@@ -22,11 +22,6 @@ git pull origin main
 ```bash
 git add .
 git commit -m "deskripsi singkat perubahan yang dilakukan"
-```
-
-**Sebelum push:**
-```bash
-git pull origin main
 git push origin main
 ```
 

@@ -1,3 +1,16 @@
+**PresensiKita** adalah aplikasi web pengganti jurnal absensi guru manual, dibangun dengan Laravel. Guru mengisi absensi harian secara digital, sementara admin dapat memantau, mengelola, dan mengekspor rekap data absensi.
+
+**Fitur Utama:**
+- Pengisian absensi harian oleh guru (pengganti jurnal kertas)
+- Manajemen data oleh admin (guru, kelas, jadwal, dll — sesuaikan)
+- Laporan/rekap absensi otomatis
+- Export laporan ke PDF & Excel
+- Role yang tersedia: Admin dan Guru
+
+**Tech Stack:**
+- Laravel (PHP)
+- MySQL/MariaDB
+
 ## Workflow
 
 **Sebelum coding:**

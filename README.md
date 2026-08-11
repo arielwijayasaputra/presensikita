@@ -34,10 +34,6 @@ git commit -m "deskripsi singkat perubahan yang dilakukan"
 git push origin main
 ```
 
-**Aturan utama:**
-- Jangan pernah commit `.env`
-- Jangan push langsung ke `main` kalau kerja tim — pakai branch + Pull Request
-
 **Fitur besar?** Kerja di branch terpisah:
 ```bash
 git checkout -b nama-fitur

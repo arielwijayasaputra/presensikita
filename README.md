@@ -40,7 +40,7 @@ git checkout -b nama-fitur
 git push -u origin nama-fitur
 ```
 
-**Mau gabung jadi contributor?** Minta di-invite dulu di GitHub, terus:
+**Mau gabung jadi contributor?** :
 ```bash
 git clone git@github.com:arielwijayasaputra/presensikita.git
 cd presensikita

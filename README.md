@@ -56,8 +56,8 @@ Start-Service ssh-agent
 ```
 ```cmd
 :: 3. Load key & ambil public key
-ssh-add %USERPROFILE%\.ssh\id_ed25519
-type %USERPROFILE%\.ssh\id_ed25519.pub
+ssh-add $env:USERPROFILE\.ssh\id_ed25519
+type $env:USERPROFILE\.ssh\id_ed25519.pub
 ```
 Paste hasil copy ke **GitHub → Settings → SSH and GPG keys → New SSH key**, lalu accept undangan collaborator dari email/notifikasi GitHub.
 

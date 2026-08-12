@@ -7,6 +7,11 @@ use App\Models\Guru;
 use App\Models\Pengaturan;
 use App\Models\TahunAjaran;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Validation\ValidationException;
 
 class PengaturanController extends Controller
 {
@@ -55,22 +60,105 @@ class PengaturanController extends Controller
 
     public function updateProfil(Request $request)
     {
-        $request->validate([
-            'nama_guru' => 'required',
-            'no_hp'     => 'nullable',
-        ]);
+        try {
+            // Otomatis pastikan kolom foto_profil ada di tabel guru
+            if (!Schema::hasColumn('guru', 'foto_profil')) {
+                try {
+                    Schema::table('guru', function (Blueprint $table) {
+                        $table->string('foto_profil', 255)->nullable();
+                    });
+                } catch (\Throwable $th) {
+                    // Abaikan jika sudah ada
+                }
+            }
 
-        $guru = Guru::where('Peran', 'Wali Kelas')->first() ?? Guru::first();
-        if ($guru) {
-            $guru->update([
-                'nama_guru' => $request->nama_guru,
-                'no_hp'     => $request->no_hp,
+            $guruId = session('auth_guru_id');
+            $guru = $guruId ? Guru::find($guruId) : (Guru::where('is_admin', 1)->first() ?? Guru::first());
+
+            if (!$guru) {
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => 'User admin tidak ditemukan.'
+                ], 404);
+            }
+
+            $request->validate([
+                'nama_guru'    => 'required|string|max:100',
+                'username'     => 'required|string|max:50|unique:guru,username,' . $guru->id_guru . ',id_guru',
+                'no_hp'        => 'nullable|string|max:20',
+                'foto'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+                'new_password' => 'nullable|string|min:4',
+            ], [
+                'nama_guru.required' => 'Nama lengkap wajib diisi.',
+                'username.required'  => 'Username wajib diisi.',
+                'username.unique'    => 'Username ini sudah digunakan oleh akun lain.',
+                'foto.image'         => 'File harus berupa gambar.',
+                'foto.max'           => 'Ukuran foto maksimal 2MB.',
+                'new_password.min'   => 'Password baru minimal 4 karakter.',
             ]);
-        }
 
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Profil berhasil diperbarui!',
-        ]);
+            $updateData = [
+                'nama_guru' => trim($request->nama_guru),
+                'username'  => trim($request->username),
+                'no_hp'     => trim($request->no_hp),
+            ];
+
+            // Ganti Password jika diisi
+            if ($request->filled('new_password')) {
+                if ($request->filled('current_password')) {
+                    if (!Hash::check($request->current_password, $guru->password_hash)) {
+                        return response()->json([
+                            'status'  => 'error',
+                            'message' => 'Password saat ini salah.'
+                        ], 422);
+                    }
+                }
+                $updateData['password_hash'] = Hash::make($request->new_password);
+            }
+
+            // Upload Foto Profil jika ada
+            if ($request->hasFile('foto')) {
+                $file = $request->file('foto');
+                $filename = 'profile_' . $guru->id_guru . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $destinationPath = public_path('uploads/profile');
+
+                if (!File::exists($destinationPath)) {
+                    File::makeDirectory($destinationPath, 0755, true, true);
+                }
+
+                // Hapus foto lama jika ada
+                if (isset($guru->foto_profil) && $guru->foto_profil && File::exists(public_path($guru->foto_profil))) {
+                    @File::delete(public_path($guru->foto_profil));
+                }
+
+                $file->move($destinationPath, $filename);
+                if (Schema::hasColumn('guru', 'foto_profil')) {
+                    $updateData['foto_profil'] = 'uploads/profile/' . $filename;
+                }
+            }
+
+            $guru->update($updateData);
+
+            // Update session jika nama guru berubah
+            session(['auth_nama_guru' => $guru->nama_guru]);
+
+            return response()->json([
+                'status'      => 'success',
+                'message'     => 'Profil & pengaturan berhasil diperbarui!',
+                'foto_profil' => isset($guru->foto_profil) && $guru->foto_profil ? asset($guru->foto_profil) : null,
+                'nama_guru'   => $guru->nama_guru,
+                'username'    => $guru->username,
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => collect($e->errors())->flatten()->first()
+            ], 422);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Gagal simpan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

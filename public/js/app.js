@@ -491,24 +491,116 @@ function filterMapel(q){
     });
 }
 
-function updateProfilSubmit(){
-    const nama = document.getElementById('input-prof-nama').value;
-    const hp = document.getElementById('input-prof-hp').value;
+function previewProfilePhoto(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.getElementById('avatar-preview-img');
+            const fallback = document.getElementById('avatar-preview-fallback');
+            if (img) {
+                img.src = e.target.result;
+                img.style.display = 'block';
+            }
+            if (fallback) {
+                fallback.style.display = 'none';
+            }
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function updateProfilSubmit(e) {
+    if (e) e.preventDefault();
+
+    const nama = document.getElementById('input-prof-nama')?.value?.trim();
+    const username = document.getElementById('input-prof-username')?.value?.trim();
+    const hp = document.getElementById('input-prof-hp')?.value?.trim();
+    const oldPass = document.getElementById('input-prof-old-pass')?.value;
+    const newPass = document.getElementById('input-prof-new-pass')?.value;
+    const photoInput = document.getElementById('input-foto-profil');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+    if (!nama || !username) {
+        Swal.fire('Peringatan', 'Nama lengkap dan Username wajib diisi!', 'warning');
+        return;
+    }
+
+    const formData = new FormData();
+    if (csrfToken) formData.append('_token', csrfToken);
+    formData.append('nama_guru', nama);
+    formData.append('username', username);
+    formData.append('no_hp', hp || '');
+    if (oldPass) formData.append('current_password', oldPass);
+    if (newPass) formData.append('new_password', newPass);
+    if (photoInput && photoInput.files[0]) {
+        formData.append('foto', photoInput.files[0]);
+    }
+
+    const btn = document.getElementById('btn-save-profile');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '⌛ Menyimpan...';
+    }
 
     fetch('/profil/update', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            'X-CSRF-TOKEN': csrfToken || ''
         },
-        body: JSON.stringify({ nama_guru: nama, no_hp: hp })
+        body: formData
     })
-    .then(res => res.json())
+    .then(async res => {
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+            throw new Error(data.message || 'Terjadi kesalahan pada server (Status ' + res.status + ')');
+        }
+        return data;
+    })
     .then(data => {
-        Swal.fire('Berhasil!', data.message, 'success');
-        document.getElementById('username-display').textContent = nama;
-        document.getElementById('prof-title-name').textContent = nama;
-        document.querySelectorAll('.profile-name-text').forEach(e => e.textContent = nama);
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '💾 Simpan Perubahan Profil';
+        }
+        if (data.status === 'success') {
+            Swal.fire({
+                title: 'Berhasil!',
+                text: data.message,
+                icon: 'success',
+                confirmButtonColor: '#1e3a8a'
+            });
+
+            // Update UI element text & avatars
+            const userDisp = document.getElementById('username-display');
+            if (userDisp) userDisp.textContent = nama;
+
+            const profTitle = document.getElementById('prof-title-name');
+            if (profTitle) profTitle.textContent = nama;
+
+            document.querySelectorAll('.profile-name-text').forEach(el => el.textContent = nama);
+
+            if (data.foto_profil) {
+                document.querySelectorAll('.user-avatar-img, #avatar-preview-img').forEach(img => {
+                    img.src = data.foto_profil;
+                    img.style.display = 'block';
+                });
+                document.querySelectorAll('.user-avatar-fallback, #avatar-preview-fallback').forEach(el => {
+                    el.style.display = 'none';
+                });
+            }
+
+            // Reset password fields
+            if (document.getElementById('input-prof-old-pass')) document.getElementById('input-prof-old-pass').value = '';
+            if (document.getElementById('input-prof-new-pass')) document.getElementById('input-prof-new-pass').value = '';
+        } else {
+            Swal.fire('Gagal', data.message || 'Terjadi kesalahan saat memperbarui profil.', 'error');
+        }
+    })
+    .catch(err => {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '💾 Simpan Perubahan Profil';
+        }
+        Swal.fire('Gagal Simpan', err.message || 'Terjadi kesalahan koneksi server.', 'error');
     });
 }
 

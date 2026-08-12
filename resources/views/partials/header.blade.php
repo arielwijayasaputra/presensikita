@@ -44,13 +44,15 @@
 
         {{-- Profil Pengguna --}}
         <div class="user-profile" style="cursor:default">
-            <div class="header-user-avatar" id="avatar-display">
-                @if(!empty($guru->foto_profil) && file_exists(public_path('storage/'.$guru->foto_profil)))
-                    <img src="{{ asset('storage/'.$guru->foto_profil) }}"
+            <div class="header-user-avatar" id="avatar-display" style="width:36px;height:36px;border-radius:50%;overflow:hidden;position:relative">
+                @if(!empty($guru->foto_profil) && file_exists(public_path($guru->foto_profil)))
+                    <img class="user-avatar-img" src="{{ asset($guru->foto_profil) }}"
                          alt="{{ $guru->nama_guru ?? 'User' }}"
                          style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                    <span class="header-avatar-initials user-avatar-fallback" style="display:none">{{ strtoupper(substr($guru->nama_guru ?? 'AD', 0, 2)) }}</span>
                 @else
-                    <span class="header-avatar-initials">{{ strtoupper(substr($guru->nama_guru ?? 'AD', 0, 2)) }}</span>
+                    <img class="user-avatar-img" src="" alt="User" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                    <span class="header-avatar-initials user-avatar-fallback">{{ strtoupper(substr($guru->nama_guru ?? 'AD', 0, 2)) }}</span>
                 @endif
             </div>
             <div>

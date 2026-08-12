@@ -32,6 +32,7 @@ CREATE TABLE `guru` (
   `nip` varchar(30) DEFAULT NULL,
   `nama_guru` varchar(100) NOT NULL,
   `Peran` varchar(50) NOT NULL DEFAULT 'Guru',
+  `foto_profil` varchar(255) DEFAULT NULL,
   `no_hp` varchar(20) DEFAULT NULL,
   `username` varchar(50) NOT NULL,
   `password_hash` varchar(255) NOT NULL,

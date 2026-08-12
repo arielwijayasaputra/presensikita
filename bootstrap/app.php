@@ -13,8 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'auth.guru'  => \App\Http\Middleware\AuthMiddleware::class,
-            'auth.admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'auth.guru'     => \App\Http\Middleware\AuthMiddleware::class,
+            'auth.admin'    => \App\Http\Middleware\AdminMiddleware::class,
+            'auth.orangtua' => \App\Http\Middleware\OrangTuaMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

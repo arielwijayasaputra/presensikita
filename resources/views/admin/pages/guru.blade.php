@@ -388,6 +388,11 @@ function editGuruModal(id, nama, nip, peran, hp, username, isAdmin){
                         <select id="swal-edit-gperan" class="swal-form-select">
                             <option value="Guru" ${peran==='Guru'?'selected':''}>Guru</option>
                             <option value="Wali Kelas" ${peran==='Wali Kelas'?'selected':''}>Wali Kelas</option>
+                            <option value="Guru Piket" ${peran==='Guru Piket'?'selected':''}>Guru Piket</option>
+                            <option value="Waka" ${peran==='Waka'?'selected':''}>Waka</option>
+                            <option value="Kepsek" ${peran==='Kepsek'?'selected':''}>Kepsek</option>
+                            <option value="Satpam" ${peran==='Satpam'?'selected':''}>Satpam</option>
+                            <option value="Admin" ${peran==='Admin'?'selected':''}>Admin</option>
                         </select>
                     </div>
                 </div>

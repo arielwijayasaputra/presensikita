@@ -12,7 +12,7 @@ return new class extends Migration
             $table->integer('id_guru')->autoIncrement();
             $table->string('nip', 30)->nullable()->unique();
             $table->string('nama_guru', 100);
-            $table->enum('Peran', ['Guru', 'Wali Kelas'])->default('Guru');
+            $table->string('Peran', 50)->default('Guru');
             $table->string('no_hp', 20)->nullable();
             $table->string('username', 50)->unique();
             $table->string('password_hash', 255);

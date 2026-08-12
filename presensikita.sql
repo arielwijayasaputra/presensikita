@@ -31,7 +31,7 @@ CREATE TABLE `guru` (
   `id_guru` int(11) NOT NULL,
   `nip` varchar(30) DEFAULT NULL,
   `nama_guru` varchar(100) NOT NULL,
-  `Peran` enum('Guru','Wali Kelas') NOT NULL DEFAULT 'Guru',
+  `Peran` varchar(50) NOT NULL DEFAULT 'Guru',
   `no_hp` varchar(20) DEFAULT NULL,
   `username` varchar(50) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
@@ -3663,6 +3663,37 @@ CREATE TABLE `tahun_ajaran` (
 
 INSERT INTO `tahun_ajaran` (`id_tahun_ajaran`, `tahun_ajaran`, `semester`, `is_aktif`) VALUES
 (1, '2026/2027', 'Ganjil', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `roles`
+--
+
+CREATE TABLE `roles` (
+  `id_role` int(11) NOT NULL AUTO_INCREMENT,
+  `nama_role` varchar(50) NOT NULL,
+  `slug_role` varchar(50) NOT NULL,
+  `deskripsi` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id_role`),
+  UNIQUE KEY `nama_role` (`nama_role`),
+  UNIQUE KEY `slug_role` (`slug_role`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`id_role`, `nama_role`, `slug_role`, `deskripsi`) VALUES
+(1, 'Guru', 'guru', 'Tenaga pengajar yang melakukan absensi dan menginput jurnal pembelajaran harian.'),
+(2, 'Wali Kelas', 'wali_kelas', 'Guru yang bertanggung jawab memantau kehadiran dan perkembangan siswa di kelasnya.'),
+(3, 'Guru Piket', 'guru_piket', 'Guru bertugas memantau ketertiban, kehadiran guru dan siswa secara keseluruhan harian.'),
+(4, 'Waka', 'waka', 'Wakil Kepala Sekolah yang memantau rekapitulasi presensi dan laporan kurikulum/kesiswaan.'),
+(5, 'Kepsek', 'kepsek', 'Kepala Sekolah yang memiliki akses peninjauan laporan eksekutif dan persetujuan sistem.'),
+(6, 'Satpam', 'satpam', 'Petugas keamanan sekolah yang memantau keluar-masuk siswa dan ketertiban area gerbang.'),
+(7, 'Admin', 'admin', 'Administrator sistem yang mengelola data master (Siswa, Kelas, Guru, Mapel, Pengaturan).');
 
 --
 -- Indexes for dumped tables

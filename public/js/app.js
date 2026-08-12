@@ -596,6 +596,11 @@ function tambahGuruModal() {
                         <select id="swal-gperan" class="swal-form-select">
                             <option value="Guru">Guru</option>
                             <option value="Wali Kelas">Wali Kelas</option>
+                            <option value="Guru Piket">Guru Piket</option>
+                            <option value="Waka">Waka</option>
+                            <option value="Kepsek">Kepsek</option>
+                            <option value="Satpam">Satpam</option>
+                            <option value="Admin">Admin</option>
                         </select>
                     </div>
                 </div>

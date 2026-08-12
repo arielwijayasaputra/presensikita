@@ -208,24 +208,100 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
 
-/* ── Custom SweetAlert Modal Form & Confirm Styles ── */
-.custom-swal-popup {
-    border-radius: 20px !important;
-    padding: 28px 30px !important;
-    font-family: 'Inter', sans-serif !important;
+/* ── Global Modern SweetAlert2 Modal & Popups ── */
+.swal2-container {
+    backdrop-filter: blur(4px) !important;
+    background: rgba(15, 23, 42, 0.45) !important;
+}
+.swal2-popup {
+    border-radius: 24px !important;
+    padding: 32px 28px 28px !important;
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
     max-width: 460px !important;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.05) !important;
-    border: 1px solid #e2e8f0 !important;
+    background: #ffffff !important;
+    box-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(0, 0, 0, 0.04) !important;
+    border: 1px solid #edf2f7 !important;
 }
-.custom-swal-title {
-    font-size: 19px !important;
+.swal2-title {
+    font-size: 20px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: 8px !important;
+    padding: 0 !important;
+}
+.swal2-html-container {
+    font-size: 13.5px !important;
+    color: #64748b !important;
+    line-height: 1.55 !important;
+    margin: 10px 0 20px 0 !important;
+}
+.swal2-icon {
+    margin: 4px auto 16px !important;
+    transform: scale(0.9) !important;
+}
+.swal2-icon.swal2-success {
+    border-color: #10b981 !important;
+    color: #10b981 !important;
+}
+.swal2-icon.swal2-success [class^='swal2-success-line'] {
+    background-color: #10b981 !important;
+}
+.swal2-icon.swal2-success .swal2-success-ring {
+    border-color: rgba(16, 185, 129, 0.25) !important;
+}
+.swal2-icon.swal2-error {
+    border-color: #ef4444 !important;
+    color: #ef4444 !important;
+}
+.swal2-icon.swal2-error [class^='swal2-x-mark-line'] {
+    background-color: #ef4444 !important;
+}
+.swal2-icon.swal2-warning {
+    border-color: #f59e0b !important;
+    color: #f59e0b !important;
+}
+.swal2-actions {
+    display: flex !important;
+    gap: 12px !important;
+    margin-top: 22px !important;
+    width: 100% !important;
+    justify-content: center !important;
+}
+.swal2-confirm {
+    background: #0f172a !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 12px 26px !important;
     font-weight: 700 !important;
-    color: #1e293b !important;
-    padding: 0 0 16px 0 !important;
-    border-bottom: 1px solid #e2e8f0;
-    margin-bottom: 20px !important;
-    text-align: left !important;
+    font-size: 14px !important;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.22) !important;
+    transition: all 0.2s ease !important;
+    outline: none !important;
 }
+.swal2-confirm:hover {
+    background: #1e293b !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.3) !important;
+}
+.swal2-cancel {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    padding: 12px 22px !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    transition: all 0.2s ease !important;
+    outline: none !important;
+}
+.swal2-cancel:hover {
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+}
+
+/* Custom Modal Form Controls */
 .swal-form-container {
     display: flex;
     flex-direction: column;
@@ -243,109 +319,26 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     gap: 6px;
 }
 .swal-form-group label {
-    font-size: 11.5px;
+    font-size: 12px;
     font-weight: 700;
-    color: #475569;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    color: #334155;
 }
 .swal-form-input, .swal-form-select {
     width: 100%;
-    padding: 10.5px 14px;
+    padding: 11px 14px;
     border: 1.5px solid #cbd5e1;
     border-radius: 10px;
     font-size: 13.5px;
-    color: #1e293b;
-    background: #f8fafc;
+    color: #0f172a;
+    background: #ffffff;
     outline: none;
     transition: all 0.2s ease;
     font-family: inherit;
     box-sizing: border-box;
 }
 .swal-form-input:focus, .swal-form-select:focus {
-    border-color: #2563eb;
-    background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-}
-.custom-swal-confirm {
-    background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
-    color: #fff !important;
-    border-radius: 10px !important;
-    padding: 11px 24px !important;
-    font-weight: 700 !important;
-    font-size: 13.5px !important;
-    box-shadow: 0 4px 14px rgba(37,99,235,0.35) !important;
-    transition: all 0.2s ease !important;
-}
-.custom-swal-confirm:hover {
-    transform: translateY(-1px) !important;
-    box-shadow: 0 6px 18px rgba(37,99,235,0.45) !important;
-}
-.custom-swal-cancel {
-    background: #f1f5f9 !important;
-    color: #475569 !important;
-    border-radius: 10px !important;
-    padding: 11px 20px !important;
-    font-weight: 600 !important;
-    font-size: 13.5px !important;
-    border: 1px solid #cbd5e1 !important;
-    transition: all 0.2s ease !important;
-}
-.custom-swal-cancel:hover {
-    background: #e2e8f0 !important;
-    color: #1e293b !important;
-}
-
-/* ── SweetAlert2 Delete Confirm Modal ── */
-.swal-delete-popup {
-    border-radius: 24px !important;
-    padding: 30px 26px 26px !important;
-    max-width: 420px !important;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.05) !important;
-    border: 1px solid #e2e8f0 !important;
-    font-family: 'Inter', sans-serif !important;
-}
-.swal-delete-actions {
-    display: flex !important;
-    gap: 12px !important;
-    margin-top: 24px !important;
-    justify-content: center !important;
-    width: 100% !important;
-}
-.swal-delete-confirm {
-    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
-    color: #ffffff !important;
-    border: none !important;
-    padding: 12px 20px !important;
-    border-radius: 12px !important;
-    font-weight: 700 !important;
-    font-size: 13.5px !important;
-    font-family: inherit !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease !important;
-    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35) !important;
-    flex: 1 !important;
-}
-.swal-delete-confirm:hover {
-    transform: translateY(-1px) !important;
-    box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45) !important;
-}
-.swal-delete-cancel {
-    background: #f1f5f9 !important;
-    color: #475569 !important;
-    border: 1px solid #cbd5e1 !important;
-    padding: 12px 20px !important;
-    border-radius: 12px !important;
-    font-weight: 600 !important;
-    font-size: 13.5px !important;
-    font-family: inherit !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease !important;
-    flex: 1 !important;
-}
-.swal-delete-cancel:hover {
-    background: #e2e8f0 !important;
-    color: #1e293b !important;
+    border-color: #0f172a;
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
 }
 
 /* ==========================================================================
@@ -568,60 +561,15 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     }
 }
 
-/* ── SweetAlert2 Custom Logout Modal ── */
-.swal-logout-popup {
-    border-radius: 24px !important;
-    padding: 28px 24px !important;
-    max-width: 400px !important;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05) !important;
-    border: 1px solid #e2e8f0 !important;
-}
-
-.swal-logout-actions {
-    display: flex !important;
-    gap: 12px !important;
-    margin-top: 24px !important;
-    justify-content: center !important;
-    width: 100% !important;
-}
-
-.swal-logout-confirm {
+/* ── Swal Konfirmasi Hapus & Logout — Tombol Merah Override ── */
+.swal2-popup.swal2-modal .swal2-confirm.swal-danger-confirm,
+.swal-confirm-danger {
     background: linear-gradient(135deg, #ef4444, #dc2626) !important;
-    color: #ffffff !important;
-    border: none !important;
-    padding: 12px 20px !important;
-    border-radius: 12px !important;
-    font-weight: 700 !important;
-    font-size: 13.5px !important;
-    font-family: inherit !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease !important;
-    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35) !important;
-    flex: 1 !important;
+    box-shadow: 0 6px 18px rgba(239, 68, 68, 0.3) !important;
 }
-
-.swal-logout-confirm:hover {
-    transform: translateY(-1px) !important;
-    box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45) !important;
-}
-
-.swal-logout-cancel {
-    background: #f1f5f9 !important;
-    color: #475569 !important;
-    border: 1px solid #cbd5e1 !important;
-    padding: 12px 20px !important;
-    border-radius: 12px !important;
-    font-weight: 600 !important;
-    font-size: 13.5px !important;
-    font-family: inherit !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease !important;
-    flex: 1 !important;
-}
-
-.swal-logout-cancel:hover {
-    background: #e2e8f0 !important;
-    color: #1e293b !important;
+.swal2-popup.swal2-modal .swal2-confirm.swal-danger-confirm:hover,
+.swal-confirm-danger:hover {
+    box-shadow: 0 10px 24px rgba(239, 68, 68, 0.4) !important;
 }
 
 /* ── Mapel Page ── */

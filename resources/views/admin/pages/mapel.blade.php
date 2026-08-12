@@ -397,13 +397,6 @@
 function editMapelModal(id, kode, nama){
     Swal.fire({
         title: 'Edit Mata Pelajaran',
-        customClass: {
-            popup: 'custom-swal-popup',
-            title: 'custom-swal-title',
-            confirmButton: 'custom-swal-confirm',
-            cancelButton: 'custom-swal-cancel'
-        },
-        buttonsStyling: false,
         html: `
             <div class="swal-form-container">
                 <div class="swal-form-group">
@@ -448,11 +441,8 @@ function editMapelModal(id, kode, nama){
                 return data;
             })
             .then(data => {
-                Swal.fire({
-                    icon: 'success', title: 'Berhasil!', text: data.message || 'Data berhasil diperbarui.',
-                    customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title', confirmButton: 'custom-swal-confirm' },
-                    buttonsStyling: false
-                }).then(() => location.reload());
+                Swal.fire({ icon: 'success', title: 'Berhasil!', text: data.message || 'Data berhasil diperbarui.' })
+                .then(() => location.reload());
             })
             .catch(err => Swal.fire('Gagal', err.message || 'Terjadi kesalahan sistem.', 'error'));
         }

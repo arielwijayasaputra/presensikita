@@ -1,42 +1,49 @@
+/* ── Global SweetAlert2 Modern Mixin ───────────────────── */
+const SwalModern = Swal.mixin({
+    buttonsStyling: true,
+    customClass: {
+        popup:         '',
+        confirmButton: '',
+        cancelButton:  '',
+    }
+});
+
 /* ── Konfirmasi Logout ─────────────────────────── */
 function confirmLogout(formId) {
     Swal.fire({
         html: `
-            <div style="padding: 8px 0 4px;">
+            <div style="padding:12px 0 4px;text-align:center">
                 <div style="
-                    width: 64px; height: 64px;
-                    background: #fef2f2;
-                    border-radius: 50%;
-                    display: flex; align-items: center; justify-content: center;
-                    margin: 0 auto 20px;
-                    border: 6px solid #fee2e2;
+                    width:72px;height:72px;
+                    background:linear-gradient(135deg,#fef2f2,#fee2e2);
+                    border-radius:50%;
+                    display:flex;align-items:center;justify-content:center;
+                    margin:0 auto 20px;
+                    border:2px solid #fecaca;
                 ">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                         <polyline points="16 17 21 12 16 7"/>
                         <line x1="21" y1="12" x2="9" y2="12"/>
                     </svg>
                 </div>
-                <div style="font-size: 19px; font-weight: 800; color: #1e293b; margin-bottom: 10px; font-family: 'Inter', sans-serif; letter-spacing: -0.02em;">
-                    Keluar dari Akun?
-                </div>
-                <div style="font-size: 13.5px; color: #64748b; line-height: 1.6; font-family: 'Inter', sans-serif;">
-                    Sesi Anda akan diakhiri.<br>Yakin ingin keluar?
-                </div>
+                <div style="font-size:20px;font-weight:800;color:#0f172a;margin-bottom:10px;letter-spacing:-0.02em">Keluar dari Akun?</div>
+                <div style="font-size:13.5px;color:#64748b;line-height:1.65">Sesi Anda akan diakhiri.<br>Yakin ingin keluar?</div>
             </div>
         `,
         showCancelButton: true,
         confirmButtonText: 'Ya, Keluar',
         cancelButtonText: 'Batal',
-        buttonsStyling: false,
         reverseButtons: true,
         focusCancel: true,
         customClass: {
-            popup:          'swal-logout-popup',
-            confirmButton:  'swal-logout-confirm',
-            cancelButton:   'swal-logout-cancel',
-            actions:        'swal-logout-actions',
-        }
+            confirmButton: 'swal2-confirm',
+            cancelButton:  'swal2-cancel',
+            actions:       'swal2-actions',
+        },
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: 'transparent',
+        buttonsStyling: true,
     }).then((result) => {
         if (result.isConfirmed) {
             document.getElementById(formId).submit();
@@ -247,13 +254,6 @@ function submitAbsensi(){
 function tambahSiswaModal(){
     Swal.fire({
         title: 'Tambah Siswa Baru',
-        customClass: {
-            popup: 'custom-swal-popup',
-            title: 'custom-swal-title',
-            confirmButton: 'custom-swal-confirm',
-            cancelButton: 'custom-swal-cancel'
-        },
-        buttonsStyling: false,
         html: `
             <div class="swal-form-container">
                 <div class="swal-form-group">
@@ -316,17 +316,8 @@ function tambahSiswaModal(){
             })
             .then(res => res.json())
             .then(data => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: data.message,
-                    customClass: {
-                        popup: 'custom-swal-popup',
-                        title: 'custom-swal-title',
-                        confirmButton: 'custom-swal-confirm'
-                    },
-                    buttonsStyling: false
-                }).then(() => location.reload());
+                Swal.fire({ icon: 'success', title: 'Berhasil!', text: data.message })
+                .then(() => location.reload());
             });
         }
     });
@@ -335,13 +326,6 @@ function tambahSiswaModal(){
 function tambahKelasModal(){
     Swal.fire({
         title: 'Tambah Kelas Baru',
-        customClass: {
-            popup: 'custom-swal-popup',
-            title: 'custom-swal-title',
-            confirmButton: 'custom-swal-confirm',
-            cancelButton: 'custom-swal-cancel'
-        },
-        buttonsStyling: false,
         html: `
             <div class="swal-form-container">
                 <div class="swal-form-group">
@@ -388,17 +372,8 @@ function tambahKelasModal(){
             })
             .then(res => res.json())
             .then(data => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: data.message,
-                    customClass: {
-                        popup: 'custom-swal-popup',
-                        title: 'custom-swal-title',
-                        confirmButton: 'custom-swal-confirm'
-                    },
-                    buttonsStyling: false
-                }).then(() => location.reload());
+                Swal.fire({ icon: 'success', title: 'Berhasil!', text: data.message })
+                .then(() => location.reload());
             });
         }
     });
@@ -407,13 +382,6 @@ function tambahKelasModal(){
 function tambahMapelModal(){
     Swal.fire({
         title: 'Tambah Mata Pelajaran',
-        customClass: {
-            popup: 'custom-swal-popup',
-            title: 'custom-swal-title',
-            confirmButton: 'custom-swal-confirm',
-            cancelButton: 'custom-swal-cancel'
-        },
-        buttonsStyling: false,
         html: `
             <div class="swal-form-container">
                 <div class="swal-form-group">
@@ -460,17 +428,8 @@ function tambahMapelModal(){
                 return data;
             })
             .then(data => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: data.message,
-                    customClass: {
-                        popup: 'custom-swal-popup',
-                        title: 'custom-swal-title',
-                        confirmButton: 'custom-swal-confirm'
-                    },
-                    buttonsStyling: false
-                }).then(() => location.reload());
+                Swal.fire({ icon: 'success', title: 'Berhasil!', text: data.message })
+                .then(() => location.reload());
             })
             .catch(err => Swal.fire('Gagal', err.message || 'Terjadi kesalahan sistem.', 'error'));
         }
@@ -539,7 +498,7 @@ function updateProfilSubmit(e) {
     const btn = document.getElementById('btn-save-profile');
     if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '⌛ Menyimpan...';
+        btn.innerHTML = 'Menyimpan...';
     }
 
     fetch('/profil/update', {
@@ -559,7 +518,7 @@ function updateProfilSubmit(e) {
     .then(data => {
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '💾 Simpan Perubahan Profil';
+            btn.innerHTML = 'Simpan Perubahan Profil';
         }
         if (data.status === 'success') {
             Swal.fire({
@@ -598,7 +557,7 @@ function updateProfilSubmit(e) {
     .catch(err => {
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '💾 Simpan Perubahan Profil';
+            btn.innerHTML = 'Simpan Perubahan Profil';
         }
         Swal.fire('Gagal Simpan', err.message || 'Terjadi kesalahan koneksi server.', 'error');
     });
@@ -644,34 +603,19 @@ function simpanPengaturan() {
             if (elYear) elYear.textContent = data.data.tahun_ajaran;
             if (elSem)  elSem.textContent  = data.data.semester;
 
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: data.message,
-                customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title', confirmButton: 'custom-swal-confirm' },
-                buttonsStyling: false,
-                timer: 2000,
-                showConfirmButton: false
-            });
+            Swal.fire({ icon: 'success', title: 'Berhasil!', text: data.message, timer: 2000, showConfirmButton: false });
         } else {
-            Swal.fire({ icon: 'error', title: 'Gagal!', text: data.message || 'Terjadi kesalahan.', customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title', confirmButton: 'custom-swal-confirm' }, buttonsStyling: false });
+            Swal.fire({ icon: 'error', title: 'Gagal!', text: data.message || 'Terjadi kesalahan.' });
         }
     })
     .catch(() => {
-        Swal.fire({ icon: 'error', title: 'Error', text: 'Gagal terhubung ke server.', customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title', confirmButton: 'custom-swal-confirm' }, buttonsStyling: false });
+        Swal.fire({ icon: 'error', title: 'Error', text: 'Gagal terhubung ke server.' });
     });
 }
 
 function tambahGuruModal() {
     Swal.fire({
         title: 'Tambah Guru Baru',
-        customClass: {
-            popup: 'custom-swal-popup',
-            title: 'custom-swal-title',
-            confirmButton: 'custom-swal-confirm',
-            cancelButton: 'custom-swal-cancel'
-        },
-        buttonsStyling: false,
         html: `
             <div class="swal-form-container">
                 <div class="swal-form-group">
@@ -766,29 +710,10 @@ function tambahGuruModal() {
             .then(res => res.json())
             .then(data => {
                 if (data.status === 'success') {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil!',
-                        text: data.message,
-                        customClass: {
-                            popup: 'custom-swal-popup',
-                            title: 'custom-swal-title',
-                            confirmButton: 'custom-swal-confirm'
-                        },
-                        buttonsStyling: false
-                    }).then(() => location.reload());
+                    Swal.fire({ icon: 'success', title: 'Berhasil!', text: data.message })
+                    .then(() => location.reload());
                 } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal!',
-                        text: data.message || 'Terjadi kesalahan saat menyimpan data.',
-                        customClass: {
-                            popup: 'custom-swal-popup',
-                            title: 'custom-swal-title',
-                            confirmButton: 'custom-swal-confirm'
-                        },
-                        buttonsStyling: false
-                    });
+                    Swal.fire({ icon: 'error', title: 'Gagal!', text: data.message || 'Terjadi kesalahan saat menyimpan data.' });
                 }
             })
             .catch(err => {
@@ -1208,13 +1133,13 @@ function hapusGuru(id, nama) {
             .then(res => res.json())
             .then(res => {
                 if (res.status === 'success') {
-                    Swal.fire({ icon: 'success', title: 'Berhasil', text: res.message, timer: 1500, showConfirmButton: false, customClass: { popup: 'custom-swal-popup' } })
+                    Swal.fire({ icon: 'success', title: 'Berhasil', text: res.message, timer: 1500, showConfirmButton: false })
                         .then(() => location.reload());
                 } else {
-                    Swal.fire({ icon: 'error', title: 'Gagal', text: res.message, customClass: { popup: 'custom-swal-popup' } });
+                    Swal.fire({ icon: 'error', title: 'Gagal', text: res.message });
                 }
             })
-            .catch(() => Swal.fire({ icon: 'error', title: 'Gagal', text: 'Terjadi kesalahan sistem.', customClass: { popup: 'custom-swal-popup' } }));
+            .catch(() => Swal.fire({ icon: 'error', title: 'Gagal', text: 'Terjadi kesalahan sistem.' }));
         }
     });
 }
@@ -1234,13 +1159,13 @@ function hapusSiswa(id, nama) {
             .then(res => res.json())
             .then(res => {
                 if (res.status === 'success') {
-                    Swal.fire({ icon: 'success', title: 'Berhasil', text: res.message, timer: 1500, showConfirmButton: false, customClass: { popup: 'custom-swal-popup' } })
+                    Swal.fire({ icon: 'success', title: 'Berhasil', text: res.message, timer: 1500, showConfirmButton: false })
                         .then(() => location.reload());
                 } else {
-                    Swal.fire({ icon: 'error', title: 'Gagal', text: res.message, customClass: { popup: 'custom-swal-popup' } });
+                    Swal.fire({ icon: 'error', title: 'Gagal', text: res.message });
                 }
             })
-            .catch(() => Swal.fire({ icon: 'error', title: 'Gagal', text: 'Terjadi kesalahan sistem.', customClass: { popup: 'custom-swal-popup' } }));
+            .catch(() => Swal.fire({ icon: 'error', title: 'Gagal', text: 'Terjadi kesalahan sistem.' }));
         }
     });
 }
@@ -1260,13 +1185,13 @@ function hapusKelas(id, nama) {
             .then(res => res.json())
             .then(res => {
                 if (res.status === 'success') {
-                    Swal.fire({ icon: 'success', title: 'Berhasil', text: res.message, timer: 1500, showConfirmButton: false, customClass: { popup: 'custom-swal-popup' } })
+                    Swal.fire({ icon: 'success', title: 'Berhasil', text: res.message, timer: 1500, showConfirmButton: false })
                         .then(() => location.reload());
                 } else {
-                    Swal.fire({ icon: 'error', title: 'Gagal', text: res.message, customClass: { popup: 'custom-swal-popup' } });
+                    Swal.fire({ icon: 'error', title: 'Gagal', text: res.message });
                 }
             })
-            .catch(() => Swal.fire({ icon: 'error', title: 'Gagal', text: 'Terjadi kesalahan sistem.', customClass: { popup: 'custom-swal-popup' } }));
+            .catch(() => Swal.fire({ icon: 'error', title: 'Gagal', text: 'Terjadi kesalahan sistem.' }));
         }
     });
 }
@@ -1277,7 +1202,6 @@ function hapusMapel(id, nama, jadwalCount) {
             icon: 'warning',
             title: 'Tidak dapat dihapus',
             html: `Mapel <strong>${nama}</strong> masih dipakai di <strong>${jadwalCount}</strong> jadwal mengajar.`,
-            customClass: { popup: 'custom-swal-popup' }
         });
         return;
     }
@@ -1297,13 +1221,13 @@ function hapusMapel(id, nama, jadwalCount) {
             .then(res => res.json())
             .then(res => {
                 if (res.status === 'success') {
-                    Swal.fire({ icon: 'success', title: 'Berhasil', text: res.message, timer: 1500, showConfirmButton: false, customClass: { popup: 'custom-swal-popup' } })
+                    Swal.fire({ icon: 'success', title: 'Berhasil', text: res.message, timer: 1500, showConfirmButton: false })
                         .then(() => location.reload());
                 } else {
-                    Swal.fire({ icon: 'error', title: 'Gagal', text: res.message, customClass: { popup: 'custom-swal-popup' } });
+                    Swal.fire({ icon: 'error', title: 'Gagal', text: res.message });
                 }
             })
-            .catch(() => Swal.fire({ icon: 'error', title: 'Gagal', text: 'Terjadi kesalahan sistem.', customClass: { popup: 'custom-swal-popup' } }));
+            .catch(() => Swal.fire({ icon: 'error', title: 'Gagal', text: 'Terjadi kesalahan sistem.' }));
         }
     });
 }

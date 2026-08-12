@@ -413,12 +413,6 @@
 function lihatDetailJurnal(id, tgl, hari, kelas, materi){
     Swal.fire({
         title: `Detail Jurnal (${tgl})`,
-        customClass: {
-            popup: 'custom-swal-popup',
-            title: 'custom-swal-title',
-            confirmButton: 'custom-swal-confirm'
-        },
-        buttonsStyling: false,
         html: `
             <div style="text-align:left;display:flex;flex-direction:column;gap:10px;font-size:13.5px;color:#1e293b;">
                 <div><strong>Hari / Tanggal:</strong> ${hari}, ${tgl}</div>

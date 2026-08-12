@@ -536,7 +536,7 @@
                         <input type="checkbox" name="remember" id="remember">
                         <span>Ingat saya</span>
                     </label>
-                    <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
+                    <a href="javascript:void(0)" onclick="Swal.fire({ icon: 'info', title: 'Lupa Password', text: 'Silakan hubungi administrator sekolah untuk me-reset password Anda.' })" class="forgot-link">Lupa password?</a>
                 </div>
 
                 <!-- Submit -->
@@ -552,7 +552,7 @@
 
             <!-- Help -->
             <div class="form-footer-text">
-                Belum punya akun? <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk membuat akun baru.')">Hubungi administrator sekolah.</a>
+                Belum punya akun? <a href="javascript:void(0)" onclick="Swal.fire({ icon: 'info', title: 'Bantuan Akun', text: 'Silakan hubungi administrator sekolah untuk membuat akun baru.' })">Hubungi administrator sekolah.</a>
             </div>
 
         </div>

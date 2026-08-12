@@ -30,7 +30,7 @@
             <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">{{ ($guru->is_admin ?? false) ? 'Administrator Sistem' : ($guru->Peran ?? 'Guru') }}</p>
 
             <button type="button" class="btn-secondary" style="width:100%;font-size:13px;margin-bottom:20px" onclick="document.getElementById('input-foto-profil').click()">
-                📷 Pilih Foto Baru
+                Pilih Foto Baru
             </button>
 
             <hr style="border:none;border-top:1px solid #e2e8f0;margin:16px 0">
@@ -99,7 +99,7 @@
 
                     <div style="margin-top:12px">
                         <button type="submit" class="btn-primary" id="btn-save-profile" style="padding:12px 28px;font-size:14px;font-weight:700;border-radius:10px">
-                            💾 Simpan Perubahan Profil
+                            Simpan Perubahan Profil
                         </button>
                     </div>
 

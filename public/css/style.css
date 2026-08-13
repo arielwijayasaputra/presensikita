@@ -268,22 +268,26 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     width: 100% !important;
     justify-content: center !important;
 }
-.swal2-confirm {
-    background: #0f172a !important;
+.swal2-confirm,
+.custom-swal-confirm,
+.swal2-styled.swal2-confirm {
+    background: #1a3268 !important;
     color: #ffffff !important;
     border: none !important;
-    border-radius: 12px !important;
+    border-radius: 10px !important;
     padding: 12px 26px !important;
     font-weight: 700 !important;
     font-size: 14px !important;
-    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.22) !important;
+    box-shadow: 0 6px 18px rgba(26, 50, 104, 0.35) !important;
     transition: all 0.2s ease !important;
     outline: none !important;
 }
-.swal2-confirm:hover {
-    background: #1e293b !important;
+.swal2-confirm:hover,
+.custom-swal-confirm:hover,
+.swal2-styled.swal2-confirm:hover {
+    background: #22408a !important;
     transform: translateY(-1px) !important;
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.3) !important;
+    box-shadow: 0 10px 24px rgba(26, 50, 104, 0.45) !important;
 }
 .swal2-cancel {
     background: #f1f5f9 !important;

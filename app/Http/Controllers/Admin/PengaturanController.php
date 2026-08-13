@@ -27,10 +27,17 @@ class PengaturanController extends Controller
             'semester.required'     => 'Semester tidak boleh kosong.',
         ]);
 
-        Pengaturan::set('nama_sekolah', trim($request->nama_sekolah));
+        Pengaturan::set('nama_sekolah',      trim($request->nama_sekolah));
+        Pengaturan::set('npsn',              trim($request->npsn ?? ''));
+        Pengaturan::set('kepsek',            trim($request->kepsek ?? ''));
+        Pengaturan::set('alamat',            trim($request->alamat ?? ''));
+        Pengaturan::set('email_sekolah',     trim($request->email_sekolah ?? ''));
+        Pengaturan::set('telepon_sekolah',   trim($request->telepon_sekolah ?? ''));
         if ($request->filled('sistem_absensi')) {
             Pengaturan::set('sistem_absensi', trim($request->sistem_absensi));
         }
+        Pengaturan::set('batas_waktu_jurnal', trim($request->batas_waktu_jurnal ?? '23:59'));
+        Pengaturan::set('izin_edit_jurnal',   $request->has('izin_edit_jurnal') ? '1' : '0');
 
         $tahun = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
         if ($tahun) {
@@ -50,10 +57,11 @@ class PengaturanController extends Controller
             'status'  => 'success',
             'message' => 'Pengaturan sistem berhasil diperbarui!',
             'data'    => [
-                'nama_sekolah'   => trim($request->nama_sekolah),
-                'tahun_ajaran'   => trim($request->tahun_ajaran),
-                'semester'       => trim($request->semester),
-                'sistem_absensi' => trim($request->sistem_absensi ?? Pengaturan::get('sistem_absensi')),
+                'nama_sekolah'       => trim($request->nama_sekolah),
+                'tahun_ajaran'       => trim($request->tahun_ajaran),
+                'semester'           => trim($request->semester),
+                'sistem_absensi'     => trim($request->sistem_absensi ?? Pengaturan::get('sistem_absensi')),
+                'batas_waktu_jurnal' => trim($request->batas_waktu_jurnal ?? '23:59'),
             ],
         ]);
     }

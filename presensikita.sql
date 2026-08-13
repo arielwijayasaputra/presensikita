@@ -2835,8 +2835,16 @@ CREATE TABLE `pengaturan` (
 --
 
 INSERT INTO `pengaturan` (`kunci`, `nilai`) VALUES
-('nama_sekolah', 'SMK NEGERI 1 Boyolangu'),
-('sistem_absensi', 'Absensi Realtime & Otomatis Rekap');
+('nama_sekolah', ''),
+('npsn', ''),
+('kepsek', ''),
+('alamat', ''),
+('email_sekolah', ''),
+('telepon_sekolah', ''),
+('sistem_absensi', 'Absensi Realtime & Otomatis Rekap'),
+('batas_waktu_jurnal', '23:59'),
+('izin_edit_jurnal', '1');
+
 
 -- --------------------------------------------------------
 
@@ -3696,6 +3704,27 @@ INSERT INTO `roles` (`id_role`, `nama_role`, `slug_role`, `deskripsi`) VALUES
 (6, 'Satpam', 'satpam', 'Petugas keamanan sekolah yang memantau keluar-masuk siswa dan ketertiban area gerbang.'),
 (7, 'Admin', 'admin', 'Administrator sistem yang mengelola data master (Siswa, Kelas, Guru, Mapel, Pengaturan).');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifikasi`
+--
+
+CREATE TABLE `notifikasi` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `judul` varchar(150) NOT NULL,
+  `pesan` text NOT NULL,
+  `tipe` enum('info','success','warning','error') NOT NULL DEFAULT 'info',
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `notifikasi`
+-- (kosong — notifikasi akan diisi oleh sistem secara otomatis)
+--
+
 --
 -- Indexes for dumped tables
 --
@@ -3767,6 +3796,14 @@ ALTER TABLE `migrations`
 --
 ALTER TABLE `pengaturan`
   ADD PRIMARY KEY (`kunci`);
+
+-- --------------------------------------------------------
+
+--
+-- AUTO_INCREMENT for table `notifikasi`
+--
+ALTER TABLE `notifikasi`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Indexes for table `sessions`

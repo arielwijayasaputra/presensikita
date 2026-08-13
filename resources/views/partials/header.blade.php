@@ -12,8 +12,8 @@
             <div class="school-name" id="header-school-name">{{ $namaSekolah ?? 'SMKN 1 Boyolangu' }}</div>
             <div class="school-year">
                 Tahun Ajaran
-                <span id="header-school-year">{{ $tahunAjaran->tahun_ajaran ?? '2024/2025' }}</span>
-                (<span id="header-semester">{{ $tahunAjaran->semester ?? 'Ganjil' }}</span>)
+                <span id="header-school-year">{{ $tahunAjaran->tahun_ajaran ?? '' }}</span>
+                (<span id="header-semester">{{ $tahunAjaran->semester ?? '' }}</span>)
                 <span class="status-dot"></span>
             </div>
         </div>
@@ -49,7 +49,7 @@
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                 <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
             </svg>
-            <span class="notif-badge" id="notif-badge-count">3</span>
+            <span class="notif-badge" id="notif-badge-count" style="display:none">0</span>
         </button>
 
         {{-- Profil Pengguna --}}

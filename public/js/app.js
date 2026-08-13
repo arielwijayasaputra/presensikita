@@ -8,8 +8,8 @@ const SwalModern = Swal.mixin({
     }
 });
 
-/* ── Konfirmasi Logout ─────────────────────────── */
-function confirmLogout(formId) {
+/* ── Konfirmasi Keluar ─────────────────────────── */
+function confirmKeluar(formId) {
     Swal.fire({
         html: `
             <div style="padding:12px 0 4px;text-align:center">
@@ -188,7 +188,7 @@ function submitAbsensi(){
             icon: 'warning',
             title: 'Akses Dibatasi',
             text: 'Admin hanya memantau data. Pengisian dan perubahan absensi adalah hak akses Guru.',
-            confirmButtonColor: '#3b82f6'
+            confirmButtonColor: '#1a3268'
         });
         return;
     }
@@ -232,7 +232,7 @@ function submitAbsensi(){
                 icon: 'success',
                 title: 'Berhasil!',
                 text: 'Absensi berhasil disimpan! (Hadir: ' + data.rekap.hadir + ', Sakit: ' + data.rekap.sakit + ', Izin: ' + data.rekap.izin + ', Alpa: ' + data.rekap.alpa + ')',
-                confirmButtonColor: '#2563eb'
+                confirmButtonColor: '#1a3268'
             });
         } else {
             Swal.fire({
@@ -525,7 +525,7 @@ function updateProfilSubmit(e) {
                 title: 'Berhasil!',
                 text: data.message,
                 icon: 'success',
-                confirmButtonColor: '#1e3a8a'
+                confirmButtonColor: '#1a3268'
             });
 
             // Update UI element text & avatars
@@ -564,10 +564,17 @@ function updateProfilSubmit(e) {
 }
 
 function simpanPengaturan() {
-    const namaSekolah   = document.getElementById('set-nama-sekolah')?.value?.trim();
-    const tahunAjaran   = document.getElementById('set-tahun-ajaran')?.value?.trim();
-    const semester      = document.getElementById('set-semester')?.value;
-    const sistemAbsensi = document.getElementById('set-sistem-absensi')?.value;
+    const namaSekolah    = document.getElementById('set-nama-sekolah')?.value?.trim();
+    const npsn           = document.getElementById('set-npsn')?.value?.trim();
+    const kepsek         = document.getElementById('set-kepsek')?.value?.trim();
+    const alamat         = document.getElementById('set-alamat')?.value?.trim();
+    const emailSekolah   = document.getElementById('set-email')?.value?.trim();
+    const teleponSekolah = document.getElementById('set-telepon')?.value?.trim();
+    const tahunAjaran    = document.getElementById('set-tahun-ajaran')?.value?.trim();
+    const semester       = document.getElementById('set-semester')?.value;
+    const sistemAbsensi  = document.getElementById('set-sistem-absensi')?.value;
+    const batasWaktu     = document.getElementById('set-batas-waktu')?.value;
+    const izinEdit       = document.getElementById('set-izin-edit')?.checked ? '1' : '0';
 
     if (!namaSekolah) {
         Swal.fire({ icon: 'warning', title: 'Perhatian', text: 'Nama sekolah tidak boleh kosong.', customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title', confirmButton: 'custom-swal-confirm' }, buttonsStyling: false });
@@ -585,24 +592,28 @@ function simpanPengaturan() {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify({
-            nama_sekolah:    namaSekolah,
-            tahun_ajaran:    tahunAjaran,
-            semester:        semester,
-            sistem_absensi:  sistemAbsensi
+            nama_sekolah:       namaSekolah,
+            npsn:               npsn,
+            kepsek:             kepsek,
+            alamat:             alamat,
+            email_sekolah:      emailSekolah,
+            telepon_sekolah:    teleponSekolah,
+            tahun_ajaran:       tahunAjaran,
+            semester:           semester,
+            sistem_absensi:     sistemAbsensi,
+            batas_waktu_jurnal: batasWaktu,
+            izin_edit_jurnal:   izinEdit,
         })
     })
     .then(res => res.json())
     .then(data => {
         if (data.status === 'success') {
-            // Update header realtime
-            const elName   = document.getElementById('header-school-name');
-            const elYear   = document.getElementById('header-school-year');
-            const elSem    = document.getElementById('header-semester');
-
+            const elName = document.getElementById('header-school-name');
+            const elYear = document.getElementById('header-school-year');
+            const elSem  = document.getElementById('header-semester');
             if (elName) elName.textContent = data.data.nama_sekolah;
             if (elYear) elYear.textContent = data.data.tahun_ajaran;
             if (elSem)  elSem.textContent  = data.data.semester;
-
             Swal.fire({ icon: 'success', title: 'Berhasil!', text: data.message, timer: 2000, showConfirmButton: false });
         } else {
             Swal.fire({ icon: 'error', title: 'Gagal!', text: data.message || 'Terjadi kesalahan.' });
@@ -1236,50 +1247,73 @@ function hapusMapel(id, nama, jadwalCount) {
 
 /* ── Modal Notifikasi Header ───────────────────────────── */
 function tampilkanNotifikasi() {
-    Swal.fire({
-        title: '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;padding-bottom:10px;border-bottom:1px solid #e2e8f0;font-size:16px;font-weight:800;color:#0f172a"><span>Pemberitahuan Sistem</span><span style="font-size:11.5px;font-weight:600;background:#eff6ff;color:#2563eb;padding:3px 10px;border-radius:99px">3 Baru</span></div>',
-        customClass: {
-            popup: 'custom-swal-popup',
-            confirmButton: 'custom-swal-confirm'
-        },
-        buttonsStyling: false,
-        confirmButtonText: 'Tutup',
-        html: `
-            <div style="text-align:left;display:flex;flex-direction:column;gap:10px;margin-top:10px;max-height:340px;overflow-y:auto">
-                <div style="display:flex;gap:12px;padding:12px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;align-items:flex-start">
-                    <div style="width:34px;height:34px;background:#eff6ff;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#2563eb;flex-shrink:0;margin-top:2px">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 16 11 18 15 14"/></svg>
-                    </div>
-                    <div>
-                        <div style="font-size:13px;font-weight:700;color:#1e293b">Absensi Hari Ini Siap</div>
-                        <div style="font-size:12px;color:#64748b;margin-top:2px">Pencatatan kehadiran harian siswa hari ini dapat diisi melalui menu Absensi Harian.</div>
-                        <div style="font-size:11px;color:#94a3b8;margin-top:4px">Baru saja</div>
-                    </div>
-                </div>
-                <div style="display:flex;gap:12px;padding:12px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;align-items:flex-start">
-                    <div style="width:34px;height:34px;background:#f0fdf4;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#16a34a;flex-shrink:0;margin-top:2px">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                    </div>
-                    <div>
-                        <div style="font-size:13px;font-weight:700;color:#1e293b">Sistem Berjalan Normal</div>
-                        <div style="font-size:12px;color:#64748b;margin-top:2px">Tahun Ajaran 2024/2025 (Genap) aktif dan terkoneksi ke database.</div>
-                        <div style="font-size:11px;color:#94a3b8;margin-top:4px">10 menit yang lalu</div>
-                    </div>
-                </div>
-                <div style="display:flex;gap:12px;padding:12px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;align-items:flex-start">
-                    <div style="width:34px;height:34px;background:#fffbeb;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#d97706;flex-shrink:0;margin-top:2px">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    </div>
-                    <div>
-                        <div style="font-size:13px;font-weight:700;color:#1e293b">Penting: Keamanan Akun</div>
-                        <div style="font-size:12px;color:#64748b;margin-top:2px">Disarankan untuk secara berkala memperbarui kata sandi akun di Pengaturan Profil.</div>
-                        <div style="font-size:11px;color:#94a3b8;margin-top:4px">1 jam yang lalu</div>
-                    </div>
-                </div>
-            </div>
-        `
-    }).then(() => {
-        const badge = document.getElementById('notif-badge-count');
-        if (badge) badge.style.display = 'none';
-    });
+    // Ambil notifikasi dari server (table notifikasi di DB)
+    fetch(window.notifUrl || '/admin/notifikasi')
+        .then(r => r.json())
+        .then(data => {
+            const items = data.notifikasi || [];
+            const jumlahBaru = items.filter(n => !n.is_read).length;
+
+            let htmlIsi = '';
+            if (items.length === 0) {
+                htmlIsi = `
+                    <div style="text-align:center;padding:32px 16px;color:#94a3b8">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 12px;display:block;opacity:0.4"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        <div style="font-size:13.5px;font-weight:600;color:#475569">Belum ada pemberitahuan</div>
+                        <div style="font-size:12px;margin-top:4px">Notifikasi sistem akan muncul di sini.</div>
+                    </div>`;
+            } else {
+                htmlIsi = '<div style="text-align:left;display:flex;flex-direction:column;gap:10px;margin-top:10px;max-height:340px;overflow-y:auto">';
+                const iconMap = {
+                    info:    { bg:'#eff6ff', color:'#2563eb', svg:'<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>' },
+                    success: { bg:'#f0fdf4', color:'#16a34a', svg:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' },
+                    warning: { bg:'#fffbeb', color:'#d97706', svg:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>' },
+                    error:   { bg:'#fef2f2', color:'#ef4444', svg:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="12" y1="16" x2="12.01" y2="16"/>' },
+                };
+                items.forEach(n => {
+                    const ic = iconMap[n.tipe] || iconMap.info;
+                    const bg = n.is_read ? '#f8fafc' : '#eff6ff';
+                    htmlIsi += `
+                        <div style="display:flex;gap:12px;padding:12px;background:${bg};border-radius:10px;border:1px solid #e2e8f0;align-items:flex-start">
+                            <div style="width:34px;height:34px;background:${ic.bg};border-radius:8px;display:flex;align-items:center;justify-content:center;color:${ic.color};flex-shrink:0;margin-top:2px">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${ic.svg}</svg>
+                            </div>
+                            <div>
+                                <div style="font-size:13px;font-weight:700;color:#1e293b">${n.judul}</div>
+                                <div style="font-size:12px;color:#64748b;margin-top:2px">${n.pesan}</div>
+                                <div style="font-size:11px;color:#94a3b8;margin-top:4px">${n.waktu_relatif || ''}</div>
+                            </div>
+                        </div>`;
+                });
+                htmlIsi += '</div>';
+            }
+
+            Swal.fire({
+                title: `<div style="display:flex;align-items:center;justify-content:space-between;width:100%;padding-bottom:10px;border-bottom:1px solid #e2e8f0;font-size:16px;font-weight:800;color:#0f172a">
+                    <span>Pemberitahuan Sistem</span>
+                    ${jumlahBaru > 0 ? `<span style="font-size:11.5px;font-weight:600;background:#eff6ff;color:#2563eb;padding:3px 10px;border-radius:99px">${jumlahBaru} Baru</span>` : ''}
+                </div>`,
+                customClass: { popup: 'custom-swal-popup', confirmButton: 'custom-swal-confirm' },
+                buttonsStyling: false,
+                confirmButtonText: 'Tutup',
+                html: htmlIsi,
+            }).then(() => {
+                const badge = document.getElementById('notif-badge-count');
+                if (badge) badge.style.display = 'none';
+            });
+        })
+        .catch(() => {
+            // Jika endpoint belum ada / error — tampilkan kosong
+            Swal.fire({
+                title: '<div style="display:flex;align-items:center;width:100%;padding-bottom:10px;border-bottom:1px solid #e2e8f0;font-size:16px;font-weight:800;color:#0f172a">Pemberitahuan Sistem</div>',
+                customClass: { popup: 'custom-swal-popup', confirmButton: 'custom-swal-confirm' },
+                buttonsStyling: false,
+                confirmButtonText: 'Tutup',
+                html: `<div style="text-align:center;padding:32px 16px;color:#94a3b8">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 12px;display:block;opacity:0.4"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    <div style="font-size:13.5px;font-weight:600;color:#475569">Belum ada pemberitahuan</div>
+                    <div style="font-size:12px;margin-top:4px">Notifikasi sistem akan muncul di sini.</div>
+                </div>`,
+            });
+        });
 }

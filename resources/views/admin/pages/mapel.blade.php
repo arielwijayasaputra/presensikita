@@ -9,7 +9,7 @@
                 @php
                     $tahunAjaranStr = ($tahunAjaran->tahun_ajaran ?? '2026/2027') . ' (' . ($tahunAjaran->semester ?? 'Ganjil') . ')';
                 @endphp
-                Tahun Ajaran {{ $tahunAjaran }}
+                Tahun Ajaran {{ $tahunAjaranStr }}
             </div>
         </div>
         <button class="btn-primary" onclick="tambahMapelModal()" id="btn-tambah-mapel" style="border-radius:10px;padding:10px 20px;font-size:13.5px">

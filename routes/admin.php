@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\MapelController;
 use App\Http\Controllers\Admin\GuruController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\PengaturanController;
+use App\Http\Controllers\Admin\NotifikasiController;
 
 // Semua route admin memerlukan middleware auth.admin
 Route::middleware('auth.admin')->group(function () {
@@ -37,4 +38,8 @@ Route::middleware('auth.admin')->group(function () {
     // Pengaturan & Profil
     Route::post('/pengaturan/update', [PengaturanController::class, 'update'])->name('pengaturan.update');
     Route::post('/profil/update', [PengaturanController::class, 'updateProfil'])->name('profil.update');
+
+    // Notifikasi
+    Route::get('/admin/notifikasi',        [NotifikasiController::class, 'index'])->name('notifikasi.index');
+    Route::post('/admin/notifikasi/read',  [NotifikasiController::class, 'markRead'])->name('notifikasi.read');
 });

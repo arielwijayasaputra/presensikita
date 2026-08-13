@@ -123,8 +123,15 @@ class DashboardController extends Controller
 
         $guru = Guru::find(session('auth_guru_id')) ?? Guru::first();
 
-        $namaSekolah = Pengaturan::get('nama_sekolah', 'SMKN 1 Boyolangu');
-        $sistemAbsensi = Pengaturan::get('sistem_absensi', 'Absensi Realtime & Otomatis Rekap');
+        $namaSekolah      = Pengaturan::get('nama_sekolah', '');
+        $npsn             = Pengaturan::get('npsn', '');
+        $kepsek           = Pengaturan::get('kepsek', '');
+        $alamat           = Pengaturan::get('alamat', '');
+        $emailSekolah     = Pengaturan::get('email_sekolah', '');
+        $teleponSekolah   = Pengaturan::get('telepon_sekolah', '');
+        $sistemAbsensi    = Pengaturan::get('sistem_absensi', 'Absensi Realtime & Otomatis Rekap');
+        $batasWaktuJurnal = Pengaturan::get('batas_waktu_jurnal', '23:59');
+        $izinEditJurnal   = Pengaturan::get('izin_edit_jurnal', '1');
 
         return view('admin.dashboard', compact(
             'tahunAjaran',
@@ -154,7 +161,14 @@ class DashboardController extends Controller
             'allMapel',
             'guru',
             'namaSekolah',
-            'sistemAbsensi'
+            'npsn',
+            'kepsek',
+            'alamat',
+            'emailSekolah',
+            'teleponSekolah',
+            'sistemAbsensi',
+            'batasWaktuJurnal',
+            'izinEditJurnal'
         ));
     }
 }

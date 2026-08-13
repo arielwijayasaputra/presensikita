@@ -529,7 +529,7 @@
         <div class="nav-right">
             <div class="school-badge">
                 <strong>{{ $namaSekolah }}</strong>
-                <span>TA {{ $tahunAjaran->tahun_ajaran ?? '2024/2025' }} ({{ $tahunAjaran->semester ?? 'Ganjil' }})</span>
+                <span>TA {{ $tahunAjaran->tahun_ajaran ?? '' }} ({{ $tahunAjaran->semester ?? '' }})</span>
             </div>
 
             <form action="{{ route('logout') }}" method="POST" id="logout-form">
@@ -663,7 +663,7 @@
                         </div>
                         @if($p['materi'] !== '-')
                         <div>
-                            <span class="materi-text">📚 Materi: {{ $p['materi'] }}</span>
+                            <span class="materi-text">Materi: {{ $p['materi'] }}</span>
                         </div>
                         @endif
                     </div>

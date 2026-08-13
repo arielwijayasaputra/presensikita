@@ -36,10 +36,10 @@
 
             <hr style="border:none;border-top:1px solid #e2e8f0;margin:16px 0">
 
-            <!-- Tombol Log Out -->
-            <button type="button" style="width:100%;padding:12px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;color:#b91c1c;font-weight:700;font-size:13.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s" onclick="confirmLogout('logout-form-sidebar')">
+            <!-- Tombol Keluar -->
+            <button type="button" style="width:100%;padding:12px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;color:#b91c1c;font-weight:700;font-size:13.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s" onclick="confirmKeluar('logout-form-sidebar')">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                <span>Keluar / Log Out</span>
+                <span>Keluar</span>
             </button>
         </div>
 

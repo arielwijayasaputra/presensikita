@@ -15,18 +15,13 @@
 <div class="page-content page-anim" id="page-riwayat" style="display:none">
 
     {{-- ── Page Header ── --}}
-    <div class="page-header" style="margin-bottom:20px;display:flex;align-items:flex-start;justify-space-between">
+    <div class="page-header" style="margin-bottom:20px">
         <div>
-            <div class="page-title" style="font-size:22px;font-weight:800;color:#1e293b">Riwayat / Jurnal</div>
-            <div class="page-subtitle" id="riwayat-subtitle" style="font-size:13px;color:#64748b;margin-top:2px">
-                Kelas {{ $selectedKelas->nama_kelas }}
-            </div>
+            
+            <div class="page-title" style="font-size:22px;font-weight:800;margin-top:2px;color:#1e293b">Riwayat &amp; Jurnal Presensi</div>
+            <div class="page-subtitle" id="riwayat-subtitle" style="font-size:13px;color:#64748b;margin-top:2px">Kelas {{ $selectedKelas->nama_kelas }}</div>
         </div>
-        <div class="breadcrumb" style="font-size:12px;color:#64748b;display:flex;align-items:center;gap:6px">
-            Dashboard
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-            <span style="color:#1e293b;font-weight:600">Riwayat / Jurnal</span>
-        </div>
+        
     </div>
 
     {{-- ── Filter Bar ── --}}
@@ -74,7 +69,7 @@
         </div>
 
         {{-- Tombol Filter di kanan --}}
-        <button type="button" class="btn-secondary" onclick="filterRiwayatPage()" style="margin-left:auto;border-radius:10px;padding:9px 18px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:8px">
+        <button type="button" class="btn-secondary" onclick="filterRiwayatPage()" style="margin-left:auto;border-radius:10px;padding:10px 20px;font-size:13.5px;font-weight:600;border-radius:10px;display:inline-flex;align-items:center;gap:8px">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
             Filter
         </button>
@@ -171,8 +166,8 @@
         <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px;align-items:center" id="riwayat-summary-grid">
 
             {{-- Hadir --}}
-            <div class="riwayat-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
-                <div style="width:40px;height:40px;background:#f0fdf4;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <div class="riwayat-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
+                <div style="width:46px;height:46px;background:#f0fdf4;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </div>
                 <div>
@@ -182,8 +177,8 @@
             </div>
 
             {{-- Sakit --}}
-            <div class="riwayat-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
-                <div style="width:40px;height:40px;background:#fffbeb;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <div class="riwayat-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
+                <div style="width:46px;height:46px;background:#fffbeb;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                 </div>
                 <div>
@@ -193,8 +188,8 @@
             </div>
 
             {{-- Izin --}}
-            <div class="riwayat-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
-                <div style="width:40px;height:40px;background:#f0f9ff;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <div class="riwayat-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
+                <div style="width:46px;height:46px;background:#f0f9ff;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
                 </div>
                 <div>
@@ -204,8 +199,8 @@
             </div>
 
             {{-- Alpa --}}
-            <div class="riwayat-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
-                <div style="width:40px;height:40px;background:#fff1f2;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <div class="riwayat-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
+                <div style="width:46px;height:46px;background:#fff1f2;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e11d48" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                 </div>
                 <div>
@@ -215,13 +210,13 @@
             </div>
 
             {{-- Persentase Kehadiran --}}
-            <div class="riwayat-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
+            <div class="riwayat-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
                 <div style="font-size:11px;color:#64748b;font-weight:600;margin-bottom:2px">Persentase Kehadiran</div>
                 <div id="r-sum-pct" style="font-size:22px;font-weight:800;color:#1e293b;line-height:1.1">{{ $overallPct }}%</div>
             </div>
 
             {{-- Export Rekap Button --}}
-            <button type="button" onclick="window.print()" class="btn-primary" style="border-radius:12px;padding:14px 16px;font-size:13.5px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;box-shadow:0 4px 12px rgba(10,25,47,0.25)">
+            <button type="button" onclick="window.print()" class="btn-primary" style="border-radius:12px;padding:10px 20px;font-size:13.5px;font-weight:700;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;box-shadow:0 4px 12px rgba(10,25,47,0.25)">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Export Rekap
             </button>
@@ -413,6 +408,12 @@
 function lihatDetailJurnal(id, tgl, hari, kelas, materi){
     Swal.fire({
         title: `Detail Jurnal (${tgl})`,
+        customClass: {
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            confirmButton: 'custom-swal-confirm'
+        },
+        buttonsStyling: false,
         html: `
             <div style="text-align:left;display:flex;flex-direction:column;gap:10px;font-size:13.5px;color:#1e293b;">
                 <div><strong>Hari / Tanggal:</strong> ${hari}, ${tgl}</div>

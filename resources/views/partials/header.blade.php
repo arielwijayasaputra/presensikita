@@ -30,20 +30,30 @@
                 <line x1="8" y1="2" x2="8" y2="6"/>
                 <line x1="3" y1="10" x2="21" y2="10"/>
             </svg>
-            <span id="header-date">Selasa, 27 Mei 2025</span>
+            @php
+    $days = ['Sunday' => 'Minggu', 'Monday' => 'Senin', 'Tuesday' => 'Selasa', 'Wednesday' => 'Rabu', 'Thursday' => 'Kamis', 'Friday' => 'Jumat', 'Saturday' => 'Sabtu'];
+    $months = [1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    $now = \Carbon\Carbon::now();
+    $hari = $days[$now->format('l')] ?? '';
+    $tgl = $now->format('j');
+    $bln = $months[(int)$now->format('n')] ?? '';
+    $thn = $now->format('Y');
+    $tanggalFormatted = "$hari, $tgl $bln $thn";
+@endphp
+<span id="header-date">{{ $tanggalFormatted }}</span>
         </div>
 
         {{-- Notifikasi --}}
-        <button class="notif-btn" aria-label="Notifikasi">
+        <button class="notif-btn" onclick="tampilkanNotifikasi()" aria-label="Notifikasi" title="Pemberitahuan">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                 <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
             </svg>
-            <span class="notif-badge">3</span>
+            <span class="notif-badge" id="notif-badge-count">3</span>
         </button>
 
         {{-- Profil Pengguna --}}
-        <div class="user-profile" style="cursor:default">
+        <div class="user-profile" onclick="showPage('profil')" title="Buka Profil Pengguna" style="cursor:pointer">
             <div class="header-user-avatar" id="avatar-display" style="width:36px;height:36px;border-radius:50%;overflow:hidden;position:relative">
                 @if(!empty($guru->foto_profil) && file_exists(public_path($guru->foto_profil)))
                     <img class="user-avatar-img" src="{{ asset($guru->foto_profil) }}"

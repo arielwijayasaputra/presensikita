@@ -1,4 +1,11 @@
 <div class="page-content page-anim" id="page-dashboard">
+    <div class="page-header" style="margin-bottom:20px">
+        <div>
+            
+            <div class="page-title" style="font-size:22px;font-weight:800;margin-top:2px;color:#1e293b">Dashboard Kehadiran</div>
+            <div class="page-subtitle">Sistem Informasi Kehadiran Siswa - PresensiKita</div>
+        </div>
+    </div>
     <div class="stat-cards">
         <div class="stat-card">
             <div class="stat-icon green"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>

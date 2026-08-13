@@ -15,18 +15,13 @@
      data-pct-alpa="{{ $lr['pct_alpa'] }}">
 
     {{-- ── Page Header ── --}}
-    <div class="page-header" style="margin-bottom:20px;display:flex;align-items:flex-start;justify-content:space-between">
+    <div class="page-header" style="margin-bottom:20px">
         <div>
-            <div class="page-title" style="font-size:22px;font-weight:800;color:#1e293b">Laporan / Rekap Absensi</div>
-            <div class="page-subtitle" id="laporan-subtitle" style="font-size:13px;color:#64748b;margin-top:2px">
-                Kelas {{ $selectedKelas->nama_kelas }}
-            </div>
+            
+            <div class="page-title" style="font-size:22px;font-weight:800;margin-top:2px;color:#1e293b">Laporan / Rekap Absensi</div>
+            <div class="page-subtitle" id="laporan-subtitle" style="font-size:13px;color:#64748b;margin-top:2px">Kelas {{ $selectedKelas->nama_kelas }}</div>
         </div>
-        <div class="breadcrumb" style="font-size:12px;color:#64748b;display:flex;align-items:center;gap:6px">
-            Dashboard
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-            <span style="color:#1e293b;font-weight:600">Laporan / Rekap</span>
-        </div>
+        
     </div>
 
     {{-- ── Filter Bar ── --}}
@@ -85,13 +80,13 @@
         </div>
 
         {{-- Tombol Tampilkan Laporan --}}
-        <button type="button" class="btn-primary" onclick="tampilkanLaporan()" style="border-radius:10px;padding:9px 18px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:8px">
+        <button type="button" class="btn-primary" onclick="tampilkanLaporan()" style="border-radius:10px;padding:10px 20px;font-size:13.5px;font-weight:700;border-radius:10px;display:inline-flex;align-items:center;gap:8px">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             Tampilkan Laporan
         </button>
 
         {{-- Tombol Export PDF --}}
-        <button type="button" class="btn-secondary" onclick="window.print()" style="margin-left:auto;border-radius:10px;padding:9px 18px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:8px">
+        <button type="button" class="btn-secondary" onclick="window.print()" style="margin-left:auto;border-radius:10px;padding:10px 20px;font-size:13.5px;font-weight:600;border-radius:10px;display:inline-flex;align-items:center;gap:8px">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             Export PDF
         </button>

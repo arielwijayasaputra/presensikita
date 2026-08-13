@@ -3,15 +3,11 @@
     {{-- ── Page Header ── --}}
     <div class="page-header" style="margin-bottom:20px">
         <div>
-            <div class="breadcrumb">
-                Dashboard
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-                <span>Data Guru</span>
-            </div>
+            
             <div class="page-title" style="font-size:22px;font-weight:800;margin-top:2px">Data Guru</div>
             <div class="page-subtitle">
                 @php
-                    $tahunAjaranStr = '2024/2025 (Genap)';
+                    $tahunAjaranStr = ($tahunAjaran->tahun_ajaran ?? '2026/2027') . ' (' . ($tahunAjaran->semester ?? 'Ganjil') . ')';
                 @endphp
                 Tahun Ajaran {{ $tahunAjaranStr }}
             </div>
@@ -365,6 +361,13 @@
 function editGuruModal(id, nama, nip, peran, hp, username, isAdmin){
     Swal.fire({
         title: 'Edit Data Guru',
+        customClass: {
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            confirmButton: 'custom-swal-confirm',
+            cancelButton: 'custom-swal-cancel'
+        },
+        buttonsStyling: false,
         html: `
             <div class="swal-form-container">
                 <div class="swal-form-group">
@@ -458,8 +461,11 @@ function editGuruModal(id, nama, nip, peran, hp, username, isAdmin){
                 return data;
             })
             .then(data => {
-                Swal.fire({ icon: 'success', title: 'Berhasil!', text: data.message || 'Data berhasil diperbarui.' })
-                .then(() => location.reload());
+                Swal.fire({
+                    icon: 'success', title: 'Berhasil!', text: data.message || 'Data berhasil diperbarui.',
+                    customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title', confirmButton: 'custom-swal-confirm' },
+                    buttonsStyling: false
+                }).then(() => location.reload());
             })
             .catch(err => Swal.fire('Gagal', err.message || 'Terjadi kesalahan sistem.', 'error'));
         }

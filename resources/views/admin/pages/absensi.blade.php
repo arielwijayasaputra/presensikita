@@ -1,9 +1,9 @@
 <div class="page-content page-anim" id="page-absensi-harian" style="display:none">
-    <div class="page-header">
+    <div class="page-header" style="margin-bottom:20px">
         <div>
-            <div class="breadcrumb">Dashboard <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg> <span>Absensi Harian</span></div>
-            <div class="page-title">Data Absensi Harian</div>
-            <div class="page-subtitle" id="ah-subtitle">Informasi Data Absensi Kelas {{ $selectedKelas->nama_kelas }}</div>
+            
+            <div class="page-title" style="font-size:22px;font-weight:800;margin-top:2px;color:#1e293b">Data Absensi Harian</div>
+            <div class="page-subtitle" id="ah-subtitle" style="font-size:13px;color:#64748b;margin-top:2px">Informasi Data Absensi Kelas {{ $selectedKelas->nama_kelas }}</div>
         </div>
     </div>
     <div class="filter-bar">

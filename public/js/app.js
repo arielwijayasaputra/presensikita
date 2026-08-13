@@ -1232,3 +1232,54 @@ function hapusMapel(id, nama, jadwalCount) {
     });
 }
 
+
+
+/* ── Modal Notifikasi Header ───────────────────────────── */
+function tampilkanNotifikasi() {
+    Swal.fire({
+        title: '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;padding-bottom:10px;border-bottom:1px solid #e2e8f0;font-size:16px;font-weight:800;color:#0f172a"><span>Pemberitahuan Sistem</span><span style="font-size:11.5px;font-weight:600;background:#eff6ff;color:#2563eb;padding:3px 10px;border-radius:99px">3 Baru</span></div>',
+        customClass: {
+            popup: 'custom-swal-popup',
+            confirmButton: 'custom-swal-confirm'
+        },
+        buttonsStyling: false,
+        confirmButtonText: 'Tutup',
+        html: `
+            <div style="text-align:left;display:flex;flex-direction:column;gap:10px;margin-top:10px;max-height:340px;overflow-y:auto">
+                <div style="display:flex;gap:12px;padding:12px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;align-items:flex-start">
+                    <div style="width:34px;height:34px;background:#eff6ff;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#2563eb;flex-shrink:0;margin-top:2px">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 16 11 18 15 14"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size:13px;font-weight:700;color:#1e293b">Absensi Hari Ini Siap</div>
+                        <div style="font-size:12px;color:#64748b;margin-top:2px">Pencatatan kehadiran harian siswa hari ini dapat diisi melalui menu Absensi Harian.</div>
+                        <div style="font-size:11px;color:#94a3b8;margin-top:4px">Baru saja</div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:12px;padding:12px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;align-items:flex-start">
+                    <div style="width:34px;height:34px;background:#f0fdf4;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#16a34a;flex-shrink:0;margin-top:2px">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size:13px;font-weight:700;color:#1e293b">Sistem Berjalan Normal</div>
+                        <div style="font-size:12px;color:#64748b;margin-top:2px">Tahun Ajaran 2024/2025 (Genap) aktif dan terkoneksi ke database.</div>
+                        <div style="font-size:11px;color:#94a3b8;margin-top:4px">10 menit yang lalu</div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:12px;padding:12px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;align-items:flex-start">
+                    <div style="width:34px;height:34px;background:#fffbeb;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#d97706;flex-shrink:0;margin-top:2px">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size:13px;font-weight:700;color:#1e293b">Penting: Keamanan Akun</div>
+                        <div style="font-size:12px;color:#64748b;margin-top:2px">Disarankan untuk secara berkala memperbarui kata sandi akun di Pengaturan Profil.</div>
+                        <div style="font-size:11px;color:#94a3b8;margin-top:4px">1 jam yang lalu</div>
+                    </div>
+                </div>
+            </div>
+        `
+    }).then(() => {
+        const badge = document.getElementById('notif-badge-count');
+        if (badge) badge.style.display = 'none';
+    });
+}

@@ -1,8 +1,9 @@
 <div class="page-content page-anim" id="page-profil" style="display:none">
-    <div class="page-header" style="margin-bottom:24px">
+    <div class="page-header" style="margin-bottom:20px">
         <div>
-            <div class="breadcrumb">Dashboard <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg> <span>Pengaturan Profil</span></div>
-            <div class="page-title">Pengaturan Profil Admin</div>
+            
+            <div class="page-title" style="font-size:22px;font-weight:800;margin-top:2px;color:#1e293b">Pengaturan Profil Admin</div>
+            <div class="page-subtitle" style="font-size:13px;color:#64748b;margin-top:2px">Kelola informasi profil dan kata sandi akun</div>
         </div>
     </div>
 
@@ -29,7 +30,7 @@
             <h3 style="font-size:18px;font-weight:700;color:#0f172a;margin-bottom:4px" id="prof-title-name">{{ $guru->nama_guru ?? 'Administrator' }}</h3>
             <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">{{ ($guru->is_admin ?? false) ? 'Administrator Sistem' : ($guru->Peran ?? 'Guru') }}</p>
 
-            <button type="button" class="btn-secondary" style="width:100%;font-size:13px;margin-bottom:20px" onclick="document.getElementById('input-foto-profil').click()">
+            <button type="button" class="btn-secondary" style="width:100%;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;margin-bottom:16px" onclick="document.getElementById('input-foto-profil').click()">
                 Pilih Foto Baru
             </button>
 
@@ -98,7 +99,7 @@
                     </div>
 
                     <div style="margin-top:12px">
-                        <button type="submit" class="btn-primary" id="btn-save-profile" style="padding:12px 28px;font-size:14px;font-weight:700;border-radius:10px">
+                        <button type="submit" class="btn-primary" id="btn-save-profile" style="padding:10px 20px;font-size:13.5px;font-weight:700;border-radius:10px">
                             Simpan Perubahan Profil
                         </button>
                     </div>

@@ -1,8 +1,7 @@
 <div class="page-content page-anim" id="page-profil" style="display:none">
     <div class="page-header" style="margin-bottom:20px">
         <div>
-            
-            <div class="page-title" style="font-size:22px;font-weight:800;margin-top:2px;color:#1e293b">Pengaturan Profil Admin</div>
+            <div class="page-title" style="font-size:22px;font-weight:800;margin-top:2px;color:#1e293b">Profil Guru</div>
             <div class="page-subtitle" style="font-size:13px;color:#64748b;margin-top:2px">Kelola informasi profil dan kata sandi akun</div>
         </div>
     </div>
@@ -16,7 +15,7 @@
                     <img id="avatar-preview-img" src="{{ asset($guru->foto_profil) }}" alt="Foto Profil" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #3b82f6;box-shadow:0 4px 12px rgba(59,130,246,0.25)">
                 @else
                     <div id="avatar-preview-fallback" class="user-avatar" style="width:100px;height:100px;font-size:36px;border-radius:50%;margin:0 auto;box-shadow:0 4px 12px rgba(30,58,138,0.2)">
-                        {{ strtoupper(substr($guru->nama_guru ?? 'AD', 0, 2)) }}
+                        {{ strtoupper(substr($guru->nama_guru ?? 'GUR', 0, 2)) }}
                     </div>
                     <img id="avatar-preview-img" src="" alt="Foto Profil" style="display:none;width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #3b82f6;box-shadow:0 4px 12px rgba(59,130,246,0.25)">
                 @endif
@@ -27,7 +26,7 @@
                 <input type="file" id="input-foto-profil" accept="image/*" style="display:none" onchange="previewProfilePhoto(this)">
             </div>
 
-            <h3 style="font-size:18px;font-weight:700;color:#0f172a;margin-bottom:4px" id="prof-title-name">{{ $guru->nama_guru ?? 'Administrator' }}</h3>
+            <h3 style="font-size:18px;font-weight:700;color:#0f172a;margin-bottom:4px" id="prof-title-name">{{ $guru->nama_guru ?? 'Guru' }}</h3>
             <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">{{ ($guru->is_admin ?? false) ? 'Administrator Sistem' : ($guru->Peran ?? 'Guru') }}</p>
 
             <button type="button" class="btn-secondary" style="width:100%;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;margin-bottom:16px" onclick="document.getElementById('input-foto-profil').click()">
@@ -47,16 +46,16 @@
         <div class="card" style="padding:28px">
             <h4 style="font-size:16px;font-weight:700;color:#0f172a;margin-bottom:20px;display:flex;align-items:center;gap:8px">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                Informasi Akun & Keamanan
+                Informasi Akun &amp; Keamanan
             </h4>
 
-            <form id="admin-profile-form" onsubmit="updateProfilSubmit(event)">
+            <form id="guru-profile-form" onsubmit="updateProfilSubmit(event)">
                 @csrf
                 <div style="display:grid;gap:18px">
 
                     <!-- Nama Lengkap -->
                     <div>
-                        <label style="font-size:12.5px;font-weight:700;color:#334155">Nama Lengkap & Gelar</label>
+                        <label style="font-size:12.5px;font-weight:700;color:#334155">Nama Lengkap &amp; Gelar</label>
                         <input type="text" class="filter-input" id="input-prof-nama" value="{{ $guru->nama_guru ?? '' }}" required style="width:100%;margin-top:6px;padding:10px 14px">
                     </div>
 

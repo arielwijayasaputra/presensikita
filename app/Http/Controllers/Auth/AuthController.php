@@ -31,26 +31,6 @@ class AuthController extends Controller
     }
 
     /**
-     * Tampilkan halaman login Orang Tua (NISN)
-     */
-    public function showLoginOrangTua()
-    {
-        if (session('auth_siswa_id')) {
-            return redirect()->route('orangtua.index');
-        }
-
-        if (session('auth_guru_id')) {
-            $guru = Guru::find(session('auth_guru_id'));
-            if ($guru && $guru->is_admin) {
-                return redirect()->route('admin.index');
-            }
-            return redirect()->route('guru.index');
-        }
-
-        return view('auth.login_orangtua');
-    }
-
-    /**
      * Proses login Guru / Admin
      */
     public function login(Request $request)

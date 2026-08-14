@@ -52,16 +52,15 @@ function confirmKeluar(formId) {
 }
 
 function showPage(page){
-    ['dashboard','absensi-harian','riwayat','laporan','data-guru','data-siswa','data-kelas','mata-pelajaran','pengaturan','profil'].forEach(p=>{
-        const el=document.getElementById('page-'+p);
-        if(el) el.style.display='none';
+    document.querySelectorAll('[id^="page-"]').forEach(el=>{
+        if(el.id!=='page-'+page) el.style.display='none';
     });
     const t=document.getElementById('page-'+page);
     if(t){t.style.display='block';t.classList.remove('page-anim');void t.offsetWidth;t.classList.add('page-anim');}
     document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
     const n=document.getElementById('nav-'+page);
     if(n) n.classList.add('active');
-    if(page==='absensi-harian') renderTable(currentSiswaList);
+    if(page==='absensi-harian' || page==='absensi' || page==='jurnal-absensi') renderTable(currentSiswaList);
     if(page==='laporan') initLaporanCharts();
     closeSidebarMobile();
 }
@@ -194,6 +193,7 @@ function submitAbsensi(){
     }
     const kelasId = document.getElementById('pilih-kelas').value;
     const tanggal = document.getElementById('input-tanggal').value;
+    const materi = (document.getElementById('input-materi')?.value || '').trim();
     const absensiData = {};
 
     currentSiswaList.forEach(s => {
@@ -222,6 +222,7 @@ function submitAbsensi(){
         body: JSON.stringify({
             id_kelas: kelasId,
             tanggal: tanggal,
+            materi: materi,
             absensi: absensiData
         })
     })
@@ -501,7 +502,7 @@ function updateProfilSubmit(e) {
         btn.innerHTML = 'Menyimpan...';
     }
 
-    fetch('/profil/update', {
+    fetch(window.profilUpdateUrl || '/profil/update', {
         method: 'POST',
         headers: {
             'X-CSRF-TOKEN': csrfToken || ''

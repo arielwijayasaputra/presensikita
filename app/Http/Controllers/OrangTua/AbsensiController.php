@@ -20,7 +20,7 @@ class AbsensiController extends Controller
 
         if (!$siswa) {
             session()->forget(['auth_siswa_id', 'auth_nisn', 'auth_nama_siswa', 'auth_role']);
-            return redirect()->route('login.orangtua')->withErrors(['nisn' => 'Siswa tidak ditemukan.']);
+            return redirect()->route('login')->withErrors(['nisn' => 'Siswa tidak ditemukan.']);
         }
 
         $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();

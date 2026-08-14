@@ -16,7 +16,7 @@
 </head>
 <body>
 
-@include('partials.sidebar')
+@include($sidebar ?? 'partials.sidebar')
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebarMobile()"></div>
 
 <div class="main-content">
@@ -30,6 +30,7 @@
     let currentSiswaList = @json($siswaList);
     window.dashboardTren = @json($dashboardTren ?? []);
     window.laporanInitial = @json($laporanRekap ?? null);
+    window.profilUpdateUrl = @json($profilUpdateUrl ?? route('profil.update'));
 </script>
 
 <!-- External JavaScript Asset -->

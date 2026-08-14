@@ -10,7 +10,7 @@ class OrangTuaMiddleware
     public function handle(Request $request, Closure $next)
     {
         if (!session('auth_siswa_id')) {
-            return redirect()->route('login.orangtua');
+            return redirect()->route('login');
         }
         return $next($request);
     }

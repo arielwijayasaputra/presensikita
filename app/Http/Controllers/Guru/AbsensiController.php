@@ -32,6 +32,54 @@ class AbsensiController extends Controller
         $namaSekolah = Pengaturan::get('nama_sekolah', 'SMKN 1 Boyolangu');
         $sistemAbsensi = Pengaturan::get('sistem_absensi', 'Absensi Realtime & Otomatis Rekap');
 
+        // Sidebar khusus guru (memakai layout yang sama dengan admin)
+        $sidebar = 'partials.sidebar_guru';
+        $profilUpdateUrl = route('guru.profil.update');
+
+        // ── Data Dashboard Guru ──
+        $totalKelas = $kelases->count();
+        $totalSiswa = Siswa::where('is_aktif', 1)->count();
+
+        $riwayatJurnal = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
+            ->join('kelas', 'jadwal_mengajar.id_kelas', '=', 'kelas.id_kelas')
+            ->where('jadwal_mengajar.id_guru', $guru->id_guru)
+            ->orderByDesc('jurnal_kelas.tanggal')
+            ->orderByDesc('jurnal_kelas.waktu_input')
+            ->select('jurnal_kelas.*', 'kelas.nama_kelas')
+            ->get();
+
+        $totalJurnal = $riwayatJurnal->count();
+        $jurnalHariIni = $riwayatJurnal->where('tanggal', date('Y-m-d'))->count();
+        $hadirHariIni = $riwayatJurnal->where('tanggal', date('Y-m-d'))->sum('jumlah_hadir');
+
+        // Rincian tidak hadir (S/I/A) per jurnal
+        $tidakHadirPerJurnal = JurnalSiswaTidakHadir::select('id_jurnal', 'status', DB::raw('count(*) as total'))
+            ->whereIn('id_jurnal', $riwayatJurnal->pluck('id_jurnal'))
+            ->groupBy('id_jurnal', 'status')
+            ->get()
+            ->groupBy('id_jurnal')
+            ->map(function ($items) {
+                return $items->pluck('total', 'status');
+            });
+
+        // Tren 7 hari terakhir
+        $tidakHadir7Hari = JurnalSiswaTidakHadir::join('jurnal_kelas', 'jurnal_siswa_tidak_hadir.id_jurnal', '=', 'jurnal_kelas.id_jurnal')
+            ->join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
+            ->where('jadwal_mengajar.id_guru', $guru->id_guru)
+            ->whereBetween('jurnal_kelas.tanggal', [date('Y-m-d', strtotime('-6 days')), date('Y-m-d')])
+            ->get(['jurnal_kelas.tanggal', 'jurnal_siswa_tidak_hadir.status']);
+
+        $hariMap = ['Mon' => 'Senin', 'Tue' => 'Selasa', 'Wed' => 'Rabu', 'Thu' => 'Kamis', 'Fri' => 'Jumat', 'Sat' => 'Sabtu', 'Sun' => 'Minggu'];
+        $dashboardTren = ['labels' => [], 'hadir' => [], 'sakit' => [], 'izin' => [], 'alpa' => []];
+        for ($i = 6; $i >= 0; $i--) {
+            $t = date('Y-m-d', strtotime("-$i days"));
+            $dashboardTren['labels'][] = $hariMap[date('D', strtotime($t))] ?? date('D', strtotime($t));
+            $dashboardTren['hadir'][] = $riwayatJurnal->where('tanggal', $t)->sum('jumlah_hadir');
+            $dashboardTren['sakit'][] = $tidakHadir7Hari->where('tanggal', $t)->where('status', 'S')->count();
+            $dashboardTren['izin'][]  = $tidakHadir7Hari->where('tanggal', $t)->where('status', 'I')->count();
+            $dashboardTren['alpa'][]  = $tidakHadir7Hari->where('tanggal', $t)->where('status', 'A')->count();
+        }
+
         return view('guru.dashboard', compact(
             'tahunAjaran',
             'kelases',
@@ -39,7 +87,17 @@ class AbsensiController extends Controller
             'siswaList',
             'guru',
             'namaSekolah',
-            'sistemAbsensi'
+            'sistemAbsensi',
+            'sidebar',
+            'profilUpdateUrl',
+            'totalKelas',
+            'totalSiswa',
+            'riwayatJurnal',
+            'totalJurnal',
+            'jurnalHariIni',
+            'hadirHariIni',
+            'tidakHadirPerJurnal',
+            'dashboardTren'
         ));
     }
 

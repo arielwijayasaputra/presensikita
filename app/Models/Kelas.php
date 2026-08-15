@@ -28,4 +28,15 @@ class Kelas extends Model
     {
         return $this->belongsTo(Guru::class, 'id_wali_kelas', 'id_guru');
     }
+
+    public function getTingkatAngkaAttribute()
+    {
+        $map = [
+            'X'   => '10',
+            'XI'  => '11',
+            'XII' => '12',
+        ];
+
+        return $map[strtoupper($this->tingkat_kelas)] ?? $this->tingkat_kelas;
+    }
 }

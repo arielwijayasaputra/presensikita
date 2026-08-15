@@ -104,7 +104,7 @@
                     <td style="color:#94a3b8;font-weight:600;font-size:13px">{{ $idx + 1 }}</td>
                     <td style="font-weight:700;color:#1e293b;font-size:13.5px">{{ $k->nama_kelas }}</td>
                     <td style="text-align:center;color:#475569;font-size:13px font-weight:500">
-                        {{ $k->tingkat_kelas }} ({{ $k->tingkat_kelas }})
+                        {{ $k->tingkat_kelas }} ({{ $k->tingkat_angka }})
                     </td>
                     <td style="font-weight:500;color:#334155;font-size:13.5px">
                         {{ $k->waliKelas->nama_guru ?? '-' }}

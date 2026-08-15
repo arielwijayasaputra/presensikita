@@ -2607,6 +2607,7 @@ INSERT INTO `jam_pelajaran` (`id_jam`, `jam_ke`, `jam_mulai`, `jam_selesai`) VAL
 CREATE TABLE `jurnal_kelas` (
   `id_jurnal` int(11) NOT NULL,
   `id_jadwal` int(11) NOT NULL,
+  `id_guru` int(11) DEFAULT NULL,
   `tanggal` date NOT NULL,
   `status_kehadiran_guru` enum('Hadir','Tidak Hadir') NOT NULL DEFAULT 'Hadir',
   `materi` varchar(255) DEFAULT NULL,
@@ -2730,7 +2731,31 @@ INSERT INTO `kelas` (`id_kelas`, `nama_kelas`, `tingkat_kelas`, `jurusan`, `id_t
 (45, 'XI TKI 2', 'XI', 'TKI', 1, NULL, NULL),
 (46, 'XI TKJ 1', 'XI', 'TKJ', 1, NULL, NULL),
 (47, 'XI TKJ 2', 'XI', 'TKJ', 1, NULL, NULL),
-(48, 'XI ULW', 'XI', 'ULW', 1, NULL, NULL);
+(48, 'XI ULW', 'XI', 'ULW', 1, NULL, NULL),
+(49, 'XII AK 1', 'XII', 'AK', 1, NULL, NULL),
+(50, 'XII AK 2', 'XII', 'AK', 1, NULL, NULL),
+(51, 'XII AK 3', 'XII', 'AK', 1, NULL, NULL),
+(52, 'XII AK 4', 'XII', 'AK', 1, NULL, NULL),
+(53, 'XII AN 1', 'XII', 'AN', 1, NULL, NULL),
+(54, 'XII AN 2', 'XII', 'AN', 1, NULL, NULL),
+(55, 'XII BD 1', 'XII', 'BD', 1, NULL, NULL),
+(56, 'XII BD 2', 'XII', 'BD', 1, NULL, NULL),
+(57, 'XII BD 3', 'XII', 'BD', 1, NULL, NULL),
+(58, 'XII DKV 1', 'XII', 'DKV', 1, NULL, NULL),
+(59, 'XII DKV 2', 'XII', 'DKV', 1, NULL, NULL),
+(60, 'XII MP 1', 'XII', 'MP', 1, NULL, NULL),
+(61, 'XII MP 2', 'XII', 'MP', 1, NULL, NULL),
+(62, 'XII MP 3', 'XII', 'MP', 1, NULL, NULL),
+(63, 'XII MP 4', 'XII', 'MP', 1, NULL, NULL),
+(64, 'XII PSPT 1', 'XII', 'PSPT', 1, NULL, NULL),
+(65, 'XII PSPT 2', 'XII', 'PSPT', 1, NULL, NULL),
+(66, 'XII RPL 1', 'XII', 'RPL', 1, NULL, NULL),
+(67, 'XII RPL 2', 'XII', 'RPL', 1, NULL, NULL),
+(68, 'XII TKI 1', 'XII', 'TKI', 1, NULL, NULL),
+(69, 'XII TKI 2', 'XII', 'TKI', 1, NULL, NULL),
+(70, 'XII TKJ 1', 'XII', 'TKJ', 1, NULL, NULL),
+(71, 'XII TKJ 2', 'XII', 'TKJ', 1, NULL, NULL),
+(72, 'XII ULW', 'XII', 'ULW', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2811,13 +2836,22 @@ CREATE TABLE `migrations` (
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(1, '2014_10_12_000000_create_users_table', 1),
-(2, '2014_10_12_100000_create_password_reset_tokens_table', 1),
-(3, '2019_08_19_000000_create_failed_jobs_table', 1),
-(4, '2019_12_14_000001_create_personal_access_tokens_table', 1),
-(5, '0001_01_01_000000_create_users_table', 1),
-(6, '0001_01_01_000001_create_cache_table', 1),
-(7, '0001_01_01_000002_create_jobs_table', 1);
+(1, '0001_01_01_000000_create_users_table', 1),
+(2, '0001_01_01_000001_create_cache_table', 1),
+(3, '0001_01_01_000002_create_jobs_table', 1),
+(4, '2026_08_05_000001_create_tahun_ajaran_table', 1),
+(5, '2026_08_05_000002_create_guru_table', 1),
+(6, '2026_08_05_000003_create_kelas_table', 1),
+(7, '2026_08_05_000004_create_siswa_table', 1),
+(8, '2026_08_05_000005_create_mapel_table', 1),
+(9, '2026_08_05_000006_create_jam_pelajaran_table', 1),
+(10, '2026_08_05_000007_create_jadwal_mengajar_table', 1),
+(11, '2026_08_05_000008_create_jurnal_kelas_table', 1),
+(12, '2026_08_05_000009_create_jurnal_siswa_tidak_hadir_table', 1),
+(13, '2026_08_12_000000_create_roles_table', 1),
+(14, '2026_08_12_000001_update_guru_peran_column', 1),
+(15, '2026_08_12_000002_add_foto_profil_to_guru_table', 1),
+(16, '2026_08_15_000000_add_id_guru_to_jurnal_kelas_table', 1);
 
 -- --------------------------------------------------------
 
@@ -3719,11 +3753,114 @@ CREATE TABLE `notifikasi` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 --
 -- Dumping data for table `notifikasi`
 -- (kosong — notifikasi akan diisi oleh sistem secara otomatis)
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `remember_token` varchar(100) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `password_reset_tokens`
+--
+
+CREATE TABLE `password_reset_tokens` (
+  `email` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cache`
+--
+
+CREATE TABLE `cache` (
+  `key` varchar(255) NOT NULL,
+  `value` mediumtext NOT NULL,
+  `expiration` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cache_locks`
+--
+
+CREATE TABLE `cache_locks` (
+  `key` varchar(255) NOT NULL,
+  `owner` varchar(255) NOT NULL,
+  `expiration` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jobs`
+--
+
+CREATE TABLE `jobs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `queue` varchar(255) NOT NULL,
+  `payload` longtext NOT NULL,
+  `attempts` smallint(5) UNSIGNED NOT NULL,
+  `reserved_at` int(10) UNSIGNED DEFAULT NULL,
+  `available_at` int(10) UNSIGNED NOT NULL,
+  `created_at` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_batches`
+--
+
+CREATE TABLE `job_batches` (
+  `id` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `total_jobs` int(11) NOT NULL,
+  `pending_jobs` int(11) NOT NULL,
+  `failed_jobs` int(11) NOT NULL,
+  `failed_job_ids` longtext NOT NULL,
+  `options` mediumtext DEFAULT NULL,
+  `cancelled_at` int(11) DEFAULT NULL,
+  `created_at` int(11) NOT NULL,
+  `finished_at` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `failed_jobs`
+--
+
+CREATE TABLE `failed_jobs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `connection` varchar(255) NOT NULL,
+  `queue` varchar(255) NOT NULL,
+  `payload` longtext NOT NULL,
+  `exception` longtext NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Indexes for dumped tables
@@ -3790,6 +3927,54 @@ ALTER TABLE `mapel`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `users_email_unique` (`email`);
+
+--
+-- Indexes for table `password_reset_tokens`
+--
+ALTER TABLE `password_reset_tokens`
+  ADD PRIMARY KEY (`email`);
+
+--
+-- Indexes for table `cache`
+--
+ALTER TABLE `cache`
+  ADD PRIMARY KEY (`key`),
+  ADD KEY `cache_expiration_index` (`expiration`);
+
+--
+-- Indexes for table `cache_locks`
+--
+ALTER TABLE `cache_locks`
+  ADD PRIMARY KEY (`key`),
+  ADD KEY `cache_locks_expiration_index` (`expiration`);
+
+--
+-- Indexes for table `jobs`
+--
+ALTER TABLE `jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `jobs_queue_index` (`queue`);
+
+--
+-- Indexes for table `job_batches`
+--
+ALTER TABLE `job_batches`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`),
+  ADD KEY `failed_jobs_connection_queue_failed_at_index` (`connection`,`queue`,`failed_at`);
 
 --
 -- Indexes for table `pengaturan`
@@ -3866,7 +4051,7 @@ ALTER TABLE `jurnal_siswa_tidak_hadir`
 -- AUTO_INCREMENT for table `kelas`
 --
 ALTER TABLE `kelas`
-  MODIFY `id_kelas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id_kelas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
 -- AUTO_INCREMENT for table `mapel`
@@ -3878,7 +4063,25 @@ ALTER TABLE `mapel`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `jobs`
+--
+ALTER TABLE `jobs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `siswa`

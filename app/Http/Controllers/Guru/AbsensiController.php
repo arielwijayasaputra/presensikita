@@ -11,10 +11,13 @@ use App\Models\TahunAjaran;
 use App\Models\JurnalKelas;
 use App\Models\JurnalSiswaTidakHadir;
 use App\Models\Pengaturan;
+use App\Services\AbsensiService;
 use Illuminate\Support\Facades\DB;
 
 class AbsensiController extends Controller
 {
+    public function __construct(protected AbsensiService $absensiService) {}
+
     public function index(Request $request)
     {
         $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
@@ -42,7 +45,7 @@ class AbsensiController extends Controller
 
         $riwayatJurnal = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
             ->join('kelas', 'jadwal_mengajar.id_kelas', '=', 'kelas.id_kelas')
-            ->where('jadwal_mengajar.id_guru', $guru->id_guru)
+            ->where('jurnal_kelas.id_guru', $guru->id_guru)
             ->orderByDesc('jurnal_kelas.tanggal')
             ->orderByDesc('jurnal_kelas.waktu_input')
             ->select('jurnal_kelas.*', 'kelas.nama_kelas')
@@ -65,7 +68,7 @@ class AbsensiController extends Controller
         // Tren 7 hari terakhir
         $tidakHadir7Hari = JurnalSiswaTidakHadir::join('jurnal_kelas', 'jurnal_siswa_tidak_hadir.id_jurnal', '=', 'jurnal_kelas.id_jurnal')
             ->join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
-            ->where('jadwal_mengajar.id_guru', $guru->id_guru)
+            ->where('jurnal_kelas.id_guru', $guru->id_guru)
             ->whereBetween('jurnal_kelas.tanggal', [date('Y-m-d', strtotime('-6 days')), date('Y-m-d')])
             ->get(['jurnal_kelas.tanggal', 'jurnal_siswa_tidak_hadir.status']);
 
@@ -79,6 +82,15 @@ class AbsensiController extends Controller
             $dashboardTren['izin'][]  = $tidakHadir7Hari->where('tanggal', $t)->where('status', 'I')->count();
             $dashboardTren['alpa'][]  = $tidakHadir7Hari->where('tanggal', $t)->where('status', 'A')->count();
         }
+
+        // Laporan (untuk tab Laporan / Rekap)
+        $laporanBulan = (int) $request->get('bulan', date('n'));
+        $laporanTahun = (int) $request->get('tahun', date('Y'));
+        $laporanRekap = $this->absensiService->buildAbsensiRekap(
+            (int) $selectedKelas->id_kelas,
+            $laporanBulan,
+            $laporanTahun
+        );
 
         return view('guru.dashboard', compact(
             'tahunAjaran',
@@ -97,7 +109,10 @@ class AbsensiController extends Controller
             'jurnalHariIni',
             'hadirHariIni',
             'tidakHadirPerJurnal',
-            'dashboardTren'
+            'dashboardTren',
+            'laporanRekap',
+            'laporanBulan',
+            'laporanTahun'
         ));
     }
 
@@ -111,6 +126,63 @@ class AbsensiController extends Controller
         return response()->json([
             'status' => 'success',
             'data'   => $siswa
+        ]);
+    }
+
+    public function cekAbsensi(Request $request)
+    {
+        $kelasId = (int) $request->get('kelas_id');
+        $tanggal = $request->get('tanggal', date('Y-m-d'));
+
+        if (!$kelasId) {
+            return response()->json(['status' => 'error', 'message' => 'Kelas wajib dipilih.'], 422);
+        }
+
+        $jurnal = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
+            ->where('jadwal_mengajar.id_kelas', $kelasId)
+            ->whereDate('jurnal_kelas.tanggal', $tanggal)
+            ->select('jurnal_kelas.*')
+            ->orderByDesc('jurnal_kelas.waktu_input')
+            ->orderByDesc('jurnal_kelas.id_jurnal')
+            ->first();
+
+        if (!$jurnal) {
+            return response()->json([
+                'status' => 'success',
+                'jurnal' => null,
+                'siswa'  => [],
+            ]);
+        }
+
+        $tidakHadir = JurnalSiswaTidakHadir::where('id_jurnal', $jurnal->id_jurnal)
+            ->get()
+            ->keyBy('id_siswa');
+
+        $siswa = Siswa::where('id_kelas', $kelasId)
+            ->where('is_aktif', 1)
+            ->orderBy('nama_siswa')
+            ->get()
+            ->map(function ($s) use ($tidakHadir) {
+                $th = $tidakHadir->get($s->id_siswa);
+                return [
+                    'id_siswa'    => $s->id_siswa,
+                    'nisn'        => $s->nisn,
+                    'nama_siswa'  => $s->nama_siswa,
+                    'status'      => $th ? $th->status : 'H',
+                    'keterangan'  => $th ? ($th->keterangan ?? '') : '',
+                ];
+            });
+
+        return response()->json([
+            'status' => 'success',
+            'jurnal' => [
+                'id_jurnal'              => $jurnal->id_jurnal,
+                'materi'                 => $jurnal->materi,
+                'jumlah_hadir'           => $jurnal->jumlah_hadir,
+                'status_kehadiran_guru'  => $jurnal->status_kehadiran_guru,
+                'waktu_input'            => $jurnal->waktu_input,
+            ],
+            'siswa' => $siswa,
         ]);
     }
 
@@ -142,10 +214,16 @@ class AbsensiController extends Controller
                 }
             }
 
-            $idJadwal = DB::table('jadwal_mengajar')->where('id_kelas', $request->id_kelas)->value('id_jadwal') ?? 1;
+            $idJadwal = DB::table('jadwal_mengajar')
+                ->where('id_kelas', $request->id_kelas)
+                ->where('id_guru', session('auth_guru_id'))
+                ->value('id_jadwal')
+                ?? DB::table('jadwal_mengajar')->where('id_kelas', $request->id_kelas)->value('id_jadwal')
+                ?? 1;
 
             $jurnal = JurnalKelas::create([
                 'id_jadwal'             => $idJadwal,
+                'id_guru'               => session('auth_guru_id'),
                 'tanggal'               => $request->tanggal,
                 'status_kehadiran_guru' => 'Hadir',
                 'materi'                => $request->materi ?? 'Pembelajaran Harian',

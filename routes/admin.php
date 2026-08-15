@@ -6,7 +6,6 @@ use App\Http\Controllers\Admin\SiswaController;
 use App\Http\Controllers\Admin\KelasController;
 use App\Http\Controllers\Admin\MapelController;
 use App\Http\Controllers\Admin\GuruController;
-use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\NotifikasiController;
 
@@ -15,9 +14,6 @@ Route::middleware('auth.admin')->group(function () {
 
     // Dashboard
     Route::get('/admin', [DashboardController::class, 'index'])->name('admin.index');
-
-    // Laporan
-    Route::get('/laporan/data', [LaporanController::class, 'getData'])->name('laporan.data');
 
     // CRUD Siswa
     Route::post('/siswa/tambah', [SiswaController::class, 'store'])->name('siswa.tambah');

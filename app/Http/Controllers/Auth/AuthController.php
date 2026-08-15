@@ -38,9 +38,12 @@ class AuthController extends Controller
         $request->validate([
             'username' => 'required|string',
             'password' => 'required|string',
+            'role'     => 'required|in:admin,guru',
         ], [
             'username.required' => 'Username tidak boleh kosong.',
             'password.required' => 'Password tidak boleh kosong.',
+            'role.required'     => 'Pilih peran terlebih dahulu.',
+            'role.in'           => 'Peran tidak valid.',
         ]);
 
         $guru = Guru::where('username', $request->username)
@@ -50,7 +53,16 @@ class AuthController extends Controller
         if (!$guru || !Hash::check($request->password, $guru->password_hash)) {
             return back()->withErrors([
                 'username' => 'Username atau password salah.',
-            ])->withInput($request->only('username'));
+            ])->withInput($request->only('username', 'role'));
+        }
+
+        $roleForm = $request->role;
+        $roleGuru = $guru->is_admin ? 'admin' : 'guru';
+
+        if ($roleForm !== $roleGuru) {
+            return back()->withErrors([
+                'username' => 'Akun tersebut bukan ' . $roleForm . '.',
+            ])->withInput($request->only('username', 'role'));
         }
 
         // Simpan data guru ke session

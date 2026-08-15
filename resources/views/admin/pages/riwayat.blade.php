@@ -161,7 +161,7 @@
     {{-- ── Ringkasan Rekap Kehadiran (Kartu Bawah) ── --}}
     <div style="margin-top:24px">
         <div id="riwayat-rekap-title" style="font-size:15px;font-weight:700;color:#1e293b;margin-bottom:14px">
-            Rekap Kehadiran Bulan Mei {{ date('Y') }}
+            Rekap Kehadiran Bulan {{ $bulanList[date('n')] }} {{ date('Y') }}
         </div>
         <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px;align-items:center" id="riwayat-summary-grid">
 

@@ -19,7 +19,7 @@
         </div>
         <div class="filter-group">
             <label>Tanggal</label>
-            <input type="date" class="filter-select" id="input-tanggal" value="{{ date('Y-m-d') }}">
+            <input type="date" class="filter-select" id="input-tanggal" value="{{ date('Y-m-d') }}" onchange="muatAbsensiTersimpan()">
         </div>
         <div class="filter-group">
             <label>Cari Siswa</label>

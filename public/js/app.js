@@ -60,7 +60,16 @@ function showPage(page){
     document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
     const n=document.getElementById('nav-'+page);
     if(n) n.classList.add('active');
-    if(page==='absensi-harian' || page==='absensi' || page==='jurnal-absensi') renderTable(currentSiswaList);
+    if(page==='absensi-harian' || page==='absensi' || page==='jurnal-absensi'){
+        const root = absensiRoot();
+        const select = root ? qs('#pilih-kelas', root) : document.getElementById('pilih-kelas');
+        if(select && select.value){
+            loadSiswaByKelas(select.value);
+        } else {
+            renderTable(currentSiswaList);
+            muatAbsensiTersimpan();
+        }
+    }
     if(page==='laporan') initLaporanCharts();
     closeSidebarMobile();
 }
@@ -98,13 +107,26 @@ function toggleSidebar(){
     }
 }
 
+function absensiRoot(){
+    const ids = ['absensi-harian','jurnal-absensi','absensi'];
+    for(const id of ids){
+        const el = document.getElementById('page-'+id);
+        if(el && el.style.display !== 'none') return '#page-'+id;
+    }
+    return null;
+}
+function qs(sel, root){
+    return document.querySelector(root ? (root + ' ' + sel) : sel);
+}
+
 function loadSiswaByKelas(idKelas){
-    const select = document.getElementById('pilih-kelas');
+    const root = absensiRoot();
+    const select = root ? qs('#pilih-kelas', root) : document.getElementById('pilih-kelas');
     if (select && select.selectedIndex >= 0) {
         const text = select.options[select.selectedIndex].text;
-        const ahSub = document.getElementById('ah-subtitle');
+        const ahSub = qs('#ah-subtitle', root);
         if (ahSub) ahSub.textContent = 'Informasi Data Absensi Kelas ' + text;
-        const guruSub = document.getElementById('guru-absensi-subtitle');
+        const guruSub = qs('#guru-absensi-subtitle', root);
         if (guruSub) guruSub.textContent = 'Daftar Absensi Siswa - ' + text;
     }
 
@@ -114,13 +136,59 @@ function loadSiswaByKelas(idKelas){
             if(res.status === 'success') {
                 currentSiswaList = res.data;
                 renderTable(currentSiswaList);
+                muatAbsensiTersimpan();
             }
         })
         .catch(err => console.error('Error fetching siswa:', err));
 }
 
+function muatAbsensiTersimpan(){
+    const root = absensiRoot();
+    if (!root) return;
+    const kelasSelect = qs('#pilih-kelas', root);
+    const tanggalInput = qs('#input-tanggal', root);
+    if (!kelasSelect || !tanggalInput) return;
+    const kelasId = kelasSelect.value;
+    const tanggal = tanggalInput.value;
+    if (!kelasId || !tanggal) return;
+
+    fetch(`/absensi/cek?kelas_id=${kelasId}&tanggal=${tanggal}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.status !== 'success') return;
+
+            // Reset semua ke status Hadir terlebih dahulu
+            currentSiswaList.forEach(s => {
+                const radioH = qs(`input[name="st-${s.id_siswa}"][value="H"]`, root);
+                if (radioH) radioH.checked = true;
+                const ket = qs(`#ket-${s.id_siswa}`, root);
+                if (ket) ket.value = '';
+            });
+
+            if (data.jurnal) {
+                const map = {};
+                (data.siswa || []).forEach(s => { map[s.id_siswa] = s; });
+                currentSiswaList.forEach(s => {
+                    const rec = map[s.id_siswa];
+                    if (rec && rec.status && rec.status !== 'H') {
+                        const radio = qs(`input[name="st-${s.id_siswa}"][value="${rec.status}"]`, root);
+                        if (radio) radio.checked = true;
+                    }
+                    if (rec && rec.keterangan) {
+                        const ket = qs(`#ket-${s.id_siswa}`, root);
+                        if (ket) ket.value = rec.keterangan;
+                    }
+                });
+            }
+
+            updateRekap();
+        })
+        .catch(err => console.error('Error fetching saved absensi:', err));
+}
+
 function renderTable(data){
-    const tbody=document.getElementById('siswa-tbody');
+    const root = absensiRoot();
+    const tbody = root ? qs('#siswa-tbody', root) : document.getElementById('siswa-tbody');
     if(!tbody) return;
     tbody.innerHTML='';
     if(data.length === 0){
@@ -128,7 +196,7 @@ function renderTable(data){
         updateRekap();
         return;
     }
-    const isAdmin = !!document.getElementById('page-absensi-harian');
+    const isAdmin = root === '#page-absensi-harian';
     const radioAttr = isAdmin ? 'onclick="return false;" tabindex="-1"' : 'onchange="updateRekap()"';
     const ketAttr = isAdmin 
         ? 'readonly placeholder="Diisi oleh Guru..." style="border:1px solid #e2e8f0;border-radius:6px;padding:4px 8px;font-size:12px;width:100%;outline:none;background:#f8fafc;color:#475569;cursor:default;"' 
@@ -155,21 +223,24 @@ function renderTable(data){
 }
 
 function updateRekap(){
+    const root = absensiRoot();
     let h=0,s=0,i=0,a=0;
     currentSiswaList.forEach(d=>{
-        const c=document.querySelector(`input[name="st-${d.id_siswa}"]:checked`);
+        const c=root ? qs(`input[name="st-${d.id_siswa}"]:checked`, root) : document.querySelector(`input[name="st-${d.id_siswa}"]:checked`);
         if(c){if(c.value==='H')h++;else if(c.value==='S')s++;else if(c.value==='I')i++;else if(c.value==='A')a++;}
     });
-    document.getElementById('rekap-hadir').textContent=h;
-    document.getElementById('rekap-sakit').textContent=s;
-    document.getElementById('rekap-izin').textContent=i;
-    document.getElementById('rekap-alpa').textContent=a;
+    const set=(id,val)=>{const el= root ? qs('#'+id, root) : document.getElementById(id); if(el) el.textContent=val;};
+    set('rekap-hadir',h);
+    set('rekap-sakit',s);
+    set('rekap-izin',i);
+    set('rekap-alpa',a);
 }
 
 function tandaiSemua(v){
-    if (document.getElementById('page-absensi-harian')) return;
+    const root = absensiRoot();
+    if (root === '#page-absensi-harian') return;
     currentSiswaList.forEach(d=>{
-        const r=document.querySelector(`input[name="st-${d.id_siswa}"][value="${v}"]`);
+        const r=root ? qs(`input[name="st-${d.id_siswa}"][value="${v}"]`, root) : document.querySelector(`input[name="st-${d.id_siswa}"][value="${v}"]`);
         if(r) r.checked=true;
     });
     updateRekap();
@@ -182,7 +253,8 @@ function filterSiswa(q){
 }
 
 function submitAbsensi(){
-    if (document.getElementById('page-absensi-harian')) {
+    const root = absensiRoot();
+    if (root === '#page-absensi-harian') {
         Swal.fire({
             icon: 'warning',
             title: 'Akses Dibatasi',
@@ -191,15 +263,15 @@ function submitAbsensi(){
         });
         return;
     }
-    const kelasId = document.getElementById('pilih-kelas').value;
-    const tanggal = document.getElementById('input-tanggal').value;
-    const materi = (document.getElementById('input-materi')?.value || '').trim();
+    const kelasId = (root ? qs('#pilih-kelas', root) : document.getElementById('pilih-kelas')).value;
+    const tanggal = (root ? qs('#input-tanggal', root) : document.getElementById('input-tanggal')).value;
+    const materi = (root ? qs('#input-materi', root) : document.getElementById('input-materi'))?.value || '';
     const absensiData = {};
 
     currentSiswaList.forEach(s => {
         const id = s.id_siswa;
-        const checked = document.querySelector(`input[name="st-${id}"]:checked`);
-        const ket = document.getElementById(`ket-${id}`)?.value || '';
+        const checked = root ? qs(`input[name="st-${id}"]:checked`, root) : document.querySelector(`input[name="st-${id}"]:checked`);
+        const ket = (root ? qs(`#ket-${id}`, root) : document.getElementById(`ket-${id}`))?.value || '';
         absensiData[id] = {
             status: checked ? checked.value : 'H',
             keterangan: ket

@@ -31,6 +31,7 @@
     window.dashboardTren = @json($dashboardTren ?? []);
     window.laporanInitial = @json($laporanRekap ?? null);
     window.profilUpdateUrl = @json($profilUpdateUrl ?? route('profil.update'));
+    window.daftarGuru = @json($allGuru ?? []);
 </script>
 
 <!-- External JavaScript Asset -->

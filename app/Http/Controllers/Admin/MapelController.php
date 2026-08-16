@@ -27,6 +27,27 @@ class MapelController extends Controller
         ]);
     }
 
+    public function update(Request $request, $id)
+    {
+        $mapel = Mapel::findOrFail($id);
+
+        $request->validate([
+            'nama_mapel' => 'required|string|max:100',
+            'kode_mapel' => 'nullable|string|max:20|unique:mapel,kode_mapel,' . $mapel->id_mapel . ',id_mapel',
+        ]);
+
+        $mapel->update([
+            'kode_mapel' => $request->kode_mapel ?: null,
+            'nama_mapel' => $request->nama_mapel,
+        ]);
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Mata pelajaran berhasil diperbarui!',
+            'data'    => $mapel,
+        ]);
+    }
+
     public function destroy($id)
     {
         $mapel = Mapel::findOrFail($id);

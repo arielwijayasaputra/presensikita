@@ -397,6 +397,9 @@ function tambahSiswaModal(){
 }
 
 function tambahKelasModal(){
+    const guruOptions = (window.daftarGuru || []).map(g =>
+        `<option value="${g.id_guru}">${g.nama_guru}</option>`
+    ).join('');
     Swal.fire({
         title: 'Tambah Kelas Baru',
         html: `
@@ -415,6 +418,13 @@ function tambahKelasModal(){
                         <input id="swal-kjurusan" class="swal-form-input" placeholder="Contoh: RPL, AK, DKV">
                     </div>
                 </div>
+                <div class="swal-form-group">
+                    <label for="swal-kwali">Wali Kelas</label>
+                    <select id="swal-kwali" class="swal-form-select">
+                        <option value="">Belum Ada Wali Kelas</option>
+                        ${guruOptions}
+                    </select>
+                </div>
             </div>
         `,
         focusConfirm: false,
@@ -431,6 +441,7 @@ function tambahKelasModal(){
                 nama_kelas: kname,
                 tingkat_kelas: document.getElementById('swal-ktingkat').value.trim(),
                 jurusan: document.getElementById('swal-kjurusan').value.trim(),
+                id_wali_kelas: document.getElementById('swal-kwali').value || null,
             }
         }
     }).then(result => {
@@ -1373,6 +1384,18 @@ function tampilkanNotifikasi() {
             }).then(() => {
                 const badge = document.getElementById('notif-badge-count');
                 if (badge) badge.style.display = 'none';
+
+                // Tandai notifikasi sudah dibaca
+                if (jumlahBaru > 0) {
+                    fetch(window.notifUrl ? window.notifUrl.replace(/\/$/, '') + '/read' : '/admin/notifikasi/read', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({ ids: [] })
+                    }).catch(() => {});
+                }
             });
         })
         .catch(() => {

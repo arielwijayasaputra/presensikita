@@ -171,7 +171,10 @@ INSERT INTO `guru` (`id_guru`, `nip`, `nama_guru`, `Peran`, `no_hp`, `username`,
 (122, NULL, 'Yustin Febrini, S.Pd', 'Guru', NULL, 'yustin', '$2y$12$l0XzNg7UDkETkwLNEniDs.yt.KvmicLODqslIBHX4RCUG/RwBcF2e', 0, 1, '2026-07-29 01:57:31', NULL),
 (123, NULL, 'Zainul Arifin,S.Pd', 'Guru', NULL, 'zainul', '$2y$12$l0XzNg7UDkETkwLNEniDs.yt.KvmicLODqslIBHX4RCUG/RwBcF2e', 0, 1, '2026-07-29 01:57:31', NULL),
 (124, '199001012020011001', 'Bambang Supriadi, M.Pd.', 'Guru', '081299887766', 'bambang', '$2y$12$l0XzNg7UDkETkwLNEniDs.yt.KvmicLODqslIBHX4RCUG/RwBcF2e', 0, 1, '2026-08-06 00:47:31', NULL),
-(125, '0000000000000000', 'Administrator', 'Guru', '08000000000', 'admin', '$2y$12$miFGbVDldixoQ0calUh0a.wPLMonaVNzEU//pFoSlT1xoFts1UNMa', 1, 1, '2026-08-06 00:59:34', NULL);
+(125, '0000000000000000', 'Administrator', 'Guru', '08000000000', 'admin', '$2y$12$miFGbVDldixoQ0calUh0a.wPLMonaVNzEU//pFoSlT1xoFts1UNMa', 1, 1, '2026-08-06 00:59:34', NULL),
+(126, NULL, 'Waka Kesiswaan (placeholder)', 'Waka', NULL, 'waka', '$2y$12$l0XzNg7UDkETkwLNEniDs.yt.KvmicLODqslIBHX4RCUG/RwBcF2e', 0, 1, '2026-08-16 08:00:00', NULL),
+(127, NULL, 'Kepala Sekolah (placeholder)', 'Kepsek', NULL, 'kepsek', '$2y$12$l0XzNg7UDkETkwLNEniDs.yt.KvmicLODqslIBHX4RCUG/RwBcF2e', 0, 1, '2026-08-16 08:00:00', NULL),
+(128, NULL, 'Petugas Satpam (placeholder)', 'Satpam', NULL, 'satpam', '$2y$12$l0XzNg7UDkETkwLNEniDs.yt.KvmicLODqslIBHX4RCUG/RwBcF2e', 0, 1, '2026-08-16 08:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -2869,7 +2872,7 @@ CREATE TABLE `pengaturan` (
 --
 
 INSERT INTO `pengaturan` (`kunci`, `nilai`) VALUES
-('nama_sekolah', ''),
+('nama_sekolah', 'SMKN 1 BOYOLANGU'),
 ('npsn', ''),
 ('kepsek', ''),
 ('alamat', ''),
@@ -3690,6 +3693,26 @@ INSERT INTO `siswa` (`id_siswa`, `nisn`, `nama_siswa`, `jenis_kelamin`, `id_kela
 -- --------------------------------------------------------
 
 --
+-- Dumping data for table `jurnal_kelas`
+--
+
+INSERT INTO `jurnal_kelas` (`id_jurnal`, `id_jadwal`, `id_guru`, `tanggal`, `status_kehadiran_guru`, `materi`, `jumlah_hadir`, `waktu_input`) VALUES
+(1, 868, 117, '2026-08-15', 'Hadir', 'Pembelajaran Harian', 29, '2026-08-15 14:30:46');
+
+--
+-- Dumping data for table `jurnal_siswa_tidak_hadir`
+--
+
+INSERT INTO `jurnal_siswa_tidak_hadir` (`id_absen`, `id_jurnal`, `id_siswa`, `status`, `keterangan`) VALUES
+(1, 1, 72, 'A', NULL),
+(2, 1, 85, 'I', NULL),
+(3, 1, 86, 'A', NULL),
+(4, 1, 89, 'S', NULL),
+(5, 1, 96, 'A', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tahun_ajaran`
 --
 
@@ -4021,7 +4044,7 @@ ALTER TABLE `tahun_ajaran`
 -- AUTO_INCREMENT for table `guru`
 --
 ALTER TABLE `guru`
-  MODIFY `id_guru` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
+  MODIFY `id_guru` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
 
 --
 -- AUTO_INCREMENT for table `jadwal_mengajar`

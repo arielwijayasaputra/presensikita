@@ -41,6 +41,41 @@ class GuruController extends Controller
         ]);
     }
 
+    public function update(Request $request, $id)
+    {
+        $guru = Guru::findOrFail($id);
+
+        $request->validate([
+            'nama_guru' => 'required|string',
+            'username'  => 'required|string|unique:guru,username,' . $guru->id_guru . ',id_guru',
+        ], [
+            'nama_guru.required' => 'Nama guru wajib diisi.',
+            'username.required'  => 'Username wajib diisi.',
+            'username.unique'    => 'Username sudah digunakan guru lain.',
+        ]);
+
+        $data = [
+            'nip'       => $request->nip ?: null,
+            'nama_guru' => $request->nama_guru,
+            'Peran'     => $request->peran ?? 'Guru',
+            'no_hp'     => $request->no_hp ?: null,
+            'username'  => strtolower(trim($request->username)),
+            'is_admin'  => $request->is_admin ? 1 : 0,
+        ];
+
+        if ($request->filled('password')) {
+            $data['password_hash'] = Hash::make($request->password);
+        }
+
+        $guru->update($data);
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Data guru berhasil diperbarui!',
+            'data'    => $guru,
+        ]);
+    }
+
     public function destroy($id)
     {
         $guru = Guru::findOrFail($id);

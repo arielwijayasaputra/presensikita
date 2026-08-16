@@ -24,11 +24,36 @@ class KelasController extends Controller
             'tingkat_kelas'   => $request->tingkat_kelas,
             'jurusan'         => $request->jurusan,
             'id_tahun_ajaran' => $tahun,
+            'id_wali_kelas'   => $request->id_wali_kelas ?: null,
         ]);
 
         return response()->json([
             'status'  => 'success',
             'message' => 'Kelas berhasil ditambahkan!',
+            'data'    => $kelas,
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nama_kelas' => 'required',
+        ]);
+
+        $kelas = Kelas::findOrFail($id);
+
+        $kelas->update([
+            'nama_kelas'    => $request->nama_kelas,
+            'tingkat_kelas' => $request->tingkat_kelas ?? $kelas->tingkat_kelas,
+            'jurusan'       => $request->jurusan ?? $kelas->jurusan,
+            'id_wali_kelas' => $request->has('id_wali_kelas') && $request->id_wali_kelas !== '' && $request->id_wali_kelas !== null
+                ? $request->id_wali_kelas
+                : null,
+        ]);
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Data kelas berhasil diperbarui!',
             'data'    => $kelas,
         ]);
     }

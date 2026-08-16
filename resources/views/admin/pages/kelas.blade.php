@@ -50,6 +50,23 @@
             </div>
         </div>
 
+        {{-- Jurusan --}}
+        <div class="filter-group" style="min-width:150px">
+            <label>Jurusan</label>
+            <div style="position:relative">
+                <select class="filter-select" id="kelas-filter-jurusan" onchange="filterKelasPage()" style="width:100%;padding-right:28px;appearance:none">
+                    <option value="">Semua Jurusan</option>
+                    @php
+                        $jurusans = $allKelas->pluck('jurusan')->unique()->filter()->sort();
+                    @endphp
+                    @foreach($jurusans as $j)
+                    <option value="{{ $j }}">{{ $j }}</option>
+                    @endforeach
+                </select>
+                <svg style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+        </div>
+
         {{-- Wali Kelas --}}
         <div class="filter-group" style="min-width:160px">
             <label>Wali Kelas</label>
@@ -86,7 +103,8 @@
                 <tr>
                     <th style="width:48px">No.</th>
                     <th>Nama Kelas</th>
-                    <th style="width:120px;text-align:center">Tingkat</th>
+                    <th style="width:110px;text-align:center">Tingkat</th>
+                    <th style="width:90px;text-align:center">Jurusan</th>
                     <th>Wali Kelas</th>
                     <th style="width:130px;text-align:center">Jumlah Siswa</th>
                     <th style="width:100px;text-align:center">Status</th>
@@ -98,6 +116,7 @@
                 <tr class="kelas-row-item"
                     data-search="{{ strtolower(($k->nama_kelas ?? '') . ' ' . ($k->waliKelas->nama_guru ?? '')) }}"
                     data-tingkat="{{ $k->tingkat_kelas }}"
+                    data-jurusan="{{ $k->jurusan }}"
                     data-wali="{{ $k->id_wali_kelas }}"
                     data-status="aktif"
                     data-siswa-count="{{ $k->siswa_count }}">
@@ -105,6 +124,11 @@
                     <td style="font-weight:700;color:#1e293b;font-size:13.5px">{{ $k->nama_kelas }}</td>
                     <td style="text-align:center;color:#475569;font-size:13px font-weight:500">
                         {{ $k->tingkat_kelas }} ({{ $k->tingkat_angka }})
+                    </td>
+                    <td style="text-align:center">
+                        <span style="display:inline-block;background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:20px">
+                            {{ $k->jurusan ?? '-' }}
+                        </span>
                     </td>
                     <td style="font-weight:500;color:#334155;font-size:13.5px">
                         {{ $k->waliKelas->nama_guru ?? '-' }}
@@ -134,7 +158,7 @@
                 </tr>
                 @empty
                 <tr id="kelas-empty-state">
-                    <td colspan="7" style="text-align:center;padding:40px;color:#94a3b8">
+                    <td colspan="8" style="text-align:center;padding:40px;color:#94a3b8">
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" style="margin:0 auto 10px;display:block"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                         Belum ada data kelas.
                     </td>
@@ -262,18 +286,21 @@
     function allRows(){ return Array.from(document.querySelectorAll('#kelas-tbody-page .kelas-row-item')); }
 
     window.filterKelasPage = function(){
-        const q       = (document.getElementById('kelas-cari')?.value || '').toLowerCase().trim();
-        const tingkat = (document.getElementById('kelas-filter-tingkat')?.value || '');
-        const wali    = (document.getElementById('kelas-filter-wali')?.value || '');
-        const status  = (document.getElementById('kelas-filter-status')?.value || '');
+        const q        = (document.getElementById('kelas-cari')?.value || '').toLowerCase().trim();
+        const tingkat  = (document.getElementById('kelas-filter-tingkat')?.value || '');
+        const jurusan  = (document.getElementById('kelas-filter-jurusan')?.value || '');
+        const wali     = (document.getElementById('kelas-filter-wali')?.value || '');
+        const status   = (document.getElementById('kelas-filter-status')?.value || '');
 
         kelasFiltered = allRows().filter(row => {
             const hay      = row.dataset.search || '';
             const rTingkat = row.dataset.tingkat || '';
+            const rJurusan = row.dataset.jurusan || '';
             const rWali    = row.dataset.wali || '';
             const rSt      = row.dataset.status || '';
             return (!q       || hay.includes(q))
                 && (!tingkat || rTingkat === tingkat)
+                && (!jurusan || rJurusan === jurusan)
                 && (!wali    || rWali === wali)
                 && (!status  || rSt === status);
         });
@@ -413,14 +440,18 @@ function editKelasModal(id, nama, tingkat, jurusan, idWali){
                         <input id="swal-edit-ktingkat" class="swal-form-input" value="${tingkat}" placeholder="Contoh: VII, VIII, IX">
                     </div>
                     <div class="swal-form-group">
-                        <label for="swal-edit-kwali">Wali Kelas</label>
-                        <select id="swal-edit-kwali" class="swal-form-select">
-                            <option value="">Pilih Wali Kelas</option>
-                            @foreach($allGuru as $g)
-                            <option value="{{ $g->id_guru }}">{{ $g->nama_guru }}</option>
-                            @endforeach
-                        </select>
+                        <label for="swal-edit-kjurusan">Jurusan</label>
+                        <input id="swal-edit-kjurusan" class="swal-form-input" value="${jurusan}" placeholder="Contoh: RPL, AK, DKV">
                     </div>
+                </div>
+                <div class="swal-form-group">
+                    <label for="swal-edit-kwali">Wali Kelas</label>
+                    <select id="swal-edit-kwali" class="swal-form-select">
+                        <option value="">Pilih Wali Kelas</option>
+                        @foreach($allGuru as $g)
+                        <option value="{{ $g->id_guru }}">{{ $g->nama_guru }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
         `,
@@ -441,6 +472,7 @@ function editKelasModal(id, nama, tingkat, jurusan, idWali){
             return {
                 nama_kelas:    newNama,
                 tingkat_kelas: document.getElementById('swal-edit-ktingkat').value.trim(),
+                jurusan:       document.getElementById('swal-edit-kjurusan').value.trim(),
                 id_wali_kelas: document.getElementById('swal-edit-kwali').value
             };
         }

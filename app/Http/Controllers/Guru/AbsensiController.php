@@ -214,22 +214,65 @@ class AbsensiController extends Controller
                 }
             }
 
-            $idJadwal = DB::table('jadwal_mengajar')
-                ->where('id_kelas', $request->id_kelas)
-                ->where('id_guru', session('auth_guru_id'))
-                ->value('id_jadwal')
-                ?? DB::table('jadwal_mengajar')->where('id_kelas', $request->id_kelas)->value('id_jadwal')
-                ?? 1;
+            $idGuru  = session('auth_guru_id');
+            $kelasId = (int) $request->id_kelas;
+            $tanggal = $request->tanggal;
 
-            $jurnal = JurnalKelas::create([
-                'id_jadwal'             => $idJadwal,
-                'id_guru'               => session('auth_guru_id'),
-                'tanggal'               => $request->tanggal,
-                'status_kehadiran_guru' => 'Hadir',
-                'materi'                => $request->materi ?? 'Pembelajaran Harian',
-                'jumlah_hadir'          => $jumlahHadir,
-                'waktu_input'           => now(),
-            ]);
+            // Cari jurnal yang sudah ada untuk kelas + tanggal ini
+            $existing = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
+                ->where('jadwal_mengajar.id_kelas', $kelasId)
+                ->whereDate('jurnal_kelas.tanggal', $tanggal)
+                ->select('jurnal_kelas.id_jurnal')
+                ->orderByDesc('jurnal_kelas.waktu_input')
+                ->orderByDesc('jurnal_kelas.id_jurnal')
+                ->first();
+
+            if ($existing) {
+                // Perbarui jurnal yang sudah ada (ganti data tidak hadir dengan data terbaru)
+                $jurnal = JurnalKelas::findOrFail($existing->id_jurnal);
+                $jurnal->update([
+                    'id_guru'               => $idGuru,
+                    'status_kehadiran_guru' => 'Hadir',
+                    'materi'                => $request->materi ?? $jurnal->materi,
+                    'jumlah_hadir'          => $jumlahHadir,
+                    'waktu_input'           => now(),
+                ]);
+
+                JurnalSiswaTidakHadir::where('id_jurnal', $jurnal->id_jurnal)->delete();
+            } else {
+                // Cari jadwal mengajar: prioritas guru ini di kelas ini, lalu jadwal mana pun di kelas ini
+                $idJadwal = DB::table('jadwal_mengajar')
+                    ->where('id_kelas', $kelasId)
+                    ->where('id_guru', $idGuru)
+                    ->value('id_jadwal')
+                    ?? DB::table('jadwal_mengajar')->where('id_kelas', $kelasId)->value('id_jadwal');
+
+                // Belum ada jadwal sama sekali untuk kelas ini: buat satu agar jurnal tetap tertaut benar
+                if (!$idJadwal) {
+                    $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
+                    $hariMap = ['Sun' => 'Senin', 'Mon' => 'Senin', 'Tue' => 'Selasa', 'Wed' => 'Rabu', 'Thu' => 'Kamis', 'Fri' => 'Jumat', 'Sat' => 'Sabtu'];
+                    $hari = $hariMap[date('D', strtotime($tanggal))] ?? 'Senin';
+
+                    $idJadwal = DB::table('jadwal_mengajar')->insertGetId([
+                        'id_guru'          => $idGuru,
+                        'id_mapel'         => (int) (DB::table('jadwal_mengajar')->where('id_guru', $idGuru)->value('id_mapel') ?? DB::table('mapel')->min('id_mapel') ?? 1),
+                        'id_kelas'         => $kelasId,
+                        'id_jam'           => (int) (DB::table('jam_pelajaran')->min('id_jam') ?? 1),
+                        'hari'             => $hari,
+                        'id_tahun_ajaran'  => $tahunAjaran->id_tahun_ajaran ?? 1,
+                    ]);
+                }
+
+                $jurnal = JurnalKelas::create([
+                    'id_jadwal'             => $idJadwal,
+                    'id_guru'               => $idGuru,
+                    'tanggal'               => $tanggal,
+                    'status_kehadiran_guru' => 'Hadir',
+                    'materi'                => $request->materi ?? 'Pembelajaran Harian',
+                    'jumlah_hadir'          => $jumlahHadir,
+                    'waktu_input'           => now(),
+                ]);
+            }
 
             foreach ($tidakHadirList as $th) {
                 JurnalSiswaTidakHadir::create([

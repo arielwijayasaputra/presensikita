@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Guru;
 use App\Models\Siswa;
+use App\Models\Kelas;
 
 class AuthController extends Controller
 {
@@ -27,7 +28,9 @@ class AuthController extends Controller
             return redirect()->route('orangtua.index');
         }
 
-        return view('auth.login');
+        $kelases = Kelas::orderBy('nama_kelas')->get();
+
+        return view('auth.login', compact('kelases'));
     }
 
     /**
@@ -131,6 +134,115 @@ class AuthController extends Controller
     }
 
     /**
+     * Proses login Wali Kelas (Guru yang menjadi wali dari suatu kelas)
+     */
+    public function loginWaliKelas(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
+            'id_kelas' => 'required|integer',
+        ], [
+            'username.required' => 'Username tidak boleh kosong.',
+            'password.required' => 'Password tidak boleh kosong.',
+            'id_kelas.required' => 'Pilih kelas yang Anda wali terlebih dahulu.',
+            'id_kelas.integer'  => 'Kelas yang dipilih tidak valid.',
+        ]);
+
+        $guru = Guru::where('username', $request->username)
+            ->where('is_aktif', 1)
+            ->first();
+
+        if (!$guru || !Hash::check($request->password, $guru->password_hash)) {
+            return back()->withErrors([
+                'username' => 'Username atau password salah.',
+            ])->withInput($request->only('username', 'id_kelas', 'role'));
+        }
+
+        // Kelas yang guru tersebut menjadi wali kelasnya
+        $kelasWali = Kelas::where('id_wali_kelas', $guru->id_guru)->get();
+
+        if ($kelasWali->isEmpty()) {
+            return back()->withErrors([
+                'username' => 'Akun tersebut bukan wali kelas.',
+            ])->withInput($request->only('username', 'id_kelas', 'role'));
+        }
+
+        // Pastikan guru menjadi wali dari kelas yang dipilih
+        $kelasDipilih = $kelasWali->firstWhere('id_kelas', (int) $request->id_kelas);
+
+        if (!$kelasDipilih) {
+            return back()->withErrors([
+                'username' => 'Anda bukan wali dari kelas tersebut.',
+            ])->withInput($request->only('username', 'id_kelas', 'role'));
+        }
+
+        // Simpan data guru + kelas wali ke session
+        session([
+            'auth_guru_id'    => $guru->id_guru,
+            'auth_nama_guru'  => $guru->nama_guru,
+            'auth_is_admin'   => 0,
+            'auth_role'       => 'walikelas',
+            'auth_kelas_id'   => $kelasDipilih->id_kelas,
+            'auth_nama_kelas' => $kelasDipilih->nama_kelas,
+        ]);
+
+        return redirect()->route('guru.index', ['kelas_id' => $kelasDipilih->id_kelas]);
+    }
+
+    /**
+     * Proses login struktural: Waka Kesiswaan / Kepala Sekolah / Satpam
+     * (untuk sementara hanya username & password)
+     */
+    public function loginPeran(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
+            'peran'    => 'required|in:Waka,Kepsek,Satpam',
+        ], [
+            'username.required' => 'Username tidak boleh kosong.',
+            'password.required' => 'Password tidak boleh kosong.',
+            'peran.required'    => 'Pilih peran terlebih dahulu.',
+            'peran.in'          => 'Peran tidak valid.',
+        ]);
+
+        $guru = Guru::where('username', $request->username)
+            ->where('is_aktif', 1)
+            ->first();
+
+        if (!$guru || !Hash::check($request->password, $guru->password_hash)) {
+            return back()->withErrors([
+                'username' => 'Username atau password salah.',
+            ])->withInput($request->only('username', 'peran', 'role'));
+        }
+
+        $peran = $request->peran;
+
+        if (($guru->Peran ?? '') !== $peran) {
+            $label = match ($peran) {
+                'Waka'   => 'Waka Kesiswaan',
+                'Kepsek' => 'Kepala Sekolah',
+                default  => 'Satpam',
+            };
+
+            return back()->withErrors([
+                'username' => 'Akun tersebut bukan ' . $label . '.',
+            ])->withInput($request->only('username', 'peran', 'role'));
+        }
+
+        // Simpan data guru ke session
+        session([
+            'auth_guru_id'   => $guru->id_guru,
+            'auth_nama_guru' => $guru->nama_guru,
+            'auth_is_admin'  => 0,
+            'auth_role'      => strtolower($peran),
+        ]);
+
+        return redirect()->route('guru.index');
+    }
+
+    /**
      * Logout untuk semua role
      */
     public function logout(Request $request)
@@ -142,6 +254,8 @@ class AuthController extends Controller
             'auth_siswa_id',
             'auth_nisn',
             'auth_nama_siswa',
+            'auth_kelas_id',
+            'auth_nama_kelas',
             'auth_role'
         ]);
 

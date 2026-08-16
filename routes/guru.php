@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Guru\AbsensiController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\LaporanController;
+use App\Http\Controllers\Admin\NotifikasiController;
 
 // Semua route guru memerlukan middleware auth.guru
 Route::middleware('auth.guru')->group(function () {
@@ -15,4 +16,8 @@ Route::middleware('auth.guru')->group(function () {
 
     // Laporan (dapat diakses admin maupun guru)
     Route::get('/laporan/data', [LaporanController::class, 'getData'])->name('laporan.data');
+
+    // Notifikasi (dapat diakses semua guru & admin)
+    Route::get('/admin/notifikasi',        [NotifikasiController::class, 'index'])->name('notifikasi.index');
+    Route::post('/admin/notifikasi/read',  [NotifikasiController::class, 'markRead'])->name('notifikasi.read');
 });

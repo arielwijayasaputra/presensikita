@@ -11,7 +11,7 @@ class JurnalKelas extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'id_jadwal', 'tanggal', 'status_kehadiran_guru', 'materi', 'jumlah_hadir', 'waktu_input'
+        'id_jadwal', 'id_guru', 'tanggal', 'status_kehadiran_guru', 'materi', 'jumlah_hadir', 'waktu_input'
     ];
 
     public function siswaTidakHadir()

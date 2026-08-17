@@ -15,6 +15,7 @@ return new class extends Migration
             $table->enum('jenis_kelamin', ['L', 'P']);
             $table->integer('id_kelas');
             $table->tinyInteger('is_aktif')->default(1);
+            $table->timestamp('deleted_at')->nullable();
         });
     }
 

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->tinyInteger('is_admin')->default(0);
             $table->tinyInteger('is_aktif')->default(1);
             $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('deleted_at')->nullable();
         });
     }
 

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('jurusan', 50);
             $table->integer('id_tahun_ajaran');
             $table->integer('id_wali_kelas')->nullable();
+            $table->timestamp('deleted_at')->nullable();
         });
     }
 

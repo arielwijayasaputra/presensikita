@@ -18,9 +18,24 @@ class AuthController extends Controller
     {
         if (session('auth_guru_id')) {
             $guru = Guru::find(session('auth_guru_id'));
+            $role = session('auth_role', '');
+
             if ($guru && $guru->is_admin) {
                 return redirect()->route('admin.index');
             }
+
+            $strukturalMap = [
+                'waka'      => 'waka.index',
+                'kepsek'    => 'kepsek.index',
+                'satpam'    => 'satpam.index',
+                'guru_piket'=> 'gurupiket.index',
+                'walikelas' => 'walikelas.index',
+            ];
+
+            if (isset($strukturalMap[$role])) {
+                return redirect()->route($strukturalMap[$role]);
+            }
+
             return redirect()->route('guru.index');
         }
 
@@ -79,6 +94,11 @@ class AuthController extends Controller
         // Redirect berdasarkan role
         if ($guru->is_admin) {
             return redirect()->route('admin.index');
+        }
+
+        if (($guru->Peran ?? '') === 'Guru Piket') {
+            session(['auth_role' => 'guru_piket']);
+            return redirect()->route('gurupiket.index');
         }
 
         return redirect()->route('guru.index');
@@ -187,7 +207,7 @@ class AuthController extends Controller
             'auth_nama_kelas' => $kelasDipilih->nama_kelas,
         ]);
 
-        return redirect()->route('guru.index', ['kelas_id' => $kelasDipilih->id_kelas]);
+        return redirect()->route('walikelas.index', ['kelas_id' => $kelasDipilih->id_kelas]);
     }
 
     /**
@@ -239,7 +259,14 @@ class AuthController extends Controller
             'auth_role'      => strtolower($peran),
         ]);
 
-        return redirect()->route('guru.index');
+        // Redirect berdasarkan peran
+        $redirectMap = [
+            'Waka'   => 'waka.index',
+            'Kepsek' => 'kepsek.index',
+            'Satpam' => 'satpam.index',
+        ];
+
+        return redirect()->route($redirectMap[$peran] ?? 'guru.index');
     }
 
     /**

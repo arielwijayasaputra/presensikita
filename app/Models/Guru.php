@@ -16,6 +16,6 @@ class Guru extends Model
     const DELETED_AT = 'deleted_at';
 
     protected $fillable = [
-        'nip', 'nama_guru', 'Peran', 'foto_profil', 'no_hp', 'username', 'password_hash', 'is_admin', 'is_aktif', 'deleted_at'
+        'nip', 'nama_guru', 'Peran', 'foto_profil', 'no_hp', 'username', 'password_hash', 'is_admin', 'is_aktif'
     ];
 }

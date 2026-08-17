@@ -18,3 +18,4 @@ require __DIR__ . '/auth.php';
 require __DIR__ . '/guru.php';
 require __DIR__ . '/admin.php';
 require __DIR__ . '/orangtua.php';
+require __DIR__ . '/struktural.php';

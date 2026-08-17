@@ -522,7 +522,7 @@
             </div>
             <div>
                 <div class="nav-brand-title">PresensiKita</div>
-                <div class="nav-brand-sub">Portal Kehadiran Orang Tua</div>
+                <div class="nav-brand-sub">Platform Absensi Digital</div>
             </div>
         </div>
 

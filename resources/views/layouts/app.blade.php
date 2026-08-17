@@ -27,7 +27,7 @@
 
 <!-- Inline Server Variables -->
 <script>
-    let currentSiswaList = @json($siswaList);
+    let currentSiswaList = {!! json_encode($siswaList ?? []) !!};
     window.dashboardTren = @json($dashboardTren ?? []);
     window.laporanInitial = @json($laporanRekap ?? null);
     window.profilUpdateUrl = @json($profilUpdateUrl ?? route('profil.update'));

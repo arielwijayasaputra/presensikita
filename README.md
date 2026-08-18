@@ -102,4 +102,4 @@ DB_PASSWORD=
 php artisan serve
 ```
 
-okee
+mantabbb

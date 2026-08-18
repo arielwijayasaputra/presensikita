@@ -661,6 +661,18 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
 .riwayat-summary-card { transition: transform 0.2s, box-shadow 0.2s; }
 .riwayat-summary-card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.09) !important; }
 
+/* ── Alumni Page ── */
+.alumni-page-btn {
+    min-width: 32px; height: 32px; padding: 0 8px;
+    border: 1px solid #e2e8f0; background: #fff; border-radius: 6px;
+    font-size: 12.5px; font-weight: 600; color: #64748b; cursor: pointer;
+    font-family: inherit; transition: all 0.15s;
+    display: inline-flex; align-items: center; justify-content: center;
+}
+.alumni-page-btn:hover:not(:disabled) { background: #f1f5f9; color: #1e293b; }
+.alumni-page-btn.active { background: #1e293b; border-color: #1e293b; color: #fff; }
+.alumni-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
 
 
 

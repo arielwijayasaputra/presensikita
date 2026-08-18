@@ -18,6 +18,66 @@
         </button>
     </div>
 
+    {{-- ── Ringkasan Data Guru ── --}}
+    <div>
+        <div style="font-size:16px;font-weight:700;color:#1e293b;margin-bottom:14px">
+            Ringkasan Data Guru
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px" id="guru-summary-grid">
+
+            {{-- Total Guru --}}
+            <div class="guru-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+                <div style="width:46px;height:46px;background:#eff6ff;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:11.5px;color:#2563eb;font-weight:600;margin-bottom:1px">Total Guru</div>
+                    <div id="gs-total-guru" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ count($allGuru) }}</div>
+                    <div style="font-size:11px;color:#94a3b8">Guru</div>
+                </div>
+            </div>
+
+            {{-- Guru Aktif --}}
+            @php $guruAktifCount = $allGuru->where('is_aktif', 1)->count(); @endphp
+            <div class="guru-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+                <div style="width:46px;height:46px;background:#f0fdf4;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:11.5px;color:#16a34a;font-weight:600;margin-bottom:1px">Guru Aktif</div>
+                    <div id="gs-guru-aktif" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ $guruAktifCount ?: count($allGuru) }}</div>
+                    <div style="font-size:11px;color:#94a3b8">Guru</div>
+                </div>
+            </div>
+
+            {{-- Guru Nonaktif --}}
+            @php $guruNonaktifCount = $allGuru->where('is_aktif', 0)->count(); @endphp
+            <div class="guru-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+                <div style="width:46px;height:46px;background:#f5f3ff;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="18" y1="8" x2="22" y2="12"/><line x1="22" y1="8" x2="18" y2="12"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:11.5px;color:#7c3aed;font-weight:600;margin-bottom:1px">Guru Nonaktif</div>
+                    <div id="gs-guru-nonaktif" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ $guruNonaktifCount }}</div>
+                    <div style="font-size:11px;color:#94a3b8">Guru</div>
+                </div>
+            </div>
+
+            {{-- Total Mata Pelajaran --}}
+            <div class="guru-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+                <div style="width:46px;height:46px;background:#fff1f2;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e11d48" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:11.5px;color:#e11d48;font-weight:600;margin-bottom:1px">Mata Pelajaran</div>
+                    <div id="gs-total-mapel" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ count($allMapel ?? []) }}</div>
+                    <div style="font-size:11px;color:#94a3b8">Mata Pelajaran</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     {{-- ── Filter Bar ── --}}
     <div class="filter-bar" style="margin-bottom:16px;align-items:flex-end;gap:12px;flex-wrap:wrap">
 
@@ -145,66 +205,6 @@
                 Menampilkan 1 - {{ min(10, count($allGuru)) }} dari {{ count($allGuru) }} data
             </span>
             <div id="guru-pagination" style="display:flex;align-items:center;gap:4px"></div>
-        </div>
-    </div>
-
-    {{-- ── Ringkasan Data Guru ── --}}
-    <div>
-        <div style="font-size:16px;font-weight:700;color:#1e293b;margin-bottom:14px">
-            Ringkasan Data Guru
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px" id="guru-summary-grid">
-
-            {{-- Total Guru --}}
-            <div class="guru-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-                <div style="width:46px;height:46px;background:#eff6ff;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                </div>
-                <div>
-                    <div style="font-size:11.5px;color:#2563eb;font-weight:600;margin-bottom:1px">Total Guru</div>
-                    <div id="gs-total-guru" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ count($allGuru) }}</div>
-                    <div style="font-size:11px;color:#94a3b8">Guru</div>
-                </div>
-            </div>
-
-            {{-- Guru Aktif --}}
-            @php $guruAktifCount = $allGuru->where('is_aktif', 1)->count(); @endphp
-            <div class="guru-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-                <div style="width:46px;height:46px;background:#f0fdf4;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
-                </div>
-                <div>
-                    <div style="font-size:11.5px;color:#16a34a;font-weight:600;margin-bottom:1px">Guru Aktif</div>
-                    <div id="gs-guru-aktif" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ $guruAktifCount ?: count($allGuru) }}</div>
-                    <div style="font-size:11px;color:#94a3b8">Guru</div>
-                </div>
-            </div>
-
-            {{-- Guru Nonaktif --}}
-            @php $guruNonaktifCount = $allGuru->where('is_aktif', 0)->count(); @endphp
-            <div class="guru-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-                <div style="width:46px;height:46px;background:#f5f3ff;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="18" y1="8" x2="22" y2="12"/><line x1="22" y1="8" x2="18" y2="12"/></svg>
-                </div>
-                <div>
-                    <div style="font-size:11.5px;color:#7c3aed;font-weight:600;margin-bottom:1px">Guru Nonaktif</div>
-                    <div id="gs-guru-nonaktif" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ $guruNonaktifCount }}</div>
-                    <div style="font-size:11px;color:#94a3b8">Guru</div>
-                </div>
-            </div>
-
-            {{-- Total Mata Pelajaran --}}
-            <div class="guru-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-                <div style="width:46px;height:46px;background:#fff1f2;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e11d48" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                </div>
-                <div>
-                    <div style="font-size:11.5px;color:#e11d48;font-weight:600;margin-bottom:1px">Mata Pelajaran</div>
-                    <div id="gs-total-mapel" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ count($allMapel ?? []) }}</div>
-                    <div style="font-size:11px;color:#94a3b8">Mata Pelajaran</div>
-                </div>
-            </div>
-
         </div>
     </div>
 

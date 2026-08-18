@@ -18,6 +18,70 @@
         </button>
     </div>
 
+    {{-- ── Ringkasan Mata Pelajaran ── --}}
+    <div style="margin-top:4px">
+        <div style="font-size:16px;font-weight:700;color:#1e293b;margin-bottom:14px">Ringkasan Mata Pelajaran</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+
+            {{-- Total Mapel --}}
+            <div class="mapel-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+                <div style="width:46px;height:46px;background:#eff6ff;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:11.5px;color:#64748b;font-weight:500;margin-bottom:2px">Total Mata Pelajaran</div>
+                    <div style="font-size:22px;font-weight:800;color:#1e293b;line-height:1.1">{{ $allMapel->count() }}</div>
+                    <div style="font-size:11px;color:#94a3b8;margin-top:1px">Mata Pelajaran</div>
+                </div>
+            </div>
+
+            {{-- Kelompok A --}}
+            @php
+                $kelompokACount = 0; $kelompokBCount = 0; $kelompokCCount = 0;
+                foreach($allMapel as $idx => $m){
+                    $k = ['A','B','C'][$idx % 3];
+                    if($k === 'A') $kelompokACount++;
+                    elseif($k === 'B') $kelompokBCount++;
+                    else $kelompokCCount++;
+                }
+            @endphp
+            <div class="mapel-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+                <div style="width:46px;height:46px;background:#f0fdf4;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:11.5px;color:#64748b;font-weight:500;margin-bottom:2px">Kelompok A</div>
+                    <div style="font-size:22px;font-weight:800;color:#1e293b;line-height:1.1">{{ $kelompokACount }}</div>
+                    <div style="font-size:11px;color:#94a3b8;margin-top:1px">Mata Pelajaran</div>
+                </div>
+            </div>
+
+            {{-- Kelompok B --}}
+            <div class="mapel-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+                <div style="width:46px;height:46px;background:#fffbeb;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:11.5px;color:#64748b;font-weight:500;margin-bottom:2px">Kelompok B</div>
+                    <div style="font-size:22px;font-weight:800;color:#1e293b;line-height:1.1">{{ $kelompokBCount }}</div>
+                    <div style="font-size:11px;color:#94a3b8;margin-top:1px">Mata Pelajaran</div>
+                </div>
+            </div>
+
+            {{-- Kelompok C --}}
+            <div class="mapel-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+                <div style="width:46px;height:46px;background:#f5f3ff;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:11.5px;color:#64748b;font-weight:500;margin-bottom:2px">Kelompok C</div>
+                    <div style="font-size:22px;font-weight:800;color:#1e293b;line-height:1.1">{{ $kelompokCCount }}</div>
+                    <div style="font-size:11px;color:#94a3b8;margin-top:1px">Mata Pelajaran</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- ── Filter Bar ── --}}
     <div class="filter-bar" style="margin-bottom:16px;align-items:flex-end;gap:12px;flex-wrap:wrap">
         {{-- Search --}}
@@ -136,70 +200,6 @@
             </span>
             <div id="mapel-pagination" style="display:flex;align-items:center;gap:4px">
                 {{-- Pagination dibuat via JS --}}
-            </div>
-        </div>
-    </div>
-
-    {{-- ── Ringkasan Mata Pelajaran ── --}}
-    <div style="margin-top:4px">
-        <div style="font-size:16px;font-weight:700;color:#1e293b;margin-bottom:14px">Ringkasan Mata Pelajaran</div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
-
-            {{-- Total Mapel --}}
-            <div class="mapel-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-                <div style="width:46px;height:46px;background:#eff6ff;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                </div>
-                <div>
-                    <div style="font-size:11.5px;color:#64748b;font-weight:500;margin-bottom:2px">Total Mata Pelajaran</div>
-                    <div style="font-size:22px;font-weight:800;color:#1e293b;line-height:1.1">{{ $allMapel->count() }}</div>
-                    <div style="font-size:11px;color:#94a3b8;margin-top:1px">Mata Pelajaran</div>
-                </div>
-            </div>
-
-            {{-- Kelompok A --}}
-            @php
-                $kelompokACount = 0; $kelompokBCount = 0; $kelompokCCount = 0;
-                foreach($allMapel as $idx => $m){
-                    $k = ['A','B','C'][$idx % 3];
-                    if($k === 'A') $kelompokACount++;
-                    elseif($k === 'B') $kelompokBCount++;
-                    else $kelompokCCount++;
-                }
-            @endphp
-            <div class="mapel-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-                <div style="width:46px;height:46px;background:#f0fdf4;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                </div>
-                <div>
-                    <div style="font-size:11.5px;color:#64748b;font-weight:500;margin-bottom:2px">Kelompok A</div>
-                    <div style="font-size:22px;font-weight:800;color:#1e293b;line-height:1.1">{{ $kelompokACount }}</div>
-                    <div style="font-size:11px;color:#94a3b8;margin-top:1px">Mata Pelajaran</div>
-                </div>
-            </div>
-
-            {{-- Kelompok B --}}
-            <div class="mapel-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-                <div style="width:46px;height:46px;background:#fffbeb;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                </div>
-                <div>
-                    <div style="font-size:11.5px;color:#64748b;font-weight:500;margin-bottom:2px">Kelompok B</div>
-                    <div style="font-size:22px;font-weight:800;color:#1e293b;line-height:1.1">{{ $kelompokBCount }}</div>
-                    <div style="font-size:11px;color:#94a3b8;margin-top:1px">Mata Pelajaran</div>
-                </div>
-            </div>
-
-            {{-- Kelompok C --}}
-            <div class="mapel-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-                <div style="width:46px;height:46px;background:#f5f3ff;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                </div>
-                <div>
-                    <div style="font-size:11.5px;color:#64748b;font-weight:500;margin-bottom:2px">Kelompok C</div>
-                    <div style="font-size:22px;font-weight:800;color:#1e293b;line-height:1.1">{{ $kelompokCCount }}</div>
-                    <div style="font-size:11px;color:#94a3b8;margin-top:1px">Mata Pelajaran</div>
-                </div>
             </div>
         </div>
     </div>

@@ -169,6 +169,10 @@ class DashboardController extends Controller
             ->orderByDesc('tahun_lulus')
             ->get();
 
+        $allAlumni = Alumni::orderByDesc('alumni.tahun_lulus')
+            ->orderBy('alumni.nama_siswa')
+            ->get();
+
         return view('admin.dashboard', compact(
             'tahunAjaran',
             'kelases',
@@ -206,7 +210,8 @@ class DashboardController extends Controller
             'batasWaktuJurnal',
             'izinEditJurnal',
             'ringkasanNk',
-            'alumniTahunan'
+            'alumniTahunan',
+            'allAlumni'
         ));
     }
 }

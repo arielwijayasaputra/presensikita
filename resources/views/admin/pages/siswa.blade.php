@@ -21,6 +21,80 @@
         </div>
     </div>
 
+    {{-- ── Ringkasan Data Siswa ── --}}
+    <div>
+        <div id="siswa-ringkasan-title" style="font-size:16px;font-weight:700;color:#1e293b;margin-bottom:14px">
+            Ringkasan Data Siswa
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px" id="siswa-summary-grid">
+
+            {{-- Total Siswa --}}
+            <div class="siswa-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+                <div style="width:46px;height:46px;background:#eff6ff;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:11.5px;color:#2563eb;font-weight:600;margin-bottom:1px">Total Siswa</div>
+                    <div id="ss-total" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ $allSiswa->count() }}</div>
+                    <div style="font-size:11px;color:#94a3b8">Orang</div>
+                </div>
+            </div>
+
+            {{-- Perempuan --}}
+            @php $jmlP = $allSiswa->where('jenis_kelamin','P')->count(); @endphp
+            <div class="siswa-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+                <div style="width:46px;height:46px;background:#fdf2f8;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#db2777" stroke-width="1.8"><circle cx="12" cy="9" r="5"/><line x1="12" y1="14" x2="12" y2="21"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:11.5px;color:#db2777;font-weight:600;margin-bottom:1px">Perempuan</div>
+                    <div id="ss-perempuan" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ $jmlP }}</div>
+                    <div style="font-size:11px;color:#94a3b8">Orang</div>
+                </div>
+            </div>
+
+            {{-- Laki-laki --}}
+            @php $jmlL = $allSiswa->where('jenis_kelamin','L')->count(); @endphp
+            <div class="siswa-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+                <div style="width:46px;height:46px;background:#eff6ff;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8"><circle cx="10" cy="14" r="5"/><path d="M19 5l-5.9 5.9M15 5h4v4"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:11.5px;color:#2563eb;font-weight:600;margin-bottom:1px">Laki-laki</div>
+                    <div id="ss-lakilaki" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ $jmlL }}</div>
+                    <div style="font-size:11px;color:#94a3b8">Orang</div>
+                </div>
+            </div>
+
+            {{-- Siswa Aktif --}}
+            @php $jmlAktif = $allSiswa->where('is_aktif',1)->count(); @endphp
+            <div class="siswa-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+                <div style="width:46px;height:46px;background:#f0fdf4;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:11.5px;color:#16a34a;font-weight:600;margin-bottom:1px">Siswa Aktif</div>
+                    <div id="ss-aktif" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ $jmlAktif }}</div>
+                    <div style="font-size:11px;color:#94a3b8">Orang</div>
+                </div>
+            </div>
+
+            {{-- Siswa Nonaktif --}}
+            @php $jmlNonaktif = $allSiswa->where('is_aktif',0)->count(); @endphp
+            <div class="siswa-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+                <div style="width:46px;height:46px;background:#fff7ed;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:11.5px;color:#d97706;font-weight:600;margin-bottom:1px">Siswa Nonaktif</div>
+                    <div id="ss-nonaktif" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ $jmlNonaktif }}</div>
+                    <div style="font-size:11px;color:#94a3b8">Orang</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     {{-- ── Filter Bar ── --}}
     <div class="filter-bar" style="margin-bottom:16px;align-items:flex-end;gap:12px;flex-wrap:wrap">
 
@@ -160,80 +234,6 @@
                 Menampilkan 1 - {{ min(10, $allSiswa->count()) }} dari {{ $allSiswa->count() }} data
             </span>
             <div id="siswa-pagination" style="display:flex;align-items:center;gap:4px"></div>
-        </div>
-    </div>
-
-    {{-- ── Ringkasan Data Siswa ── --}}
-    <div>
-        <div id="siswa-ringkasan-title" style="font-size:16px;font-weight:700;color:#1e293b;margin-bottom:14px">
-            Ringkasan Data Siswa
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px" id="siswa-summary-grid">
-
-            {{-- Total Siswa --}}
-            <div class="siswa-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-                <div style="width:46px;height:46px;background:#eff6ff;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                </div>
-                <div>
-                    <div style="font-size:11.5px;color:#2563eb;font-weight:600;margin-bottom:1px">Total Siswa</div>
-                    <div id="ss-total" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ $allSiswa->count() }}</div>
-                    <div style="font-size:11px;color:#94a3b8">Orang</div>
-                </div>
-            </div>
-
-            {{-- Perempuan --}}
-            @php $jmlP = $allSiswa->where('jenis_kelamin','P')->count(); @endphp
-            <div class="siswa-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-                <div style="width:46px;height:46px;background:#fdf2f8;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#db2777" stroke-width="1.8"><circle cx="12" cy="9" r="5"/><line x1="12" y1="14" x2="12" y2="21"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
-                </div>
-                <div>
-                    <div style="font-size:11.5px;color:#db2777;font-weight:600;margin-bottom:1px">Perempuan</div>
-                    <div id="ss-perempuan" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ $jmlP }}</div>
-                    <div style="font-size:11px;color:#94a3b8">Orang</div>
-                </div>
-            </div>
-
-            {{-- Laki-laki --}}
-            @php $jmlL = $allSiswa->where('jenis_kelamin','L')->count(); @endphp
-            <div class="siswa-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-                <div style="width:46px;height:46px;background:#eff6ff;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8"><circle cx="10" cy="14" r="5"/><path d="M19 5l-5.9 5.9M15 5h4v4"/></svg>
-                </div>
-                <div>
-                    <div style="font-size:11.5px;color:#2563eb;font-weight:600;margin-bottom:1px">Laki-laki</div>
-                    <div id="ss-lakilaki" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ $jmlL }}</div>
-                    <div style="font-size:11px;color:#94a3b8">Orang</div>
-                </div>
-            </div>
-
-            {{-- Siswa Aktif --}}
-            @php $jmlAktif = $allSiswa->where('is_aktif',1)->count(); @endphp
-            <div class="siswa-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-                <div style="width:46px;height:46px;background:#f0fdf4;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                </div>
-                <div>
-                    <div style="font-size:11.5px;color:#16a34a;font-weight:600;margin-bottom:1px">Siswa Aktif</div>
-                    <div id="ss-aktif" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ $jmlAktif }}</div>
-                    <div style="font-size:11px;color:#94a3b8">Orang</div>
-                </div>
-            </div>
-
-            {{-- Siswa Nonaktif --}}
-            @php $jmlNonaktif = $allSiswa->where('is_aktif',0)->count(); @endphp
-            <div class="siswa-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-                <div style="width:46px;height:46px;background:#fff7ed;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-                </div>
-                <div>
-                    <div style="font-size:11.5px;color:#d97706;font-weight:600;margin-bottom:1px">Siswa Nonaktif</div>
-                    <div id="ss-nonaktif" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ $jmlNonaktif }}</div>
-                    <div style="font-size:11px;color:#94a3b8">Orang</div>
-                </div>
-            </div>
-
         </div>
     </div>
 

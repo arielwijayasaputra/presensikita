@@ -105,7 +105,14 @@
                         @endif
                     </td>
                     <td style="text-align:center">
-                        <div style="display:inline-flex;align-items:center;gap:6px">
+                        <div style="display:inline-flex;align-items:center;gap:8px">
+                            <div onclick="toggleAktifGuru(this, {{ $g->id_guru }}, '{{ addslashes($g->nama_guru) }}', {{ (int)$isAktif }})"
+                                 data-guru-id="{{ $g->id_guru }}"
+                                 class="guru-toggle-switch"
+                                 style="width:40px;height:22px;border-radius:11px;cursor:pointer;position:relative;transition:background 0.25s;@if($isAktif) background:var(--green,#22c55e);@else background:var(--red,#ef4444);@endif"
+                                 title="{{ $isAktif ? 'Nonaktifkan' : 'Aktifkan' }}">
+                                <div class="guru-toggle-dot" style="width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:3px;transition:left 0.25s;box-shadow:0 1px 3px rgba(0,0,0,0.15);@if($isAktif) left:21px;@else left:3px;@endif"></div>
+                            </div>
                             <button
                                 onclick="editGuruModal({{ $g->id_guru }}, '{{ addslashes($g->nama_guru) }}', '{{ addslashes($g->nip ?? '') }}', '{{ addslashes($g->Peran ?? 'Guru') }}', '{{ addslashes($g->no_hp ?? '') }}', '{{ addslashes($g->username) }}', {{ (int)($g->is_admin ?? 0) }})"
                                 style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:#eff6ff;border:1px solid #bfdbfe;color:#2563eb;border-radius:8px;cursor:pointer;transition:all 0.2s;"
@@ -466,6 +473,74 @@ function editGuruModal(id, nama, nip, peran, hp, username, isAdmin){
                     customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title', confirmButton: 'custom-swal-confirm' },
                     buttonsStyling: false
                 }).then(() => location.reload());
+            })
+            .catch(err => Swal.fire('Gagal', err.message || 'Terjadi kesalahan sistem.', 'error'));
+        }
+    });
+}
+
+function toggleAktifGuru(el, id, nama, isAktif) {
+    const action = isAktif ? 'menonaktifkan' : 'mengaktifkan';
+    Swal.fire({
+        title: `${action.charAt(0).toUpperCase() + action.slice(1)} Guru?`,
+        html: `<div style="font-size:14px;color:#64748b">Anda yakin ingin ${action} <strong>${nama}</strong>?</div>`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: `Ya, ${action}`,
+        cancelButtonText: 'Batal',
+        buttonsStyling: false,
+        customClass: {
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            confirmButton: 'custom-swal-confirm',
+            cancelButton: 'custom-swal-cancel'
+        }
+    }).then(result => {
+        if (result.isConfirmed) {
+            fetch(`/guru/${id}/toggle-aktif`, {
+                method: 'PATCH',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(async res => {
+                const data = await res.json();
+                if (!res.ok || data.status === 'error') throw new Error(data.message || 'Gagal mengubah status guru');
+                return data;
+            })
+            .then(data => {
+                const newIsAktif = data.is_aktif;
+                const row = el.closest('tr');
+
+                el.style.background = newIsAktif ? 'var(--green,#22c55e)' : 'var(--red,#ef4444)';
+                el.querySelector('.guru-toggle-dot').style.left = newIsAktif ? '21px' : '3px';
+                el.title = newIsAktif ? 'Nonaktifkan' : 'Aktifkan';
+                el.setAttribute('onclick', `toggleAktifGuru(this, ${id}, '${nama.replace(/'/g, "\\'")}', ${newIsAktif})`);
+
+                if (row) {
+                    row.dataset.status = newIsAktif ? 'aktif' : 'nonaktif';
+                    const statusCell = row.querySelectorAll('td')[6];
+                    if (statusCell) {
+                        statusCell.innerHTML = newIsAktif
+                            ? '<span class="badge badge-success">Aktif</span>'
+                            : '<span class="badge badge-warning">Nonaktif</span>';
+                    }
+                }
+
+                const rows = Array.from(document.querySelectorAll('#guru-tbody-page .guru-row-item'));
+                let totalGuru = rows.length, aktif = 0, nonaktif = 0;
+                rows.forEach(r => { if (r.dataset.status === 'aktif') aktif++; else nonaktif++; });
+                const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
+                set('gs-total-guru', totalGuru);
+                set('gs-guru-aktif', aktif);
+                set('gs-guru-nonaktif', nonaktif);
+
+                Swal.fire({
+                    icon: 'success', title: 'Berhasil!', text: data.message,
+                    timer: 1200, showConfirmButton: false
+                });
             })
             .catch(err => Swal.fire('Gagal', err.message || 'Terjadi kesalahan sistem.', 'error'));
         }

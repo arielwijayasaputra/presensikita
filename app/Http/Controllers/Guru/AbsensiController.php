@@ -250,8 +250,13 @@ class AbsensiController extends Controller
                 // Belum ada jadwal sama sekali untuk kelas ini: buat satu agar jurnal tetap tertaut benar
                 if (!$idJadwal) {
                     $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
-                    $hariMap = ['Sun' => 'Senin', 'Mon' => 'Senin', 'Tue' => 'Selasa', 'Wed' => 'Rabu', 'Thu' => 'Kamis', 'Fri' => 'Jumat', 'Sat' => 'Sabtu'];
-                    $hari = $hariMap[date('D', strtotime($tanggal))] ?? 'Senin';
+                    $hariMap = ['Mon' => 'Senin', 'Tue' => 'Selasa', 'Wed' => 'Rabu', 'Thu' => 'Kamis', 'Fri' => 'Jumat'];
+                    $hari = $hariMap[date('D', strtotime($tanggal))];
+
+                    if (!$hari) {
+                        DB::rollBack();
+                        return response()->json(['status' => 'error', 'message' => 'Absensi hanya tersedia pada hari Senin–Jumat.'], 422);
+                    }
 
                     $idJadwal = DB::table('jadwal_mengajar')->insertGetId([
                         'id_guru'          => $idGuru,

@@ -275,9 +275,8 @@
         }
         .role-card.active .role-card-icon-admin     { background: linear-gradient(135deg, #1d4ed8, #3b82f6); color: #fff; }
         .role-card.active .role-card-icon-guru      { background: linear-gradient(135deg, #0e7490, #06b6d4); color: #fff; }
+        .role-card.active .role-card-icon-gurupiket { background: linear-gradient(135deg, #0891b2, #22d3ee); color: #fff; }
         .role-card.active .role-card-icon-walikelas { background: linear-gradient(135deg, #059669, #34d399); color: #fff; }
-        .role-card.active .role-card-icon-waka      { background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff; }
-        .role-card.active .role-card-icon-kepsek    { background: linear-gradient(135deg, #4338ca, #6366f1); color: #fff; }
         .role-card.active .role-card-icon-satpam    { background: linear-gradient(135deg, #334155, #64748b); color: #fff; }
         .role-card.active .role-card-icon-wali      { background: linear-gradient(135deg, #7c3aed, #a78bfa); color: #fff; }
         .role-card-name { font-size: 14px; font-weight: 700; color: #1a2a45; }
@@ -406,17 +405,14 @@
         .btn-guru  { background: linear-gradient(135deg, #0e7490, #0891b2); box-shadow: 0 4px 16px rgba(14,116,144,0.35); }
         .btn-guru:hover { box-shadow: 0 6px 22px rgba(14,116,144,0.45); }
 
+        .btn-gurupiket  { background: linear-gradient(135deg, #0891b2, #06b6d4); box-shadow: 0 4px 16px rgba(8,145,178,0.35); }
+        .btn-gurupiket:hover { box-shadow: 0 6px 22px rgba(8,145,178,0.45); }
+
         .btn-wali  { background: linear-gradient(135deg, #7c3aed, #8b5cf6); box-shadow: 0 4px 16px rgba(124,58,237,0.35); }
         .btn-wali:hover { box-shadow: 0 6px 22px rgba(124,58,237,0.45); }
 
         .btn-walikelas { background: linear-gradient(135deg, #059669, #10b981); box-shadow: 0 4px 16px rgba(5,150,105,0.35); }
         .btn-walikelas:hover { box-shadow: 0 6px 22px rgba(5,150,105,0.45); }
-
-        .btn-waka  { background: linear-gradient(135deg, #d97706, #f59e0b); box-shadow: 0 4px 16px rgba(217,119,6,0.35); }
-        .btn-waka:hover { box-shadow: 0 6px 22px rgba(217,119,6,0.45); }
-
-        .btn-kepsek  { background: linear-gradient(135deg, #4338ca, #6366f1); box-shadow: 0 4px 16px rgba(67,56,202,0.35); }
-        .btn-kepsek:hover { box-shadow: 0 6px 22px rgba(67,56,202,0.45); }
 
         .btn-satpam  { background: linear-gradient(135deg, #334155, #64748b); box-shadow: 0 4px 16px rgba(51,65,85,0.35); }
         .btn-satpam:hover { box-shadow: 0 6px 22px rgba(51,65,85,0.45); }
@@ -492,7 +488,7 @@
                     Platform Digital Sekolah
                 </div>
                 <h1 class="hero-title">Kelola Kehadiran Siswa<br>Lebih <span class="accent">Mudah &amp; Terorganisir</span></h1>
-                <p class="hero-desc">Catat, pantau, dan rekap kehadiran siswa setiap hari secara digital, akurat, dan efisien. Tersedia untuk Admin, Guru, Wali Kelas, Waka Kesiswaan, Kepala Sekolah, Satpam, dan Wali Murid.</p>
+                <p class="hero-desc">Catat, pantau, dan rekap kehadiran siswa setiap hari secara digital, akurat, dan efisien. Tersedia untuk Admin, Guru, Guru Piket, Wali Kelas, Satpam, dan Wali Murid.</p>
                 <div class="feature-list">
                     <div class="feature-item">
                         <div class="feature-icon-badge">
@@ -510,7 +506,7 @@
                         <div class="feature-icon-badge">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                         </div>
-                        <div><div class="feature-title">Multi-Role Akses</div><div class="feature-sub">Admin, Guru, Wali Kelas, Waka Kesiswaan, Kepala Sekolah, Satpam, dan Wali Murid memiliki akses dan fitur tersendiri.</div></div>
+                        <div><div class="feature-title">Multi-Role Akses</div><div class="feature-sub">Admin, Guru, Guru Piket, Wali Kelas, Satpam, dan Wali Murid memiliki akses dan fitur tersendiri.</div></div>
                     </div>
                 </div>
                 <div class="hero-quote">
@@ -561,6 +557,15 @@
                         </div>
                         <div class="role-card-name">Guru</div>
                     </div>
+                    <div class="role-card" id="card-gurupiket">
+                        <div class="role-card-icon role-card-icon-gurupiket">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2l8 3v6c0 5-4 9-8 10-4-1-8-5-8-10V5l8-3z"/>
+                                <path d="M9 12l2 2 4-4"/>
+                            </svg>
+                        </div>
+                        <div class="role-card-name">Guru Piket</div>
+                    </div>
                     <div class="role-card" id="card-walikelas">
                         <div class="role-card-icon role-card-icon-walikelas">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -570,26 +575,6 @@
                             </svg>
                         </div>
                         <div class="role-card-name">Wali Kelas</div>
-                    </div>
-                    <div class="role-card" id="card-waka">
-                        <div class="role-card-icon role-card-icon-waka">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="8" r="6"/>
-                                <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
-                            </svg>
-                        </div>
-                        <div class="role-card-name">Waka Kesiswaan</div>
-                    </div>
-                    <div class="role-card" id="card-kepsek">
-                        <div class="role-card-icon role-card-icon-kepsek">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 21h18"/>
-                                <path d="M5 21V7l7-4 7 4v14"/>
-                                <path d="M9 21v-6h6v6"/>
-                                <path d="M9 9h.01M15 9h.01M9 12h.01M15 12h.01"/>
-                            </svg>
-                        </div>
-                        <div class="role-card-name">Kepala Sekolah</div>
                     </div>
                     <div class="role-card" id="card-satpam">
                         <div class="role-card-icon role-card-icon-satpam">
@@ -621,9 +606,8 @@
             <div class="role-dots">
                 <button type="button" class="role-dot active" data-role="admin" aria-label="Pilih Admin"></button>
                 <button type="button" class="role-dot" data-role="guru" aria-label="Pilih Guru"></button>
+                <button type="button" class="role-dot" data-role="gurupiket" aria-label="Pilih Guru Piket"></button>
                 <button type="button" class="role-dot" data-role="walikelas" aria-label="Pilih Wali Kelas"></button>
-                <button type="button" class="role-dot" data-role="waka" aria-label="Pilih Waka Kesiswaan"></button>
-                <button type="button" class="role-dot" data-role="kepsek" aria-label="Pilih Kepala Sekolah"></button>
                 <button type="button" class="role-dot" data-role="satpam" aria-label="Pilih Satpam"></button>
                 <button type="button" class="role-dot" data-role="wali" aria-label="Pilih Wali Murid"></button>
             </div>
@@ -708,18 +692,54 @@
                 </form>
             </div>
 
+            <!-- ─── PANEL GURU PIKET ─── -->
+            <div class="form-panel" id="panel-gurupiket" role="tabpanel" aria-labelledby="card-gurupiket">
+                <form method="POST" action="{{ route('login.gurupiket.post') }}" id="form-gurupiket">
+                    @csrf
+                    <input type="hidden" name="role" value="gurupiket">
+                    <div class="form-group">
+                        <label class="form-label" for="gurupiket-username">Username Guru Piket</label>
+                        <div class="input-relative">
+                            <span class="input-icon">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            </span>
+                            <input type="text" id="gurupiket-username" name="username" class="form-input" placeholder="Masukkan username guru piket" value="{{ old('username') }}" autocomplete="username" required autofocus>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="gurupiket-password">Password</label>
+                        <div class="input-relative">
+                            <span class="input-icon">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                            </span>
+                            <input type="password" id="gurupiket-password" name="password" class="form-input" placeholder="Masukkan password" autocomplete="current-password" required>
+                            <button type="button" class="btn-eye-toggle" onclick="togglePassword('gurupiket-password','eye-gurupiket')" title="Tampilkan/Sembunyikan">
+                                <svg id="eye-gurupiket" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-options">
+                        <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
+                    </div>
+                    <button type="submit" class="btn-submit btn-gurupiket" id="btn-gurupiket">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                        <span>Masuk sebagai Guru Piket</span>
+                    </button>
+                </form>
+            </div>
+
             <!-- ─── PANEL WALI KELAS ─── -->
             <div class="form-panel" id="panel-walikelas" role="tabpanel" aria-labelledby="card-walikelas">
                 <form method="POST" action="{{ route('login.walikelas.post') }}" id="form-walikelas">
                     @csrf
                     <input type="hidden" name="role" value="walikelas">
                     <div class="form-group">
-                        <label class="form-label" for="walikelas-username">Username Guru</label>
+                        <label class="form-label" for="walikelas-nip">NIP Guru</label>
                         <div class="input-relative">
                             <span class="input-icon">
-                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="13" y2="12"/><line x1="7" y1="16" x2="10" y2="16"/></svg>
                             </span>
-                            <input type="text" id="walikelas-username" name="username" class="form-input" placeholder="Masukkan username guru" value="{{ old('username') }}" autocomplete="username" required>
+                            <input type="text" id="walikelas-nip" name="nip" class="form-input" placeholder="Masukkan NIP guru" value="{{ old('nip') }}" inputmode="numeric" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -734,102 +754,12 @@
                             </button>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label" for="walikelas-kelas">Kelas Wali</label>
-                        <div class="input-relative">
-                            <span class="input-icon">
-                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-                            </span>
-                            <select id="walikelas-kelas" name="id_kelas" class="form-input form-select" required>
-                                <option value="" disabled {{ old('id_kelas') ? '' : 'selected' }}>Pilih kelas</option>
-                                @foreach($kelases as $kelas)
-                                    <option value="{{ $kelas->id_kelas }}" {{ (string) old('id_kelas') === (string) $kelas->id_kelas ? 'selected' : '' }}>
-                                        {{ $kelas->nama_kelas }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
                     <div class="form-options">
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
                     </div>
                     <button type="submit" class="btn-submit btn-walikelas" id="btn-walikelas">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
                         <span>Masuk sebagai Wali Kelas</span>
-                    </button>
-                </form>
-            </div>
-
-            <!-- ─── PANEL WAKA KESISWAAN ─── -->
-            <div class="form-panel" id="panel-waka" role="tabpanel" aria-labelledby="card-waka">
-                <form method="POST" action="{{ route('login.peran.post') }}" id="form-waka">
-                    @csrf
-                    <input type="hidden" name="role" value="waka">
-                    <input type="hidden" name="peran" value="Waka">
-                    <div class="form-group">
-                        <label class="form-label" for="waka-username">Username Waka Kesiswaan</label>
-                        <div class="input-relative">
-                            <span class="input-icon">
-                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                            </span>
-                            <input type="text" id="waka-username" name="username" class="form-input" placeholder="Masukkan username" value="{{ old('username') }}" autocomplete="username" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="waka-password">Password</label>
-                        <div class="input-relative">
-                            <span class="input-icon">
-                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                            </span>
-                            <input type="password" id="waka-password" name="password" class="form-input" placeholder="Masukkan password" autocomplete="current-password" required>
-                            <button type="button" class="btn-eye-toggle" onclick="togglePassword('waka-password','eye-waka')" title="Tampilkan/Sembunyikan">
-                                <svg id="eye-waka" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="form-options">
-                        <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
-                    </div>
-                    <button type="submit" class="btn-submit btn-waka" id="btn-waka">
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                        <span>Masuk sebagai Waka Kesiswaan</span>
-                    </button>
-                </form>
-            </div>
-
-            <!-- ─── PANEL KEPALA SEKOLAH ─── -->
-            <div class="form-panel" id="panel-kepsek" role="tabpanel" aria-labelledby="card-kepsek">
-                <form method="POST" action="{{ route('login.peran.post') }}" id="form-kepsek">
-                    @csrf
-                    <input type="hidden" name="role" value="kepsek">
-                    <input type="hidden" name="peran" value="Kepsek">
-                    <div class="form-group">
-                        <label class="form-label" for="kepsek-username">Username Kepala Sekolah</label>
-                        <div class="input-relative">
-                            <span class="input-icon">
-                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                            </span>
-                            <input type="text" id="kepsek-username" name="username" class="form-input" placeholder="Masukkan username" value="{{ old('username') }}" autocomplete="username" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="kepsek-password">Password</label>
-                        <div class="input-relative">
-                            <span class="input-icon">
-                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                            </span>
-                            <input type="password" id="kepsek-password" name="password" class="form-input" placeholder="Masukkan password" autocomplete="current-password" required>
-                            <button type="button" class="btn-eye-toggle" onclick="togglePassword('kepsek-password','eye-kepsek')" title="Tampilkan/Sembunyikan">
-                                <svg id="eye-kepsek" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="form-options">
-                        <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
-                    </div>
-                    <button type="submit" class="btn-submit btn-kepsek" id="btn-kepsek">
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                        <span>Masuk sebagai Kepala Sekolah</span>
                     </button>
                 </form>
             </div>
@@ -909,7 +839,7 @@
 
 <script>
     // ── Role switching (single display)
-    const roles = ['admin', 'guru', 'walikelas', 'waka', 'kepsek', 'satpam', 'wali'];
+    const roles = ['admin', 'guru', 'gurupiket', 'walikelas', 'satpam', 'wali'];
     let currentRoleIndex = 0;
 
     function switchRole(role) {
@@ -970,9 +900,8 @@
     @if($errors->any())
         const oldRole = '{{ old("role", "admin") }}';
         if (oldRole === 'guru') switchRole('guru');
+        else if (oldRole === 'gurupiket') switchRole('gurupiket');
         else if (oldRole === 'walikelas') switchRole('walikelas');
-        else if (oldRole === 'waka') switchRole('waka');
-        else if (oldRole === 'kepsek') switchRole('kepsek');
         else if (oldRole === 'satpam') switchRole('satpam');
         else if (oldRole === 'wali' || {{ $errors->has('nisn') ? 'true' : 'false' }}) switchRole('wali');
     @endif
@@ -1000,9 +929,8 @@
 
     document.getElementById('form-admin').addEventListener('submit', () => setLoading('btn-admin', 'Memproses...'));
     document.getElementById('form-guru').addEventListener('submit',  () => setLoading('btn-guru',  'Memproses...'));
+    document.getElementById('form-gurupiket').addEventListener('submit',  () => setLoading('btn-gurupiket',  'Memproses...'));
     document.getElementById('form-walikelas').addEventListener('submit', () => setLoading('btn-walikelas', 'Memproses...'));
-    document.getElementById('form-waka').addEventListener('submit',    () => setLoading('btn-waka',  'Memproses...'));
-    document.getElementById('form-kepsek').addEventListener('submit',  () => setLoading('btn-kepsek', 'Memproses...'));
     document.getElementById('form-satpam').addEventListener('submit',  () => setLoading('btn-satpam', 'Memproses...'));
     document.getElementById('form-wali').addEventListener('submit',  () => setLoading('btn-wali',  'Memeriksa NISN...'));
 

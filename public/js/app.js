@@ -1189,7 +1189,7 @@ function confirmDeleteData({ title, itemName, warningText, onConfirm }) {
                 </div>
                 <div style="font-size: 13.5px; color: #64748b; line-height: 1.55; font-family: 'Inter', sans-serif;">
                     Apakah Anda yakin ingin menghapus <strong>${itemName}</strong>?<br>
-                    <small style="color:#94a3b8;font-size:12px;">${warningText || 'Data akan dihapus secara soft-delete.'}</small>
+                    ${warningText ? `<small style="color:#94a3b8;font-size:12px;">${warningText}</small>` : ''}
                 </div>
             </div>
         `,

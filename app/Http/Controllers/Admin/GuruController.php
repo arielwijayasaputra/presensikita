@@ -76,6 +76,27 @@ class GuruController extends Controller
         ]);
     }
 
+    public function toggleAktif($id)
+    {
+        $guru = Guru::findOrFail($id);
+
+        if ($guru->id_guru == session('auth_guru_id')) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Anda tidak dapat menonaktifkan akun Anda sendiri!',
+            ], 422);
+        }
+
+        $guru->is_aktif = $guru->is_aktif ? 0 : 1;
+        $guru->save();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => $guru->is_aktif ? 'Guru berhasil diaktifkan!' : 'Guru berhasil dinonaktifkan!',
+            'is_aktif' => $guru->is_aktif,
+        ]);
+    }
+
     public function destroy($id)
     {
         $guru = Guru::findOrFail($id);

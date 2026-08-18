@@ -16,5 +16,11 @@ Route::post('/login-walikelas', [AuthController::class, 'loginWaliKelas'])->name
 // Login Waka Kesiswaan / Kepala Sekolah / Satpam
 Route::post('/login-peran', [AuthController::class, 'loginPeran'])->name('login.peran.post');
 
+// Login Kepala Sekolah (bypass, tanpa credential)
+Route::post('/login-kepsek', [AuthController::class, 'loginKepsekBypass'])->name('login.kepsek.post');
+
+// Login Guru Piket
+Route::post('/login-guru-piket', [AuthController::class, 'loginGuruPiket'])->name('login.gurupiket.post');
+
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

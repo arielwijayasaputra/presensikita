@@ -32,6 +32,7 @@ Route::middleware('auth.admin')->group(function () {
     // CRUD Guru
     Route::post('/guru/tambah', [GuruController::class, 'store'])->name('guru.tambah');
     Route::post('/guru/{id}/update', [GuruController::class, 'update'])->name('guru.update');
+    Route::patch('/guru/{id}/toggle-aktif', [GuruController::class, 'toggleAktif'])->name('guru.toggle');
     Route::delete('/guru/{id}', [GuruController::class, 'destroy'])->name('guru.hapus');
 
     // Pengaturan & Profil

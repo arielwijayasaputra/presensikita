@@ -101,3 +101,6 @@ DB_PASSWORD=
 :: 7. Jalankan project
 php artisan serve
 ```
+
+
+mariiiiiiiiiiiiiiiii

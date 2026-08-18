@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\KelasController;
 use App\Http\Controllers\Admin\MapelController;
 use App\Http\Controllers\Admin\GuruController;
 use App\Http\Controllers\Admin\PengaturanController;
+use App\Http\Controllers\Admin\NaikKelasController;
 
 // Semua route admin memerlukan middleware auth.admin
 Route::middleware('auth.admin')->group(function () {
@@ -16,6 +17,7 @@ Route::middleware('auth.admin')->group(function () {
 
     // CRUD Siswa
     Route::post('/siswa/tambah', [SiswaController::class, 'store'])->name('siswa.tambah');
+    Route::post('/siswa/import-csv', [SiswaController::class, 'importCsv'])->name('siswa.import');
     Route::post('/siswa/{id}/update', [SiswaController::class, 'update'])->name('siswa.update');
     Route::delete('/siswa/{id}', [SiswaController::class, 'destroy'])->name('siswa.hapus');
 
@@ -38,4 +40,11 @@ Route::middleware('auth.admin')->group(function () {
     // Pengaturan & Profil
     Route::post('/pengaturan/update', [PengaturanController::class, 'update'])->name('pengaturan.update');
     Route::post('/profil/update', [PengaturanController::class, 'updateProfil'])->name('profil.update');
+
+    // Naik Kelas
+    Route::get('/naik-kelas', [NaikKelasController::class, 'index'])->name('naik-kelas.index');
+    Route::get('/naik-kelas/preview', [NaikKelasController::class, 'preview'])->name('naik-kelas.preview');
+    Route::post('/naik-kelas/execute', [NaikKelasController::class, 'execute'])->name('naik-kelas.execute');
+    Route::get('/naik-kelas/siswa/{id_kelas}', [NaikKelasController::class, 'getSiswaByKelas'])->name('naik-kelas.siswa');
+    Route::get('/alumni', [NaikKelasController::class, 'alumniList'])->name('alumni.list');
 });

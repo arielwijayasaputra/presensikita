@@ -9,6 +9,7 @@
     @include('admin.pages.siswa')
     @include('admin.pages.kelas')
     @include('admin.pages.mapel')
+    @include('admin.pages.naik-kelas')
     @include('admin.pages.pengaturan')
     @include('admin.pages.profil')
 @endsection

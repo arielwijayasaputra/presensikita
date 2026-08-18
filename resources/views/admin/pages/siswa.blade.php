@@ -9,10 +9,16 @@
                 {{ $allKelas->first()->nama_kelas ?? 'Semua Kelas' }}
             </div>
         </div>
-        <button class="btn-primary" onclick="tambahSiswaModal()" style="border-radius:10px;padding:10px 20px;font-size:13.5px">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Tambah Siswa
-        </button>
+        <div style="display:flex;align-items:center;gap:8px">
+            <button class="btn-primary" onclick="tambahSiswaModal()" style="border-radius:10px;padding:10px 20px;font-size:13.5px">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Tambah Siswa
+            </button>
+            <button class="btn-primary" onclick="uploadCsvModal()" style="border-radius:10px;padding:10px 20px;font-size:13.5px;background:var(--green,#22c55e);border-color:var(--green,#22c55e)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload CSV
+            </button>
+        </div>
     </div>
 
     {{-- ── Filter Bar ── --}}
@@ -495,10 +501,125 @@ function editSiswaModal(id, nisn, nama, jk, idKelas){
                     icon: 'success', title: 'Berhasil!', text: data.message || 'Data berhasil diperbarui.',
                     customClass: { popup:'custom-swal-popup', title:'custom-swal-title', confirmButton:'custom-swal-confirm' },
                     buttonsStyling: false
-                }).then(() => location.reload());
+                }).then(() => reloadCurrentPage());
             })
             .catch(err => Swal.fire('Gagal', err.message || 'Terjadi kesalahan sistem.', 'error'));
         }
     });
 }
+
+function uploadCsvModal() {
+    Swal.fire({
+        title: 'Upload CSV Siswa',
+        customClass: {
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            confirmButton: 'custom-swal-confirm',
+            cancelButton: 'custom-swal-cancel'
+        },
+        buttonsStyling: false,
+        html: `
+            <div style="text-align:left;padding:4px 0">
+                <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;margin-bottom:16px">
+                    <div style="font-size:13px;font-weight:700;color:#16a34a;margin-bottom:6px">Format CSV</div>
+                    <code style="font-size:12px;color:#475569;display:block;line-height:1.7">
+                        nisn,nama_siswa,jenis_kelamin,nama_kelas,is_aktif<br>
+                        12300101,Aditya Pratama,L,X TKJ 1,1<br>
+                        12300102,Aisyah Putri,P,XI RPL 2,0
+                    </code>
+                </div>
+                <div style="font-size:12.5px;color:#64748b;margin-bottom:10px">
+                    <strong>Catatan:</strong> Kolom <code>is_aktif</code> opsional (1=aktif, 0=nonaktif). Jika tidak diisi, default aktif. Kelas otomatis dibuat jika belum ada.
+                </div>
+                <div style="position:relative;border:2px dashed #cbd5e1;border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all 0.2s;background:#f8fafc" id="csv-dropzone"
+                     onclick="document.getElementById('csv-file-input').click()"
+                     ondragover="event.preventDefault();this.style.borderColor='#22c55e';this.style.background='#f0fdf4'"
+                     ondragleave="this.style.borderColor='#cbd5e1';this.style.background='#f8fafc'"
+                     ondrop="event.preventDefault();this.style.borderColor='#cbd5e1';this.style.background='#f8fafc';handleCsvFile(event.dataTransfer.files[0])">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" style="margin:0 auto 8px;display:block"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <div style="font-size:13.5px;color:#64748b;font-weight:600">Klik atau seret file ke sini</div>
+                    <div style="font-size:11.5px;color:#94a3b8;margin-top:4px">Format .csv, maks 5MB</div>
+                    <div id="csv-filename" style="font-size:12.5px;color:#22c55e;font-weight:600;margin-top:8px;display:none"></div>
+                </div>
+                <input type="file" id="csv-file-input" accept=".csv,text/csv" style="display:none" onchange="handleCsvFile(this.files[0])">
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px;vertical-align:-2px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Upload',
+        cancelButtonText: 'Batal',
+        focusConfirm: false,
+        preConfirm: () => {
+            const file = window._csvFile;
+            if (!file) {
+                Swal.showValidationMessage('Pilih file CSV terlebih dahulu');
+                return false;
+            }
+            return { file };
+        }
+    }).then(result => {
+        if (result.isConfirmed && result.value) {
+            const formData = new FormData();
+            formData.append('file_csv', result.value.file);
+
+            Swal.fire({
+                title: 'Mengupload...',
+                html: '<div style="color:#64748b;font-size:13.5px">Sedang memproses data siswa...</div>',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+                customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title' },
+                buttonsStyling: false,
+                didOpen: () => Swal.showLoading()
+            });
+
+            fetch('/siswa/import-csv', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(async res => {
+                const data = await res.json();
+                if (!res.ok || data.status === 'error') throw new Error(data.message || 'Gagal upload CSV');
+                return data;
+            })
+            .then(data => {
+                let detailHtml = `<div style="text-align:left;font-size:13.5px;color:#475569;line-height:1.8">`;
+                detailHtml += `<div style="font-size:22px;font-weight:800;color:#16a34a;margin-bottom:4px">${data.imported} siswa</div>`;
+                detailHtml += `<div style="margin-bottom:2px">Berhasil diimport ke database.</div>`;
+                if (data.errors && data.errors.length > 0) {
+                    detailHtml += `<div style="margin-top:10px;padding-top:10px;border-top:1px solid #e2e8f0">`;
+                    detailHtml += `<div style="font-weight:700;color:#e11d48;margin-bottom:4px">${data.errors.length} baris gagal:</div>`;
+                    detailHtml += `<div style="max-height:120px;overflow-y:auto;font-size:12px;color:#64748b;background:#fff1f2;padding:8px 10px;border-radius:6px">`;
+                    data.errors.forEach(e => { detailHtml += `<div style="margin-bottom:2px">• ${e}</div>`; });
+                    detailHtml += `</div></div>`;
+                }
+                detailHtml += `</div>`;
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Upload Selesai!',
+                    html: detailHtml,
+                    customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title', confirmButton: 'custom-swal-confirm' },
+                    buttonsStyling: false,
+                    confirmButtonText: 'OK'
+                }).then(() => reloadCurrentPage());
+            })
+            .catch(err => Swal.fire('Gagal', err.message || 'Terjadi kesalahan sistem.', 'error'));
+        }
+    });
+}
+
+window._csvFile = null;
+window.handleCsvFile = function(file) {
+    if (!file) return;
+    window._csvFile = file;
+    const nameEl = document.getElementById('csv-filename');
+    if (nameEl) {
+        nameEl.textContent = file.name;
+        nameEl.style.display = 'block';
+    }
+};
 </script>

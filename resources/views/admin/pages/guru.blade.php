@@ -472,7 +472,7 @@ function editGuruModal(id, nama, nip, peran, hp, username, isAdmin){
                     icon: 'success', title: 'Berhasil!', text: data.message || 'Data berhasil diperbarui.',
                     customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title', confirmButton: 'custom-swal-confirm' },
                     buttonsStyling: false
-                }).then(() => location.reload());
+                }).then(() => reloadCurrentPage());
             })
             .catch(err => Swal.fire('Gagal', err.message || 'Terjadi kesalahan sistem.', 'error'));
         }

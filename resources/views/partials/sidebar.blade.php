@@ -96,6 +96,15 @@
             Mata Pelajaran
         </a>
 
+        <a class="nav-item" onclick="showPage('naik-kelas')" id="nav-naik-kelas">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="18 15 12 9 6 15"/>
+                <line x1="12" y1="9" x2="12" y2="21"/>
+                <line x1="3" y1="3" x2="21" y2="3"/>
+            </svg>
+            Naik Kelas
+        </a>
+
         <!-- PENGATURAN -->
         <div class="nav-section-label">Pengaturan</div>
 

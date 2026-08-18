@@ -74,6 +74,13 @@ function showPage(page){
     closeSidebarMobile();
 }
 
+function reloadCurrentPage(){
+    const visible = document.querySelector('[id^="page-"]:not([style*="display: none"]):not([style*="display:none"])');
+    const page = visible ? visible.id.replace('page-', '') : 'dashboard';
+    window.location.hash = page;
+    location.reload();
+}
+
 let sidebarVisible=true;
 
 function setSidebarOverlay(open){
@@ -390,7 +397,7 @@ function tambahSiswaModal(){
             .then(res => res.json())
             .then(data => {
                 Swal.fire({ icon: 'success', title: 'Berhasil!', text: data.message })
-                .then(() => location.reload());
+                .then(() => reloadCurrentPage());
             });
         }
     });
@@ -457,7 +464,7 @@ function tambahKelasModal(){
             .then(res => res.json())
             .then(data => {
                 Swal.fire({ icon: 'success', title: 'Berhasil!', text: data.message })
-                .then(() => location.reload());
+                .then(() => reloadCurrentPage());
             });
         }
     });
@@ -513,7 +520,7 @@ function tambahMapelModal(){
             })
             .then(data => {
                 Swal.fire({ icon: 'success', title: 'Berhasil!', text: data.message })
-                .then(() => location.reload());
+                .then(() => reloadCurrentPage());
             })
             .catch(err => Swal.fire('Gagal', err.message || 'Terjadi kesalahan sistem.', 'error'));
         }
@@ -806,7 +813,7 @@ function tambahGuruModal() {
             .then(data => {
                 if (data.status === 'success') {
                     Swal.fire({ icon: 'success', title: 'Berhasil!', text: data.message })
-                    .then(() => location.reload());
+                    .then(() => reloadCurrentPage());
                 } else {
                     Swal.fire({ icon: 'error', title: 'Gagal!', text: data.message || 'Terjadi kesalahan saat menyimpan data.' });
                 }
@@ -1162,6 +1169,11 @@ document.addEventListener('DOMContentLoaded',function(){
     window.addEventListener('resize', function(){
         if (window.innerWidth > 992) closeSidebarMobile();
     });
+
+    const hash = window.location.hash.replace('#', '');
+    if (hash && document.getElementById('page-' + hash)) {
+        showPage(hash);
+    }
 });
 
 /* ── Custom Delete Confirmation Helper ── */
@@ -1229,7 +1241,7 @@ function hapusGuru(id, nama) {
             .then(res => {
                 if (res.status === 'success') {
                     Swal.fire({ icon: 'success', title: 'Berhasil', text: res.message, timer: 1500, showConfirmButton: false })
-                        .then(() => location.reload());
+                        .then(() => reloadCurrentPage());
                 } else {
                     Swal.fire({ icon: 'error', title: 'Gagal', text: res.message });
                 }
@@ -1255,7 +1267,7 @@ function hapusSiswa(id, nama) {
             .then(res => {
                 if (res.status === 'success') {
                     Swal.fire({ icon: 'success', title: 'Berhasil', text: res.message, timer: 1500, showConfirmButton: false })
-                        .then(() => location.reload());
+                        .then(() => reloadCurrentPage());
                 } else {
                     Swal.fire({ icon: 'error', title: 'Gagal', text: res.message });
                 }
@@ -1281,7 +1293,7 @@ function hapusKelas(id, nama) {
             .then(res => {
                 if (res.status === 'success') {
                     Swal.fire({ icon: 'success', title: 'Berhasil', text: res.message, timer: 1500, showConfirmButton: false })
-                        .then(() => location.reload());
+                        .then(() => reloadCurrentPage());
                 } else {
                     Swal.fire({ icon: 'error', title: 'Gagal', text: res.message });
                 }
@@ -1317,7 +1329,7 @@ function hapusMapel(id, nama, jadwalCount) {
             .then(res => {
                 if (res.status === 'success') {
                     Swal.fire({ icon: 'success', title: 'Berhasil', text: res.message, timer: 1500, showConfirmButton: false })
-                        .then(() => location.reload());
+                        .then(() => reloadCurrentPage());
                 } else {
                     Swal.fire({ icon: 'error', title: 'Gagal', text: res.message });
                 }

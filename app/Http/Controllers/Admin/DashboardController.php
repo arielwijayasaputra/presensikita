@@ -10,6 +10,7 @@ use App\Models\Guru;
 use App\Models\TahunAjaran;
 use App\Models\Pengaturan;
 use App\Models\Mapel;
+use App\Models\Alumni;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -133,6 +134,41 @@ class DashboardController extends Controller
         $batasWaktuJurnal = Pengaturan::get('batas_waktu_jurnal', '23:59');
         $izinEditJurnal   = Pengaturan::get('izin_edit_jurnal', '1');
 
+        // ── Naik Kelas data ──
+        $allKelasForNk = Kelas::withCount('siswa')
+            ->whereNull('deleted_at')
+            ->orderBy('tingkat_kelas')
+            ->orderBy('jurusan')
+            ->orderBy('nama_kelas')
+            ->get();
+
+        $ringkasanNk = [];
+        foreach ($allKelasForNk as $k) {
+            $key = $k->tingkat_kelas . '|' . $k->jurusan;
+            $count = $k->siswa_count ?? 0;
+            if (!isset($ringkasanNk[$key])) {
+                $ringkasanNk[$key] = [
+                    'tingkat' => $k->tingkat_kelas,
+                    'jurusan' => $k->jurusan,
+                    'kelas'   => [],
+                    'total'   => 0,
+                ];
+            }
+            $ringkasanNk[$key]['kelas'][] = [
+                'id'   => $k->id_kelas,
+                'nama' => $k->nama_kelas,
+                'jml'  => $count,
+            ];
+            $ringkasanNk[$key]['total'] += $count;
+        }
+        $ringkasanNk = collect($ringkasanNk);
+
+        $alumniTahunan = Alumni::select('tahun_lulus')
+            ->selectRaw('COUNT(*) as jumlah')
+            ->groupBy('tahun_lulus')
+            ->orderByDesc('tahun_lulus')
+            ->get();
+
         return view('admin.dashboard', compact(
             'tahunAjaran',
             'kelases',
@@ -168,7 +204,9 @@ class DashboardController extends Controller
             'teleponSekolah',
             'sistemAbsensi',
             'batasWaktuJurnal',
-            'izinEditJurnal'
+            'izinEditJurnal',
+            'ringkasanNk',
+            'alumniTahunan'
         ));
     }
 }

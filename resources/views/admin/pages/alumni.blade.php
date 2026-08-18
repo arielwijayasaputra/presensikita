@@ -13,6 +13,35 @@
         </div>
     </div>
 
+    {{-- ── Ringkasan per Tahun ── --}}
+    <div style="margin-bottom:20px">
+        <div style="font-size:16px;font-weight:700;color:#1e293b;margin-bottom:14px">Ringkasan per Tahun Kelulusan</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+            @forelse($alumniTahunan as $a)
+            <div class="card" style="padding:16px 18px;display:flex;align-items:center;justify-content:space-between">
+                <div style="display:flex;align-items:center;gap:10px">
+                    <div class="stat-icon green" style="width:36px;height:36px">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size:14px;font-weight:700;color:#1e293b">{{ $a->tahun_lulus }}</div>
+                        <div style="font-size:12px;color:#94a3b8">Tahun Kelulusan</div>
+                    </div>
+                </div>
+                <div style="text-align:right">
+                    <div style="font-size:20px;font-weight:800;color:#15803d">{{ $a->jumlah }}</div>
+                    <div style="font-size:11px;color:#94a3b8">alumni</div>
+                </div>
+            </div>
+            @empty
+            <div class="card" style="text-align:center;padding:30px;color:#94a3b8;grid-column:1/-1">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" style="margin:0 auto 8px;display:block"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Belum ada data alumni.
+            </div>
+            @endforelse
+        </div>
+    </div>
+
     {{-- ── Filter Bar ── --}}
     <div class="filter-bar" style="margin-bottom:16px;align-items:flex-end;gap:12px;flex-wrap:wrap">
         <div class="filter-group" style="min-width:160px">
@@ -53,8 +82,8 @@
                     <th>Nama Alumni</th>
                     <th style="width:130px">NIS</th>
                     <th style="width:120px">Kelas Asal</th>
-                    <th style="width:100px;text-align:center">Tahun Lulus</th>
-                    <th style="width:100px;text-align:center">Jenis Kelamin</th>
+                    <th style="width:100px;text-align:center;white-space:nowrap">Tahun Lulus</th>
+                    <th style="width:100px;text-align:center;white-space:nowrap">Jenis Kelamin</th>
                 </tr>
             </thead>
             <tbody id="alumni-tbody">
@@ -101,35 +130,6 @@
                 Menampilkan {{ $allAlumni->count() }} alumni
             </span>
             <div id="alumni-pagination" style="display:flex;align-items:center;gap:4px"></div>
-        </div>
-    </div>
-
-    {{-- ── Ringkasan per Tahun ── --}}
-    <div>
-        <div style="font-size:16px;font-weight:700;color:#1e293b;margin-bottom:14px">Ringkasan per Tahun Kelulusan</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
-            @forelse($alumniTahunan as $a)
-            <div class="card" style="padding:16px 18px;display:flex;align-items:center;justify-content:space-between">
-                <div style="display:flex;align-items:center;gap:10px">
-                    <div class="stat-icon green" style="width:36px;height:36px">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                    </div>
-                    <div>
-                        <div style="font-size:14px;font-weight:700;color:#1e293b">{{ $a->tahun_lulus }}</div>
-                        <div style="font-size:12px;color:#94a3b8">Tahun Kelulusan</div>
-                    </div>
-                </div>
-                <div style="text-align:right">
-                    <div style="font-size:20px;font-weight:800;color:#15803d">{{ $a->jumlah }}</div>
-                    <div style="font-size:11px;color:#94a3b8">alumni</div>
-                </div>
-            </div>
-            @empty
-            <div class="card" style="text-align:center;padding:30px;color:#94a3b8;grid-column:1/-1">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" style="margin:0 auto 8px;display:block"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                Belum ada data alumni.
-            </div>
-            @endforelse
         </div>
     </div>
 

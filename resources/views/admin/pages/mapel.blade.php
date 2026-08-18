@@ -19,7 +19,7 @@
     </div>
 
     {{-- ── Ringkasan Mata Pelajaran ── --}}
-    <div style="margin-top:4px">
+    <div style="margin-bottom:20px">
         <div style="font-size:16px;font-weight:700;color:#1e293b;margin-bottom:14px">Ringkasan Mata Pelajaran</div>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
 
@@ -133,7 +133,7 @@
                     <th>Nama Mata Pelajaran</th>
                     <th style="width:100px;text-align:center">Kelompok</th>
                     <th>Deskripsi</th>
-                    <th style="width:120px;text-align:center">Jumlah Jadwal</th>
+                    <th style="width:110px;text-align:center;white-space:nowrap">Jumlah Jadwal</th>
                     <th style="width:100px;text-align:center">Status</th>
                     <th style="width:90px;text-align:center">Aksi</th>
                 </tr>

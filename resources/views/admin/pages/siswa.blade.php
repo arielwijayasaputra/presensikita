@@ -22,7 +22,7 @@
     </div>
 
     {{-- ── Ringkasan Data Siswa ── --}}
-    <div>
+    <div style="margin-bottom:20px">
         <div id="siswa-ringkasan-title" style="font-size:16px;font-weight:700;color:#1e293b;margin-bottom:14px">
             Ringkasan Data Siswa
         </div>

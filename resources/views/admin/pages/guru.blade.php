@@ -19,7 +19,7 @@
     </div>
 
     {{-- ── Ringkasan Data Guru ── --}}
-    <div>
+    <div style="margin-bottom:20px">
         <div style="font-size:16px;font-weight:700;color:#1e293b;margin-bottom:14px">
             Ringkasan Data Guru
         </div>

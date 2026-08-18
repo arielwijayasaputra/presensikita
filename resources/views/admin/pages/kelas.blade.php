@@ -19,7 +19,7 @@
     </div>
 
     {{-- ── Ringkasan Data Kelas ── --}}
-    <div>
+    <div style="margin-bottom:20px">
         <div style="font-size:16px;font-weight:700;color:#1e293b;margin-bottom:14px">
             Ringkasan Data Kelas
         </div>
@@ -175,10 +175,10 @@
                 <tr>
                     <th style="width:48px">No.</th>
                     <th>Nama Kelas</th>
-                    <th style="width:110px;text-align:center">Tingkat</th>
-                    <th style="width:90px;text-align:center">Jurusan</th>
-                    <th>Wali Kelas</th>
-                    <th style="width:130px;text-align:center">Jumlah Siswa</th>
+                    <th style="width:140px;text-align:center;padding-right:32px">Tingkat</th>
+                    <th style="width:120px;text-align:center;padding-right:32px">Jurusan</th>
+                    <th style="padding-left:20px">Wali Kelas</th>
+                    <th style="width:130px;text-align:center;white-space:nowrap">Jumlah Siswa</th>
                     <th style="width:100px;text-align:center">Status</th>
                     <th style="width:90px;text-align:center">Aksi</th>
                 </tr>
@@ -194,15 +194,15 @@
                     data-siswa-count="{{ $k->siswa_count }}">
                     <td style="color:#94a3b8;font-weight:600;font-size:13px">{{ $idx + 1 }}</td>
                     <td style="font-weight:700;color:#1e293b;font-size:13.5px">{{ $k->nama_kelas }}</td>
-                    <td style="text-align:center;color:#475569;font-size:13px font-weight:500">
+                    <td style="text-align:center;color:#475569;font-size:13px;font-weight:500;padding-right:32px">
                         {{ $k->tingkat_kelas }} ({{ $k->tingkat_angka }})
                     </td>
-                    <td style="text-align:center">
+                    <td style="text-align:center;padding-right:32px">
                         <span style="display:inline-block;background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:20px">
                             {{ $k->jurusan ?? '-' }}
                         </span>
                     </td>
-                    <td style="font-weight:500;color:#334155;font-size:13.5px">
+                    <td style="font-weight:500;color:#334155;font-size:13.5px;padding-left:20px">
                         {{ $k->waliKelas->nama_guru ?? '-' }}
                     </td>
                     <td style="text-align:center;font-weight:600;color:#1e293b">

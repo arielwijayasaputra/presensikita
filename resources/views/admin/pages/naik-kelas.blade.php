@@ -91,9 +91,9 @@
                 <tr>
                     <th style="width:48px">No.</th>
                     <th>Nama Kelas</th>
-                    <th style="width:80px;text-align:center">Tingkat</th>
-                    <th style="width:100px">Jurusan</th>
-                    <th style="width:100px;text-align:center">Jumlah Siswa</th>
+                    <th style="width:120px;text-align:center;padding-right:24px">Tingkat</th>
+                    <th style="width:120px;padding-right:24px">Jurusan</th>
+                    <th style="width:120px;text-align:center;white-space:nowrap">Jumlah Siswa</th>
                 </tr>
             </thead>
             <tbody id="nk-kelas-tbody">
@@ -109,7 +109,7 @@
                 <tr class="nk-kelas-row" data-tingkat="{{ $k->tingkat_kelas }}" data-jurusan="{{ $k->jurusan }}">
                     <td style="color:#94a3b8;font-weight:600;font-size:13px">{{ $idx + 1 }}</td>
                     <td style="font-weight:600;color:#1e293b;font-size:13.5px">{{ $k->nama_kelas }}</td>
-                    <td style="text-align:center">
+                    <td style="text-align:center;padding-right:24px">
                         @if(strtoupper($k->tingkat_kelas) === 'XII')
                             <span class="badge badge-danger">{{ $k->tingkat_kelas }}</span>
                         @elseif(strtoupper($k->tingkat_kelas) === 'XI')
@@ -118,7 +118,7 @@
                             <span class="badge badge-info">{{ $k->tingkat_kelas }}</span>
                         @endif
                     </td>
-                    <td style="color:#475569;font-size:13px">{{ $k->jurusan }}</td>
+                    <td style="color:#475569;font-size:13px;padding-right:24px">{{ $k->jurusan }}</td>
                     <td style="text-align:center;font-weight:700;color:#1e293b;font-size:14px">{{ $k->siswa_count ?? 0 }}</td>
                 </tr>
                 @endforeach

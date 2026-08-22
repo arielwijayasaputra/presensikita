@@ -8,6 +8,8 @@
     @include('admin.pages.laporan-masuk')
     @include('admin.pages.guru')
     @include('admin.pages.guru-piket')
+    @include('admin.pages.jadwal')
+    @include('admin.pages.jam-pelajaran')
     @include('admin.pages.siswa')
     @include('admin.pages.kelas')
     @include('admin.pages.mapel')

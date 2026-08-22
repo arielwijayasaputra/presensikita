@@ -13,6 +13,7 @@ use App\Models\Mapel;
 use App\Models\Alumni;
 use App\Models\Laporan;
 use App\Models\GuruPiket;
+use App\Models\JamPelajaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -136,6 +137,32 @@ class DashboardController extends Controller
             ->orderBy('nama_mapel')
             ->get();
 
+        $allJamPelajaran = JamPelajaran::orderBy('jam_ke')->get();
+        $allJadwal = DB::table('jadwal_mengajar')
+            ->join('guru', 'jadwal_mengajar.id_guru', '=', 'guru.id_guru')
+            ->join('mapel', 'jadwal_mengajar.id_mapel', '=', 'mapel.id_mapel')
+            ->join('kelas', 'jadwal_mengajar.id_kelas', '=', 'kelas.id_kelas')
+            ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
+            ->select(
+                'jadwal_mengajar.id_jadwal',
+                'jadwal_mengajar.id_guru',
+                'jadwal_mengajar.id_mapel',
+                'jadwal_mengajar.id_kelas',
+                'jadwal_mengajar.id_jam',
+                'jadwal_mengajar.hari',
+                'jadwal_mengajar.id_tahun_ajaran',
+                'guru.nama_guru',
+                'mapel.nama_mapel',
+                'kelas.nama_kelas',
+                'jam_pelajaran.jam_ke',
+                'jam_pelajaran.jam_mulai',
+                'jam_pelajaran.jam_selesai'
+            )
+            ->orderByRaw("FIELD(jadwal_mengajar.hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat')")
+            ->orderBy('jam_pelajaran.jam_ke')
+            ->orderBy('kelas.nama_kelas')
+            ->get();
+
         $guru = Guru::find(session('auth_guru_id')) ?? Guru::first();
 
         $namaSekolah      = Pengaturan::get('nama_sekolah', '');
@@ -228,6 +255,8 @@ class DashboardController extends Controller
             'guruPiketTanggal',
             'guruPiketHariIni',
             'allMapel',
+            'allJamPelajaran',
+            'allJadwal',
             'guru',
             'namaSekolah',
             'npsn',

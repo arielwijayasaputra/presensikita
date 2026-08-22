@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\NaikKelasController;
 use App\Http\Controllers\Admin\LaporanMasukController;
 use App\Http\Controllers\Admin\GuruPiketController;
+use App\Http\Controllers\Admin\JamPelajaranController;
+use App\Http\Controllers\Admin\JadwalMengajarController;
 
 // Semua route admin memerlukan middleware auth.admin
 Route::middleware('auth.admin')->group(function () {
@@ -41,6 +43,10 @@ Route::middleware('auth.admin')->group(function () {
 
     // Penugasan Guru Piket harian
     Route::post('/guru-piket/update', [GuruPiketController::class, 'update'])->name('guru-piket.update');
+    Route::post('/jam-pelajaran/update', [JamPelajaranController::class, 'update'])->name('jam-pelajaran.update');
+    Route::post('/jadwal/tambah', [JadwalMengajarController::class, 'store'])->name('jadwal.tambah');
+    Route::post('/jadwal/{id}/update', [JadwalMengajarController::class, 'update'])->name('jadwal.update');
+    Route::delete('/jadwal/{id}', [JadwalMengajarController::class, 'destroy'])->name('jadwal.hapus');
 
     // Pengaturan & Profil
     Route::post('/pengaturan/update', [PengaturanController::class, 'update'])->name('pengaturan.update');

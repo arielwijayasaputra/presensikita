@@ -69,6 +69,28 @@ CREATE TABLE `cache_locks` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `dispen_siswa`
+--
+
+CREATE TABLE `dispen_siswa` (
+  `id_dispen_siswa` bigint UNSIGNED NOT NULL,
+  `id_siswa` int NOT NULL,
+  `id_guru_piket` int NOT NULL,
+  `tanggal_dispen` date NOT NULL,
+  `alasan` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status_waka` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'menunggu',
+  `status_guru_piket` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'menunggu',
+  `catatan_waka` text COLLATE utf8mb4_unicode_ci,
+  `catatan_guru_piket` text COLLATE utf8mb4_unicode_ci,
+  `disetujui_waka_pada` timestamp NULL DEFAULT NULL,
+  `disetujui_guru_piket_pada` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `failed_jobs`
 --
 
@@ -258,6 +280,28 @@ CREATE TABLE `guru_piket` (
 
 INSERT INTO `guru_piket` (`id_guru_piket`, `id_guru`, `tanggal`, `created_at`, `updated_at`) VALUES
 (1, 1, '2026-08-22', '2026-08-21 23:50:49', '2026-08-21 23:50:49');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `izin_guru`
+--
+
+CREATE TABLE `izin_guru` (
+  `id_izin_guru` bigint UNSIGNED NOT NULL,
+  `id_guru` int NOT NULL,
+  `id_guru_piket` int NOT NULL,
+  `tanggal_izin` date NOT NULL,
+  `alasan` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status_kepsek` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'menunggu',
+  `status_waka` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'menunggu',
+  `catatan_kepsek` text COLLATE utf8mb4_unicode_ci,
+  `catatan_waka` text COLLATE utf8mb4_unicode_ci,
+  `disetujui_kepsek_pada` timestamp NULL DEFAULT NULL,
+  `disetujui_waka_pada` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -3020,7 +3064,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (16, '2026_08_15_000000_add_id_guru_to_jurnal_kelas_table', 1),
 (17, '2026_08_18_032844_create_alumni_table', 2),
 (18, '2026_08_18_100000_create_laporan_table', 3),
-(19, '2026_08_22_000001_create_guru_piket_table', 4);
+(19, '2026_08_22_000001_create_guru_piket_table', 4),
+(20, '2026_08_22_000002_create_izin_guru_table', 4),
+(21, '2026_08_22_000003_create_dispen_siswa_table', 4);
 
 -- --------------------------------------------------------
 
@@ -4009,6 +4055,15 @@ ALTER TABLE `cache_locks`
   ADD KEY `cache_locks_expiration_index` (`expiration`);
 
 --
+-- Indexes for table `dispen_siswa`
+--
+ALTER TABLE `dispen_siswa`
+  ADD PRIMARY KEY (`id_dispen_siswa`),
+  ADD KEY `dispen_siswa_tanggal_dispen_id_siswa_index` (`tanggal_dispen`,`id_siswa`),
+  ADD KEY `dispen_siswa_id_siswa_foreign` (`id_siswa`),
+  ADD KEY `dispen_siswa_id_guru_piket_foreign` (`id_guru_piket`);
+
+--
 -- Indexes for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -4031,6 +4086,15 @@ ALTER TABLE `guru_piket`
   ADD PRIMARY KEY (`id_guru_piket`),
   ADD UNIQUE KEY `guru_piket_id_guru_tanggal_unique` (`id_guru`,`tanggal`),
   ADD KEY `guru_piket_tanggal_index` (`tanggal`);
+
+--
+-- Indexes for table `izin_guru`
+--
+ALTER TABLE `izin_guru`
+  ADD PRIMARY KEY (`id_izin_guru`),
+  ADD KEY `izin_guru_tanggal_izin_id_guru_index` (`tanggal_izin`,`id_guru`),
+  ADD KEY `izin_guru_id_guru_foreign` (`id_guru`),
+  ADD KEY `izin_guru_id_guru_piket_foreign` (`id_guru_piket`);
 
 --
 -- Indexes for table `jadwal_mengajar`
@@ -4172,6 +4236,12 @@ ALTER TABLE `alumni`
   MODIFY `id_alumni` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `dispen_siswa`
+--
+ALTER TABLE `dispen_siswa`
+  MODIFY `id_dispen_siswa` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -4188,6 +4258,12 @@ ALTER TABLE `guru`
 --
 ALTER TABLE `guru_piket`
   MODIFY `id_guru_piket` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `izin_guru`
+--
+ALTER TABLE `izin_guru`
+  MODIFY `id_izin_guru` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `jadwal_mengajar`
@@ -4241,7 +4317,7 @@ ALTER TABLE `mapel`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `notifikasi`
@@ -4278,10 +4354,24 @@ ALTER TABLE `users`
 --
 
 --
+-- Constraints for table `dispen_siswa`
+--
+ALTER TABLE `dispen_siswa`
+  ADD CONSTRAINT `dispen_siswa_id_guru_piket_foreign` FOREIGN KEY (`id_guru_piket`) REFERENCES `guru` (`id_guru`) ON DELETE CASCADE,
+  ADD CONSTRAINT `dispen_siswa_id_siswa_foreign` FOREIGN KEY (`id_siswa`) REFERENCES `siswa` (`id_siswa`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `guru_piket`
 --
 ALTER TABLE `guru_piket`
   ADD CONSTRAINT `guru_piket_id_guru_foreign` FOREIGN KEY (`id_guru`) REFERENCES `guru` (`id_guru`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `izin_guru`
+--
+ALTER TABLE `izin_guru`
+  ADD CONSTRAINT `izin_guru_id_guru_foreign` FOREIGN KEY (`id_guru`) REFERENCES `guru` (`id_guru`) ON DELETE CASCADE,
+  ADD CONSTRAINT `izin_guru_id_guru_piket_foreign` FOREIGN KEY (`id_guru_piket`) REFERENCES `guru` (`id_guru`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `jadwal_mengajar`

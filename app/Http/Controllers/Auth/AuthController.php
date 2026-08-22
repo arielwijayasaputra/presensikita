@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Guru;
 use App\Models\Siswa;
 use App\Models\Kelas;
+use App\Models\GuruPiket;
 
 class AuthController extends Controller
 {
@@ -340,9 +341,13 @@ class AuthController extends Controller
             ])->withInput($request->only('username'));
         }
 
-        if (($guru->Peran ?? '') !== 'Guru Piket') {
+        $ditugaskanHariIni = GuruPiket::where('id_guru', $guru->id_guru)
+            ->whereDate('tanggal', now()->toDateString())
+            ->exists();
+
+        if (!$ditugaskanHariIni) {
             return back()->withErrors([
-                'username' => 'Akun tersebut bukan Guru Piket.',
+                'username' => 'Akun ini belum ditugaskan sebagai Guru Piket hari ini.',
             ])->withInput($request->only('username'));
         }
 

@@ -7,6 +7,7 @@
     @include('admin.pages.laporan')
     @include('admin.pages.laporan-masuk')
     @include('admin.pages.guru')
+    @include('admin.pages.guru-piket')
     @include('admin.pages.siswa')
     @include('admin.pages.kelas')
     @include('admin.pages.mapel')

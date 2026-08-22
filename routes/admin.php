@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\GuruController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\NaikKelasController;
 use App\Http\Controllers\Admin\LaporanMasukController;
+use App\Http\Controllers\Admin\GuruPiketController;
 
 // Semua route admin memerlukan middleware auth.admin
 Route::middleware('auth.admin')->group(function () {
@@ -37,6 +38,9 @@ Route::middleware('auth.admin')->group(function () {
     Route::post('/guru/{id}/update', [GuruController::class, 'update'])->name('guru.update');
     Route::patch('/guru/{id}/toggle-aktif', [GuruController::class, 'toggleAktif'])->name('guru.toggle');
     Route::delete('/guru/{id}', [GuruController::class, 'destroy'])->name('guru.hapus');
+
+    // Penugasan Guru Piket harian
+    Route::post('/guru-piket/update', [GuruPiketController::class, 'update'])->name('guru-piket.update');
 
     // Pengaturan & Profil
     Route::post('/pengaturan/update', [PengaturanController::class, 'update'])->name('pengaturan.update');

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Aug 09, 2026 at 01:12 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Host: localhost:3306
+-- Generation Time: Aug 22, 2026 at 05:54 AM
+-- Server version: 8.0.30
+-- PHP Version: 8.4.24
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,21 +24,82 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `alumni`
+--
+
+CREATE TABLE `alumni` (
+  `id_alumni` bigint UNSIGNED NOT NULL,
+  `nisn` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_siswa` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jenis_kelamin` enum('L','P') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_kelas` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tingkat_kelas` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jurusan` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tahun_lulus` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tanggal_lulus` date NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cache`
+--
+
+CREATE TABLE `cache` (
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cache_locks`
+--
+
+CREATE TABLE `cache_locks` (
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `owner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `failed_jobs`
+--
+
+CREATE TABLE `failed_jobs` (
+  `id` bigint UNSIGNED NOT NULL,
+  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `guru`
 --
 
 CREATE TABLE `guru` (
-  `id_guru` int(11) NOT NULL,
-  `nip` varchar(30) DEFAULT NULL,
-  `nama_guru` varchar(100) NOT NULL,
-  `Peran` varchar(50) NOT NULL DEFAULT 'Guru',
-  `foto_profil` varchar(255) DEFAULT NULL,
-  `no_hp` varchar(20) DEFAULT NULL,
-  `username` varchar(50) NOT NULL,
-  `password_hash` varchar(255) NOT NULL,
-  `is_admin` tinyint(1) NOT NULL DEFAULT 0,
-  `is_aktif` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `id_guru` int NOT NULL,
+  `nip` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_guru` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Peran` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Guru',
+  `foto_profil` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `no_hp` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_admin` tinyint(1) NOT NULL DEFAULT '0',
+  `is_aktif` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -46,136 +107,136 @@ CREATE TABLE `guru` (
 -- Dumping data for table `guru`
 --
 
-INSERT INTO `guru` (`id_guru`, `nip`, `nama_guru`, `Peran`, `no_hp`, `username`, `password_hash`, `is_admin`, `is_aktif`, `created_at`, `deleted_at`) VALUES
-(1, '197101012024000100', 'Abdul Rohman, S.Pd', 'Guru', '08128745886', 'abdul', '$2y$12$f2o5of0Ab8mZLtxGT.1J1uW4u0vOYMsJBQR1C0/K1VxAdJhBaL8Gq', 0, 1, '2026-07-29 01:57:31', NULL),
-(2, '197201012024000200', 'Agung Yulianto, S.Pd', 'Guru', NULL, 'agung', '$2y$12$T8YSFVUadOwOwUP4Y9TJy.7N0S6B9vmxh9Y9w6g3k6SyGknK.q.J2', 0, 1, '2026-07-29 01:57:31', NULL),
-(3, '197301012024000300', 'Agus Fahruddy, S.Pd., M.Pd', 'Guru', NULL, 'agus', '$2y$12$JBRCKnJI5bjvodQFuyF5/OwLW3GWxBQrwcQi9v5g1LwYGJhHwrP8W', 0, 1, '2026-07-29 01:57:31', NULL),
-(4, '197401012024000400', 'Agus Muharyanto, M.Pd', 'Guru', NULL, 'agus2', '$2y$12$UL9SqW3gUxJP0GYG0rU4kOsXaZDZbxYNKhsVKVfxQi0s2FmnAxwee', 0, 1, '2026-07-29 01:57:31', NULL),
-(5, '197501012024000500', 'Agus Pramono, S.Sn', 'Guru', NULL, 'agus3', '$2y$12$rbkaNMAImTnvpBaITCd3uehHBAGez0/uGIBg1Trx5RLiz1Fn0hT9a', 0, 1, '2026-07-29 01:57:31', NULL),
-(6, '197601012024000600', 'Agustina Mardika Rini, S.Pd.,M.Pd', 'Guru', NULL, 'agustina', '$2y$12$RAS1qhyTyVzz7geFnvrXdeN3cI.J09E8ftdo2XIxHTYTFqI46Rlrm', 0, 1, '2026-07-29 01:57:31', NULL),
-(7, '197701012024000700', 'Ajeng Okvitasari, S.Pd', 'Guru', NULL, 'ajeng', '$2y$12$LHDkd6nTnh8/DKpIg7xK/uuHXYUUncL716XhKjvupjT5qOmJu16Sy', 0, 1, '2026-07-29 01:57:31', NULL),
-(8, '197801012024000800', 'Alfinu Farikh Abdillah, S.Pd.I', 'Guru', NULL, 'alfinu', '$2y$12$gO3Xb0YrfH6pI7GX63lLy.RLVVVwddwu5wqt0OTvTNzr7/Fq1vPfO', 0, 1, '2026-07-29 01:57:31', NULL),
-(9, '197901012024000900', 'Anang Prasetyo, S.Pd', 'Guru', NULL, 'anang', '$2y$12$EYGck9TKF5gbEPW4KcSf0.4IwjnaRBbdjPcbzckjuGwUFCo3bcqDC', 0, 1, '2026-07-29 01:57:31', NULL),
-(10, '198001012024001000', 'Andika Christian Sasmita, S.ST', 'Guru', NULL, 'andika', '$2y$12$RWhM3L4v061FrrEcQ5qCzeacn9LSmgiWm.IdlDlUt46yJkV89mOP6', 0, 1, '2026-07-29 01:57:31', NULL),
-(11, '198101012024001100', 'Andri Krisdianto, SE., M.Pd', 'Guru', NULL, 'andri', '$2y$12$BigH4l7lQnWpS6pQidZ1z.1RFxr.CweVQZTFd/fZ5sw283Ftj9mVu', 0, 1, '2026-07-29 01:57:31', NULL),
-(12, '198201012024001200', 'Andri Retno Yuli Astuti, S.Pd', 'Guru', NULL, 'andri2', '$2y$12$A5/Nn/rKtn0L5/ByI6OoB.lvIauPtp986N70fJKa5n0nYSRuLAanu', 0, 1, '2026-07-29 01:57:31', NULL),
-(13, '198301012024001300', 'Angga Widhy Wirawan, S.Pd.,M.Pd', 'Guru', NULL, 'angga', '$2y$12$sACo0WVqLrWT00waTjGLWOlWKmYeT2lWWIuTYUZd2DdLTmItcG8aa', 0, 1, '2026-07-29 01:57:31', NULL),
-(14, '198401012024001400', 'Anisa Kusumawati, S.Pd', 'Guru', NULL, 'anisa', '$2y$12$86qtu1FfTJgp9QV584KcJeQhrlC3yF1r68bUD9C.YS2poDbNsasGW', 0, 1, '2026-07-29 01:57:31', NULL),
-(15, '198501012024001500', 'Arif Setyobudi, S.Pd', 'Guru', NULL, 'arif', '$2y$12$JnuON/JDVm40AAy4GDEKLeDUn8F7bUGnUBY9QAxvqq1fM2PWO0Z3K', 0, 1, '2026-07-29 01:57:31', NULL),
-(16, '198601012024001600', 'Arvia Rienetasary, S.Pd', 'Guru', NULL, 'arvia', '$2y$12$JjxIy3yWrGzOG76kv7t/d.HBEOB8uecXnqeMQS0GZL3HlhvoiaO0a', 0, 1, '2026-07-29 01:57:31', NULL),
-(17, '198701012024001700', 'Ary Sunaryo, ST.,M.Pd', 'Guru', NULL, 'ary', '$2y$12$0z57yt4DhkWV/OmozuGIkej5aiFiMoXQqXTS4S6y5FBYSMapwh/Fu', 0, 1, '2026-07-29 01:57:31', NULL),
-(18, '198801012024001800', 'Astra Bella Flamboyan, S.Psi', 'Guru', NULL, 'astra', '$2y$12$QmMdU6nWBCWaGmyS7gTU2.ONQsan4vEr.HSR8B8cOnPWYThBvMKFW', 0, 1, '2026-07-29 01:57:31', NULL),
-(19, '198901012024001900', 'Atih Wilupi, S.E, M.Pd', 'Guru', NULL, 'atih', '$2y$12$EcDndpTS2o2554YddiT.G.5rKsflyO4M46ayt/M57EAfLWSWyGGL.', 0, 1, '2026-07-29 01:57:31', NULL),
-(20, '199001012024002000', 'Ayu Puspitorini, ST', 'Guru', NULL, 'ayu', '$2y$12$sAOCl4lYAb981g1R0PPWou5P66egHwGEvaOsk2.84I08ZNTA9cHOW', 0, 1, '2026-07-29 01:57:31', NULL),
-(21, '199101012024002100', 'Badrus Sulaiman, S.Pd.', 'Guru', NULL, 'badrus', '$2y$12$asaSCA3T3yqP5baQtSKaPODYD4rDghndAo5YMH1LdGO905JH7e2Qe', 0, 1, '2026-07-29 01:57:31', NULL),
-(22, '199201012024002200', 'Baskoro, S.Si', 'Guru', NULL, 'baskoro', '$2y$12$L35Uq6V7M.lgaNqWB6gjreVPhum8KxCLKSmHSg3vwFluTItgrVLyC', 0, 1, '2026-07-29 01:57:31', NULL),
-(23, '199301012024002300', 'Basuki Sarjono, S.Pd', 'Guru', NULL, 'basuki', '$2y$12$rA9AgRZvEHyqzTzJJFEwOelifCAbE01F3Fv1iMDjF6ZtGcbe067Pa', 0, 1, '2026-07-29 01:57:31', NULL),
-(24, '199401012024002400', 'Bella Prakoso, S.Pd', 'Guru', NULL, 'bella', '$2y$12$I.1wdU1UtYvg70qJcUaaauwbn3J8jlKJHS1ISZMhWBi4fhnaVUPP6', 0, 1, '2026-07-29 01:57:31', NULL),
-(25, '199501012024002500', 'Benny Mamora, S.Kom', 'Guru', NULL, 'benny', '$2y$12$b0OuHu.FzJ3kzuBwLyTpquEUWZhif3WmCQUWpk2Bl5zRjxxMBAmcK', 0, 1, '2026-07-29 01:57:31', NULL),
-(26, '199601012024002600', 'Danang Anjar Hymawanto, S.Pd', 'Guru', NULL, 'danang', '$2y$12$WxkocH9Yxs/dvFVIAZ0YEO7fw5swb.qK7QQBrRCcuFb/entnP7Nxy', 0, 1, '2026-07-29 01:57:31', NULL),
-(27, '199701012024002700', 'Dhuana Putri Puspitasary, S.Pd', 'Guru', NULL, 'dhuana', '$2y$12$tdqCYHmFClX98XT/X1hICeAChS/gkk4LZ8mzEAf6LOEiOp1Ye/0vu', 0, 1, '2026-07-29 01:57:31', NULL),
-(28, '199801012024002800', 'Dian Mawarti, S.Pd', 'Guru', NULL, 'dian', '$2y$12$whMLUoycEpY3Vm6/Enq1zOQit.l1iqpdqzyt3rPENpi5Tw3KrrZ5K', 0, 1, '2026-07-29 01:57:31', NULL),
-(29, '199901012024002900', 'Diana Hartanti, S.T., M.Pd', 'Guru', NULL, 'diana', '$2y$12$iyFLB84pTLuWio43oUtv3etfRDkBrBYtsiKGrUFs.GoYBfvKWn64G', 0, 1, '2026-07-29 01:57:31', NULL),
-(30, '197001012024003000', 'Dra. Anik Indriani', 'Guru', NULL, 'anik', '$2y$12$tF1o/rtCSnj3Q4z2b5lsCuUL3CxO5nGQzbTzPf4RTvJB74oz1E8y2', 0, 1, '2026-07-29 01:57:31', NULL),
-(31, '197101012024003100', 'Dra. Hanik Pangestuti', 'Guru', NULL, 'hanik', '$2y$12$mQNkIPC78dLUYvOArk9J9e.iNrDnWVCnkUrQVU8oBym4x3.42cMia', 0, 1, '2026-07-29 01:57:31', NULL),
-(32, '197201012024003200', 'Dra. Susakti Yuharini', 'Guru', NULL, 'susakti', '$2y$12$sF2HwmzJ8.k2CtGk9N7K9OHbgLCPPzv6rmkzaq3nXvFWaLhRmgVg.', 0, 1, '2026-07-29 01:57:31', NULL),
-(33, '197301012024003300', 'Dwi Kuswanto, S.Pd', 'Guru', NULL, 'dwi', '$2y$12$qOmTKKKASaQtuOvfM0nB5uFLG4YVtB9fAcTiowbVQ42nxfoJAqfS6', 0, 1, '2026-07-29 01:57:31', NULL),
-(34, '197401012024003400', 'Dwi Nova Setyandari, S.Pd', 'Guru', NULL, 'dwi2', '$2y$12$ou4BLFDcwdDsdH8jKK7L4eq/70ksaWam0RjDThCtP5zesW796GiBm', 0, 1, '2026-07-29 01:57:31', NULL),
-(35, '197501012024003500', 'Dwi Rini Manfaati, S.Pd', 'Guru', NULL, 'dwi3', '$2y$12$rX13506D0T5jrllLxPCcOOBaMGmbn/03GULPfBIZa.oFdLGxE1eyK', 0, 1, '2026-07-29 01:57:31', NULL),
-(36, '197601012024003600', 'Dyah Esti Rahayu, S.Pd', 'Guru', NULL, 'dyah', '$2y$12$1oGVFMNXM6yG.O55n856sO7GTiEK6Rh1o1wT0Iv6zhiMRd3tUixr6', 0, 1, '2026-07-29 01:57:31', NULL),
-(37, '197701012024003700', 'Eko Saputro, S.Pd', 'Guru', NULL, 'eko', '$2y$12$A6p3Lc8wPa0hc/wprIX4M.aa.MPf57HRZQ7tXKngKLkg./2u/V9gm', 0, 1, '2026-07-29 01:57:31', NULL),
-(38, '197801012024003800', 'Elyana Frisca Monica, S.Pd', 'Guru', NULL, 'elyana', '$2y$12$yBxW2thyqqEagye2j.sLK.DRB0M3zjjYqb0RRBGRJBM71Ln/SW.IC', 0, 1, '2026-07-29 01:57:31', NULL),
-(39, '197901012024003900', 'Elysa Yuli Nur\'aini, S.Si', 'Guru', NULL, 'elysa', '$2y$12$MXwcbBt4WGCwYns8NDJMluhXcl1KYRlV2MikxUuJnH/uWyt1Sl4WO', 0, 1, '2026-07-29 01:57:31', NULL),
-(40, '198001012024004000', 'Endang Ary Handayani S.T., M.Pd', 'Guru', NULL, 'endang', '$2y$12$uJ5PK8AACNFg6S/5DSsB4ercHfz3OHtZm08yhD.PLC5rvtUXNtI9q', 0, 1, '2026-07-29 01:57:31', NULL),
-(41, '198101012024004100', 'Endang Safitri, S.Pd', 'Guru', NULL, 'endang2', '$2y$12$XPccCXEZamKGcu2H..X8MeGmPFMy3flN/D4mjuWKZ9Pt0Rcq5UuxS', 0, 1, '2026-07-29 01:57:31', NULL),
-(42, '198201012024004200', 'Endik Kuswantoro, S.Kom.,M.T', 'Guru', NULL, 'endik', '$2y$12$aUEZ8ccUNRwBmQXeUJSfTucg1zG640HEjdS/kEx9XFUrByGKmoPeK', 0, 1, '2026-07-29 01:57:31', NULL),
-(43, '198301012024004300', 'Erna Qoriah, S.E.', 'Guru', NULL, 'erna', '$2y$12$CS6Ny0Oa4a3.P85cDuhqmOWA9YdClE2.aZT/G3k8V0tVGJpvBtW7a', 0, 1, '2026-07-29 01:57:31', NULL),
-(44, '198401012024004400', 'Erna Rinawati, S.Pd', 'Guru', NULL, 'erna2', '$2y$12$OmSrU6zoMDxFngyHA57cHO1WElqX7Ni2eQ3SgwESqnDZqj/OZW6UW', 0, 1, '2026-07-29 01:57:31', NULL),
-(45, '198501012024004500', 'Erwan Septiyono, S.Pd', 'Guru', NULL, 'erwan', '$2y$12$lRuA.3wdyuhILuBYgPNQeeuI.CbkHgkZdZZtoTq0lmM.yWbTDSU.K', 0, 1, '2026-07-29 01:57:31', NULL),
-(46, '198601012024004600', 'Fajar Luthfianto, S.Pd', 'Guru', NULL, 'fajar', '$2y$12$yNLO4.BFvjaqgxcaPGCdQ.9ao6XLRh/FScXVmfo71cwtznsmFh1Bm', 0, 1, '2026-07-29 01:57:31', NULL),
-(47, '198701012024004700', 'Fajar Wahyu Pratiwi, S.S', 'Guru', NULL, 'fajar2', '$2y$12$Hv.KM31g8a.bEtWlUHrUEOt8beabCAknOaM8RwIuoM0p1oz.Q8fFm', 0, 1, '2026-07-29 01:57:31', NULL),
-(48, '198801012024004800', 'Fitri Amaliyah, S.Pd', 'Guru', NULL, 'fitri', '$2y$12$SguOE7g2JG04zR.1JmhxVui0jHc5kZQO1QsN8dTpFiZOs/GP3nMby', 0, 1, '2026-07-29 01:57:31', NULL),
-(49, '198901012024004900', 'Fitria Diah Ayu Hartati, S.Pd', 'Guru', NULL, 'fitria', '$2y$12$M9HU3/OnWwYLZgZ/ihqVeOJqMyieEnP27o4N5kNd6yoVjml/SJ0LO', 0, 1, '2026-07-29 01:57:31', NULL),
-(50, '199001012024005000', 'Fitria Renytasari, S.Pd', 'Guru', NULL, 'fitria2', '$2y$12$s0inUvtizfT3VMmqpZjdK.XDh/WRzncB7r1w228yNhmZ86EfcC4Ni', 0, 1, '2026-07-29 01:57:31', NULL),
-(51, '199101012024005100', 'Ilham Sungeidi, S.Pd', 'Guru', NULL, 'ilham', '$2y$12$MMzx7iBN31dBcguGMZT9WOTbo2AWewL3mZ7CnNH5NjRXpeyO.gUKi', 0, 1, '2026-07-29 01:57:31', NULL),
-(52, '199201012024005200', 'Indayah, S.Pd., M.Pd', 'Guru', NULL, 'indayah', '$2y$12$yhfefd1Ah6eXt.UTwxTZIeQPFvcosT27cDB.hG7dUWKYnZZL/UDW6', 0, 1, '2026-07-29 01:57:31', NULL),
-(53, '199301012024005300', 'Indriati, S.Pd', 'Guru', NULL, 'indriati', '$2y$12$bwWyqrieCx0MeKg/kD52we4L583bmBb7Lvabv0UxSnciOP7x0nKCO', 0, 1, '2026-07-29 01:57:31', NULL),
-(54, '199401012024005400', 'Ista Nofasari, S.Pd', 'Guru', NULL, 'ista', '$2y$12$d7F3XuoBacVFpUxY2OHbi.zBDkQB6OsO7aFWJLQIJ.reusuZvAOqG', 0, 1, '2026-07-29 01:57:31', NULL),
-(55, '199501012024005500', 'Isti Mufadah, S.Pd', 'Guru', NULL, 'isti', '$2y$12$69WP2DSu9Qrd3lrGb08jheLjFnGRkO0PRNCDVbGR/NQPIPvTTRz0u', 0, 1, '2026-07-29 01:57:31', NULL),
-(56, '199601012024005600', 'Istiana Suhartati, S.T', 'Guru', NULL, 'istiana', '$2y$12$zo7rG/yPWWZpoKHc5xZohuUF8VTBmgYUeHCGDrjKQwpclDCZN5JNW', 0, 1, '2026-07-29 01:57:31', NULL),
-(57, '199701012024005700', 'Joko Priyanto, S.Kom', 'Guru', NULL, 'joko', '$2y$12$DFADnMUOmXXW0aAiX0CHleqa3P3i1j/zQI7v1ydYFCbFzEfq5OWwi', 0, 1, '2026-07-29 01:57:31', NULL),
-(58, '199801012024005800', 'Kasmi, S.Pd., M.Pd', 'Guru', NULL, 'kasmi', '$2y$12$7NIt3oaWsP3vreheppFO.OFjCgpBjHnxyhCfyqsRrHTukPA68RgSW', 0, 1, '2026-07-29 01:57:31', NULL),
-(59, '199901012024005900', 'Khoyrotun Hisani, S.Sn', 'Guru', NULL, 'khoyrotun', '$2y$12$968JUe90QR5KV4SGcijJDO/JZJPI09.DCwkxhCnRL8hVMpe9vJYBe', 0, 1, '2026-07-29 01:57:31', NULL),
-(60, '197001012024006000', 'Khuriyatul Kamila, S.Si', 'Guru', NULL, 'khuriyatul', '$2y$12$faQNNFjhlajOJ22G8dMqge4aQ3OMqJhIJJo7tV5SAlHCI6hILcdsO', 0, 1, '2026-07-29 01:57:31', NULL),
-(61, '197101012024006100', 'Komariyah, S.Pd', 'Guru', NULL, 'komariyah', '$2y$12$wfyHbIHkR.qVmJjRKuUzle2i0HHr2m0FnApfwYCTofuHKhxfdVm6K', 0, 1, '2026-07-29 01:57:31', NULL),
-(62, '197201012024006200', 'Kurnila Putri Islamawati, S.Pd', 'Guru', NULL, 'kurnila', '$2y$12$G9m3Rsjk5FkX/vsJEx3bP.jknlwewEfCVi1QCiBCjKP7dzhJevuVa', 0, 1, '2026-07-29 01:57:31', NULL),
-(63, '197301012024006300', 'Laili Ermawati, S.Pd', 'Guru', NULL, 'laili', '$2y$12$FQwt.ZaiteWCuqOEdEaXVuNVL7SrDs74mLdFluDY.xcaL4qPg0xYC', 0, 1, '2026-07-29 01:57:31', NULL),
-(64, '197401012024006400', 'Lilik Suratmi, S.Pd', 'Guru', NULL, 'lilik', '$2y$12$BeURmroBNu4Dld3Y0KTg9eJZ4C5okecBuEX31KgzU7YtToZqe8YXu', 0, 1, '2026-07-29 01:57:31', NULL),
-(65, '197501012024006500', 'Listyana Hartati, S.Kom. M.Pd', 'Guru', NULL, 'listyana', '$2y$12$wYXFAHAMtBIqauxXTep.guZBIMwf71eXlJWr9bKt4ErCw7vJLuTQe', 0, 1, '2026-07-29 01:57:31', NULL),
-(66, '197601012024006600', 'Luluk Munfarida,S.Pd', 'Guru', NULL, 'luluk', '$2y$12$LBhxSTNB/TwVAyt8UFLate7i0.obMbFo3EQDaSo4FY6sZc20Eu6Wm', 0, 1, '2026-07-29 01:57:31', NULL),
-(67, '197701012024006700', 'Lutfia Marsalina, S.Pd.I, M.Pd.', 'Guru', NULL, 'lutfia', '$2y$12$LJSH.RaG4pq.YmI07bgP7eYN1kGrXQbiTfjUxvgGd2H0Y4nuSyjle', 0, 1, '2026-07-29 01:57:31', NULL),
-(68, '197801012024006800', 'Martiin, S.Pd', 'Guru', NULL, 'martiin', '$2y$12$PeowuQ8/XlqDTZUiUPRF3.7Dp.mY7f1OhqT0mBjNuuFJSoEqxYiMW', 0, 1, '2026-07-29 01:57:31', NULL),
-(69, '197901012024006900', 'Mas\'an Widodo, S.Pd. M.T', 'Guru', NULL, 'masan', '$2y$12$Xgp2ZwHaV0nDrNPjZmmaKe/I6M9AoW556oNibE9265ZJLBhG8TR8q', 0, 1, '2026-07-29 01:57:31', NULL),
-(70, '198001012024007000', 'Mega Mahardika, S.Pd', 'Guru', NULL, 'mega', '$2y$12$qP0xJS.vHzyNp4jjLx1BCOlgMXRb4z1bfQmqV6QInp4OREyReoW.e', 0, 1, '2026-07-29 01:57:31', NULL),
-(71, '198101012024007100', 'Muashofah, M.Pd', 'Guru', NULL, 'muashofah', '$2y$12$CXNz2s7pvp6gXCbwEhpou.PZDCLiQha1ifjM4K24GjVbhU.SEa.eC', 0, 1, '2026-07-29 01:57:31', NULL),
-(72, '198201012024007200', 'Mufatiroh, S.Ag', 'Guru', NULL, 'mufatiroh', '$2y$12$O3wVnCKi.hgFTRagV88zr.LRDDBffWf4rGAeJhESzNWd4Qk1hwwqS', 0, 1, '2026-07-29 01:57:31', NULL),
-(73, '198301012024007300', 'Muhammad Fajar Assidiqi, S.Pd', 'Guru', NULL, 'muhammad', '$2y$12$Zvud2z93VNoLdgybbP1DcOW5YxUPMDiLhAuTZZuYHWeN7dIp14IUi', 0, 1, '2026-07-29 01:57:31', NULL),
-(74, '198401012024007400', 'Muto\'atul Khosi\'ah, S.Pd', 'Guru', NULL, 'mutoatul', '$2y$12$4jv9cSnkz3xCNWgYOaS/puODOvPfWT8dvYIra.feQ8IYCqxj.jYb6', 0, 1, '2026-07-29 01:57:31', NULL),
-(75, '198501012024007500', 'Niken Dewi Hastika, S.Pd', 'Guru', NULL, 'niken', '$2y$12$qAFiE73dzMlUmRq0NMv8IO2gIfTuSpgTP/KFBOE8dsLdq4vFTLvXK', 0, 1, '2026-07-29 01:57:31', NULL),
-(76, '198601012024007600', 'Niken Hari Pratiwi, S.Psi.,M.Pd', 'Guru', NULL, 'niken2', '$2y$12$VM3hW1qNsix.1LzDbYpJj.Tqznqebx4xOOyCc/pi68Zk6uKOGTk7u', 0, 1, '2026-07-29 01:57:31', NULL),
-(77, '198701012024007700', 'Ninik Sriwidayati, S.Pd.,M.Pd', 'Guru', NULL, 'ninik', '$2y$12$3wW1ItrFuTxkkoSBQw/Gcu/gvBS6qbY4ZcYYZ8fEkP82tL6IeYoG6', 0, 1, '2026-07-29 01:57:31', NULL),
-(78, '198801012024007800', 'Nishfu Laili,S.Pd', 'Guru', NULL, 'nishfu', '$2y$12$b/75fGWI6db8A7e7bO0pPesq9wLVTDTx8uO58x8RtHXLPMGbARQzu', 0, 1, '2026-07-29 01:57:31', NULL),
-(79, '198901012024007900', 'Nur Eko Wahyuningsih, S.Pd', 'Guru', NULL, 'nur', '$2y$12$JO3Tv2gGhdo.7jukCiJLG.y20u4ZpIut1DBDIjIKghNLk9mLp.XfO', 0, 1, '2026-07-29 01:57:31', NULL),
-(80, '199001012024008000', 'Nur Nastutisari, S.ST.Par.', 'Guru', NULL, 'nur2', '$2y$12$kmAc.UOVhKaP.FiuOOI7/uSOQnbh.z6Ox5e5Zv.dDTIzJWNdhboxu', 0, 1, '2026-07-29 01:57:31', NULL),
-(81, '199101012024008100', 'Nurul Azizah, S.Pd', 'Guru', NULL, 'nurul', '$2y$12$2z0Y5pN1QtmM1qFUc2Z9guBg3y.y.T7LAVpzukse/c4dT3LutKRjK', 0, 1, '2026-07-29 01:57:31', NULL),
-(82, '199201012024008200', 'Peni Wulandari, S.Pd', 'Guru', NULL, 'peni', '$2y$12$Llyr/IgQT0l.mrJeiFOheOun6N.k1rCa90S3YpcnK8kNuUgDhH.Lm', 0, 1, '2026-07-29 01:57:31', NULL),
-(83, '199301012024008300', 'Pipit Ambarwati, S.Pd', 'Guru', NULL, 'pipit', '$2y$12$6JG6fGRylCAYP.g5oxddZesuWJPqukfbb3FOhynqyb1pEUfMBLJ2O', 0, 1, '2026-07-29 01:57:31', NULL),
-(84, '199401012024008400', 'Purwati,S.Pd', 'Guru', NULL, 'purwati', '$2y$12$RK..seFT4Lx.axlAc15qiupek4XSbU5/P0cRcN98ZqhCUPQr9qJMW', 0, 1, '2026-07-29 01:57:31', NULL),
-(85, '199501012024008500', 'Ratih Dian Irawati, SE', 'Guru', NULL, 'ratih', '$2y$12$TQktZxeM5XATHFnv/AOFg.PfodBymfhBGZ/WFAJ3dsNXdJ8AAzyt.', 0, 1, '2026-07-29 01:57:31', NULL),
-(86, '199601012024008600', 'Retno Widyastuti, S.Pd., M.Pd', 'Guru', NULL, 'retno', '$2y$12$xPJD8RtlfU/BiryKKEJnneZlraT8VKYUeF0z0OphduhOa9MoqkDd6', 0, 1, '2026-07-29 01:57:31', NULL),
-(87, '199701012024008700', 'Rifkotin Na\'imah, S.Pd', 'Guru', NULL, 'rifkotin', '$2y$12$0tAYeH5kLrcfQn5yWzKtZeIGYwAXBCaWuPU1FtULcSgnR5sefWF.q', 0, 1, '2026-07-29 01:57:31', NULL),
-(88, '199801012024008800', 'Rika Okta Maulida, S.Ds.', 'Guru', NULL, 'rika', '$2y$12$7YxT15qdGCwvi4NUgjBovu0KjiEfWH3SV5Safbw5xUJFQmjk03ufa', 0, 1, '2026-07-29 01:57:31', NULL),
-(89, '199901012024008900', 'Rindang Rejeki, S.Pd', 'Guru', NULL, 'rindang', '$2y$12$ZLaK31spfezprURuy9XdmelUo2vEFv53d1R1g7SmsVtwt0FRsqNB2', 0, 1, '2026-07-29 01:57:31', NULL),
-(90, '197001012024009000', 'Risqi Nur Imama, S.Tr.Par', 'Guru', NULL, 'risqi', '$2y$12$r93Up6ifHXamIZbB8T3vlesfPUYnMvNV/kWPrj.iQew./iba4O/Uy', 0, 1, '2026-07-29 01:57:31', NULL),
-(91, '197101012024009100', 'Rizki Putri Wulandari, S.Pd', 'Guru', NULL, 'rizki', '$2y$12$vY.TreXu3otJgy1S0P/xXuwS93o3WOY/uss/PClaqZlAmy9WXJrm6', 0, 1, '2026-07-29 01:57:31', NULL),
-(92, '197201012024009200', 'Rulik Indrawati, S.Pd', 'Guru', NULL, 'rulik', '$2y$12$CJCWbO/.15vCNP7SQBKICOe4DZqgLUXYN5vP9lO456PrzPnezMVUa', 0, 1, '2026-07-29 01:57:31', NULL),
-(93, '197301012024009300', 'Ruly Dwi Setyaningrum, S.Kom', 'Guru', NULL, 'ruly', '$2y$12$mnZOyl7NYDYonlSszkH4POExt8t66veFjjnM6.P1vhiN7e4azMjSW', 0, 1, '2026-07-29 01:57:31', NULL),
-(94, '197401012024009400', 'Sa\'ad Wazis Hiedayat, S.Pd', 'Guru', NULL, 'saad', '$2y$12$XSpDnXfgka2pgwn1CYoqvO3hl4VCv.KXGkWjiIYEnBFljWkkx09we', 0, 1, '2026-07-29 01:57:31', NULL),
-(95, '197501012024009500', 'Septiani, S.Pd.,M.Pd', 'Guru', NULL, 'septiani', '$2y$12$iJ5jFXediquVn559b/28COLG2o8D4mTfw6U781M5bszuKPE53Joh.', 0, 1, '2026-07-29 01:57:31', NULL),
-(96, '197601012024009600', 'Setiyo Winarko, S.Pd', 'Guru', NULL, 'setiyo', '$2y$12$ruP.nNRYVnbeUQTlLD6YyO6WRHooZ2ZMLeL6vr2vNwr0WhISH5tCK', 0, 1, '2026-07-29 01:57:31', NULL),
-(97, '197701012024009700', 'Shinta Indyar Shanty Susanto, S.Kom', 'Guru', NULL, 'shinta', '$2y$12$uqgCK5VPCO6AIDsTL.9L.Ov9WbFE1s4iEPcy8QV3/a0btH.nRDJca', 0, 1, '2026-07-29 01:57:31', NULL),
-(98, '197801012024009800', 'Sinta Lestari, S.Pd.I', 'Guru', NULL, 'sinta', '$2y$12$V.v14ewZth2WwfMQ4VU0e.oD5hlTyp.Oet7KzK48RKF/CgoLdaEpa', 0, 1, '2026-07-29 01:57:31', NULL),
-(99, '197901012024009900', 'Siswanti Purwaningsih, S.T., M.Pd', 'Guru', NULL, 'siswanti', '$2y$12$SKSM779k9TR56YABWc267etccFsbJ.iXg1iBUDFp9hwLcRTiaDSrq', 0, 1, '2026-07-29 01:57:31', NULL),
-(100, '198001012024010000', 'Siti Khoiriyah, S.Pd', 'Guru', NULL, 'siti', '$2y$12$LaWxdNf9afhhddugxqmFKeVo9jotKrvOdjVoAKvXyDSwprji.9TH2', 0, 1, '2026-07-29 01:57:31', NULL),
-(101, '198101012024010100', 'Siti Maisaroh, S.Pd', 'Guru', NULL, 'siti2', '$2y$12$K.6BaMtINSwvFhklDWb3euMloqO7soy6EUkX4kShwFVL7pByvuY0.', 0, 1, '2026-07-29 01:57:31', NULL),
-(102, '198201012024010200', 'Siti Munawaroh, S.Kom.,M.Pd', 'Guru', NULL, 'siti3', '$2y$12$wCUldPemaD0sJY/npJed6O9WcCpuy18vH8dJVRzr6mTuuQOO79d4.', 0, 1, '2026-07-29 01:57:31', NULL),
-(103, '198301012024010300', 'Siti Umiharsih, S.Pd', 'Guru', NULL, 'siti4', '$2y$12$Aob83.93xqb2YmotZEvfKONpDjeqfILRxWft3bnX.FORRjg.K7D9K', 0, 1, '2026-07-29 01:57:31', NULL),
-(104, '198401012024010400', 'Sri Kusumastuti, S.Pd', 'Guru', NULL, 'sri', '$2y$12$fVRlC.2FBdeSX4WsgvZdJe0MHvj29t6UX/rAokkBe57sHsy0rlhwS', 0, 1, '2026-07-29 01:57:31', NULL),
-(105, '198501012024010500', 'Sri Rahayu, S.Pd', 'Guru', NULL, 'sri2', '$2y$12$g3Am4Weup3oYGWiZCChkqeOLWTlkDEJpnOlB1syD9Icp1G3iaOhwC', 0, 1, '2026-07-29 01:57:31', NULL),
-(106, '198601012024010600', 'Sri Subekti, S.Pd', 'Guru', NULL, 'sri3', '$2y$12$s1U6FQqlskw3wzfRkCTEm.6rP5nppEBpz7bRvYgqjrLy7.QTwaeRC', 0, 1, '2026-07-29 01:57:31', NULL),
-(107, '198701012024010700', 'Sulistyowati, SS', 'Guru', NULL, 'sulistyowati', '$2y$12$IqDRbA1RS1mn52YZ95B3Re794MW6oUxWZKs.k3v34JadCOsTrKWH.', 0, 1, '2026-07-29 01:57:31', NULL),
-(108, '198801012024010800', 'Sunarti, S.Pd', 'Guru', NULL, 'sunarti', '$2y$12$zj1bus3wRzHx0W8856A8r.72bMiPYdLLEWvzBG5WCQYJ2iVRORVsy', 0, 1, '2026-07-29 01:57:31', NULL),
-(109, '198901012024010900', 'Titik Samsistini, S.Pd', 'Guru', NULL, 'titik', '$2y$12$lp.WOZubmbcf4zbcugDxhOxrFaMudqfPn0BKI5ZjHAZ2jSF7Y0N9m', 0, 1, '2026-07-29 01:57:31', NULL),
-(110, '199001012024011000', 'Titin Sukmasari, S.Pd., M.Pd', 'Guru', NULL, 'titin', '$2y$12$Xgrwdir.x/DnLWpj82ypM.AYGRf0JsSj7hwuxoWbLtNkKPhfkwU0C', 0, 1, '2026-07-29 01:57:31', NULL),
-(111, '199101012024011100', 'Tuhu Eries Kudori, S.Sn', 'Guru', NULL, 'tuhu', '$2y$12$nw1rEjuDQ5FK7dhjs.U5DODDW9hnvXq5wQigy6NTJHLx5Y5hDIZaa', 0, 1, '2026-07-29 01:57:31', NULL),
-(112, '199201012024011200', 'Tutut Sriatin, S.Pd', 'Guru', NULL, 'tutut', '$2y$12$4tx.n/EMUvAHiQI2bJ9As.tq07PgOTIS0qTqImUy0oGVdnLFMFOmC', 0, 1, '2026-07-29 01:57:31', NULL),
-(113, '199301012024011300', 'Umi Kulsum, S.Pd', 'Guru', NULL, 'umi', '$2y$12$kZujmUy3xFHPgP6oBi/6qewh4NGyFCfbXDtg2yWoqrZwW96hXc3mu', 0, 1, '2026-07-29 01:57:31', NULL),
-(114, '199401012024011400', 'Veronica Damay Rulitasari, S.Pd', 'Guru', NULL, 'veronica', '$2y$12$UxaAjA5.Dsoh.5rCiSg3VeoQZYH82nYpix1/IqfAgNyY/1Qe2zw3u', 0, 1, '2026-07-29 01:57:31', NULL),
-(115, '199501012024011500', 'Widodo, S.Pd', 'Guru', NULL, 'widodo', '$2y$12$8qKjQtGwwyBaSIPCGWKxfeP0KEUH7x/KWVpmeVEIwuQoNS.BNFdrW', 0, 1, '2026-07-29 01:57:31', NULL),
-(116, '199601012024011600', 'Winarsih, S.Pd, M.Pd', 'Guru', NULL, 'winarsih', '$2y$12$l9Hjg9HThaYCVzyXBj5d.unW9Y5y1r8w59knTRv4hb0OVXBMbQWjK', 0, 1, '2026-07-29 01:57:31', NULL),
-(117, '199701012024011700', 'Winartin, S.Pd', 'Guru', NULL, 'winartin', '$2y$12$PyGgbRk84zz3.IgtZURAS.nhe8mNpxC9mwk8Qb2DNuP7SmJsHvfBK', 0, 1, '2026-07-29 01:57:31', NULL),
-(118, '199801012024011800', 'Wiwik Yuniarsih, S.Pd', 'Guru', NULL, 'wiwik', '$2y$12$Oo4Uj8k9Bvho/nwG75ovf.jEDU7cuV6cV/Ggtl9vPxDLGIE5H.rNy', 0, 1, '2026-07-29 01:57:31', NULL),
-(119, '199901012024011900', 'Yani, S.Pd.', 'Guru', NULL, 'yani', '$2y$12$/jR1s3Y3EEgILnMINVpjuuK1SixLS8MeDbrrEka1FNQOass.y09l.', 0, 1, '2026-07-29 01:57:31', NULL),
-(120, '197001012024012000', 'Yuli Ratnasari, S.Pd', 'Guru', NULL, 'yuli', '$2y$12$ipNbtcDTyVNh9PupA2qiQ.4aZ1.0W8l00G4QbyVreJVl4wKL0Vm8q', 0, 1, '2026-07-29 01:57:31', NULL),
-(121, '197101012024012100', 'Yuni Jiastuti, S.Pd', 'Guru', NULL, 'yuni', '$2y$12$Ro27vg9W9gF.GnGd8j4VQ.fGeI1Iq7b/PRssQMP0SqaX60KNyCAVi', 0, 1, '2026-07-29 01:57:31', NULL),
-(122, '197201012024012200', 'Yustin Febrini, S.Pd', 'Guru', NULL, 'yustin', '$2y$12$Ez1Oic3uuDiUlPGBZcJRWOtYYDHqFo0aaH15.4JemM9jSaa3xZgHy', 0, 1, '2026-07-29 01:57:31', NULL),
-(123, '197301012024012300', 'Zainul Arifin,S.Pd', 'Guru', NULL, 'zainul', '$2y$12$aeFXknOyt7JP863SOIsPNOOtZctIi95yyfQrJJE5ocBdW.xSDBNoS', 0, 1, '2026-07-29 01:57:31', NULL),
-(124, '199001012020011001', 'Bambang Supriadi, M.Pd.', 'Guru', '081299887766', 'bambang', '$2y$12$Q.xxDUpoIAZngnpYZj1MxejwMbTyTcWLiw3PtZXbCAQyZMIYAOTyy', 0, 1, '2026-08-06 00:47:31', NULL),
-(125, '0000000000000000', 'Administrator', 'Guru', '08000000000', 'admin', '$2y$12$rN2vIx7VUZ9XjmE5JCUqwO8BDs3N7WiOezL31NTP0LYAfCX9Xf0h.', 1, 1, '2026-08-06 00:59:34', NULL),
-(126, '197601012024012600', 'Waka Kesiswaan (placeholder)', 'Waka', NULL, 'waka', '$2y$12$qHNE9gOUSoe763dj7nXfQOTO2IN9fnAgYp.tjuOUek.skqwJ20Che', 0, 1, '2026-08-16 08:00:00', NULL),
-(127, '197701012024012700', 'Kepala Sekolah (placeholder)', 'Kepsek', NULL, 'kepsek', '$2y$12$VYCzluumnm7rLcKWqnBUEexVD925sBtmPI0esn5cyFrsOEN9PvcLS', 0, 1, '2026-08-16 08:00:00', NULL),
-(128, '197801012024012800', 'Petugas Satpam (placeholder)', 'Satpam', NULL, 'satpam', '$2y$12$gF/u1nxarq7Q2U0Z0h/di.BbjRmcZ4OQI4E95I27HVS.RjIJ7lmSm', 0, 1, '2026-08-16 08:00:00', NULL),
-(129, '197901012024012900', 'Guru Piket (placeholder)', 'Guru Piket', NULL, 'piket', '$2y$12$E70f1tVTtpYtYq.Pkpo7DOzqE7rf0mJz3R.qe6OJHNG9LIQ4GwwNq', 0, 1, '2026-08-17 08:00:00', NULL);
+INSERT INTO `guru` (`id_guru`, `nip`, `nama_guru`, `Peran`, `foto_profil`, `no_hp`, `username`, `password_hash`, `is_admin`, `is_aktif`, `created_at`, `deleted_at`) VALUES
+(1, '197101012024000100', 'Abdul Rohman, S.Pd', 'Guru', NULL, '08128745886', 'abdul', '$2y$12$f2o5of0Ab8mZLtxGT.1J1uW4u0vOYMsJBQR1C0/K1VxAdJhBaL8Gq', 0, 1, '2026-07-29 01:57:31', NULL),
+(2, '197201012024000200', 'Agung Yulianto, S.Pd', 'Guru', NULL, NULL, 'agung', '$2y$12$T8YSFVUadOwOwUP4Y9TJy.7N0S6B9vmxh9Y9w6g3k6SyGknK.q.J2', 0, 0, '2026-07-29 01:57:31', NULL),
+(3, '197301012024000300', 'Agus Fahruddy, S.Pd., M.Pd', 'Guru', NULL, NULL, 'agus', '$2y$12$JBRCKnJI5bjvodQFuyF5/OwLW3GWxBQrwcQi9v5g1LwYGJhHwrP8W', 0, 1, '2026-07-29 01:57:31', NULL),
+(4, '197401012024000400', 'Agus Muharyanto, M.Pd', 'Guru', NULL, NULL, 'agus2', '$2y$12$UL9SqW3gUxJP0GYG0rU4kOsXaZDZbxYNKhsVKVfxQi0s2FmnAxwee', 0, 1, '2026-07-29 01:57:31', NULL),
+(5, '197501012024000500', 'Agus Pramono, S.Sn', 'Guru', NULL, NULL, 'agus3', '$2y$12$rbkaNMAImTnvpBaITCd3uehHBAGez0/uGIBg1Trx5RLiz1Fn0hT9a', 0, 1, '2026-07-29 01:57:31', NULL),
+(6, '197601012024000600', 'Agustina Mardika Rini, S.Pd.,M.Pd', 'Guru', NULL, NULL, 'agustina', '$2y$12$RAS1qhyTyVzz7geFnvrXdeN3cI.J09E8ftdo2XIxHTYTFqI46Rlrm', 0, 1, '2026-07-29 01:57:31', NULL),
+(7, '197701012024000700', 'Ajeng Okvitasari, S.Pd', 'Guru', NULL, NULL, 'ajeng', '$2y$12$LHDkd6nTnh8/DKpIg7xK/uuHXYUUncL716XhKjvupjT5qOmJu16Sy', 0, 1, '2026-07-29 01:57:31', NULL),
+(8, '197801012024000800', 'Alfinu Farikh Abdillah, S.Pd.I', 'Guru', NULL, NULL, 'alfinu', '$2y$12$gO3Xb0YrfH6pI7GX63lLy.RLVVVwddwu5wqt0OTvTNzr7/Fq1vPfO', 0, 1, '2026-07-29 01:57:31', NULL),
+(9, '197901012024000900', 'Anang Prasetyo, S.Pd', 'Guru', NULL, NULL, 'anang', '$2y$12$EYGck9TKF5gbEPW4KcSf0.4IwjnaRBbdjPcbzckjuGwUFCo3bcqDC', 0, 1, '2026-07-29 01:57:31', NULL),
+(10, '198001012024001000', 'Andika Christian Sasmita, S.ST', 'Guru', NULL, NULL, 'andika', '$2y$12$RWhM3L4v061FrrEcQ5qCzeacn9LSmgiWm.IdlDlUt46yJkV89mOP6', 0, 1, '2026-07-29 01:57:31', NULL),
+(11, '198101012024001100', 'Andri Krisdianto, SE., M.Pd', 'Guru', NULL, NULL, 'andri', '$2y$12$BigH4l7lQnWpS6pQidZ1z.1RFxr.CweVQZTFd/fZ5sw283Ftj9mVu', 0, 1, '2026-07-29 01:57:31', NULL),
+(12, '198201012024001200', 'Andri Retno Yuli Astuti, S.Pd', 'Guru', NULL, NULL, 'andri2', '$2y$12$A5/Nn/rKtn0L5/ByI6OoB.lvIauPtp986N70fJKa5n0nYSRuLAanu', 0, 1, '2026-07-29 01:57:31', NULL),
+(13, '198301012024001300', 'Angga Widhy Wirawan, S.Pd.,M.Pd', 'Guru', NULL, NULL, 'angga', '$2y$12$sACo0WVqLrWT00waTjGLWOlWKmYeT2lWWIuTYUZd2DdLTmItcG8aa', 0, 1, '2026-07-29 01:57:31', NULL),
+(14, '198401012024001400', 'Anisa Kusumawati, S.Pd', 'Guru', NULL, NULL, 'anisa', '$2y$12$86qtu1FfTJgp9QV584KcJeQhrlC3yF1r68bUD9C.YS2poDbNsasGW', 0, 1, '2026-07-29 01:57:31', NULL),
+(15, '198501012024001500', 'Arif Setyobudi, S.Pd', 'Guru', NULL, NULL, 'arif', '$2y$12$JnuON/JDVm40AAy4GDEKLeDUn8F7bUGnUBY9QAxvqq1fM2PWO0Z3K', 0, 1, '2026-07-29 01:57:31', NULL),
+(16, '198601012024001600', 'Arvia Rienetasary, S.Pd', 'Guru', NULL, NULL, 'arvia', '$2y$12$JjxIy3yWrGzOG76kv7t/d.HBEOB8uecXnqeMQS0GZL3HlhvoiaO0a', 0, 1, '2026-07-29 01:57:31', NULL),
+(17, '198701012024001700', 'Ary Sunaryo, ST.,M.Pd', 'Guru', NULL, NULL, 'ary', '$2y$12$0z57yt4DhkWV/OmozuGIkej5aiFiMoXQqXTS4S6y5FBYSMapwh/Fu', 0, 1, '2026-07-29 01:57:31', NULL),
+(18, '198801012024001800', 'Astra Bella Flamboyan, S.Psi', 'Guru', NULL, NULL, 'astra', '$2y$12$QmMdU6nWBCWaGmyS7gTU2.ONQsan4vEr.HSR8B8cOnPWYThBvMKFW', 0, 1, '2026-07-29 01:57:31', NULL),
+(19, '198901012024001900', 'Atih Wilupi, S.E, M.Pd', 'Guru', NULL, NULL, 'atih', '$2y$12$EcDndpTS2o2554YddiT.G.5rKsflyO4M46ayt/M57EAfLWSWyGGL.', 0, 1, '2026-07-29 01:57:31', NULL),
+(20, '199001012024002000', 'Ayu Puspitorini, ST', 'Guru', NULL, NULL, 'ayu', '$2y$12$sAOCl4lYAb981g1R0PPWou5P66egHwGEvaOsk2.84I08ZNTA9cHOW', 0, 1, '2026-07-29 01:57:31', NULL),
+(21, '199101012024002100', 'Badrus Sulaiman, S.Pd.', 'Guru', NULL, NULL, 'badrus', '$2y$12$asaSCA3T3yqP5baQtSKaPODYD4rDghndAo5YMH1LdGO905JH7e2Qe', 0, 1, '2026-07-29 01:57:31', NULL),
+(22, '199201012024002200', 'Baskoro, S.Si', 'Guru', NULL, NULL, 'baskoro', '$2y$12$L35Uq6V7M.lgaNqWB6gjreVPhum8KxCLKSmHSg3vwFluTItgrVLyC', 0, 1, '2026-07-29 01:57:31', NULL),
+(23, '199301012024002300', 'Basuki Sarjono, S.Pd', 'Guru', NULL, NULL, 'basuki', '$2y$12$rA9AgRZvEHyqzTzJJFEwOelifCAbE01F3Fv1iMDjF6ZtGcbe067Pa', 0, 1, '2026-07-29 01:57:31', NULL),
+(24, '199401012024002400', 'Bella Prakoso, S.Pd', 'Guru', NULL, NULL, 'bella', '$2y$12$I.1wdU1UtYvg70qJcUaaauwbn3J8jlKJHS1ISZMhWBi4fhnaVUPP6', 0, 1, '2026-07-29 01:57:31', NULL),
+(25, '199501012024002500', 'Benny Mamora, S.Kom', 'Guru', NULL, NULL, 'benny', '$2y$12$b0OuHu.FzJ3kzuBwLyTpquEUWZhif3WmCQUWpk2Bl5zRjxxMBAmcK', 0, 1, '2026-07-29 01:57:31', NULL),
+(26, '199601012024002600', 'Danang Anjar Hymawanto, S.Pd', 'Guru', NULL, NULL, 'danang', '$2y$12$WxkocH9Yxs/dvFVIAZ0YEO7fw5swb.qK7QQBrRCcuFb/entnP7Nxy', 0, 1, '2026-07-29 01:57:31', NULL),
+(27, '199701012024002700', 'Dhuana Putri Puspitasary, S.Pd', 'Guru', NULL, NULL, 'dhuana', '$2y$12$tdqCYHmFClX98XT/X1hICeAChS/gkk4LZ8mzEAf6LOEiOp1Ye/0vu', 0, 1, '2026-07-29 01:57:31', NULL),
+(28, '199801012024002800', 'Dian Mawarti, S.Pd', 'Guru', NULL, NULL, 'dian', '$2y$12$whMLUoycEpY3Vm6/Enq1zOQit.l1iqpdqzyt3rPENpi5Tw3KrrZ5K', 0, 1, '2026-07-29 01:57:31', NULL),
+(29, '199901012024002900', 'Diana Hartanti, S.T., M.Pd', 'Guru', NULL, NULL, 'diana', '$2y$12$iyFLB84pTLuWio43oUtv3etfRDkBrBYtsiKGrUFs.GoYBfvKWn64G', 0, 1, '2026-07-29 01:57:31', NULL),
+(30, '197001012024003000', 'Dra. Anik Indriani', 'Guru', NULL, NULL, 'anik', '$2y$12$tF1o/rtCSnj3Q4z2b5lsCuUL3CxO5nGQzbTzPf4RTvJB74oz1E8y2', 0, 1, '2026-07-29 01:57:31', NULL),
+(31, '197101012024003100', 'Dra. Hanik Pangestuti', 'Guru', NULL, NULL, 'hanik', '$2y$12$mQNkIPC78dLUYvOArk9J9e.iNrDnWVCnkUrQVU8oBym4x3.42cMia', 0, 1, '2026-07-29 01:57:31', NULL),
+(32, '197201012024003200', 'Dra. Susakti Yuharini', 'Guru', NULL, NULL, 'susakti', '$2y$12$sF2HwmzJ8.k2CtGk9N7K9OHbgLCPPzv6rmkzaq3nXvFWaLhRmgVg.', 0, 1, '2026-07-29 01:57:31', NULL),
+(33, '197301012024003300', 'Dwi Kuswanto, S.Pd', 'Guru', NULL, NULL, 'dwi', '$2y$12$qOmTKKKASaQtuOvfM0nB5uFLG4YVtB9fAcTiowbVQ42nxfoJAqfS6', 0, 1, '2026-07-29 01:57:31', NULL),
+(34, '197401012024003400', 'Dwi Nova Setyandari, S.Pd', 'Guru', NULL, NULL, 'dwi2', '$2y$12$ou4BLFDcwdDsdH8jKK7L4eq/70ksaWam0RjDThCtP5zesW796GiBm', 0, 1, '2026-07-29 01:57:31', NULL),
+(35, '197501012024003500', 'Dwi Rini Manfaati, S.Pd', 'Guru', NULL, NULL, 'dwi3', '$2y$12$rX13506D0T5jrllLxPCcOOBaMGmbn/03GULPfBIZa.oFdLGxE1eyK', 0, 1, '2026-07-29 01:57:31', NULL),
+(36, '197601012024003600', 'Dyah Esti Rahayu, S.Pd', 'Guru', NULL, NULL, 'dyah', '$2y$12$1oGVFMNXM6yG.O55n856sO7GTiEK6Rh1o1wT0Iv6zhiMRd3tUixr6', 0, 1, '2026-07-29 01:57:31', NULL),
+(37, '197701012024003700', 'Eko Saputro, S.Pd', 'Guru', NULL, NULL, 'eko', '$2y$12$A6p3Lc8wPa0hc/wprIX4M.aa.MPf57HRZQ7tXKngKLkg./2u/V9gm', 0, 1, '2026-07-29 01:57:31', NULL),
+(38, '197801012024003800', 'Elyana Frisca Monica, S.Pd', 'Guru', NULL, NULL, 'elyana', '$2y$12$yBxW2thyqqEagye2j.sLK.DRB0M3zjjYqb0RRBGRJBM71Ln/SW.IC', 0, 1, '2026-07-29 01:57:31', NULL),
+(39, '197901012024003900', 'Elysa Yuli Nur\'aini, S.Si', 'Guru', NULL, NULL, 'elysa', '$2y$12$MXwcbBt4WGCwYns8NDJMluhXcl1KYRlV2MikxUuJnH/uWyt1Sl4WO', 0, 1, '2026-07-29 01:57:31', NULL),
+(40, '198001012024004000', 'Endang Ary Handayani S.T., M.Pd', 'Guru', NULL, NULL, 'endang', '$2y$12$uJ5PK8AACNFg6S/5DSsB4ercHfz3OHtZm08yhD.PLC5rvtUXNtI9q', 0, 1, '2026-07-29 01:57:31', NULL),
+(41, '198101012024004100', 'Endang Safitri, S.Pd', 'Guru', NULL, NULL, 'endang2', '$2y$12$XPccCXEZamKGcu2H..X8MeGmPFMy3flN/D4mjuWKZ9Pt0Rcq5UuxS', 0, 1, '2026-07-29 01:57:31', NULL),
+(42, '198201012024004200', 'Endik Kuswantoro, S.Kom.,M.T', 'Guru', NULL, NULL, 'endik', '$2y$12$aUEZ8ccUNRwBmQXeUJSfTucg1zG640HEjdS/kEx9XFUrByGKmoPeK', 0, 1, '2026-07-29 01:57:31', NULL),
+(43, '198301012024004300', 'Erna Qoriah, S.E.', 'Guru', NULL, NULL, 'erna', '$2y$12$CS6Ny0Oa4a3.P85cDuhqmOWA9YdClE2.aZT/G3k8V0tVGJpvBtW7a', 0, 1, '2026-07-29 01:57:31', NULL),
+(44, '198401012024004400', 'Erna Rinawati, S.Pd', 'Guru', NULL, NULL, 'erna2', '$2y$12$OmSrU6zoMDxFngyHA57cHO1WElqX7Ni2eQ3SgwESqnDZqj/OZW6UW', 0, 1, '2026-07-29 01:57:31', NULL),
+(45, '198501012024004500', 'Erwan Septiyono, S.Pd', 'Guru', NULL, NULL, 'erwan', '$2y$12$lRuA.3wdyuhILuBYgPNQeeuI.CbkHgkZdZZtoTq0lmM.yWbTDSU.K', 0, 1, '2026-07-29 01:57:31', NULL),
+(46, '198601012024004600', 'Fajar Luthfianto, S.Pd', 'Guru', NULL, NULL, 'fajar', '$2y$12$yNLO4.BFvjaqgxcaPGCdQ.9ao6XLRh/FScXVmfo71cwtznsmFh1Bm', 0, 1, '2026-07-29 01:57:31', NULL),
+(47, '198701012024004700', 'Fajar Wahyu Pratiwi, S.S', 'Guru', NULL, NULL, 'fajar2', '$2y$12$Hv.KM31g8a.bEtWlUHrUEOt8beabCAknOaM8RwIuoM0p1oz.Q8fFm', 0, 1, '2026-07-29 01:57:31', NULL),
+(48, '198801012024004800', 'Fitri Amaliyah, S.Pd', 'Guru', NULL, NULL, 'fitri', '$2y$12$SguOE7g2JG04zR.1JmhxVui0jHc5kZQO1QsN8dTpFiZOs/GP3nMby', 0, 1, '2026-07-29 01:57:31', NULL),
+(49, '198901012024004900', 'Fitria Diah Ayu Hartati, S.Pd', 'Guru', NULL, NULL, 'fitria', '$2y$12$M9HU3/OnWwYLZgZ/ihqVeOJqMyieEnP27o4N5kNd6yoVjml/SJ0LO', 0, 1, '2026-07-29 01:57:31', NULL),
+(50, '199001012024005000', 'Fitria Renytasari, S.Pd', 'Guru', NULL, NULL, 'fitria2', '$2y$12$s0inUvtizfT3VMmqpZjdK.XDh/WRzncB7r1w228yNhmZ86EfcC4Ni', 0, 1, '2026-07-29 01:57:31', NULL),
+(51, '199101012024005100', 'Ilham Sungeidi, S.Pd', 'Guru', NULL, NULL, 'ilham', '$2y$12$MMzx7iBN31dBcguGMZT9WOTbo2AWewL3mZ7CnNH5NjRXpeyO.gUKi', 0, 1, '2026-07-29 01:57:31', NULL),
+(52, '199201012024005200', 'Indayah, S.Pd., M.Pd', 'Guru', NULL, NULL, 'indayah', '$2y$12$yhfefd1Ah6eXt.UTwxTZIeQPFvcosT27cDB.hG7dUWKYnZZL/UDW6', 0, 1, '2026-07-29 01:57:31', NULL),
+(53, '199301012024005300', 'Indriati, S.Pd', 'Guru', NULL, NULL, 'indriati', '$2y$12$bwWyqrieCx0MeKg/kD52we4L583bmBb7Lvabv0UxSnciOP7x0nKCO', 0, 1, '2026-07-29 01:57:31', NULL),
+(54, '199401012024005400', 'Ista Nofasari, S.Pd', 'Guru', NULL, NULL, 'ista', '$2y$12$d7F3XuoBacVFpUxY2OHbi.zBDkQB6OsO7aFWJLQIJ.reusuZvAOqG', 0, 1, '2026-07-29 01:57:31', NULL),
+(55, '199501012024005500', 'Isti Mufadah, S.Pd', 'Guru', NULL, NULL, 'isti', '$2y$12$69WP2DSu9Qrd3lrGb08jheLjFnGRkO0PRNCDVbGR/NQPIPvTTRz0u', 0, 1, '2026-07-29 01:57:31', NULL),
+(56, '199601012024005600', 'Istiana Suhartati, S.T', 'Guru', NULL, NULL, 'istiana', '$2y$12$zo7rG/yPWWZpoKHc5xZohuUF8VTBmgYUeHCGDrjKQwpclDCZN5JNW', 0, 1, '2026-07-29 01:57:31', NULL),
+(57, '199701012024005700', 'Joko Priyanto, S.Kom', 'Guru', NULL, NULL, 'joko', '$2y$12$DFADnMUOmXXW0aAiX0CHleqa3P3i1j/zQI7v1ydYFCbFzEfq5OWwi', 0, 1, '2026-07-29 01:57:31', NULL),
+(58, '199801012024005800', 'Kasmi, S.Pd., M.Pd', 'Guru', NULL, NULL, 'kasmi', '$2y$12$7NIt3oaWsP3vreheppFO.OFjCgpBjHnxyhCfyqsRrHTukPA68RgSW', 0, 1, '2026-07-29 01:57:31', NULL),
+(59, '199901012024005900', 'Khoyrotun Hisani, S.Sn', 'Guru', NULL, NULL, 'khoyrotun', '$2y$12$968JUe90QR5KV4SGcijJDO/JZJPI09.DCwkxhCnRL8hVMpe9vJYBe', 0, 1, '2026-07-29 01:57:31', NULL),
+(60, '197001012024006000', 'Khuriyatul Kamila, S.Si', 'Guru', NULL, NULL, 'khuriyatul', '$2y$12$faQNNFjhlajOJ22G8dMqge4aQ3OMqJhIJJo7tV5SAlHCI6hILcdsO', 0, 1, '2026-07-29 01:57:31', NULL),
+(61, '197101012024006100', 'Komariyah, S.Pd', 'Guru', NULL, NULL, 'komariyah', '$2y$12$wfyHbIHkR.qVmJjRKuUzle2i0HHr2m0FnApfwYCTofuHKhxfdVm6K', 0, 1, '2026-07-29 01:57:31', NULL),
+(62, '197201012024006200', 'Kurnila Putri Islamawati, S.Pd', 'Guru', NULL, NULL, 'kurnila', '$2y$12$G9m3Rsjk5FkX/vsJEx3bP.jknlwewEfCVi1QCiBCjKP7dzhJevuVa', 0, 1, '2026-07-29 01:57:31', NULL),
+(63, '197301012024006300', 'Laili Ermawati, S.Pd', 'Guru', NULL, NULL, 'laili', '$2y$12$FQwt.ZaiteWCuqOEdEaXVuNVL7SrDs74mLdFluDY.xcaL4qPg0xYC', 0, 1, '2026-07-29 01:57:31', NULL),
+(64, '197401012024006400', 'Lilik Suratmi, S.Pd', 'Guru', NULL, NULL, 'lilik', '$2y$12$BeURmroBNu4Dld3Y0KTg9eJZ4C5okecBuEX31KgzU7YtToZqe8YXu', 0, 1, '2026-07-29 01:57:31', NULL),
+(65, '197501012024006500', 'Listyana Hartati, S.Kom. M.Pd', 'Guru', NULL, NULL, 'listyana', '$2y$12$wYXFAHAMtBIqauxXTep.guZBIMwf71eXlJWr9bKt4ErCw7vJLuTQe', 0, 1, '2026-07-29 01:57:31', NULL),
+(66, '197601012024006600', 'Luluk Munfarida,S.Pd', 'Guru', NULL, NULL, 'luluk', '$2y$12$LBhxSTNB/TwVAyt8UFLate7i0.obMbFo3EQDaSo4FY6sZc20Eu6Wm', 0, 1, '2026-07-29 01:57:31', NULL),
+(67, '197701012024006700', 'Lutfia Marsalina, S.Pd.I, M.Pd.', 'Guru', NULL, NULL, 'lutfia', '$2y$12$LJSH.RaG4pq.YmI07bgP7eYN1kGrXQbiTfjUxvgGd2H0Y4nuSyjle', 0, 1, '2026-07-29 01:57:31', NULL),
+(68, '197801012024006800', 'Martiin, S.Pd', 'Guru', NULL, NULL, 'martiin', '$2y$12$PeowuQ8/XlqDTZUiUPRF3.7Dp.mY7f1OhqT0mBjNuuFJSoEqxYiMW', 0, 1, '2026-07-29 01:57:31', NULL),
+(69, '197901012024006900', 'Mas\'an Widodo, S.Pd. M.T', 'Guru', NULL, NULL, 'masan', '$2y$12$Xgp2ZwHaV0nDrNPjZmmaKe/I6M9AoW556oNibE9265ZJLBhG8TR8q', 0, 1, '2026-07-29 01:57:31', NULL),
+(70, '198001012024007000', 'Mega Mahardika, S.Pd', 'Guru', NULL, NULL, 'mega', '$2y$12$qP0xJS.vHzyNp4jjLx1BCOlgMXRb4z1bfQmqV6QInp4OREyReoW.e', 0, 1, '2026-07-29 01:57:31', NULL),
+(71, '198101012024007100', 'Muashofah, M.Pd', 'Guru', NULL, NULL, 'muashofah', '$2y$12$CXNz2s7pvp6gXCbwEhpou.PZDCLiQha1ifjM4K24GjVbhU.SEa.eC', 0, 1, '2026-07-29 01:57:31', NULL),
+(72, '198201012024007200', 'Mufatiroh, S.Ag', 'Guru', NULL, NULL, 'mufatiroh', '$2y$12$O3wVnCKi.hgFTRagV88zr.LRDDBffWf4rGAeJhESzNWd4Qk1hwwqS', 0, 1, '2026-07-29 01:57:31', NULL),
+(73, '198301012024007300', 'Muhammad Fajar Assidiqi, S.Pd', 'Guru', NULL, NULL, 'muhammad', '$2y$12$Zvud2z93VNoLdgybbP1DcOW5YxUPMDiLhAuTZZuYHWeN7dIp14IUi', 0, 1, '2026-07-29 01:57:31', NULL),
+(74, '198401012024007400', 'Muto\'atul Khosi\'ah, S.Pd', 'Guru', NULL, NULL, 'mutoatul', '$2y$12$4jv9cSnkz3xCNWgYOaS/puODOvPfWT8dvYIra.feQ8IYCqxj.jYb6', 0, 1, '2026-07-29 01:57:31', NULL),
+(75, '198501012024007500', 'Niken Dewi Hastika, S.Pd', 'Guru', NULL, NULL, 'niken', '$2y$12$qAFiE73dzMlUmRq0NMv8IO2gIfTuSpgTP/KFBOE8dsLdq4vFTLvXK', 0, 1, '2026-07-29 01:57:31', NULL),
+(76, '198601012024007600', 'Niken Hari Pratiwi, S.Psi.,M.Pd', 'Guru', NULL, NULL, 'niken2', '$2y$12$VM3hW1qNsix.1LzDbYpJj.Tqznqebx4xOOyCc/pi68Zk6uKOGTk7u', 0, 1, '2026-07-29 01:57:31', NULL),
+(77, '198701012024007700', 'Ninik Sriwidayati, S.Pd.,M.Pd', 'Guru', NULL, NULL, 'ninik', '$2y$12$3wW1ItrFuTxkkoSBQw/Gcu/gvBS6qbY4ZcYYZ8fEkP82tL6IeYoG6', 0, 1, '2026-07-29 01:57:31', NULL),
+(78, '198801012024007800', 'Nishfu Laili,S.Pd', 'Guru', NULL, NULL, 'nishfu', '$2y$12$b/75fGWI6db8A7e7bO0pPesq9wLVTDTx8uO58x8RtHXLPMGbARQzu', 0, 1, '2026-07-29 01:57:31', NULL),
+(79, '198901012024007900', 'Nur Eko Wahyuningsih, S.Pd', 'Guru', NULL, NULL, 'nur', '$2y$12$JO3Tv2gGhdo.7jukCiJLG.y20u4ZpIut1DBDIjIKghNLk9mLp.XfO', 0, 1, '2026-07-29 01:57:31', NULL),
+(80, '199001012024008000', 'Nur Nastutisari, S.ST.Par.', 'Guru', NULL, NULL, 'nur2', '$2y$12$kmAc.UOVhKaP.FiuOOI7/uSOQnbh.z6Ox5e5Zv.dDTIzJWNdhboxu', 0, 1, '2026-07-29 01:57:31', NULL),
+(81, '199101012024008100', 'Nurul Azizah, S.Pd', 'Guru', NULL, NULL, 'nurul', '$2y$12$2z0Y5pN1QtmM1qFUc2Z9guBg3y.y.T7LAVpzukse/c4dT3LutKRjK', 0, 1, '2026-07-29 01:57:31', NULL),
+(82, '199201012024008200', 'Peni Wulandari, S.Pd', 'Guru', NULL, NULL, 'peni', '$2y$12$Llyr/IgQT0l.mrJeiFOheOun6N.k1rCa90S3YpcnK8kNuUgDhH.Lm', 0, 1, '2026-07-29 01:57:31', NULL),
+(83, '199301012024008300', 'Pipit Ambarwati, S.Pd', 'Guru', NULL, NULL, 'pipit', '$2y$12$6JG6fGRylCAYP.g5oxddZesuWJPqukfbb3FOhynqyb1pEUfMBLJ2O', 0, 1, '2026-07-29 01:57:31', NULL),
+(84, '199401012024008400', 'Purwati,S.Pd', 'Guru', NULL, NULL, 'purwati', '$2y$12$RK..seFT4Lx.axlAc15qiupek4XSbU5/P0cRcN98ZqhCUPQr9qJMW', 0, 1, '2026-07-29 01:57:31', NULL),
+(85, '199501012024008500', 'Ratih Dian Irawati, SE', 'Guru', NULL, NULL, 'ratih', '$2y$12$TQktZxeM5XATHFnv/AOFg.PfodBymfhBGZ/WFAJ3dsNXdJ8AAzyt.', 0, 1, '2026-07-29 01:57:31', NULL),
+(86, '199601012024008600', 'Retno Widyastuti, S.Pd., M.Pd', 'Guru', NULL, NULL, 'retno', '$2y$12$xPJD8RtlfU/BiryKKEJnneZlraT8VKYUeF0z0OphduhOa9MoqkDd6', 0, 1, '2026-07-29 01:57:31', NULL),
+(87, '199701012024008700', 'Rifkotin Na\'imah, S.Pd', 'Guru', NULL, NULL, 'rifkotin', '$2y$12$0tAYeH5kLrcfQn5yWzKtZeIGYwAXBCaWuPU1FtULcSgnR5sefWF.q', 0, 1, '2026-07-29 01:57:31', NULL),
+(88, '199801012024008800', 'Rika Okta Maulida, S.Ds.', 'Guru', NULL, NULL, 'rika', '$2y$12$7YxT15qdGCwvi4NUgjBovu0KjiEfWH3SV5Safbw5xUJFQmjk03ufa', 0, 1, '2026-07-29 01:57:31', NULL),
+(89, '199901012024008900', 'Rindang Rejeki, S.Pd', 'Guru', NULL, NULL, 'rindang', '$2y$12$ZLaK31spfezprURuy9XdmelUo2vEFv53d1R1g7SmsVtwt0FRsqNB2', 0, 1, '2026-07-29 01:57:31', NULL),
+(90, '197001012024009000', 'Risqi Nur Imama, S.Tr.Par', 'Guru', NULL, NULL, 'risqi', '$2y$12$r93Up6ifHXamIZbB8T3vlesfPUYnMvNV/kWPrj.iQew./iba4O/Uy', 0, 1, '2026-07-29 01:57:31', NULL),
+(91, '197101012024009100', 'Rizki Putri Wulandari, S.Pd', 'Guru', NULL, NULL, 'rizki', '$2y$12$vY.TreXu3otJgy1S0P/xXuwS93o3WOY/uss/PClaqZlAmy9WXJrm6', 0, 1, '2026-07-29 01:57:31', NULL),
+(92, '197201012024009200', 'Rulik Indrawati, S.Pd', 'Guru', NULL, NULL, 'rulik', '$2y$12$CJCWbO/.15vCNP7SQBKICOe4DZqgLUXYN5vP9lO456PrzPnezMVUa', 0, 1, '2026-07-29 01:57:31', NULL),
+(93, '197301012024009300', 'Ruly Dwi Setyaningrum, S.Kom', 'Guru', NULL, NULL, 'ruly', '$2y$12$mnZOyl7NYDYonlSszkH4POExt8t66veFjjnM6.P1vhiN7e4azMjSW', 0, 1, '2026-07-29 01:57:31', NULL),
+(94, '197401012024009400', 'Sa\'ad Wazis Hiedayat, S.Pd', 'Guru', NULL, NULL, 'saad', '$2y$12$XSpDnXfgka2pgwn1CYoqvO3hl4VCv.KXGkWjiIYEnBFljWkkx09we', 0, 1, '2026-07-29 01:57:31', NULL),
+(95, '197501012024009500', 'Septiani, S.Pd.,M.Pd', 'Guru', NULL, NULL, 'septiani', '$2y$12$iJ5jFXediquVn559b/28COLG2o8D4mTfw6U781M5bszuKPE53Joh.', 0, 1, '2026-07-29 01:57:31', NULL),
+(96, '197601012024009600', 'Setiyo Winarko, S.Pd', 'Guru', NULL, NULL, 'setiyo', '$2y$12$ruP.nNRYVnbeUQTlLD6YyO6WRHooZ2ZMLeL6vr2vNwr0WhISH5tCK', 0, 1, '2026-07-29 01:57:31', NULL),
+(97, '197701012024009700', 'Shinta Indyar Shanty Susanto, S.Kom', 'Guru', NULL, NULL, 'shinta', '$2y$12$uqgCK5VPCO6AIDsTL.9L.Ov9WbFE1s4iEPcy8QV3/a0btH.nRDJca', 0, 1, '2026-07-29 01:57:31', NULL),
+(98, '197801012024009800', 'Sinta Lestari, S.Pd.I', 'Guru', NULL, NULL, 'sinta', '$2y$12$V.v14ewZth2WwfMQ4VU0e.oD5hlTyp.Oet7KzK48RKF/CgoLdaEpa', 0, 1, '2026-07-29 01:57:31', NULL),
+(99, '197901012024009900', 'Siswanti Purwaningsih, S.T., M.Pd', 'Guru', NULL, NULL, 'siswanti', '$2y$12$SKSM779k9TR56YABWc267etccFsbJ.iXg1iBUDFp9hwLcRTiaDSrq', 0, 1, '2026-07-29 01:57:31', NULL),
+(100, '198001012024010000', 'Siti Khoiriyah, S.Pd', 'Guru', NULL, NULL, 'siti', '$2y$12$LaWxdNf9afhhddugxqmFKeVo9jotKrvOdjVoAKvXyDSwprji.9TH2', 0, 1, '2026-07-29 01:57:31', NULL),
+(101, '198101012024010100', 'Siti Maisaroh, S.Pd', 'Guru', NULL, NULL, 'siti2', '$2y$12$K.6BaMtINSwvFhklDWb3euMloqO7soy6EUkX4kShwFVL7pByvuY0.', 0, 1, '2026-07-29 01:57:31', NULL),
+(102, '198201012024010200', 'Siti Munawaroh, S.Kom.,M.Pd', 'Guru', NULL, NULL, 'siti3', '$2y$12$wCUldPemaD0sJY/npJed6O9WcCpuy18vH8dJVRzr6mTuuQOO79d4.', 0, 1, '2026-07-29 01:57:31', NULL),
+(103, '198301012024010300', 'Siti Umiharsih, S.Pd', 'Guru', NULL, NULL, 'siti4', '$2y$12$Aob83.93xqb2YmotZEvfKONpDjeqfILRxWft3bnX.FORRjg.K7D9K', 0, 1, '2026-07-29 01:57:31', NULL),
+(104, '198401012024010400', 'Sri Kusumastuti, S.Pd', 'Guru', NULL, NULL, 'sri', '$2y$12$fVRlC.2FBdeSX4WsgvZdJe0MHvj29t6UX/rAokkBe57sHsy0rlhwS', 0, 1, '2026-07-29 01:57:31', NULL),
+(105, '198501012024010500', 'Sri Rahayu, S.Pd', 'Guru', NULL, NULL, 'sri2', '$2y$12$g3Am4Weup3oYGWiZCChkqeOLWTlkDEJpnOlB1syD9Icp1G3iaOhwC', 0, 1, '2026-07-29 01:57:31', NULL),
+(106, '198601012024010600', 'Sri Subekti, S.Pd', 'Guru', NULL, NULL, 'sri3', '$2y$12$s1U6FQqlskw3wzfRkCTEm.6rP5nppEBpz7bRvYgqjrLy7.QTwaeRC', 0, 1, '2026-07-29 01:57:31', NULL),
+(107, '198701012024010700', 'Sulistyowati, SS', 'Guru', NULL, NULL, 'sulistyowati', '$2y$12$IqDRbA1RS1mn52YZ95B3Re794MW6oUxWZKs.k3v34JadCOsTrKWH.', 0, 1, '2026-07-29 01:57:31', NULL),
+(108, '198801012024010800', 'Sunarti, S.Pd', 'Guru', NULL, NULL, 'sunarti', '$2y$12$zj1bus3wRzHx0W8856A8r.72bMiPYdLLEWvzBG5WCQYJ2iVRORVsy', 0, 1, '2026-07-29 01:57:31', NULL),
+(109, '198901012024010900', 'Titik Samsistini, S.Pd', 'Guru', NULL, NULL, 'titik', '$2y$12$lp.WOZubmbcf4zbcugDxhOxrFaMudqfPn0BKI5ZjHAZ2jSF7Y0N9m', 0, 1, '2026-07-29 01:57:31', NULL),
+(110, '199001012024011000', 'Titin Sukmasari, S.Pd., M.Pd', 'Guru', NULL, NULL, 'titin', '$2y$12$Xgrwdir.x/DnLWpj82ypM.AYGRf0JsSj7hwuxoWbLtNkKPhfkwU0C', 0, 1, '2026-07-29 01:57:31', NULL),
+(111, '199101012024011100', 'Tuhu Eries Kudori, S.Sn', 'Guru', NULL, NULL, 'tuhu', '$2y$12$nw1rEjuDQ5FK7dhjs.U5DODDW9hnvXq5wQigy6NTJHLx5Y5hDIZaa', 0, 1, '2026-07-29 01:57:31', NULL),
+(112, '199201012024011200', 'Tutut Sriatin, S.Pd', 'Guru', NULL, NULL, 'tutut', '$2y$12$4tx.n/EMUvAHiQI2bJ9As.tq07PgOTIS0qTqImUy0oGVdnLFMFOmC', 0, 1, '2026-07-29 01:57:31', NULL),
+(113, '199301012024011300', 'Umi Kulsum, S.Pd', 'Guru', NULL, NULL, 'umi', '$2y$12$kZujmUy3xFHPgP6oBi/6qewh4NGyFCfbXDtg2yWoqrZwW96hXc3mu', 0, 1, '2026-07-29 01:57:31', NULL),
+(114, '199401012024011400', 'Veronica Damay Rulitasari, S.Pd', 'Guru', NULL, NULL, 'veronica', '$2y$12$UxaAjA5.Dsoh.5rCiSg3VeoQZYH82nYpix1/IqfAgNyY/1Qe2zw3u', 0, 1, '2026-07-29 01:57:31', NULL),
+(115, '199501012024011500', 'Widodo, S.Pd', 'Guru', NULL, NULL, 'widodo', '$2y$12$8qKjQtGwwyBaSIPCGWKxfeP0KEUH7x/KWVpmeVEIwuQoNS.BNFdrW', 0, 1, '2026-07-29 01:57:31', NULL),
+(116, '199601012024011600', 'Winarsih, S.Pd, M.Pd', 'Guru', NULL, NULL, 'winarsih', '$2y$12$l9Hjg9HThaYCVzyXBj5d.unW9Y5y1r8w59knTRv4hb0OVXBMbQWjK', 0, 1, '2026-07-29 01:57:31', NULL),
+(117, '199701012024011700', 'Winartin, S.Pd', 'Guru', NULL, NULL, 'winartin', '$2y$12$PyGgbRk84zz3.IgtZURAS.nhe8mNpxC9mwk8Qb2DNuP7SmJsHvfBK', 0, 1, '2026-07-29 01:57:31', NULL),
+(118, '199801012024011800', 'Wiwik Yuniarsih, S.Pd', 'Guru', NULL, NULL, 'wiwik', '$2y$12$Oo4Uj8k9Bvho/nwG75ovf.jEDU7cuV6cV/Ggtl9vPxDLGIE5H.rNy', 0, 1, '2026-07-29 01:57:31', NULL),
+(119, '199901012024011900', 'Yani, S.Pd.', 'Guru', NULL, NULL, 'yani', '$2y$12$/jR1s3Y3EEgILnMINVpjuuK1SixLS8MeDbrrEka1FNQOass.y09l.', 0, 1, '2026-07-29 01:57:31', NULL),
+(120, '197001012024012000', 'Yuli Ratnasari, S.Pd', 'Guru', NULL, NULL, 'yuli', '$2y$12$ipNbtcDTyVNh9PupA2qiQ.4aZ1.0W8l00G4QbyVreJVl4wKL0Vm8q', 0, 1, '2026-07-29 01:57:31', NULL),
+(121, '197101012024012100', 'Yuni Jiastuti, S.Pd', 'Guru', NULL, NULL, 'yuni', '$2y$12$Ro27vg9W9gF.GnGd8j4VQ.fGeI1Iq7b/PRssQMP0SqaX60KNyCAVi', 0, 1, '2026-07-29 01:57:31', NULL),
+(122, '197201012024012200', 'Yustin Febrini, S.Pd', 'Guru', NULL, NULL, 'yustin', '$2y$12$Ez1Oic3uuDiUlPGBZcJRWOtYYDHqFo0aaH15.4JemM9jSaa3xZgHy', 0, 1, '2026-07-29 01:57:31', NULL),
+(123, '197301012024012300', 'Zainul Arifin,S.Pd', 'Guru', NULL, NULL, 'zainul', '$2y$12$aeFXknOyt7JP863SOIsPNOOtZctIi95yyfQrJJE5ocBdW.xSDBNoS', 0, 1, '2026-07-29 01:57:31', NULL),
+(124, '199001012020011001', 'Bambang Supriadi, M.Pd.', 'Guru', NULL, '081299887766', 'bambang', '$2y$12$Q.xxDUpoIAZngnpYZj1MxejwMbTyTcWLiw3PtZXbCAQyZMIYAOTyy', 0, 1, '2026-08-06 00:47:31', NULL),
+(125, '0000000000000000', 'Administrator', 'Guru', NULL, '08000000000', 'admin', '$2y$12$rN2vIx7VUZ9XjmE5JCUqwO8BDs3N7WiOezL31NTP0LYAfCX9Xf0h.', 1, 1, '2026-08-06 00:59:34', NULL),
+(126, '197601012024012600', 'Waka Kesiswaan (placeholder)', 'Waka', NULL, NULL, 'waka', '$2y$12$qHNE9gOUSoe763dj7nXfQOTO2IN9fnAgYp.tjuOUek.skqwJ20Che', 0, 1, '2026-08-16 08:00:00', NULL),
+(127, '197701012024012700', 'Kepala Sekolah (placeholder)', 'Kepsek', NULL, NULL, 'kepsek', '$2y$12$VYCzluumnm7rLcKWqnBUEexVD925sBtmPI0esn5cyFrsOEN9PvcLS', 0, 1, '2026-08-16 08:00:00', NULL),
+(128, '197801012024012800', 'Petugas Satpam (placeholder)', 'Satpam', NULL, NULL, 'satpam', '$2y$12$gF/u1nxarq7Q2U0Z0h/di.BbjRmcZ4OQI4E95I27HVS.RjIJ7lmSm', 0, 1, '2026-08-16 08:00:00', NULL),
+(129, '197901012024012900', 'Guru Piket (placeholder)', 'Guru Piket', NULL, NULL, 'piket', '$2y$12$E70f1tVTtpYtYq.Pkpo7DOzqE7rf0mJz3R.qe6OJHNG9LIQ4GwwNq', 0, 1, '2026-08-17 08:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -184,13 +245,13 @@ INSERT INTO `guru` (`id_guru`, `nip`, `nama_guru`, `Peran`, `no_hp`, `username`,
 --
 
 CREATE TABLE `jadwal_mengajar` (
-  `id_jadwal` int(11) NOT NULL,
-  `id_guru` int(11) NOT NULL,
-  `id_mapel` int(11) NOT NULL,
-  `id_kelas` int(11) NOT NULL,
-  `id_jam` int(11) NOT NULL,
-  `hari` enum('Senin','Selasa','Rabu','Kamis','Jumat') NOT NULL,
-  `id_tahun_ajaran` int(11) NOT NULL
+  `id_jadwal` int NOT NULL,
+  `id_guru` int NOT NULL,
+  `id_mapel` int NOT NULL,
+  `id_kelas` int NOT NULL,
+  `id_jam` int NOT NULL,
+  `hari` enum('Senin','Selasa','Rabu','Kamis','Jumat') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_tahun_ajaran` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2567,8 +2628,8 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 --
 
 CREATE TABLE `jam_pelajaran` (
-  `id_jam` int(11) NOT NULL,
-  `jam_ke` int(11) NOT NULL,
+  `id_jam` int NOT NULL,
+  `jam_ke` int NOT NULL,
   `jam_mulai` time NOT NULL,
   `jam_selesai` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2605,19 +2666,61 @@ INSERT INTO `jam_pelajaran` (`id_jam`, `jam_ke`, `jam_mulai`, `jam_selesai`) VAL
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `jobs`
+--
+
+CREATE TABLE `jobs` (
+  `id` bigint UNSIGNED NOT NULL,
+  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `attempts` smallint UNSIGNED NOT NULL,
+  `reserved_at` int UNSIGNED DEFAULT NULL,
+  `available_at` int UNSIGNED NOT NULL,
+  `created_at` int UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_batches`
+--
+
+CREATE TABLE `job_batches` (
+  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `total_jobs` int NOT NULL,
+  `pending_jobs` int NOT NULL,
+  `failed_jobs` int NOT NULL,
+  `failed_job_ids` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `options` mediumtext COLLATE utf8mb4_unicode_ci,
+  `cancelled_at` int DEFAULT NULL,
+  `created_at` int NOT NULL,
+  `finished_at` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `jurnal_kelas`
 --
 
 CREATE TABLE `jurnal_kelas` (
-  `id_jurnal` int(11) NOT NULL,
-  `id_jadwal` int(11) NOT NULL,
-  `id_guru` int(11) DEFAULT NULL,
+  `id_jurnal` int NOT NULL,
+  `id_jadwal` int NOT NULL,
+  `id_guru` int DEFAULT NULL,
   `tanggal` date NOT NULL,
-  `status_kehadiran_guru` enum('Hadir','Tidak Hadir') NOT NULL DEFAULT 'Hadir',
-  `materi` varchar(255) DEFAULT NULL,
-  `jumlah_hadir` int(11) NOT NULL DEFAULT 0,
-  `waktu_input` timestamp NULL DEFAULT current_timestamp()
+  `status_kehadiran_guru` enum('Hadir','Tidak Hadir') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Hadir',
+  `materi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jumlah_hadir` int NOT NULL DEFAULT '0',
+  `waktu_input` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `jurnal_kelas`
+--
+
+INSERT INTO `jurnal_kelas` (`id_jurnal`, `id_jadwal`, `id_guru`, `tanggal`, `status_kehadiran_guru`, `materi`, `jumlah_hadir`, `waktu_input`) VALUES
+(1, 868, 117, '2026-08-15', 'Hadir', 'Pembelajaran Harian', 29, '2026-08-15 14:30:46');
 
 -- --------------------------------------------------------
 
@@ -2626,12 +2729,23 @@ CREATE TABLE `jurnal_kelas` (
 --
 
 CREATE TABLE `jurnal_siswa_tidak_hadir` (
-  `id_absen` int(11) NOT NULL,
-  `id_jurnal` int(11) NOT NULL,
-  `id_siswa` int(11) NOT NULL,
-  `status` enum('S','I','A') NOT NULL,
-  `keterangan` varchar(150) DEFAULT NULL
+  `id_absen` int NOT NULL,
+  `id_jurnal` int NOT NULL,
+  `id_siswa` int NOT NULL,
+  `status` enum('S','I','A') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `keterangan` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `jurnal_siswa_tidak_hadir`
+--
+
+INSERT INTO `jurnal_siswa_tidak_hadir` (`id_absen`, `id_jurnal`, `id_siswa`, `status`, `keterangan`) VALUES
+(1, 1, 72, 'A', NULL),
+(2, 1, 85, 'I', NULL),
+(3, 1, 86, 'A', NULL),
+(4, 1, 89, 'S', NULL),
+(5, 1, 96, 'A', NULL);
 
 --
 -- Triggers `jurnal_siswa_tidak_hadir`
@@ -2674,12 +2788,12 @@ DELIMITER ;
 --
 
 CREATE TABLE `kelas` (
-  `id_kelas` int(11) NOT NULL,
-  `nama_kelas` varchar(50) NOT NULL,
-  `tingkat_kelas` varchar(10) NOT NULL,
-  `jurusan` varchar(50) NOT NULL,
-  `id_tahun_ajaran` int(11) NOT NULL,
-  `id_wali_kelas` int(11) DEFAULT NULL,
+  `id_kelas` int NOT NULL,
+  `nama_kelas` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tingkat_kelas` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jurusan` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_tahun_ajaran` int NOT NULL,
+  `id_wali_kelas` int DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -2764,13 +2878,40 @@ INSERT INTO `kelas` (`id_kelas`, `nama_kelas`, `tingkat_kelas`, `jurusan`, `id_t
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `laporan`
+--
+
+CREATE TABLE `laporan` (
+  `id_laporan` int NOT NULL,
+  `role_pelapor` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_pelapor` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `judul` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `isi_laporan` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('menunggu','diterima','ditolak','diproses','selesai','dibatalkan') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'menunggu',
+  `catatan_admin` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `laporan`
+--
+
+INSERT INTO `laporan` (`id_laporan`, `role_pelapor`, `nama_pelapor`, `judul`, `isi_laporan`, `status`, `catatan_admin`, `created_at`, `updated_at`) VALUES
+(1, 'Orang Tua', 'Orang Tua dari Siswa Budi', 'Uji Coba AJAX Laporan', 'Isi detail laporan untuk pengujian AJAX response.', 'menunggu', NULL, '2026-08-21 18:29:59', '2026-08-21 18:29:59'),
+(2, 'Guru', 'abid rizky', 'kendala absensi', 'ga bisa absen', 'diproses', NULL, '2026-08-21 18:33:06', '2026-08-21 19:05:07'),
+(3, 'Kepala Sekolah', 'tresss', 'ga bisa ngizinin izin', 'errororororor', 'dibatalkan', NULL, '2026-08-21 18:34:01', '2026-08-21 18:57:21');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `mapel`
 --
 
 CREATE TABLE `mapel` (
-  `id_mapel` int(11) NOT NULL,
-  `kode_mapel` varchar(20) DEFAULT NULL,
-  `nama_mapel` varchar(100) NOT NULL
+  `id_mapel` int NOT NULL,
+  `kode_mapel` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_mapel` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2830,9 +2971,9 @@ INSERT INTO `mapel` (`id_mapel`, `kode_mapel`, `nama_mapel`) VALUES
 --
 
 CREATE TABLE `migrations` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `migration` varchar(255) NOT NULL,
-  `batch` int(11) NOT NULL
+  `id` int UNSIGNED NOT NULL,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2855,7 +2996,36 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (13, '2026_08_12_000000_create_roles_table', 1),
 (14, '2026_08_12_000001_update_guru_peran_column', 1),
 (15, '2026_08_12_000002_add_foto_profil_to_guru_table', 1),
-(16, '2026_08_15_000000_add_id_guru_to_jurnal_kelas_table', 1);
+(16, '2026_08_15_000000_add_id_guru_to_jurnal_kelas_table', 1),
+(17, '2026_08_18_032844_create_alumni_table', 2),
+(18, '2026_08_18_100000_create_laporan_table', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifikasi`
+--
+
+CREATE TABLE `notifikasi` (
+  `id` int NOT NULL,
+  `judul` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pesan` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tipe` enum('info','success','warning','error') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'info',
+  `is_read` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `password_reset_tokens`
+--
+
+CREATE TABLE `password_reset_tokens` (
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -2864,8 +3034,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 --
 
 CREATE TABLE `pengaturan` (
-  `kunci` varchar(50) NOT NULL,
-  `nilai` text DEFAULT NULL
+  `kunci` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `nilai` text COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2873,16 +3043,43 @@ CREATE TABLE `pengaturan` (
 --
 
 INSERT INTO `pengaturan` (`kunci`, `nilai`) VALUES
+('alamat', ''),
+('batas_waktu_jurnal', '23:59'),
+('email_sekolah', ''),
+('izin_edit_jurnal', '1'),
+('kepsek', ''),
 ('nama_sekolah', 'SMKN 1 BOYOLANGU'),
 ('npsn', ''),
-('kepsek', ''),
-('alamat', ''),
-('email_sekolah', ''),
-('telepon_sekolah', ''),
 ('sistem_absensi', 'Absensi Realtime & Otomatis Rekap'),
-('batas_waktu_jurnal', '23:59'),
-('izin_edit_jurnal', '1');
+('telepon_sekolah', '');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `roles`
+--
+
+CREATE TABLE `roles` (
+  `id_role` int NOT NULL,
+  `nama_role` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug_role` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`id_role`, `nama_role`, `slug_role`, `deskripsi`, `created_at`, `updated_at`) VALUES
+(1, 'Guru', 'guru', 'Tenaga pengajar yang melakukan absensi dan menginput jurnal pembelajaran harian.', '2026-08-18 01:57:42', '2026-08-18 01:57:42'),
+(2, 'Wali Kelas', 'wali_kelas', 'Guru yang bertanggung jawab memantau kehadiran dan perkembangan siswa di kelasnya.', '2026-08-18 01:57:42', '2026-08-18 01:57:42'),
+(3, 'Guru Piket', 'guru_piket', 'Guru bertugas memantau ketertiban, kehadiran guru dan siswa secara keseluruhan harian.', '2026-08-18 01:57:42', '2026-08-18 01:57:42'),
+(4, 'Waka', 'waka', 'Wakil Kepala Sekolah yang memantau rekapitulasi presensi dan laporan kurikulum/kesiswaan.', '2026-08-18 01:57:42', '2026-08-18 01:57:42'),
+(5, 'Kepsek', 'kepsek', 'Kepala Sekolah yang memiliki akses peninjauan laporan eksekutif dan persetujuan sistem.', '2026-08-18 01:57:42', '2026-08-18 01:57:42'),
+(6, 'Satpam', 'satpam', 'Petugas keamanan sekolah yang memantau keluar-masuk siswa dan ketertiban area gerbang.', '2026-08-18 01:57:42', '2026-08-18 01:57:42'),
+(7, 'Admin', 'admin', 'Administrator sistem yang mengelola data master (Siswa, Kelas, Guru, Mapel, Pengaturan).', '2026-08-18 01:57:42', '2026-08-18 01:57:42');
 
 -- --------------------------------------------------------
 
@@ -2891,13 +3088,22 @@ INSERT INTO `pengaturan` (`kunci`, `nilai`) VALUES
 --
 
 CREATE TABLE `sessions` (
-  `id` varchar(255) NOT NULL,
-  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `ip_address` varchar(45) DEFAULT NULL,
-  `user_agent` text DEFAULT NULL,
-  `payload` longtext NOT NULL,
-  `last_activity` int(11) NOT NULL
+  `id` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `user_id` bigint UNSIGNED DEFAULT NULL,
+  `ip_address` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `user_agent` text COLLATE utf8mb4_general_ci,
+  `payload` longtext COLLATE utf8mb4_general_ci NOT NULL,
+  `last_activity` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sessions`
+--
+
+INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
+('JVoM8cgv1spjACs1AYJvi9tmSOLm54vK4UHiUTZx', NULL, '192.168.1.4', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Mobile Safari/537.36', 'eyJfdG9rZW4iOiJKV0lqTTRzaUVuR0Z4bjlzemducjJJMWNxbUlGdUlZQjFFOHRsYXRxIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzE5Mi4xNjguMS45OjgwMDBcL2xvZ2luIiwicm91dGUiOiJsb2dpbiJ9LCJfZmxhc2giOnsib2xkIjpbXSwibmV3IjpbXX19', 1787363688),
+('siV1JdDW5e1GdlJA1WhQg5Tal0y6aBmb6dPiZRmG', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 'eyJfdG9rZW4iOiJzMGpmU0dmOHJRa2R4MFJST0VZdVFxcVlMbXBYQUowRXIwQzlRbWd4IiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cL3ByZXNlbnNpa2l0YS50ZXN0XC9hZG1pbiIsInJvdXRlIjoiYWRtaW4uaW5kZXgifSwiX2ZsYXNoIjp7Im9sZCI6W10sIm5ldyI6W119LCJhdXRoX2d1cnVfaWQiOjEyNSwiYXV0aF9uYW1hX2d1cnUiOiJBZG1pbmlzdHJhdG9yIiwiYXV0aF9pc19hZG1pbiI6MSwiYXV0aF9yb2xlIjoiYWRtaW4ifQ==', 1787364307),
+('vviLQ72EnZhjhZwwDcyifJ0dDMWmQrs3gpmx3RdD', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0', 'eyJfdG9rZW4iOiJ3VFJ1S3BDVmRId2U0OWpJRmdDRGREcWtoMExLVVdkeWcxRzV2czBNIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cL3ByZXNlbnNpa2l0YS50ZXN0XC9sb2dpbiIsInJvdXRlIjoibG9naW4ifSwiX2ZsYXNoIjp7Im9sZCI6W10sIm5ldyI6W119fQ==', 1787362443);
 
 -- --------------------------------------------------------
 
@@ -2906,12 +3112,12 @@ CREATE TABLE `sessions` (
 --
 
 CREATE TABLE `siswa` (
-  `id_siswa` int(11) NOT NULL,
-  `nisn` varchar(20) DEFAULT NULL,
-  `nama_siswa` varchar(100) NOT NULL,
-  `jenis_kelamin` enum('L','P') NOT NULL,
-  `id_kelas` int(11) NOT NULL,
-  `is_aktif` tinyint(1) NOT NULL DEFAULT 1,
+  `id_siswa` int NOT NULL,
+  `nisn` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_siswa` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jenis_kelamin` enum('L','P') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_kelas` int NOT NULL,
+  `is_aktif` tinyint(1) NOT NULL DEFAULT '1',
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -3689,27 +3895,27 @@ INSERT INTO `siswa` (`id_siswa`, `nisn`, `nama_siswa`, `jenis_kelamin`, `id_kela
 (767, '0095063459', 'NAMIRA PUSPANIA', 'P', 17, 1, NULL),
 (768, '0098568013', 'NATASHA MAHARANI NOVIAN', 'P', 17, 1, NULL),
 (769, '0094335811', 'NATASYA AMELIA SARASWATI', 'P', 17, 1, NULL),
-(770, '0105727135', 'NEIZA PUTRI WINATA', 'P', 17, 1, NULL);
-
--- --------------------------------------------------------
-
---
--- Dumping data for table `jurnal_kelas`
---
-
-INSERT INTO `jurnal_kelas` (`id_jurnal`, `id_jadwal`, `id_guru`, `tanggal`, `status_kehadiran_guru`, `materi`, `jumlah_hadir`, `waktu_input`) VALUES
-(1, 868, 117, '2026-08-15', 'Hadir', 'Pembelajaran Harian', 29, '2026-08-15 14:30:46');
-
---
--- Dumping data for table `jurnal_siswa_tidak_hadir`
---
-
-INSERT INTO `jurnal_siswa_tidak_hadir` (`id_absen`, `id_jurnal`, `id_siswa`, `status`, `keterangan`) VALUES
-(1, 1, 72, 'A', NULL),
-(2, 1, 85, 'I', NULL),
-(3, 1, 86, 'A', NULL),
-(4, 1, 89, 'S', NULL),
-(5, 1, 96, 'A', NULL);
+(770, '0105727135', 'NEIZA PUTRI WINATA', 'P', 17, 1, NULL),
+(771, '12300101', 'Aditya Pratama', 'L', 22, 1, NULL),
+(772, '12300102', 'Aisyah Putri', 'P', 22, 1, NULL),
+(773, '12300103', 'Bagas Wicaksono', 'L', 22, 1, NULL),
+(774, '12300104', 'Bella Anggraini', 'P', 22, 1, NULL),
+(775, '12300105', 'Chandra Kusuma', 'L', 22, 1, NULL),
+(776, '12300106', 'Dewi Lestari', 'P', 22, 1, NULL),
+(777, '12300107', 'Eko Saputra', 'L', 23, 1, NULL),
+(778, '12300108', 'Fitriani Rahmawati', 'P', 23, 1, NULL),
+(779, '12300109', 'Galih Prasetyo', 'L', 23, 1, NULL),
+(780, '12300110', 'Hana Salsabila', 'P', 23, 1, NULL),
+(781, '12300111', 'Irfan Maulana', 'L', 23, 1, NULL),
+(782, '12300112', 'Jasmine Ayu', 'P', 23, 1, NULL),
+(783, '12300113', 'Kevin Ardiansyah', 'L', 18, 1, NULL),
+(784, '12300114', 'Laila Nur Azizah', 'P', 18, 1, NULL),
+(785, '12300115', 'Muhammad Fauzan', 'L', 18, 1, NULL),
+(786, '12300116', 'Nadia Kartika', 'P', 18, 1, NULL),
+(787, '12300117', 'Oscar Firmansyah', 'L', 18, 1, NULL),
+(788, '12300118', 'Putri Wulandari', 'P', 18, 1, NULL),
+(789, '12300119', 'Rizky Ramadhan', 'L', 19, 1, NULL),
+(790, '12300120', 'Sari Indah Permata', 'P', 19, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -3718,10 +3924,10 @@ INSERT INTO `jurnal_siswa_tidak_hadir` (`id_absen`, `id_jurnal`, `id_siswa`, `st
 --
 
 CREATE TABLE `tahun_ajaran` (
-  `id_tahun_ajaran` int(11) NOT NULL,
-  `tahun_ajaran` varchar(20) NOT NULL,
-  `semester` enum('Ganjil','Genap') NOT NULL,
-  `is_aktif` tinyint(1) NOT NULL DEFAULT 0
+  `id_tahun_ajaran` int NOT NULL,
+  `tahun_ajaran` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `semester` enum('Ganjil','Genap') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_aktif` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3734,161 +3940,52 @@ INSERT INTO `tahun_ajaran` (`id_tahun_ajaran`, `tahun_ajaran`, `semester`, `is_a
 -- --------------------------------------------------------
 
 --
--- Table structure for table `roles`
---
-
-CREATE TABLE `roles` (
-  `id_role` int(11) NOT NULL AUTO_INCREMENT,
-  `nama_role` varchar(50) NOT NULL,
-  `slug_role` varchar(50) NOT NULL,
-  `deskripsi` text DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id_role`),
-  UNIQUE KEY `nama_role` (`nama_role`),
-  UNIQUE KEY `slug_role` (`slug_role`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `roles`
---
-
-INSERT INTO `roles` (`id_role`, `nama_role`, `slug_role`, `deskripsi`) VALUES
-(1, 'Guru', 'guru', 'Tenaga pengajar yang melakukan absensi dan menginput jurnal pembelajaran harian.'),
-(2, 'Wali Kelas', 'wali_kelas', 'Guru yang bertanggung jawab memantau kehadiran dan perkembangan siswa di kelasnya.'),
-(3, 'Guru Piket', 'guru_piket', 'Guru bertugas memantau ketertiban, kehadiran guru dan siswa secara keseluruhan harian.'),
-(4, 'Waka', 'waka', 'Wakil Kepala Sekolah yang memantau rekapitulasi presensi dan laporan kurikulum/kesiswaan.'),
-(5, 'Kepsek', 'kepsek', 'Kepala Sekolah yang memiliki akses peninjauan laporan eksekutif dan persetujuan sistem.'),
-(6, 'Satpam', 'satpam', 'Petugas keamanan sekolah yang memantau keluar-masuk siswa dan ketertiban area gerbang.'),
-(7, 'Admin', 'admin', 'Administrator sistem yang mengelola data master (Siswa, Kelas, Guru, Mapel, Pengaturan).');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `notifikasi`
---
-
-CREATE TABLE `notifikasi` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `judul` varchar(150) NOT NULL,
-  `pesan` text NOT NULL,
-  `tipe` enum('info','success','warning','error') NOT NULL DEFAULT 'info',
-  `is_read` tinyint(1) NOT NULL DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
---
--- Dumping data for table `notifikasi`
--- (kosong — notifikasi akan diisi oleh sistem secara otomatis)
---
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(255) NOT NULL,
-  `remember_token` varchar(100) DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `password_reset_tokens`
---
-
-CREATE TABLE `password_reset_tokens` (
-  `email` varchar(255) NOT NULL,
-  `token` varchar(255) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `cache`
---
-
-CREATE TABLE `cache` (
-  `key` varchar(255) NOT NULL,
-  `value` mediumtext NOT NULL,
-  `expiration` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `cache_locks`
---
-
-CREATE TABLE `cache_locks` (
-  `key` varchar(255) NOT NULL,
-  `owner` varchar(255) NOT NULL,
-  `expiration` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `jobs`
---
-
-CREATE TABLE `jobs` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `queue` varchar(255) NOT NULL,
-  `payload` longtext NOT NULL,
-  `attempts` smallint(5) UNSIGNED NOT NULL,
-  `reserved_at` int(10) UNSIGNED DEFAULT NULL,
-  `available_at` int(10) UNSIGNED NOT NULL,
-  `created_at` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `job_batches`
---
-
-CREATE TABLE `job_batches` (
-  `id` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `total_jobs` int(11) NOT NULL,
-  `pending_jobs` int(11) NOT NULL,
-  `failed_jobs` int(11) NOT NULL,
-  `failed_job_ids` longtext NOT NULL,
-  `options` mediumtext DEFAULT NULL,
-  `cancelled_at` int(11) DEFAULT NULL,
-  `created_at` int(11) NOT NULL,
-  `finished_at` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `failed_jobs`
---
-
-CREATE TABLE `failed_jobs` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `connection` varchar(255) NOT NULL,
-  `queue` varchar(255) NOT NULL,
-  `payload` longtext NOT NULL,
-  `exception` longtext NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `alumni`
+--
+ALTER TABLE `alumni`
+  ADD PRIMARY KEY (`id_alumni`),
+  ADD UNIQUE KEY `alumni_nisn_unique` (`nisn`);
+
+--
+-- Indexes for table `cache`
+--
+ALTER TABLE `cache`
+  ADD PRIMARY KEY (`key`),
+  ADD KEY `cache_expiration_index` (`expiration`);
+
+--
+-- Indexes for table `cache_locks`
+--
+ALTER TABLE `cache_locks`
+  ADD PRIMARY KEY (`key`),
+  ADD KEY `cache_locks_expiration_index` (`expiration`);
+
+--
+-- Indexes for table `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`),
+  ADD KEY `failed_jobs_connection_queue_failed_at_index` (`connection`,`queue`,`failed_at`);
 
 --
 -- Indexes for table `guru`
@@ -3917,6 +4014,19 @@ ALTER TABLE `jam_pelajaran`
   ADD UNIQUE KEY `jam_ke` (`jam_ke`);
 
 --
+-- Indexes for table `jobs`
+--
+ALTER TABLE `jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `jobs_queue_index` (`queue`);
+
+--
+-- Indexes for table `job_batches`
+--
+ALTER TABLE `job_batches`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `jurnal_kelas`
 --
 ALTER TABLE `jurnal_kelas`
@@ -3940,6 +4050,12 @@ ALTER TABLE `kelas`
   ADD KEY `fk_kelas_wali` (`id_wali_kelas`);
 
 --
+-- Indexes for table `laporan`
+--
+ALTER TABLE `laporan`
+  ADD PRIMARY KEY (`id_laporan`);
+
+--
 -- Indexes for table `mapel`
 --
 ALTER TABLE `mapel`
@@ -3953,11 +4069,10 @@ ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `users`
+-- Indexes for table `notifikasi`
 --
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `users_email_unique` (`email`);
+ALTER TABLE `notifikasi`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `password_reset_tokens`
@@ -3966,53 +4081,18 @@ ALTER TABLE `password_reset_tokens`
   ADD PRIMARY KEY (`email`);
 
 --
--- Indexes for table `cache`
---
-ALTER TABLE `cache`
-  ADD PRIMARY KEY (`key`),
-  ADD KEY `cache_expiration_index` (`expiration`);
-
---
--- Indexes for table `cache_locks`
---
-ALTER TABLE `cache_locks`
-  ADD PRIMARY KEY (`key`),
-  ADD KEY `cache_locks_expiration_index` (`expiration`);
-
---
--- Indexes for table `jobs`
---
-ALTER TABLE `jobs`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `jobs_queue_index` (`queue`);
-
---
--- Indexes for table `job_batches`
---
-ALTER TABLE `job_batches`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `failed_jobs`
---
-ALTER TABLE `failed_jobs`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`),
-  ADD KEY `failed_jobs_connection_queue_failed_at_index` (`connection`,`queue`,`failed_at`);
-
---
 -- Indexes for table `pengaturan`
 --
 ALTER TABLE `pengaturan`
   ADD PRIMARY KEY (`kunci`);
 
--- --------------------------------------------------------
-
 --
--- AUTO_INCREMENT for table `notifikasi`
+-- Indexes for table `roles`
 --
-ALTER TABLE `notifikasi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id_role`),
+  ADD UNIQUE KEY `nama_role` (`nama_role`),
+  ADD UNIQUE KEY `slug_role` (`slug_role`);
 
 --
 -- Indexes for table `sessions`
@@ -4038,86 +4118,117 @@ ALTER TABLE `tahun_ajaran`
   ADD UNIQUE KEY `uq_ta` (`tahun_ajaran`,`semester`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `users_email_unique` (`email`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `guru`
+-- AUTO_INCREMENT for table `alumni`
 --
-ALTER TABLE `guru`
-  MODIFY `id_guru` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
-
---
--- AUTO_INCREMENT for table `jadwal_mengajar`
---
-ALTER TABLE `jadwal_mengajar`
-  MODIFY `id_jadwal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2361;
-
---
--- AUTO_INCREMENT for table `jam_pelajaran`
---
-ALTER TABLE `jam_pelajaran`
-  MODIFY `id_jam` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
-
---
--- AUTO_INCREMENT for table `jurnal_kelas`
---
-ALTER TABLE `jurnal_kelas`
-  MODIFY `id_jurnal` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `jurnal_siswa_tidak_hadir`
---
-ALTER TABLE `jurnal_siswa_tidak_hadir`
-  MODIFY `id_absen` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `kelas`
---
-ALTER TABLE `kelas`
-  MODIFY `id_kelas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
-
---
--- AUTO_INCREMENT for table `mapel`
---
-ALTER TABLE `mapel`
-  MODIFY `id_mapel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
-
---
--- AUTO_INCREMENT for table `migrations`
---
-ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `jobs`
---
-ALTER TABLE `jobs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `alumni`
+  MODIFY `id_alumni` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `guru`
+--
+ALTER TABLE `guru`
+  MODIFY `id_guru` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
+
+--
+-- AUTO_INCREMENT for table `jadwal_mengajar`
+--
+ALTER TABLE `jadwal_mengajar`
+  MODIFY `id_jadwal` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2361;
+
+--
+-- AUTO_INCREMENT for table `jam_pelajaran`
+--
+ALTER TABLE `jam_pelajaran`
+  MODIFY `id_jam` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+
+--
+-- AUTO_INCREMENT for table `jobs`
+--
+ALTER TABLE `jobs`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `jurnal_kelas`
+--
+ALTER TABLE `jurnal_kelas`
+  MODIFY `id_jurnal` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `jurnal_siswa_tidak_hadir`
+--
+ALTER TABLE `jurnal_siswa_tidak_hadir`
+  MODIFY `id_absen` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `kelas`
+--
+ALTER TABLE `kelas`
+  MODIFY `id_kelas` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+
+--
+-- AUTO_INCREMENT for table `laporan`
+--
+ALTER TABLE `laporan`
+  MODIFY `id_laporan` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `mapel`
+--
+ALTER TABLE `mapel`
+  MODIFY `id_mapel` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+
+--
+-- AUTO_INCREMENT for table `migrations`
+--
+ALTER TABLE `migrations`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT for table `notifikasi`
+--
+ALTER TABLE `notifikasi`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `id_role` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `siswa`
 --
 ALTER TABLE `siswa`
-  MODIFY `id_siswa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=771;
+  MODIFY `id_siswa` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=791;
 
 --
 -- AUTO_INCREMENT for table `tahun_ajaran`
 --
 ALTER TABLE `tahun_ajaran`
-  MODIFY `id_tahun_ajaran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_tahun_ajaran` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables

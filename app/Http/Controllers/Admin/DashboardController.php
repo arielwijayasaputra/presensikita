@@ -12,6 +12,7 @@ use App\Models\Pengaturan;
 use App\Models\Mapel;
 use App\Models\Alumni;
 use App\Models\Laporan;
+use App\Models\GuruPiket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -118,6 +119,18 @@ class DashboardController extends Controller
 
         $allGuru  = Guru::where('is_admin', 0)->orderBy('nama_guru')->get();
         $allAdmin = Guru::where('is_admin', 1)->orderBy('nama_guru')->get();
+        $allGuruPiket = Guru::where('is_admin', 0)
+            ->where('is_aktif', 1)
+            ->orderBy('nama_guru')
+            ->get();
+
+        $guruPiketTanggal = $request->get('guru_piket_tanggal', now()->toDateString());
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $guruPiketTanggal)) {
+            $guruPiketTanggal = now()->toDateString();
+        }
+        $guruPiketHariIni = GuruPiket::whereDate('tanggal', $guruPiketTanggal)
+            ->pluck('id_guru')
+            ->all();
 
         $allMapel = Mapel::withCount('jadwal')
             ->orderBy('nama_mapel')
@@ -211,6 +224,9 @@ class DashboardController extends Controller
             'allKelas',
             'allGuru',
             'allAdmin',
+            'allGuruPiket',
+            'guruPiketTanggal',
+            'guruPiketHariIni',
             'allMapel',
             'guru',
             'namaSekolah',

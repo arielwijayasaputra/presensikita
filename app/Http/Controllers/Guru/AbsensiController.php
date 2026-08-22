@@ -8,6 +8,7 @@ use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\Guru;
 use App\Models\TahunAjaran;
+use App\Models\IzinGuru;
 use App\Models\JurnalKelas;
 use App\Models\JurnalSiswaTidakHadir;
 use App\Models\Pengaturan;
@@ -217,6 +218,12 @@ class AbsensiController extends Controller
             $idGuru  = session('auth_guru_id');
             $kelasId = (int) $request->id_kelas;
             $tanggal = $request->tanggal;
+            $guruSedangIzin = IzinGuru::where('id_guru', $idGuru)
+                ->whereDate('tanggal_izin', $tanggal)
+                ->where('status_kepsek', 'disetujui')
+                ->where('status_waka', 'disetujui')
+                ->exists();
+            $statusKehadiranGuru = $guruSedangIzin ? 'Tidak Hadir' : 'Hadir';
 
             // Cari jurnal yang sudah ada untuk kelas + tanggal ini
             $existing = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
@@ -232,7 +239,7 @@ class AbsensiController extends Controller
                 $jurnal = JurnalKelas::findOrFail($existing->id_jurnal);
                 $jurnal->update([
                     'id_guru'               => $idGuru,
-                    'status_kehadiran_guru' => 'Hadir',
+                    'status_kehadiran_guru' => $statusKehadiranGuru,
                     'materi'                => $request->materi ?? $jurnal->materi,
                     'jumlah_hadir'          => $jumlahHadir,
                     'waktu_input'           => now(),
@@ -272,7 +279,7 @@ class AbsensiController extends Controller
                     'id_jadwal'             => $idJadwal,
                     'id_guru'               => $idGuru,
                     'tanggal'               => $tanggal,
-                    'status_kehadiran_guru' => 'Hadir',
+                    'status_kehadiran_guru' => $statusKehadiranGuru,
                     'materi'                => $request->materi ?? 'Pembelajaran Harian',
                     'jumlah_hadir'          => $jumlahHadir,
                     'waktu_input'           => now(),

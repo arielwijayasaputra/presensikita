@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 22, 2026 at 05:54 AM
+-- Generation Time: Aug 22, 2026 at 07:14 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.4.24
 
@@ -237,6 +237,27 @@ INSERT INTO `guru` (`id_guru`, `nip`, `nama_guru`, `Peran`, `foto_profil`, `no_h
 (127, '197701012024012700', 'Kepala Sekolah (placeholder)', 'Kepsek', NULL, NULL, 'kepsek', '$2y$12$VYCzluumnm7rLcKWqnBUEexVD925sBtmPI0esn5cyFrsOEN9PvcLS', 0, 1, '2026-08-16 08:00:00', NULL),
 (128, '197801012024012800', 'Petugas Satpam (placeholder)', 'Satpam', NULL, NULL, 'satpam', '$2y$12$gF/u1nxarq7Q2U0Z0h/di.BbjRmcZ4OQI4E95I27HVS.RjIJ7lmSm', 0, 1, '2026-08-16 08:00:00', NULL),
 (129, '197901012024012900', 'Guru Piket (placeholder)', 'Guru Piket', NULL, NULL, 'piket', '$2y$12$E70f1tVTtpYtYq.Pkpo7DOzqE7rf0mJz3R.qe6OJHNG9LIQ4GwwNq', 0, 1, '2026-08-17 08:00:00', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `guru_piket`
+--
+
+CREATE TABLE `guru_piket` (
+  `id_guru_piket` bigint UNSIGNED NOT NULL,
+  `id_guru` int NOT NULL,
+  `tanggal` date NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `guru_piket`
+--
+
+INSERT INTO `guru_piket` (`id_guru_piket`, `id_guru`, `tanggal`, `created_at`, `updated_at`) VALUES
+(1, 1, '2026-08-22', '2026-08-21 23:50:49', '2026-08-21 23:50:49');
 
 -- --------------------------------------------------------
 
@@ -2898,8 +2919,8 @@ CREATE TABLE `laporan` (
 --
 
 INSERT INTO `laporan` (`id_laporan`, `role_pelapor`, `nama_pelapor`, `judul`, `isi_laporan`, `status`, `catatan_admin`, `created_at`, `updated_at`) VALUES
-(1, 'Orang Tua', 'Orang Tua dari Siswa Budi', 'Uji Coba AJAX Laporan', 'Isi detail laporan untuk pengujian AJAX response.', 'menunggu', NULL, '2026-08-21 18:29:59', '2026-08-21 18:29:59'),
-(2, 'Guru', 'abid rizky', 'kendala absensi', 'ga bisa absen', 'diproses', NULL, '2026-08-21 18:33:06', '2026-08-21 19:05:07'),
+(1, 'Orang Tua', 'Orang Tua dari Siswa Budi', 'Uji Coba AJAX Laporan', 'Isi detail laporan untuk pengujian AJAX response.', 'ditolak', NULL, '2026-08-21 18:29:59', '2026-08-21 23:26:15'),
+(2, 'Guru', 'abid rizky', 'kendala absensi', 'ga bisa absen', 'selesai', NULL, '2026-08-21 18:33:06', '2026-08-21 23:25:59'),
 (3, 'Kepala Sekolah', 'tresss', 'ga bisa ngizinin izin', 'errororororor', 'dibatalkan', NULL, '2026-08-21 18:34:01', '2026-08-21 18:57:21');
 
 -- --------------------------------------------------------
@@ -2998,7 +3019,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (15, '2026_08_12_000002_add_foto_profil_to_guru_table', 1),
 (16, '2026_08_15_000000_add_id_guru_to_jurnal_kelas_table', 1),
 (17, '2026_08_18_032844_create_alumni_table', 2),
-(18, '2026_08_18_100000_create_laporan_table', 3);
+(18, '2026_08_18_100000_create_laporan_table', 3),
+(19, '2026_08_22_000001_create_guru_piket_table', 4);
 
 -- --------------------------------------------------------
 
@@ -3101,8 +3123,15 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
+('9zRGouGAcBXE3JY57TeIVUIALLEnVLceKeGwu6kb', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9168', 'eyJfdG9rZW4iOiJyUWVUMmM2ZmxjakFkT2NvdDNkUk81MHRRRGtrMERqek5kZUJ0U0o1IiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwXC9hZG1pbiIsInJvdXRlIjoiYWRtaW4uaW5kZXgifSwiX2ZsYXNoIjp7Im9sZCI6W10sIm5ldyI6W119fQ==', 1787381983),
+('AuzHG9ojwVpmfTZTU94w44OluDbQyQz9tDn0scgE', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9168', 'eyJfdG9rZW4iOiJuTFpmSVcwNTZ0Z2dRVVR1YjhJVkZGV1RvakRSZnZwZkFueXNaYm90IiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwXC9sb2dpbiIsInJvdXRlIjoibG9naW4ifSwiX2ZsYXNoIjp7Im9sZCI6W10sIm5ldyI6W119fQ==', 1787382325),
+('In2McwBpWdOGJG72O75z4tJecd88n0kyyGttHmg9', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9168', 'eyJfdG9rZW4iOiJQTkxiZW5pUjZBVHd0WjNZZzBheFYxSHBZVExVaVIydmZwcGNSMFBvIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwXC9sb2dpbiIsInJvdXRlIjoibG9naW4ifSwiX2ZsYXNoIjp7Im9sZCI6W10sIm5ldyI6W119fQ==', 1787382011),
+('iUdH0lafhRcB40LFBE8P1RANv2nCehS6RwRvvVCz', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9168', 'eyJfdG9rZW4iOiI0Q3FmS1NZd1VXVlVFMmdLQ2x2ZnZwa1NWcms0b1g3RTBoUVF1eEFIIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwXC9idWF0LWxhcG9yYW4iLCJyb3V0ZSI6ImxhcG9yYW4ucHVibGljIn0sIl9mbGFzaCI6eyJvbGQiOltdLCJuZXciOltdfX0=', 1787381089),
+('IzgGJHUSkPF92BSRFBMUfEgJcfwOjdqzu9qoB4IB', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9168', 'eyJfdG9rZW4iOiJabFk0U3B6WWh2dHNuUVBJWFU1Rlcya2I1VVNWSUlWeUh5UXk1QkM1IiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwXC9sb2dpbiIsInJvdXRlIjoibG9naW4ifSwiX2ZsYXNoIjp7Im9sZCI6W10sIm5ldyI6W119fQ==', 1787379673),
 ('JVoM8cgv1spjACs1AYJvi9tmSOLm54vK4UHiUTZx', NULL, '192.168.1.4', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Mobile Safari/537.36', 'eyJfdG9rZW4iOiJKV0lqTTRzaUVuR0Z4bjlzemducjJJMWNxbUlGdUlZQjFFOHRsYXRxIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzE5Mi4xNjguMS45OjgwMDBcL2xvZ2luIiwicm91dGUiOiJsb2dpbiJ9LCJfZmxhc2giOnsib2xkIjpbXSwibmV3IjpbXX19', 1787363688),
+('O0HJYJq4xE9AlIe8VanY25RG5vZSPtk3wUyWBJA8', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 'eyJfdG9rZW4iOiJFV1dWZTBuY3Y3VzF3RG1DU3ZlY0NTbEhGWXZNb1N6Z0J6ZVFtU0o5IiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cL3ByZXNlbnNpa2l0YS50ZXN0XC9hZG1pbiIsInJvdXRlIjoiYWRtaW4uaW5kZXgifSwiX2ZsYXNoIjp7Im9sZCI6W10sIm5ldyI6W119LCJhdXRoX2d1cnVfaWQiOjEyNSwiYXV0aF9uYW1hX2d1cnUiOiJBZG1pbmlzdHJhdG9yIiwiYXV0aF9pc19hZG1pbiI6MSwiYXV0aF9yb2xlIjoiYWRtaW4ifQ==', 1787382719),
 ('siV1JdDW5e1GdlJA1WhQg5Tal0y6aBmb6dPiZRmG', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 'eyJfdG9rZW4iOiJzMGpmU0dmOHJRa2R4MFJST0VZdVFxcVlMbXBYQUowRXIwQzlRbWd4IiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cL3ByZXNlbnNpa2l0YS50ZXN0XC9hZG1pbiIsInJvdXRlIjoiYWRtaW4uaW5kZXgifSwiX2ZsYXNoIjp7Im9sZCI6W10sIm5ldyI6W119LCJhdXRoX2d1cnVfaWQiOjEyNSwiYXV0aF9uYW1hX2d1cnUiOiJBZG1pbmlzdHJhdG9yIiwiYXV0aF9pc19hZG1pbiI6MSwiYXV0aF9yb2xlIjoiYWRtaW4ifQ==', 1787364307),
+('uOlWAZaJ2wz0yq3lqhmdbU6yZXq9CtgJSZYKR10I', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0', 'eyJfdG9rZW4iOiJTZUR4bTM4cXdPVUVsUGFVQjJ5WkM1dllEWmtIRkdGOGRyRktzMmFDIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cL3ByZXNlbnNpa2l0YS50ZXN0XC9ndXJ1LXBpa2V0Iiwicm91dGUiOiJndXJ1cGlrZXQuaW5kZXgifSwiX2ZsYXNoIjp7Im9sZCI6W10sIm5ldyI6W119LCJhdXRoX2d1cnVfaWQiOjEsImF1dGhfbmFtYV9ndXJ1IjoiQWJkdWwgUm9obWFuLCBTLlBkIiwiYXV0aF9pc19hZG1pbiI6MCwiYXV0aF9yb2xlIjoiZ3VydV9waWtldCJ9', 1787381467),
 ('vviLQ72EnZhjhZwwDcyifJ0dDMWmQrs3gpmx3RdD', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0', 'eyJfdG9rZW4iOiJ3VFJ1S3BDVmRId2U0OWpJRmdDRGREcWtoMExLVVdkeWcxRzV2czBNIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cL3ByZXNlbnNpa2l0YS50ZXN0XC9sb2dpbiIsInJvdXRlIjoibG9naW4ifSwiX2ZsYXNoIjp7Im9sZCI6W10sIm5ldyI6W119fQ==', 1787362443);
 
 -- --------------------------------------------------------
@@ -3996,6 +4025,14 @@ ALTER TABLE `guru`
   ADD UNIQUE KEY `nip` (`nip`);
 
 --
+-- Indexes for table `guru_piket`
+--
+ALTER TABLE `guru_piket`
+  ADD PRIMARY KEY (`id_guru_piket`),
+  ADD UNIQUE KEY `guru_piket_id_guru_tanggal_unique` (`id_guru`,`tanggal`),
+  ADD KEY `guru_piket_tanggal_index` (`tanggal`);
+
+--
 -- Indexes for table `jadwal_mengajar`
 --
 ALTER TABLE `jadwal_mengajar`
@@ -4147,6 +4184,12 @@ ALTER TABLE `guru`
   MODIFY `id_guru` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
 
 --
+-- AUTO_INCREMENT for table `guru_piket`
+--
+ALTER TABLE `guru_piket`
+  MODIFY `id_guru_piket` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `jadwal_mengajar`
 --
 ALTER TABLE `jadwal_mengajar`
@@ -4198,7 +4241,7 @@ ALTER TABLE `mapel`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `notifikasi`
@@ -4233,6 +4276,12 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `guru_piket`
+--
+ALTER TABLE `guru_piket`
+  ADD CONSTRAINT `guru_piket_id_guru_foreign` FOREIGN KEY (`id_guru`) REFERENCES `guru` (`id_guru`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `jadwal_mengajar`

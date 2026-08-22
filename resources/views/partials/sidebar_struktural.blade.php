@@ -15,7 +15,18 @@
     <nav class="sidebar-nav">
         <div class="nav-section-label">Menu Utama</div>
 
-        <a class="nav-item active" onclick="showPage('profil')" id="nav-profil">
+        @if(session('auth_role') === 'guru_piket')
+        <a class="nav-item active" onclick="showPage('guru-piket')" id="nav-guru-piket">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 16 11 18 15 14"/></svg>
+            Dashboard Guru Piket
+        </a>
+        <a class="nav-item" onclick="showPage('izin-guru')" id="nav-izin-guru">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h8M8 17h5"/></svg>
+            Permintaan Izin
+        </a>
+        @endif
+
+        <a class="nav-item {{ session('auth_role') === 'guru_piket' ? '' : 'active' }}" onclick="showPage('profil')" id="nav-profil">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>

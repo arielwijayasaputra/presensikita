@@ -10,6 +10,8 @@ use App\Models\TahunAjaran;
 use App\Models\JamPelajaran;
 use App\Models\GuruPiket;
 use App\Models\IzinGuru;
+use App\Models\Siswa;
+use App\Models\DispenSiswa;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -23,6 +25,10 @@ class DashboardController extends Controller
         $profilUpdateUrl = route('struktural.profil.update');
         $isGuruPiket = session('auth_role') === 'guru_piket';
         $guruAktif = Guru::where('is_admin', 0)->where('is_aktif', 1)->orderBy('nama_guru')->get();
+        $siswaAktif = Siswa::with('kelas')->where('is_aktif', 1)->orderBy('nama_siswa')->get();
+        $dispenTerbaru = DispenSiswa::with(['siswa.kelas', 'guruPiket'])
+            ->where('id_guru_piket', session('auth_guru_id'))
+            ->latest()->limit(25)->get();
         $hariMap = [1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu', 4 => 'Kamis', 5 => 'Jumat', 6 => 'Sabtu', 7 => 'Minggu'];
         $hariIni = $hariMap[now()->dayOfWeekIso];
         $jadwalHariIni = DB::table('jadwal_mengajar')
@@ -64,7 +70,7 @@ class DashboardController extends Controller
             'totalKelasHariIni',
             'totalGuruHariIni',
             'jamAktif'
-            , 'guruAktif', 'izinGuruTerbaru', 'isGuruPiket'
+            , 'guruAktif', 'izinGuruTerbaru', 'isGuruPiket', 'siswaAktif', 'dispenTerbaru'
         ));
     }
 }

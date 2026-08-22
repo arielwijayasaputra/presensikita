@@ -24,6 +24,10 @@
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h8M8 17h5"/></svg>
             Permintaan Izin
         </a>
+        <a class="nav-item" href="{{ route('gurupiket.index') }}#dispen-siswa" id="nav-dispen-siswa">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+            Dispensasi Siswa
+        </a>
         @endif
 
         <a class="nav-item {{ session('auth_role') === 'guru_piket' ? '' : 'active' }}" onclick="showPage('profil')" id="nav-profil">

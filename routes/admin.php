@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\MapelController;
 use App\Http\Controllers\Admin\GuruController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\NaikKelasController;
+use App\Http\Controllers\Admin\LaporanMasukController;
 
 // Semua route admin memerlukan middleware auth.admin
 Route::middleware('auth.admin')->group(function () {
@@ -47,4 +48,8 @@ Route::middleware('auth.admin')->group(function () {
     Route::post('/naik-kelas/execute', [NaikKelasController::class, 'execute'])->name('naik-kelas.execute');
     Route::get('/naik-kelas/siswa/{id_kelas}', [NaikKelasController::class, 'getSiswaByKelas'])->name('naik-kelas.siswa');
     Route::get('/alumni', [NaikKelasController::class, 'alumniList'])->name('alumni.list');
+
+    // Manajemen Laporan Masuk
+    Route::post('/laporan-masuk/{id}/status', [LaporanMasukController::class, 'updateStatus'])->name('laporan.update-status');
+    Route::delete('/laporan-masuk/{id}', [LaporanMasukController::class, 'destroy'])->name('laporan.hapus');
 });

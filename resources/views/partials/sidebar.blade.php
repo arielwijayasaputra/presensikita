@@ -54,7 +54,7 @@
                 <line x1="16" y1="13" x2="8" y2="13"/>
                 <line x1="16" y1="17" x2="8" y2="17"/>
             </svg>
-            Laporan / Rekap
+            Rekap Absensi
         </a>
 
         <!-- DATA MASTER -->
@@ -113,6 +113,16 @@
                 <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
             </svg>
             Data Alumni
+        </a>
+
+        <!-- LAPORAN MASUK -->
+        <div class="nav-section-label">Laporan Masuk</div>
+
+        <a class="nav-item" onclick="showPage('laporan-masuk')" id="nav-laporan-masuk">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            Laporan Masuk
         </a>
 
         <!-- PENGATURAN -->

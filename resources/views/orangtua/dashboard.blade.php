@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Portal Orang Tua - PresensiKita</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         *, *::before, *::after {
             box-sizing: border-box;
@@ -532,6 +534,13 @@
                 <span>TA {{ $tahunAjaran->tahun_ajaran ?? '' }} ({{ $tahunAjaran->semester ?? '' }})</span>
             </div>
 
+            <button type="button" onclick="bukaModalLaporOrangTua()" class="btn-logout" style="background-color: #f0f9ff; color: #0284c7; border-color: #bae6fd; margin-right: 8px;" title="Laporkan Kendala">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                Lapor Admin
+            </button>
+
             <form action="{{ route('logout') }}" method="POST" id="logout-form">
                 @csrf
                 <button type="submit" class="btn-logout" title="Keluar dari sistem">
@@ -744,6 +753,75 @@
         </div>
 
     </div>
+
+    <script>
+    function bukaModalLaporOrangTua() {
+        Swal.fire({
+            title: 'Kirim Laporan / Pengaduan Ke Admin',
+            html: `
+                <div style="text-align: left; font-family: inherit;">
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 13px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Nama Orang Tua / Pelapor</label>
+                        <input type="text" id="swal-nama-pelapor" class="swal2-input" value="Orang Tua dari {{ $siswa->nama_siswa }}" style="margin: 0; width: 100%; font-size: 14px; box-sizing: border-box; border-radius: 8px; border: 1px solid #cbd5e1;" readonly>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 13px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Judul Laporan</label>
+                        <input type="text" id="swal-judul-laporan" class="swal2-input" placeholder="Contoh: Masalah Absensi / Kendala Akun" style="margin: 0; width: 100%; font-size: 14px; box-sizing: border-box; border-radius: 8px; border: 1px solid #cbd5e1;">
+                    </div>
+                    <div>
+                        <label style="font-size: 13px; font-weight: 700; color: #334155; display: block; margin-bottom: 6px;">Rincian Masalah</label>
+                        <textarea id="swal-isi-laporan" class="swal2-textarea" placeholder="Jelaskan kendala Anda secara rinci..." style="margin: 0; width: 100%; height: 100px; font-size: 14px; font-family: inherit; box-sizing: border-box; border-radius: 8px; border: 1px solid #cbd5e1;"></textarea>
+                    </div>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Kirim Laporan',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#2563eb',
+            preConfirm: () => {
+                const judul = Swal.getPopup().querySelector('#swal-judul-laporan').value;
+                const isi = Swal.getPopup().querySelector('#swal-isi-laporan').value;
+                if (!judul || !isi) {
+                    Swal.showValidationMessage(`Judul dan rincian laporan tidak boleh kosong`);
+                }
+                return { judul: judul, isi_laporan: isi }
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const formData = new FormData();
+                formData.append('role_pelapor', 'Orang Tua');
+                formData.append('nama_pelapor', 'Orang Tua dari {{ $siswa->nama_siswa }}');
+                formData.append('judul', result.value.judul);
+                formData.append('isi_laporan', result.value.isi_laporan);
+
+                fetch('{{ route("laporan.public.store") }}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    }
+                })
+                .then(r => r.json())
+                .then(res => {
+                    if (res.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: res.message,
+                            confirmButtonColor: '#2563eb'
+                        });
+                    } else {
+                        Swal.fire('Gagal', res.message || 'Gagal mengirim laporan.', 'error');
+                    }
+                })
+                .catch(() => {
+                    Swal.fire('Gagal', 'Terjadi kesalahan sistem.', 'error');
+                });
+            }
+        });
+    }
+    </script>
 
 </body>
 </html>

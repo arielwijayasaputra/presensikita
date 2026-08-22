@@ -11,6 +11,7 @@ use App\Models\TahunAjaran;
 use App\Models\Pengaturan;
 use App\Models\Mapel;
 use App\Models\Alumni;
+use App\Models\Laporan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -173,6 +174,18 @@ class DashboardController extends Controller
             ->orderBy('alumni.nama_siswa')
             ->get();
 
+        // ── Laporan Masuk data ──
+        $laporanMasukList = Laporan::orderByDesc('created_at')->get();
+        $laporanMasukStats = [
+            'total'     => $laporanMasukList->count(),
+            'menunggu'  => $laporanMasukList->where('status', 'menunggu')->count(),
+            'diterima'  => $laporanMasukList->where('status', 'diterima')->count(),
+            'diproses'  => $laporanMasukList->where('status', 'diproses')->count(),
+            'selesai'   => $laporanMasukList->where('status', 'selesai')->count(),
+            'ditolak'   => $laporanMasukList->where('status', 'ditolak')->count(),
+            'dibatalkan' => $laporanMasukList->where('status', 'dibatalkan')->count(),
+        ];
+
         return view('admin.dashboard', compact(
             'tahunAjaran',
             'kelases',
@@ -211,7 +224,9 @@ class DashboardController extends Controller
             'izinEditJurnal',
             'ringkasanNk',
             'alumniTahunan',
-            'allAlumni'
+            'allAlumni',
+            'laporanMasukList',
+            'laporanMasukStats'
         ));
     }
 }

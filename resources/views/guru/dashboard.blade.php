@@ -5,5 +5,6 @@
     @include('guru.pages.jurnal_absensi')
     @include('guru.pages.riwayat')
     @include('guru.pages.profil')
+    @include('guru.pages.buat-laporan')
     @include('admin.pages.laporan')
 @endsection

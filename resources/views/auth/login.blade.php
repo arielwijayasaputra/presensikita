@@ -830,7 +830,7 @@
 
             <!-- Footer -->
             <div class="form-footer-text">
-                Butuh bantuan? <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk mendapatkan bantuan.')">Hubungi administrator.</a>
+                Butuh bantuan? <a href="{{ route('laporan.public') }}">Buat laporan ke admin.</a>
             </div>
 
         </div>

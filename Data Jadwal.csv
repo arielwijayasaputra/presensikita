@@ -1,0 +1,1067 @@
+Kelas,Hari,Jam,WaktuMulai,WaktuSelesai,Kind,MataPelajaran,Guru,Ruang
+X TKI 1,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X TKI 1,Senin,2-3,07:40,09:00,CLASS,Bahasa Inggris,"Muto'atul Khosi'ah, S.Pd",Lab. KI 1
+X TKI 1,Senin,4-5-6,09:00,11:20,CLASS,PJOK,"Ilham Sungeidi, S.Pd",LAP
+X TKI 1,Senin,7-8,11:20,13:40,CLASS,Bahasa Indonesia,"Yani, S.Pd.",Lab. KI 1
+X TKI 1,Senin,9-10,13:40,15:00,CLASS,Bahasa Jawa,"Yustin Febrini, S.Pd",Lab. KI 1
+X TKI 1,Selasa,1-2,07:00,08:20,CLASS,Seni Budaya,"Anang Prasetyo, S.Pd",Lab. KI 1
+X TKI 1,Selasa,3-4,08:20,09:40,CLASS,Bahasa Indonesia,"Yani, S.Pd.",Lab. KI 1
+X TKI 1,Selasa,5-6-7,10:00,12:00,CLASS,IPAS,"Khuriyatul Kamila, S.Si",Lab. KI 1
+X TKI 1,Selasa,8-9-10,13:00,15:00,CLASS,Dasar TKI,"Rifkotin Na'imah, S.Pd",Lab. KI 1
+X TKI 1,Rabu,1-2,07:00,08:20,CLASS,Koding dan Kecerdasan Artifisial,"Endang Ary Handayani S.T., M.Pd",Lab. TKJ 3
+X TKI 1,Rabu,3-4-5,08:20,10:40,CLASS,Dasar TKI,"Sri Kusumastuti, S.Pd",Lab. KI 1
+X TKI 1,Rabu,6-7-8,10:40,13:40,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Muashofah, M.Pd",Lab. KI 1
+X TKI 1,Rabu,9-10,13:40,15:00,CLASS,Informatika,"Lutfia Marsalina, S.Pd.I M.Pd.",Lab. Broadcast
+X TKI 1,Kamis,1-2,07:00,08:20,CLASS,Matematika,"Arvia Rienetasary, S.Pd",Lab. KI 1
+X TKI 1,Kamis,3-4,08:20,09:40,CLASS,Pendidikan Pancasila,"Wiwik Yuniarsih, S.Pd",Lab. KI 1
+X TKI 1,Kamis,5-6-7,10:00,12:00,CLASS,IPAS,"Khuriyatul Kamila, S.Si",Lab. KI 1
+X TKI 1,Kamis,8-9-10,13:00,15:00,CLASS,Dasar TKI,"Sri Kusumastuti, S.Pd",Lab. KI 1
+X TKI 1,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X TKI 1,Jumat,2-3-4,07:30,09:00,CLASS,Dasar TKI,"Rifkotin Na'imah, S.Pd",Lab. KI 1
+X TKI 1,Jumat,5,09:00,09:30,CLASS,BK,Yuni Jiastuti S.Pd,Lab. KI 1
+X TKI 1,Jumat,6-7,09:50,10:50,CLASS,Matematika,"Arvia Rienetasary, S.Pd",Lab. KI 1
+X TKI 1,Jumat,8-9,10:50,13:30,CLASS,Informatika,"Lutfia Marsalina, S.Pd.I M.Pd.",Lab. Broadcast
+X TKI 1,Jumat,10-11,13:30,14:30,CLASS,Sejarah,"Fajar Luthfianto, S.Pd",Lab. KI 1
+X TKI 1,Jumat,12-13,14:30,15:30,CLASS,Bahasa Inggris,"Muto'atul Khosi'ah, S.Pd",Lab. KI 1
+X TKI 2,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X TKI 2,Senin,2-3,07:40,09:00,CLASS,Bahasa Indonesia,"Yani, S.Pd.",R 10
+X TKI 2,Senin,4-5,09:00,10:40,CLASS,Matematika,"Arvia Rienetasary, S.Pd",R 10
+X TKI 2,Senin,6-7,10:40,12:00,CLASS,Pendidikan Pancasila,"Wiwik Yuniarsih, S.Pd",R 10
+X TKI 2,Senin,8-9-10,13:00,15:00,CLASS,Dasar TKI,"Sri Kusumastuti, S.Pd",R 10
+X TKI 2,Selasa,1,07:00,07:40,CLASS,BK,Yuni Jiastuti S.Pd,R 10
+X TKI 2,Selasa,2-3-4,07:40,09:40,CLASS,Dasar TKI,"Rifkotin Na'imah, S.Pd",R 10
+X TKI 2,Selasa,5-6,10:00,11:20,CLASS,Informatika,"Lutfia Marsalina, S.Pd.I M.Pd.",Lab. Broadcast
+X TKI 2,Selasa,7-8,11:20,13:40,CLASS,Sejarah,"Ista Nofasari, S.Pd",R 10
+X TKI 2,Selasa,9-10,13:40,15:00,CLASS,Koding dan Kecerdasan Artifisial,"Endang Ary Handayani S.T., M.Pd",Lab. TKJ 3
+X TKI 2,Rabu,1-2,07:00,08:20,CLASS,Matematika,"Arvia Rienetasary, S.Pd",R 10
+X TKI 2,Rabu,3-4,08:20,09:40,CLASS,Seni Budaya,"Anang Prasetyo, S.Pd",R 10
+X TKI 2,Rabu,5-6,10:00,11:20,CLASS,Bahasa Inggris,"Fitria Renytasari, S.Pd",R 10
+X TKI 2,Rabu,7-8,11:20,13:40,CLASS,Informatika,"Lutfia Marsalina, S.Pd.I M.Pd.",Lab. Broadcast
+X TKI 2,Rabu,9-10,13:40,15:00,CLASS,Bahasa Jawa,"Yustin Febrini, S.Pd",R 10
+X TKI 2,Kamis,1-2-3,07:00,09:00,CLASS,Dasar TKI,"Rifkotin Na'imah, S.Pd",R 10
+X TKI 2,Kamis,4-5,09:00,10:40,CLASS,Bahasa Inggris,"Fitria Renytasari, S.Pd",R 10
+X TKI 2,Kamis,6-7,10:40,12:00,CLASS,Bahasa Indonesia,"Yani, S.Pd.",R 10
+X TKI 2,Kamis,8-9-10,13:00,15:00,CLASS,IPAS,"Khuriyatul Kamila, S.Si",R 10
+X TKI 2,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X TKI 2,Jumat,2-3-4,07:30,09:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Mufatiroh, S.Ag",R 10
+X TKI 2,Jumat,5-6-7,09:00,10:50,CLASS,PJOK,"Ilham Sungeidi, S.Pd",LAP
+X TKI 2,Jumat,8-9-10,10:50,14:00,CLASS,Dasar TKI,"Sri Kusumastuti, S.Pd",R 10
+X TKI 2,Jumat,11-12-13,14:00,15:30,CLASS,IPAS,"Khuriyatul Kamila, S.Si",R 10
+X RPL 1,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X RPL 1,Senin,2-3,07:40,09:00,CLASS,Bahasa Indonesia,"Winartin, S.Pd",Lab. RPL 1
+X RPL 1,Senin,4,09:00,09:40,CLASS,BK,Widodo S.Pd,Lab. RPL 1
+X RPL 1,Senin,5-6-7,10:00,12:00,CLASS,PJOK,"Zainul Arifin,S.Pd",LAP
+X RPL 1,Senin,8-9-10,13:00,15:00,CLASS,IPAS,"Indriati, S.Pd",R 57
+X RPL 1,Selasa,1-2-3,07:00,09:00,CLASS,IPAS,"Indriati, S.Pd",R 57
+X RPL 1,Selasa,4-5,09:00,10:40,CLASS,Bahasa Jawa,Rizki Putri Wulandari S.Pd,R 57
+X RPL 1,Selasa,6-7,10:40,12:00,CLASS,Bahasa Inggris,"Fitria Renytasari, S.Pd",R 57
+X RPL 1,Selasa,8-9-10,13:00,15:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Mufatiroh, S.Ag",R 57
+X RPL 1,Rabu,1-2,07:00,08:20,CLASS,Seni Budaya,"Anang Prasetyo, S.Pd",R 57
+X RPL 1,Rabu,3-4,08:20,09:40,CLASS,Matematika,"Elysa Yuli Nur'aini, S.Si",R 57
+X RPL 1,Rabu,5-6,10:00,11:20,CLASS,Informatika,Kurnila Putri Islamawati S.Pd,Lab. RPL 1
+X RPL 1,Rabu,7-8-9-10,11:20,15:00,CLASS,Dasar PPLG,"Badrus Sulaiman, S.Pd.",Lab. RPL 1
+X RPL 1,Kamis,1-2,07:00,08:20,CLASS,Bahasa Inggris,"Fitria Renytasari, S.Pd",R 57
+X RPL 1,Kamis,3-4,08:20,09:40,CLASS,Matematika,"Elysa Yuli Nur'aini, S.Si",R 57
+X RPL 1,Kamis,5-6,10:00,11:20,CLASS,Sejarah,"Yustin Febrini, S.Pd",R 57
+X RPL 1,Kamis,7-8-9-10,11:20,15:00,CLASS,Dasar PPLG,"Ruly Dwi Setyaningrum, S.Kom",Lab. RPL 1
+X RPL 1,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X RPL 1,Jumat,2-3-4-5,07:30,09:30,CLASS,Dasar PPLG,"Ruly Dwi Setyaningrum, S.Kom",Lab. RPL 1
+X RPL 1,Jumat,6-7,09:50,10:50,CLASS,Koding dan Kecerdasan Artifisial,Elyana Frisca Monica S.Pd,Lab. RPL 1
+X RPL 1,Jumat,8-9,10:50,13:30,CLASS,Pendidikan Pancasila,"Abdul Rohman, S.Pd",R 57
+X RPL 1,Jumat,10-11,13:30,14:30,CLASS,Informatika,Kurnila Putri Islamawati S.Pd,Lab. RPL 1
+X RPL 1,Jumat,12-13,14:30,15:30,CLASS,Bahasa Indonesia,"Winartin, S.Pd",Lab. RPL 1
+X RPL 2,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X RPL 2,Senin,2-3-4-5,07:40,10:40,CLASS,Dasar PPLG,"Ruly Dwi Setyaningrum, S.Kom",Lab. RPL 2
+X RPL 2,Senin,6-7,10:40,12:00,CLASS,Bahasa Indonesia,"Umi Kulsum, S.Pd",R 57
+X RPL 2,Senin,8-9-10,13:00,15:00,CLASS,IPAS,"Fitri Amaliyah, S.Pd",R 58
+X RPL 2,Selasa,1-2-3-4,07:00,09:40,CLASS,Informatika,"Elyana Frisca Monica, S.Pd",Lab. RPL 2
+X RPL 2,Selasa,5-6,10:00,11:20,CLASS,Koding dan Kecerdasan Artifisial,Elyana Frisca Monica S.Pd,Lab. RPL 2
+X RPL 2,Selasa,7-8,11:20,13:40,CLASS,Sejarah,"Yustin Febrini, S.Pd",R 58
+X RPL 2,Selasa,9-10,13:40,15:00,CLASS,Pendidikan Pancasila,"Abdul Rohman, S.Pd",R 58
+X RPL 2,Rabu,1-2,07:00,08:20,CLASS,Bahasa Inggris,"Fajar Wahyu Pratiwi, S.S",R 58
+X RPL 2,Rabu,3-4,08:20,09:40,CLASS,Bahasa Inggris,"Fajar Wahyu Pratiwi, S.S",R 58
+X RPL 2,Rabu,5-6,10:00,11:20,CLASS,Matematika,"Elysa Yuli Nur'aini, S.Si",R 58
+X RPL 2,Rabu,7-8-9-10,11:20,15:00,CLASS,Dasar PPLG,"Ruly Dwi Setyaningrum, S.Kom",Lab. RPL 2
+X RPL 2,Kamis,1-2-3-4,07:00,09:40,CLASS,Dasar PPLG,"Badrus Sulaiman, S.Pd.",Lab. RPL 2
+X RPL 2,Kamis,5-6-7,10:00,12:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Mufatiroh, S.Ag",R 58
+X RPL 2,Kamis,8-9-10,13:00,15:00,CLASS,IPAS,"Fitri Amaliyah, S.Pd",R 58
+X RPL 2,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X RPL 2,Jumat,2-3,07:30,08:30,CLASS,Bahasa Indonesia,"Umi Kulsum, S.Pd",Lab. RPL 2
+X RPL 2,Jumat,4,08:30,09:00,CLASS,BK,Widodo S.Pd,Lab. RPL 2
+X RPL 2,Jumat,5-6-7,09:00,10:50,CLASS,PJOK,"Zainul Arifin,S.Pd",Lapangan
+X RPL 2,Jumat,8-9,10:50,13:30,CLASS,Bahasa Jawa,"Laili Ermawati, S.Pd",R 58
+X RPL 2,Jumat,10-11,13:30,14:30,CLASS,Seni Budaya,"Anang Prasetyo, S.Pd",R 58
+X RPL 2,Jumat,12-13,14:30,15:30,CLASS,Matematika,"Elysa Yuli Nur'aini, S.Si",R 58
+X TKJ 1,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X TKJ 1,Senin,2-3-4,07:40,09:40,CLASS,IPAS,"Fitri Amaliyah, S.Pd",R 32
+X TKJ 1,Senin,5-6,10:00,11:20,CLASS,Bahasa Inggris,"Isti Mufadah, S.Pd",R 32
+X TKJ 1,Senin,7-8,11:20,13:40,CLASS,Koding dan Kecerdasan Artifisial,"Listyana Hartati, S.Kom. M.Pd",Lab. TKJ 3
+X TKJ 1,Senin,9-10,13:40,15:00,CLASS,Dasar TJKT,"Listyana Hartati, S.Kom. M.Pd",Lab. TKJ 3
+X TKJ 1,Selasa,1-2-3-4,07:00,09:40,CLASS,Informatika,"Siswanti Purwaningsih, S.T., M.Pd",Lab. TKJ 3
+X TKJ 1,Selasa,5-6-7,10:00,12:00,CLASS,IPAS,"Fitri Amaliyah, S.Pd",R 32
+X TKJ 1,Selasa,8-9,13:00,14:20,CLASS,Bahasa Jawa,Muhammad Fajar Assidiqi S.Pd,R 32
+X TKJ 1,Selasa,10,14:20,15:00,CLASS,BK,Nishfu Laili S.Pd,R 32
+X TKJ 1,Rabu,1-2,07:00,08:20,CLASS,Matematika,"Basuki Sarjono, S.Pd",R 32
+X TKJ 1,Rabu,3-4,08:20,09:40,CLASS,Bahasa Indonesia,"Sri Rahayu, S.Pd",R 32
+X TKJ 1,Rabu,5-6,10:00,11:20,CLASS,Dasar TJKT,"Endang Ary Handayani S.T., M.Pd",Lab. TKJ 3
+X TKJ 1,Rabu,7-8,11:20,13:40,CLASS,Matematika,"Basuki Sarjono, S.Pd",R 32
+X TKJ 1,Rabu,9-10,13:40,15:00,CLASS,Bahasa Inggris,"Isti Mufadah, S.Pd",R 32
+X TKJ 1,Kamis,1-2,07:00,08:20,CLASS,Sejarah,"Ista Nofasari, S.Pd",R 32
+X TKJ 1,Kamis,3-4,08:20,09:40,CLASS,Bahasa Indonesia,"Sri Rahayu, S.Pd",R 32
+X TKJ 1,Kamis,5-6,10:00,11:20,CLASS,Pendidikan Pancasila,"Wiwik Yuniarsih, S.Pd",R 32
+X TKJ 1,Kamis,7-8-9-10,11:20,15:00,CLASS,Dasar TJKT,"Siti Munawaroh, S.Kom.,M.Pd",Lab. TKJ 3
+X TKJ 1,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X TKJ 1,Jumat,2-3-4,07:30,09:00,CLASS,PJOK,"Ilham Sungeidi, S.Pd",Lapangan
+X TKJ 1,Jumat,5-6,09:00,10:20,CLASS,Seni Budaya,"Anang Prasetyo, S.Pd",R 32
+X TKJ 1,Jumat,7-8-9-10,10:20,14:00,CLASS,Dasar TJKT,"Siswanti Purwaningsih, S.T., M.Pd",Lab. TKJ 3
+X TKJ 1,Jumat,11-12-13,14:00,15:30,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Sinta Lestari, S.Pd.I",R 32
+X TKJ 2,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X TKJ 2,Senin,2-3-4-5,07:40,10:40,CLASS,Dasar TJKT,"Siti Munawaroh, S.Kom.,M.Pd",Lab. TKJ 3
+X TKJ 2,Senin,6-7-8,10:40,13:40,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Sinta Lestari, S.Pd.I",R 33
+X TKJ 2,Senin,9-10,13:40,15:00,CLASS,Matematika,"Basuki Sarjono, S.Pd",R 33
+X TKJ 2,Selasa,1-2,07:00,08:20,CLASS,Bahasa Indonesia,"Sri Rahayu, S.Pd",R 33
+X TKJ 2,Selasa,3-4-5,08:20,10:40,CLASS,PJOK,"Ilham Sungeidi, S.Pd",Lapangan
+X TKJ 2,Selasa,6-7,10:40,12:00,CLASS,Dasar TJKT,"Endang Ary Handayani S.T., M.Pd",Lab. TKJ 3
+X TKJ 2,Selasa,8-9-10,13:00,15:00,CLASS,IPAS,"Fitri Amaliyah, S.Pd",R 33
+X TKJ 2,Rabu,1-2,07:00,08:20,CLASS,Pendidikan Pancasila,"Wiwik Yuniarsih, S.Pd",R 33
+X TKJ 2,Rabu,3,08:20,09:00,CLASS,BK,"Nishfu Laili, S.Pd",R 33
+X TKJ 2,Rabu,4-5-6,09:00,11:20,CLASS,IPAS,"Fitri Amaliyah, S.Pd",R 33
+X TKJ 2,Rabu,7-8,11:20,13:40,CLASS,Dasar TJKT,"Listyana Hartati, S.Kom. M.Pd",Lab. TKJ 3
+X TKJ 2,Rabu,9-10,13:40,15:00,CLASS,Matematika,"Basuki Sarjono, S.Pd",R 33
+X TKJ 2,Kamis,1-2-3-4,07:00,09:40,CLASS,Informatika,"Siswanti Purwaningsih, S.T., M.Pd",Lab. TKJ 3
+X TKJ 2,Kamis,5-6,10:00,11:20,CLASS,Bahasa Indonesia,"Sri Rahayu, S.Pd",R 33
+X TKJ 2,Kamis,7-8,11:20,13:40,CLASS,Seni Budaya,"Anang Prasetyo, S.Pd",R 33
+X TKJ 2,Kamis,9-10,13:40,15:00,CLASS,Bahasa Inggris,"Isti Mufadah, S.Pd",R 33
+X TKJ 2,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X TKJ 2,Jumat,2-3-4-5,07:30,09:30,CLASS,Dasar TJKT,"Siswanti Purwaningsih, S.T., M.Pd",Lab. TKJ 3
+X TKJ 2,Jumat,6-7,09:50,10:50,CLASS,Sejarah,"Yustin Febrini, S.Pd",R 33
+X TKJ 2,Jumat,8-9,10:50,13:30,CLASS,Bahasa Jawa,Muhammad Fajar Assidiqi S.Pd,R 33
+X TKJ 2,Jumat,10-11,13:30,14:30,CLASS,Bahasa Inggris,"Isti Mufadah, S.Pd",R 33
+X TKJ 2,Jumat,12-13,14:30,15:30,CLASS,Koding dan Kecerdasan Artifisial,"Listyana Hartati, S.Kom. M.Pd",Lab. TKJ 3
+X BD 1,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X BD 1,Senin,2-3,07:40,09:00,CLASS,Sejarah,"Pipit Ambarwati, S.Pd",R 23
+X BD 1,Senin,4-5-6-7,09:00,12:00,CLASS,Dasar PM,"Ratih Dian Irawati, SE",R 23
+X BD 1,Senin,8-9,13:00,14:20,CLASS,Bahasa Indonesia,"Arif Setyobudi, S.Pd",R 23
+X BD 1,Senin,10,14:20,15:00,CLASS,BK,Dian Mawarti S.Pd,R 23
+X BD 1,Selasa,1-2-3,07:00,09:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Sinta Lestari, S.Pd.I",R 23
+X BD 1,Selasa,4-5,09:00,10:40,CLASS,Bahasa Indonesia,"Arif Setyobudi, S.Pd",R 23
+X BD 1,Selasa,6-7-8,10:40,13:40,CLASS,IPAS,"Indriati, S.Pd",R 23
+X BD 1,Selasa,9-10,13:40,15:00,CLASS,Matematika,"Laili Ermawati, S.Pd",R 23
+X BD 1,Rabu,1-2,07:00,08:20,CLASS,Koding dan Kecerdasan Artifisial,"Siti Munawaroh, S.Kom. M.Pd",Lab. PM Belakang
+X BD 1,Rabu,3-4,08:20,09:40,CLASS,Bahasa Inggris,"Muto'atul Khosi'ah, S.Pd",R 23
+X BD 1,Rabu,5-6-7-8,10:00,13:40,CLASS,Dasar PM,"Anisa Kusumawati, S.Pd",R 23
+X BD 1,Rabu,9-10,13:40,15:00,CLASS,Seni Budaya,"Angga Widhy Wirawan S.Pd.,M.Pd",R 23
+X BD 1,Kamis,1-2-3,07:00,09:00,CLASS,IPAS,"Indriati, S.Pd",R 23
+X BD 1,Kamis,4-5-6,09:00,11:20,CLASS,PJOK,"Agus Fahruddy, S.Pd., M.Pd",LAP
+X BD 1,Kamis,7-8,11:20,13:40,CLASS,Bahasa Inggris,"Muto'atul Khosi'ah, S.Pd",R 23
+X BD 1,Kamis,9-10,13:40,15:00,CLASS,Pendidikan Pancasila,"Anisa Kusumawati, S.Pd",R 23
+X BD 1,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X BD 1,Jumat,2-3-4-5,07:30,09:30,CLASS,Informatika,"Eko Saputro, S.Pd",Lab. PM Belakang
+X BD 1,Jumat,6-7,09:50,10:50,CLASS,Matematika,"Laili Ermawati, S.Pd",R 23
+X BD 1,Jumat,8-9-10-11,10:50,14:30,CLASS,Dasar PM,"Retno Widyastuti, S.Pd., M.Pd",R 23
+X BD 1,Jumat,12-13,14:30,15:30,CLASS,Bahasa Jawa,Rizki Putri Wulandari S.Pd,R 23
+X BD 2,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X BD 2,Senin,2-3-4,07:40,09:40,CLASS,IPAS,"Indriati, S.Pd",R 24
+X BD 2,Senin,5-6-7-8,10:00,13:40,CLASS,Dasar PM,"Retno Widyastuti, S.Pd., M.Pd",R 24
+X BD 2,Senin,9-10,13:40,15:00,CLASS,Pendidikan Pancasila,"Anisa Kusumawati, S.Pd",R 24
+X BD 2,Selasa,1-2,07:00,08:20,CLASS,Bahasa Jawa,"Erna Qoriah, S.E.",R 24
+X BD 2,Selasa,3-4,08:20,09:40,CLASS,Koding dan Kecerdasan Artifisial,"Siti Munawaroh, S.Kom. M.Pd",Lab. PM Belakang
+X BD 2,Selasa,5-6,10:00,11:20,CLASS,Matematika,"Laili Ermawati, S.Pd",R 24
+X BD 2,Selasa,7-8-9-10,11:20,15:00,CLASS,Dasar PM,"Ratih Dian Irawati, SE",R 24
+X BD 2,Rabu,1-2-3,07:00,09:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Sinta Lestari, S.Pd.I",R 24
+X BD 2,Rabu,4-5-6,09:00,11:20,CLASS,IPAS,"Indriati, S.Pd",R 24
+X BD 2,Rabu,7-8-9-10,11:20,15:00,CLASS,Informatika,"Eko Saputro, S.Pd",Lab. PM Belakang
+X BD 2,Kamis,1-2-3-4,07:00,09:40,CLASS,Dasar PM,"Anisa Kusumawati, S.Pd",R 24
+X BD 2,Kamis,5-6,10:00,11:20,CLASS,Bahasa Inggris,"Dwi Rini Manfaati, S.Pd",R 24
+X BD 2,Kamis,7-8,11:20,13:40,CLASS,Sejarah,"Pipit Ambarwati, S.Pd",R 24
+X BD 2,Kamis,9-10,13:40,15:00,CLASS,Bahasa Indonesia,"Arif Setyobudi, S.Pd",R 24
+X BD 2,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X BD 2,Jumat,2,07:30,08:00,CLASS,BK,Dian Mawarti S.Pd,R 24
+X BD 2,Jumat,3-4,08:00,09:00,CLASS,Bahasa Inggris,"Dwi Rini Manfaati, S.Pd",R 24
+X BD 2,Jumat,5-6-7,09:00,10:50,CLASS,PJOK,"Agus Fahruddy, S.Pd., M.Pd",LAP
+X BD 2,Jumat,8-9,10:50,13:30,CLASS,Bahasa Indonesia,"Arif Setyobudi, S.Pd",R 24
+X BD 2,Jumat,10-11,13:30,14:30,CLASS,Seni Budaya,"Angga Widhy Wirawan S.Pd.,M.Pd",R 24
+X BD 2,Jumat,12-13,14:30,15:30,CLASS,Matematika,"Laili Ermawati, S.Pd",R 24
+X BD 3,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X BD 3,Senin,2-3-4,07:40,09:40,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Fitria Diah Ayu Hartati, S.Pd",R 25
+X BD 3,Senin,5-6-7,10:00,12:00,CLASS,PJOK,"Bella Prakoso, S.Pd",Lapangan
+X BD 3,Senin,8-9-10,13:00,15:00,CLASS,IPAS,"Sri Subekti, S.Pd",R 25
+X BD 3,Selasa,1-2,07:00,08:20,CLASS,Matematika,"Eko Saputro, S.Pd",R 25
+X BD 3,Selasa,3-4-5-6,08:20,11:20,CLASS,Dasar PM,"Retno Widyastuti, S.Pd., M.Pd",R 25
+X BD 3,Selasa,7-8,11:20,13:40,CLASS,Bahasa Inggris,"Dwi Rini Manfaati, S.Pd",R 25
+X BD 3,Selasa,9-10,13:40,15:00,CLASS,Bahasa Indonesia,"Siti Khoiriyah, S.Pd",R 25
+X BD 3,Rabu,1-2-3-4,07:00,09:40,CLASS,Dasar PM,"Anisa Kusumawati, S.Pd",R 25
+X BD 3,Rabu,5-6,10:00,11:20,CLASS,Sejarah,"Yustin Febrini, S.Pd",R 25
+X BD 3,Rabu,7-8,11:20,13:40,CLASS,Bahasa Jawa,Muhammad Fajar Assidiqi S.Pd,R 25
+X BD 3,Rabu,9-10,13:40,15:00,CLASS,Bahasa Indonesia,"Siti Khoiriyah, S.Pd",R 25
+X BD 3,Kamis,1-2,07:00,08:20,CLASS,Pendidikan Pancasila,"Abdul Rohman, S.Pd",R 25
+X BD 3,Kamis,3-4-5,08:20,10:40,CLASS,IPAS,"Sri Subekti, S.Pd",R 25
+X BD 3,Kamis,6-7,10:40,12:00,CLASS,Seni Budaya,"Angga Widhy Wirawan S.Pd.,M.Pd",R 25
+X BD 3,Kamis,8-9,13:00,14:20,CLASS,Bahasa Inggris,"Dwi Rini Manfaati, S.Pd",R 25
+X BD 3,Kamis,10,14:20,15:00,CLASS,BK,"Niken Hari Pratiwi, S.Psi.,M.Pd",R 25
+X BD 3,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X BD 3,Jumat,2-3-4-5,07:30,09:30,CLASS,Dasar PM,"Ratih Dian Irawati, SE",R 25
+X BD 3,Jumat,6-7-8-9,09:50,13:30,CLASS,Informatika,"Eko Saputro, S.Pd",Lab. PM Belakang
+X BD 3,Jumat,10-11,13:30,14:30,CLASS,Matematika,"Eko Saputro, S.Pd",R 25
+X BD 3,Jumat,12-13,14:30,15:30,CLASS,Koding dan Kecerdasan Artifisial,"Siti Munawaroh, S.Kom. M.Pd",Lab. PM Belakang
+X MP 1,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X MP 1,Senin,2-3-4,07:40,09:40,CLASS,IPAS,"Sri Subekti, S.Pd",R 11
+X MP 1,Senin,5-6,10:00,11:20,CLASS,Sejarah,"Fajar Luthfianto, S.Pd",R 11
+X MP 1,Senin,7-8,11:20,13:40,CLASS,Seni Budaya,"Angga Widhy Wirawan S.Pd.,M.Pd",R 11
+X MP 1,Senin,9-10,13:40,15:00,CLASS,Bahasa Indonesia,"Purwati,S.Pd",R 11
+X MP 1,Selasa,1-2-3-4,07:00,09:40,CLASS,Dasar MPLB,"Dwi Kuswanto, S.Pd",R 11
+X MP 1,Selasa,5-6,10:00,11:20,CLASS,Bahasa Inggris,"Komariyah, S.Pd",R 11
+X MP 1,Selasa,7-8,11:20,13:40,CLASS,Bahasa Indonesia,"Purwati,S.Pd",R 11
+X MP 1,Selasa,9-10,13:40,15:00,CLASS,Matematika,"Rulik Indrawati, S.Pd",R 11
+X MP 1,Rabu,1-2,07:00,08:20,CLASS,Bahasa Inggris,"Komariyah, S.Pd",R 11
+X MP 1,Rabu,3-4,08:20,09:40,CLASS,Bahasa Jawa,Muhammad Fajar Assidiqi S.Pd,R 11
+X MP 1,Rabu,5-6-7,10:00,12:00,CLASS,IPAS,"Sri Subekti, S.Pd",R 11
+X MP 1,Rabu,8,13:00,13:40,CLASS,BK,Veronica Damay Rulitasari S.Pd,R 11
+X MP 1,Rabu,9-10,13:40,15:00,CLASS,Informatika,Kurnila Putri Islamawati S.Pd,Lab. AP BAWAH
+X MP 1,Kamis,1-2,07:00,08:20,CLASS,Pendidikan Pancasila,"Tutut Sriatin, S.Pd",R 11
+X MP 1,Kamis,3-4,08:20,09:40,CLASS,Matematika,"Rulik Indrawati, S.Pd",R 11
+X MP 1,Kamis,5-6,10:00,11:20,CLASS,Koding dan Kecerdasan Artifisial,Kurnila Putri Islamawati S.Pd,Lab. AP BAWAH
+X MP 1,Kamis,7-8-9-10,11:20,15:00,CLASS,Dasar MPLB,"Dwi Kuswanto, S.Pd",R 11
+X MP 1,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X MP 1,Jumat,2-3-4,07:30,09:00,CLASS,PJOK,"Zainul Arifin,S.Pd",LAP
+X MP 1,Jumat,5-6-7-8,09:00,11:20,CLASS,Dasar MPLB,"Dwi Kuswanto, S.Pd",R 11
+X MP 1,Jumat,9-10-11,13:00,14:30,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Fitria Diah Ayu Hartati, S.Pd",R 11
+X MP 1,Jumat,12-13,14:30,15:30,CLASS,Informatika,Kurnila Putri Islamawati S.Pd,Lab. AP BAWAH
+X MP 2,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X MP 2,Senin,2,07:40,08:20,CLASS,BK,Nishfu Laili S.Pd,R 12
+X MP 2,Senin,3-4,08:20,09:40,CLASS,Pendidikan Pancasila,"Tutut Sriatin, S.Pd",R 12
+X MP 2,Senin,5-6,10:00,11:20,CLASS,Bahasa Jawa,Muhammad Fajar Assidiqi S.Pd,R 12
+X MP 2,Senin,7-8,11:20,13:40,CLASS,Bahasa Inggris,"Komariyah, S.Pd",R 12
+X MP 2,Senin,9-10,13:40,15:00,CLASS,Sejarah,"Fajar Luthfianto, S.Pd",R 12
+X MP 2,Selasa,1-2,07:00,08:20,CLASS,Bahasa Inggris,"Komariyah, S.Pd",R 12
+X MP 2,Selasa,3-4,08:20,09:40,CLASS,Matematika,"Rulik Indrawati, S.Pd",R 12
+X MP 2,Selasa,5-6-7-8,10:00,13:40,CLASS,Dasar MPLB,"Peni Wulandari, S.Pd",R 12
+X MP 2,Selasa,9-10,13:40,15:00,CLASS,Koding dan Kecerdasan Artifisial,Kurnila Putri Islamawati S.Pd,Lab. AP BAWAH
+X MP 2,Rabu,1-2,07:00,08:20,CLASS,Seni Budaya,"Angga Widhy Wirawan S.Pd.,M.Pd",R 12
+X MP 2,Rabu,3-4-5,08:20,10:40,CLASS,PJOK,"Zainul Arifin,S.Pd",Lapangan
+X MP 2,Rabu,6-7,10:40,12:00,CLASS,Matematika,"Rulik Indrawati, S.Pd",R 12
+X MP 2,Rabu,8-9-10,13:00,15:00,CLASS,IPAS,"Sri Subekti, S.Pd",R 12
+X MP 2,Kamis,1-2-3-4,07:00,09:40,CLASS,Informatika,"Ary Sunaryo, ST.,M.Pd",Lab. AP BAWAH
+X MP 2,Kamis,5-6,10:00,11:20,CLASS,Bahasa Indonesia,"Purwati,S.Pd",R 12
+X MP 2,Kamis,7-8-9-10,11:20,15:00,CLASS,Dasar MPLB,"Peni Wulandari, S.Pd",R 12
+X MP 2,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X MP 2,Jumat,2-3-4,07:30,09:00,CLASS,IPAS,"Sri Subekti, S.Pd",R 12
+X MP 2,Jumat,5-6-7,09:00,10:50,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Fitria Diah Ayu Hartati, S.Pd",R 12
+X MP 2,Jumat,8-9,10:50,13:30,CLASS,Bahasa Indonesia,"Purwati,S.Pd",R 12
+X MP 2,Jumat,10-11-12-13,13:30,15:30,CLASS,Dasar MPLB,"Peni Wulandari, S.Pd",R 12
+X MP 3,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X MP 3,Senin,2-3-4,07:40,09:40,CLASS,PJOK,"Zainul Arifin,S.Pd",LAP
+X MP 3,Senin,5-6,10:00,11:20,CLASS,Bahasa Inggris,"Komariyah, S.Pd",R 13
+X MP 3,Senin,7-8-9-10,11:20,15:00,CLASS,Dasar MPLB,"Lilik Suratmi, S.Pd",R 13
+X MP 3,Selasa,1-2,07:00,08:20,CLASS,Bahasa Indonesia,"Arif Setyobudi, S.Pd",R 13
+X MP 3,Selasa,3-4,08:20,09:40,CLASS,Bahasa Inggris,"Komariyah, S.Pd",R 13
+X MP 3,Selasa,5-6,10:00,11:20,CLASS,Koding dan Kecerdasan Artifisial,"Badrus Sulaiman, S.Pd.",Lab. AP ATAS
+X MP 3,Selasa,7-8-9-10,11:20,15:00,CLASS,Dasar MPLB,"Lilik Suratmi, S.Pd",R 13
+X MP 3,Rabu,1-2,07:00,08:20,CLASS,Bahasa Indonesia,"Arif Setyobudi, S.Pd",R 13
+X MP 3,Rabu,3-4,08:20,09:40,CLASS,Matematika,"Basuki Sarjono, S.Pd",R 13
+X MP 3,Rabu,5-6-7,10:00,12:00,CLASS,IPAS,"Khuriyatul Kamila, S.Si",R 13
+X MP 3,Rabu,8-9-10,13:00,15:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Fitria Diah Ayu Hartati, S.Pd",R 13
+X MP 3,Kamis,1-2-3,07:00,09:00,CLASS,IPAS,"Khuriyatul Kamila, S.Si",R 13
+X MP 3,Kamis,4-5,09:00,10:40,CLASS,Matematika,"Basuki Sarjono, S.Pd",R 13
+X MP 3,Kamis,6,10:40,11:20,CLASS,BK,"Nur Eko Wahyuningsi h, S.Pd",R 13
+X MP 3,Kamis,7-8-9-10,11:20,15:00,CLASS,Informatika,"Badrus Sulaiman, S.Pd.",Lab. AP ATAS
+X MP 3,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X MP 3,Jumat,2-3,07:30,08:30,CLASS,Pendidikan Pancasila,"Khuriyatul Kamila, S.Si",R 13
+X MP 3,Jumat,4-5,08:30,09:30,CLASS,Sejarah,"Yustin Febrini, S.Pd",R 13
+X MP 3,Jumat,6-7,09:50,10:50,CLASS,Bahasa Jawa,Rizki Putri Wulandari S.Pd,R 13
+X MP 3,Jumat,8-9-10-11,10:50,14:30,CLASS,Dasar MPLB,"Lilik Suratmi, S.Pd",R 13
+X MP 3,Jumat,12-13,14:30,15:30,CLASS,Seni Budaya,"Angga Widhy Wirawan S.Pd.,M.Pd",R 13
+X MP 4,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X MP 4,Senin,2-3-4,07:40,09:40,CLASS,IPAS,"Khuriyatul Kamila, S.Si",R 14
+X MP 4,Senin,5-6-7-8,10:00,13:40,CLASS,Dasar MPLB,"Rindang Rejeki, S.Pd",R 14
+X MP 4,Senin,9-10,13:40,15:00,CLASS,Matematika,"Eko Saputro, S.Pd",R 14
+X MP 4,Selasa,1-2-3,07:00,09:00,CLASS,PJOK,"Zainul Arifin,S.Pd",Lapangan
+X MP 4,Selasa,4-5,09:00,10:40,CLASS,Bahasa Inggris,"Muto'atul Khosi'ah, S.Pd",R 14
+X MP 4,Selasa,6-7,10:40,12:00,CLASS,Bahasa Indonesia,"Arif Setyobudi, S.Pd",R 14
+X MP 4,Selasa,8-9-10,13:00,15:00,CLASS,IPAS,"Khuriyatul Kamila, S.Si",R 14
+X MP 4,Rabu,1-2,07:00,08:20,CLASS,Koding dan Kecerdasan Artifisial,"Badrus Sulaiman, S.Pd.",Lab. AP ATAS
+X MP 4,Rabu,3-4-5-6,08:20,11:20,CLASS,Dasar MPLB,"Rindang Rejeki, S.Pd",R 14
+X MP 4,Rabu,7-8,11:20,13:40,CLASS,Bahasa Indonesia,"Arif Setyobudi, S.Pd",R 14
+X MP 4,Rabu,9-10,13:40,15:00,CLASS,Sejarah,"Fajar Luthfianto, S.Pd",R 14
+X MP 4,Kamis,1-2,07:00,08:20,CLASS,Bahasa Inggris,"Muto'atul Khosi'ah, S.Pd",R 14
+X MP 4,Kamis,3,08:20,09:00,CLASS,BK,Siti Maisaroh S.Pd,R 14
+X MP 4,Kamis,4-5-6,09:00,11:20,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Alfinu Farikh Abdillah, S.Pd.I",R 14
+X MP 4,Kamis,7-8,11:20,13:40,CLASS,Matematika,"Eko Saputro, S.Pd",R 14
+X MP 4,Kamis,9-10,13:40,15:00,CLASS,Seni Budaya,"Angga Widhy Wirawan S.Pd.,M.Pd",R 14
+X MP 4,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X MP 4,Jumat,2-3-4-5,07:30,09:30,CLASS,Informatika,"Badrus Sulaiman, S.Pd.",Lab. AP ATAS
+X MP 4,Jumat,6-7,09:50,10:50,CLASS,Pendidikan Pancasila,"Abdul Rohman, S.Pd",R 14
+X MP 4,Jumat,8-9,10:50,13:30,CLASS,Bahasa Jawa,Rizki Putri Wulandari S.Pd,R 14
+X MP 4,Jumat,10-11-12-13,13:30,15:30,CLASS,Dasar MPLB,"Rindang Rejeki, S.Pd",R 14
+X AK 1,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X AK 1,Senin,2-3,07:40,09:00,CLASS,Matematika,"Lutfia Marsalina, S.Pd.I M.Pd.",R 1
+X AK 1,Senin,4-5,09:00,10:40,CLASS,Bahasa Inggris,"Fitria Renytasari, S.Pd",R 1
+X AK 1,Senin,6,10:40,11:20,CLASS,BK,"Nur Eko Wahyuningsi h, S.Pd",R 1
+X AK 1,Senin,7-8,11:20,13:40,CLASS,Sejarah,"Fajar Luthfianto, S.Pd",R 1
+X AK 1,Senin,9-10,13:40,15:00,CLASS,Informatika,"Shinta Indyar Shanty Susanto, S.Kom",Lab. AK ATAS
+X AK 1,Selasa,1-2,07:00,08:20,CLASS,Seni Budaya,"Angga Widhy Wirawan, S.Pd.,M.Pd",R 1
+X AK 1,Selasa,3-4-5,08:20,10:40,CLASS,Dasar AKL,"Pipit Ambarwati, S.Pd",R 1
+X AK 1,Selasa,6-7-8,10:40,13:40,CLASS,IPAS,"Sri Subekti, S.Pd",R 1
+X AK 1,Selasa,9-10,13:40,15:00,CLASS,Informatika,"Shinta Indyar Shanty Susanto, S.Kom",Lab. AK ATAS
+X AK 1,Rabu,1-2,07:00,08:20,CLASS,Bahasa Inggris,"Fitria Renytasari, S.Pd",R 1
+X AK 1,Rabu,3-4-5,08:20,10:40,CLASS,PJOK,"Agus Fahruddy, S.Pd., M.Pd",Lapangan
+X AK 1,Rabu,6-7,10:40,12:00,CLASS,Bahasa Indonesia,"Endang Safitri, S.Pd",R 1
+X AK 1,Rabu,8-9-10,13:00,15:00,CLASS,Dasar AKL,"Pipit Ambarwati, S.Pd",R 1
+X AK 1,Kamis,1-2,07:00,08:20,CLASS,Bahasa Indonesia,"Endang Safitri, S.Pd",R 1
+X AK 1,Kamis,3-4,08:20,09:40,CLASS,Bahasa Jawa,"Fitri Amaliyah, S.Pd",R 1
+X AK 1,Kamis,5-6,10:00,11:20,CLASS,Dasar AKL,"Atih Wilupi, S.E, M.Pd",R 1
+X AK 1,Kamis,7-8,11:20,13:40,CLASS,Pendidikan Pancasila,"Yuli Ratnasari, S.Pd",R 1
+X AK 1,Kamis,9-10,13:40,15:00,CLASS,Matematika,"Lutfia Marsalina, S.Pd.I, M.Pd.",R 1
+X AK 1,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X AK 1,Jumat,2-3,07:30,08:30,CLASS,Koding dan Kecerdasan Artifisial,"Shinta Indyar Shanty Susanto, S.Kom",Lab. AK ATAS
+X AK 1,Jumat,4-5-6,08:30,10:20,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Alfinu Farikh Abdillah, S.Pd.I",R 1
+X AK 1,Jumat,7-8-9,10:20,13:30,CLASS,IPAS,"Sri Subekti, S.Pd",R 1
+X AK 1,Jumat,10-11-12-13,13:30,15:30,CLASS,Dasar AKL,"Agustina Mardika Rini, S.Pd.,M.Pd",Lab. AK BAWAH
+X AK 2,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X AK 2,Senin,2-3,07:40,09:00,CLASS,Bahasa Inggris,"Fitria Renytasari, S.Pd",R 2
+X AK 2,Senin,4-5-6,09:00,11:20,CLASS,Dasar AKL,"Indayah, S.Pd., M.Pd",R 2
+X AK 2,Senin,7-8,11:20,13:40,CLASS,Informatika,"Shinta Indyar Shanty Susanto, S.Kom",Lab. AK ATAS
+X AK 2,Senin,9-10,13:40,15:00,CLASS,Bahasa Indonesia,"Endang Safitri, S.Pd",R 2
+X AK 2,Selasa,1-2,07:00,08:20,CLASS,Informatika,"Shinta Indyar Shanty Susanto, S.Kom",Lab. AK ATAS
+X AK 2,Selasa,3-4,08:20,09:40,CLASS,Bahasa Inggris,"Fitria Renytasari, S.Pd",R 2
+X AK 2,Selasa,5-6-7,10:00,12:00,CLASS,PJOK,"Agus Fahruddy, S.Pd., M.Pd",Lapangan
+X AK 2,Selasa,8-9,13:00,14:20,CLASS,Matematika,"Lutfia Marsalina, S.Pd.I, M.Pd.",R 2
+X AK 2,Selasa,10,14:20,15:00,CLASS,BK,"Nur Eko Wahyuningsi h, S.Pd",R 2
+X AK 2,Rabu,1-2-3,07:00,09:00,CLASS,IPAS,"Sri Subekti, S.Pd",R 2
+X AK 2,Rabu,4-5-6,09:00,11:20,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Alfinu Farikh Abdillah, S.Pd.I",R 2
+X AK 2,Rabu,7-8-9-10,11:20,15:00,CLASS,Dasar AKL,"Agustina Mardika Rini, S.Pd.,M.Pd",Lab. AK BAWAH
+X AK 2,Kamis,1-2-3,07:00,09:00,CLASS,Dasar AKL,"Indayah, S.Pd., M.Pd",R 2
+X AK 2,Kamis,4-5,09:00,10:40,CLASS,Matematika,"Lutfia Marsalina, S.Pd.I, M.Pd.",R 2
+X AK 2,Kamis,6-7-8,10:40,13:40,CLASS,IPAS,"Sri Subekti, S.Pd",R 2
+X AK 2,Kamis,9-10,13:40,15:00,CLASS,Koding dan Kecerdasan Artifisial,"Shinta Indyar Shanty Susanto, S.Kom",Lab. AK ATAS
+X AK 2,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X AK 2,Jumat,2-3,07:30,08:30,CLASS,Pendidikan Pancasila,"Yuli Ratnasari, S.Pd",R 2
+X AK 2,Jumat,4-5,08:30,09:30,CLASS,Bahasa Indonesia,"Endang Safitri, S.Pd",R 2
+X AK 2,Jumat,6-7,09:50,10:50,CLASS,Bahasa Jawa,"Fitri Amaliyah, S.Pd",R 2
+X AK 2,Jumat,8-9,10:50,13:30,CLASS,Seni Budaya,"Angga Widhy Wirawan, S.Pd.,M.Pd",R 2
+X AK 2,Jumat,10-11,13:30,14:30,CLASS,Dasar AKL,"Pipit Ambarwati, S.Pd",R 2
+X AK 2,Jumat,12-13,14:30,15:30,CLASS,Sejarah,"Fajar Luthfianto, S.Pd",R 2
+X AK 3,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X AK 3,Senin,2-3-4,07:40,09:40,CLASS,PJOK,"Agus Fahruddy, S.Pd., M.Pd",Lapangan
+X AK 3,Senin,5-6,10:00,11:20,CLASS,Dasar AKL,"Pipit Ambarwati, S.Pd",R 3
+X AK 3,Senin,7-8,11:20,13:40,CLASS,Koding dan Kecerdasan Artifisial,Ruly Dwi Setyaningrum S.Kom,Lab. AK BAWAH
+X AK 3,Senin,9-10,13:40,15:00,CLASS,Informatika,"Ary Sunaryo, ST.,M.Pd",Lab. AK BAWAH
+X AK 3,Selasa,1-2,07:00,08:20,CLASS,Informatika,"Ary Sunaryo, ST.,M.Pd",Lab. AK BAWAH
+X AK 3,Selasa,3-4,08:20,09:40,CLASS,Seni Budaya,"Angga Widhy Wirawan, S.Pd.,M.Pd",R 3
+X AK 3,Selasa,5-6,10:00,11:20,CLASS,Pendidikan Pancasila,"Abdul Rohman, S.Pd",R 3
+X AK 3,Selasa,7-8,11:20,13:40,CLASS,Bahasa Indonesia,"Endang Safitri, S.Pd",R 3
+X AK 3,Selasa,9-10,13:40,15:00,CLASS,Bahasa Inggris,"Andri Retno Yuli Astuti, S.Pd",R 3
+X AK 3,Rabu,1-2-3,07:00,09:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Alfinu Farikh Abdillah, S.Pd.I",R 3
+X AK 3,Rabu,4-5,09:00,10:40,CLASS,Matematika,"Dwi Nova Setyandari, S.Pd",R 3
+X AK 3,Rabu,6,10:40,11:20,CLASS,BK,"Astra Bella Flamboyan, S.Psi",R 3
+X AK 3,Rabu,7-8-9-10,11:20,15:00,CLASS,Dasar AKL,"Titin Sukmasari, S.Pd., M.Pd",Lab. AK ATAS
+X AK 3,Kamis,1-2,07:00,08:20,CLASS,Sejarah,"Pipit Ambarwati, S.Pd",R 3
+X AK 3,Kamis,3-4,08:20,09:40,CLASS,Bahasa Jawa,"Rizki Putri Wulandari, S.Pd",R 3
+X AK 3,Kamis,5-6-7,10:00,12:00,CLASS,Dasar AKL,"Setiyo Winarko, S.Pd",R 3
+X AK 3,Kamis,8-9-10,13:00,15:00,CLASS,IPAS,"Ista Nofasari, S.Pd",R 3
+X AK 3,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X AK 3,Jumat,2-3-4,07:30,09:00,CLASS,IPAS,"Ista Nofasari, S.Pd",R 3
+X AK 3,Jumat,5-6,09:00,10:20,CLASS,Bahasa Inggris,"Andri Retno Yuli Astuti, S.Pd",R 3
+X AK 3,Jumat,7-8-9,10:20,13:30,CLASS,Dasar AKL,"Setiyo Winarko, S.Pd",R 3
+X AK 3,Jumat,10-11,13:30,14:30,CLASS,Matematika,Dwi Nova Setyandari S.Pd,R 3
+X AK 3,Jumat,12-13,14:30,15:30,CLASS,Bahasa Indonesia,"Endang Safitri, S.Pd",R 3
+X AK 4,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X AK 4,Senin,2-3,07:40,09:00,CLASS,Seni Budaya,"Angga Widhy Wirawan, S.Pd.,M.Pd",R 4
+X AK 4,Senin,4,09:00,09:40,CLASS,BK,"Astra Bella Flamboyan, S.Psi",R 4
+X AK 4,Senin,5-6-7,10:00,12:00,CLASS,IPAS,"Ista Nofasari, S.Pd",R 4
+X AK 4,Senin,8-9-10,13:00,15:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Muashofah, M.Pd",R 4
+X AK 4,Selasa,1-2,07:00,08:20,CLASS,Sejarah,"Pipit Ambarwati, S.Pd",R 4
+X AK 4,Selasa,3-4,08:20,09:40,CLASS,Informatika,"Ary Sunaryo, ST.,M.Pd",Lab. AK BAWAH
+X AK 4,Selasa,5-6,10:00,11:20,CLASS,Matematika,"Dwi Nova Setyandari, S.Pd",R 4
+X AK 4,Selasa,7-8,11:20,13:40,CLASS,Bahasa Inggris,"Andri Retno Yuli Astuti, S.Pd",R 4
+X AK 4,Selasa,9-10,13:40,15:00,CLASS,Dasar AKL,"Pipit Ambarwati, S.Pd",R 4
+X AK 4,Rabu,1-2-3,07:00,09:00,CLASS,Dasar AKL,"Septiani, S.Pd.,M.Pd",R 4
+X AK 4,Rabu,4-5,09:00,10:40,CLASS,Bahasa Jawa,"Rizki Putri Wulandari, S.Pd",R 4
+X AK 4,Rabu,6-7,10:40,12:00,CLASS,Bahasa Indonesia,"Siti Khoiriyah, S.Pd",R 4
+X AK 4,Rabu,8-9-10,13:00,15:00,CLASS,IPAS,"Ista Nofasari, S.Pd",R 4
+X AK 4,Kamis,1-2-3,07:00,09:00,CLASS,PJOK,"Agus Fahruddy, S.Pd., M.Pd",LAP
+X AK 4,Kamis,4-5-6,09:00,11:20,CLASS,Dasar AKL,"Septiani, S.Pd.,M.Pd",R 4
+X AK 4,Kamis,7-8,11:20,13:40,CLASS,Bahasa Inggris,"Andri Retno Yuli Astuti, S.Pd",R 4
+X AK 4,Kamis,9-10,13:40,15:00,CLASS,Pendidikan Pancasila,"Abdul Rohman, S.Pd",R 4
+X AK 4,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X AK 4,Jumat,2-3,07:30,08:30,CLASS,Informatika,"Ary Sunaryo, ST.,M.Pd",Lab. AK BAWAH
+X AK 4,Jumat,4-5,08:30,09:30,CLASS,Matematika,"Dwi Nova Setyandari, S.Pd",R 4
+X AK 4,Jumat,6-7,09:50,10:50,CLASS,Bahasa Indonesia,"Siti Khoiriyah, S.Pd",R 4
+X AK 4,Jumat,8-9,10:50,13:30,CLASS,Koding dan Kecerdasan Artifisial,"Ruly Dwi Setyaningrum, S.Kom",Lab. AK BAWAH
+X AK 4,Jumat,10-11-12-13,13:30,15:30,CLASS,Dasar AKL,"Titin Sukmasari, S.Pd., M.Pd",Lab. AK ATAS
+X ULW,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X ULW,Senin,2-3-4,07:40,09:40,CLASS,IPAS,"Ista Nofasari, S.Pd",R 22
+X ULW,Senin,5-6-7-8,10:00,13:40,CLASS,Informatika,"Siswanti Purwaningsih, S.T., M.Pd",Lab. UPW 2 (Ticketing)
+X ULW,Senin,9-10,13:40,15:00,CLASS,Bahasa Jawa,"Laili Ermawati, S.Pd",R 22
+X ULW,Selasa,1-2-3,07:00,09:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Mufatiroh, S.Ag",R 22
+X ULW,Selasa,4-5-6,09:00,11:20,CLASS,PJOK,"Bella Prakoso, S.Pd",Lapangan
+X ULW,Selasa,7-8,11:20,13:40,CLASS,Dasar ULP,Risqi Nur Imama S.Tr.Par,R 22
+X ULW,Selasa,9-10,13:40,15:00,CLASS,Bahasa Inggris,"Fitria Renytasari, S.Pd",R 22
+X ULW,Rabu,1-2,07:00,08:20,CLASS,Bahasa Indonesia,"Sri Rahayu, S.Pd",R 22
+X ULW,Rabu,3-4-5-6,08:20,11:20,CLASS,Dasar ULP,"Risqi Nur Imama, S.Tr.Par",R 22
+X ULW,Rabu,7-8,11:20,13:40,CLASS,Matematika,Dwi Nova Setyandari S.Pd,R 22
+X ULW,Rabu,9-10,13:40,15:00,CLASS,Bahasa Inggris,"Fitria Renytasari, S.Pd",R 22
+X ULW,Kamis,1-2,07:00,08:20,CLASS,Bahasa Indonesia,"Sri Rahayu, S.Pd",R 22
+X ULW,Kamis,3-4-5-6,08:20,11:20,CLASS,Dasar ULP,"Risqi Nur Imama, S.Tr.Par",R 22
+X ULW,Kamis,7-8,11:20,13:40,CLASS,Pendidikan Pancasila,"Wiwik Yuniarsih, S.Pd",R 22
+X ULW,Kamis,9-10,13:40,15:00,CLASS,Sejarah,"Fajar Luthfianto, S.Pd",R 22
+X ULW,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X ULW,Jumat,2,07:30,08:00,CLASS,BK,"Niken Hari Pratiwi, S.Psi.,M.Pd",R 22
+X ULW,Jumat,3-4,08:00,09:00,CLASS,Dasar ULP,"Risqi Nur Imama, S.Tr.Par",R 22
+X ULW,Jumat,5-6,09:00,10:20,CLASS,Seni Budaya,"Angga Widhy Wirawan, S.Pd.,M.Pd",R 22
+X ULW,Jumat,7-8,10:20,11:20,CLASS,Koding dan Kecerdasan Artifisial,"Shinta Indyar Shanty Susanto, S.Kom",Lab. UPW 2 (Ticketing)
+X ULW,Jumat,9-10-11,13:00,14:30,CLASS,IPAS,"Ista Nofasari, S.Pd",R 22
+X ULW,Jumat,12-13,14:30,15:30,CLASS,Matematika,"Dwi Nova Setyandari, S.Pd",R 22
+X DKV 1,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X DKV 1,Senin,2-3-4,07:40,09:40,CLASS,Pendidikan Agama Islam dan Budi Pekerti,Dra. Hanik Pangestuti,R 15
+X DKV 1,Senin,5-6-7,10:00,12:00,CLASS,IPAS,"Khuriyatul Kamila, S.Si",R 15
+X DKV 1,Senin,8-9-10,13:00,15:00,CLASS,Dasar DKV,"Danang Anjar Hymawanto, S.Pd",R 15
+X DKV 1,Selasa,1,07:00,07:40,CLASS,BK,"Nur Eko Wahyuningsi h, S.Pd",R 15
+X DKV 1,Selasa,2-3,07:40,09:00,CLASS,Bahasa Inggris,"Fajar Wahyu Pratiwi, S.S",R 15
+X DKV 1,Selasa,4-5-6,09:00,11:20,CLASS,Dasar DKV,"Agus Pramono, S.Sn",R 15
+X DKV 1,Selasa,7-8,11:20,13:40,CLASS,Bahasa Jawa,"Khoyrotun Hisani, S.Sn",R 15
+X DKV 1,Selasa,9-10,13:40,15:00,CLASS,Bahasa Indonesia,"Erna Rinawati, S.Pd",R 15
+X DKV 1,Rabu,1-2,07:00,08:20,CLASS,Matematika,"Rulik Indrawati, S.Pd",R 15
+X DKV 1,Rabu,3-4-5,08:20,10:40,CLASS,PJOK,"Ilham Sungeidi, S.Pd",Lapangan
+X DKV 1,Rabu,6-7-8,10:40,13:40,CLASS,Dasar DKV,"Khoyrotun Hisani, S.Sn",R 15
+X DKV 1,Rabu,9-10,13:40,15:00,CLASS,Koding dan Kecerdasan Artifisial,"Endik Kuswantoro, S.Kom.,M.T",Lab. DKV Komputer
+X DKV 1,Kamis,1-2,07:00,08:20,CLASS,Informatika,"Elysa Yuli Nur'aini, S.Si",Lab. DKV Komputer
+X DKV 1,Kamis,3-4,08:20,09:40,CLASS,Bahasa Inggris,"Fajar Wahyu Pratiwi, S.S",R 15
+X DKV 1,Kamis,5-6,10:00,11:20,CLASS,Seni Budaya,"Anang Prasetyo, S.Pd",R 15
+X DKV 1,Kamis,7-8,11:20,13:40,CLASS,Sejarah,"Yustin Febrini, S.Pd",R 15
+X DKV 1,Kamis,9-10,13:40,15:00,CLASS,Pendidikan Pancasila,"Wiwik Yuniarsih, S.Pd",R 15
+X DKV 1,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X DKV 1,Jumat,2-3-4,07:30,09:00,CLASS,Dasar DKV,"Agus Pramono, S.Sn",R 15
+X DKV 1,Jumat,5-6,09:00,10:20,CLASS,Matematika,"Rulik Indrawati, S.Pd",R 15
+X DKV 1,Jumat,7-8-9,10:20,13:30,CLASS,IPAS,"Khuriyatul Kamila, S.Si",R 15
+X DKV 1,Jumat,10-11,13:30,14:30,CLASS,Informatika,"Elysa Yuli Nur'aini, S.Si",Lab. DKV Komputer
+X DKV 1,Jumat,12-13,14:30,15:30,CLASS,Bahasa Indonesia,"Erna Rinawati, S.Pd",R 15
+X DKV 2,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X DKV 2,Senin,2-3,07:40,09:00,CLASS,Koding dan Kecerdasan Artifisial,"Endik Kuswantoro, S.Kom.,M.T",Lab. DKV Komputer
+X DKV 2,Senin,4-5,09:00,10:40,CLASS,Sejarah,"Yustin Febrini, S.Pd",R 16
+X DKV 2,Senin,6-7-8,10:40,13:40,CLASS,Dasar DKV,"Agus Pramono, S.Sn",R 16
+X DKV 2,Senin,9-10,13:40,15:00,CLASS,Pendidikan Pancasila,"Wiwik Yuniarsih, S.Pd",R 16
+X DKV 2,Selasa,1-2-3,07:00,09:00,CLASS,IPAS,"Fitri Amaliyah, S.Pd",R 16
+X DKV 2,Selasa,4-5,09:00,10:40,CLASS,Bahasa Indonesia,"Erna Rinawati, S.Pd",R 16
+X DKV 2,Selasa,6-7,10:40,12:00,CLASS,Bahasa Inggris,"Fajar Wahyu Pratiwi, S.S",R 16
+X DKV 2,Selasa,8-9-10,13:00,15:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,Dra. Hanik Pangestuti,R 16
+X DKV 2,Rabu,1-2,07:00,08:20,CLASS,Informatika,"Elysa Yuli Nur'aini, S.Si",Lab. DKV Komputer
+X DKV 2,Rabu,3,08:20,09:00,CLASS,BK,"Yuni Jiastuti, S.Pd",R 16
+X DKV 2,Rabu,4-5-6,09:00,11:20,CLASS,Dasar DKV,"Agus Pramono, S.Sn",R 16
+X DKV 2,Rabu,7-8,11:20,13:40,CLASS,Matematika,"Ajeng Okvitasari, S.Pd",R 16
+X DKV 2,Rabu,9-10,13:40,15:00,CLASS,Bahasa Indonesia,"Erna Rinawati, S.Pd",R 16
+X DKV 2,Kamis,1-2,07:00,08:20,CLASS,Bahasa Inggris,"Fajar Wahyu Pratiwi, S.S",R 16
+X DKV 2,Kamis,3-4-5,08:20,10:40,CLASS,PJOK,"Ilham Sungeidi, S.Pd",Lapangan
+X DKV 2,Kamis,6-7,10:40,12:00,CLASS,Informatika,"Elysa Yuli Nur'aini, S.Si",Lab. DKV Komputer
+X DKV 2,Kamis,8-9-10,13:00,15:00,CLASS,Dasar DKV,"Danang Anjar Hymawanto, S.Pd",R 16
+X DKV 2,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X DKV 2,Jumat,2-3,07:30,08:30,CLASS,Seni Budaya,"Anang Prasetyo, S.Pd",R 16
+X DKV 2,Jumat,4-5,08:30,09:30,CLASS,Bahasa Jawa,"Khoyrotun Hisani, S.Sn",R 16
+X DKV 2,Jumat,6-7-8,09:50,11:20,CLASS,Dasar DKV,"Khoyrotun Hisani, S.Sn",R 16
+X DKV 2,Jumat,9-10,13:00,14:00,CLASS,Matematika,"Ajeng Okvitasari, S.Pd",R 16
+X DKV 2,Jumat,11-12-13,14:00,15:30,CLASS,IPAS,"Fitri Amaliyah, S.Pd",R 16
+X PSPT 1,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X PSPT 1,Senin,2-3-4,07:40,09:40,CLASS,PJOK,"Bella Prakoso, S.Pd",Lapangan
+X PSPT 1,Senin,5-6,10:00,11:20,CLASS,Pendidikan Pancasila,"Abdul Rohman, S.Pd",R 55
+X PSPT 1,Senin,7-8-9-10,11:20,15:00,CLASS,Dasar BP,"Benny Mamora, S.Kom",Lab. Broadcast
+X PSPT 1,Selasa,1-2-3-4,07:00,09:40,CLASS,Dasar BP,"Benny Mamora, S.Kom",Lab. Broadcast
+X PSPT 1,Selasa,5-6,10:00,11:20,CLASS,Seni Budaya,"Anang Prasetyo, S.Pd",R 55
+X PSPT 1,Selasa,7-8,11:20,13:40,CLASS,Matematika,"Eko Saputro, S.Pd",R 55
+X PSPT 1,Selasa,9-10,13:40,15:00,CLASS,Bahasa Indonesia,"Winartin, S.Pd",R 55
+X PSPT 1,Rabu,1-2-3,07:00,09:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,Dra. Hanik Pangestuti,R 55
+X PSPT 1,Rabu,4-5-6,09:00,11:20,CLASS,IPAS,"Ista Nofasari, S.Pd",R 55
+X PSPT 1,Rabu,7-8,11:20,13:40,CLASS,Bahasa Inggris,"Muto'atul Khosi'ah, S.Pd",R 55
+X PSPT 1,Rabu,9-10,13:40,15:00,CLASS,Bahasa Indonesia,"Winartin, S.Pd",R 55
+X PSPT 1,Kamis,1-2,07:00,08:20,CLASS,Koding dan Kecerdasan Artifisial,"Elyana Frisca Monica, S.Pd",Lab. Broadcast
+X PSPT 1,Kamis,3-4-5-6,08:20,11:20,CLASS,Informatika,"Elyana Frisca Monica, S.Pd",Lab. Broadcast
+X PSPT 1,Kamis,7-8,11:20,13:40,CLASS,Bahasa Jawa,"Khoyrotun Hisani, S.Sn",R 55
+X PSPT 1,Kamis,9-10,13:40,15:00,CLASS,Matematika,"Eko Saputro, S.Pd",R 55
+X PSPT 1,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X PSPT 1,Jumat,2-3,07:30,08:30,CLASS,Sejarah,"Yustin Febrini, S.Pd",R 55
+X PSPT 1,Jumat,4-5,08:30,09:30,CLASS,Bahasa Inggris,"Muto'atul Khosi'ah, S.Pd",R 55
+X PSPT 1,Jumat,6-7-8,09:50,11:20,CLASS,IPAS,"Ista Nofasari, S.Pd",R 55
+X PSPT 1,Jumat,9,13:00,13:30,CLASS,BK,"Winarsih, S.Pd, M.Pd",R 55
+X PSPT 1,Jumat,10-11-12-13,13:30,15:30,CLASS,Dasar BP,"Benny Mamora, S.Kom",Lab. Broadcast
+X PSPT 2,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X PSPT 2,Senin,2-3-4-5,07:40,10:40,CLASS,Informatika,"Elyana Frisca Monica, S.Pd",Lab. Broadcast
+X PSPT 2,Senin,6-7,10:40,12:00,CLASS,Bahasa Inggris,"Muto'atul Khosi'ah, S.Pd",R 56
+X PSPT 2,Senin,8-9-10,13:00,15:00,CLASS,IPAS,"Ista Nofasari, S.Pd",R 56
+X PSPT 2,Selasa,1-2-3,07:00,09:00,CLASS,IPAS,"Ista Nofasari, S.Pd",R 56
+X PSPT 2,Selasa,4-5,09:00,10:40,CLASS,Sejarah,"Yustin Febrini, S.Pd",R 56
+X PSPT 2,Selasa,6,10:40,11:20,CLASS,BK,"Winarsih, S.Pd, M.Pd",R 56
+X PSPT 2,Selasa,7-8-9-10,11:20,15:00,CLASS,Dasar BP,"Sa'ad Wazis Hiedayat, S.Pd",Lab. Broadcast
+X PSPT 2,Rabu,1-2-3-4,07:00,09:40,CLASS,Dasar BP,"Sa'ad Wazis Hiedayat, S.Pd",Lab. Broadcast
+X PSPT 2,Rabu,5-6-7,10:00,12:00,CLASS,PJOK,"Bella Prakoso, S.Pd",Lapangan
+X PSPT 2,Rabu,8-9-10,13:00,15:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,Dra. Hanik Pangestuti,R 56
+X PSPT 2,Kamis,1-2,07:00,08:20,CLASS,Bahasa Indonesia,"Umi Kulsum, S.Pd",R 56
+X PSPT 2,Kamis,3-4,08:20,09:40,CLASS,Matematika,"Laili Ermawati, S.Pd",R 56
+X PSPT 2,Kamis,5-6,10:00,11:20,CLASS,Pendidikan Pancasila,"Abdul Rohman, S.Pd",R 56
+X PSPT 2,Kamis,7-8,11:20,13:40,CLASS,Bahasa Jawa,"Muhammad Fajar Assidiqi, S.Pd",R 56
+X PSPT 2,Kamis,9-10,13:40,15:00,CLASS,Bahasa Inggris,"Muto'atul Khosi'ah, S.Pd",R 56
+X PSPT 2,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X PSPT 2,Jumat,2-3,07:30,08:30,CLASS,Koding dan Kecerdasan Artifisial,Elyana Frisca Monica S.Pd,Lab. Broadcast
+X PSPT 2,Jumat,4-5-6-7,08:30,10:50,CLASS,Dasar BP,"Sa'ad Wazis Hiedayat, S.Pd",Lab. Broadcast
+X PSPT 2,Jumat,8-9,10:50,13:30,CLASS,Seni Budaya,"Anang Prasetyo, S.Pd",R 56
+X PSPT 2,Jumat,10-11,13:30,14:30,CLASS,Matematika,"Laili Ermawati, S.Pd",R 56
+X PSPT 2,Jumat,12-13,14:30,15:30,CLASS,Bahasa Indonesia,"Umi Kulsum, S.Pd",R 56
+X AN 1,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X AN 1,Senin,2-3,07:40,09:00,CLASS,Sejarah,"Yustin Febrini, S.Pd",R 31
+X AN 1,Senin,4-5,09:00,10:40,CLASS,Seni Budaya,"Anang Prasetyo, S.Pd",R 31
+X AN 1,Senin,6,10:40,11:20,CLASS,BK,"Siti Maisaroh, S.Pd",R 31
+X AN 1,Senin,7-8,11:20,13:40,CLASS,Bahasa Indonesia,"Siti Khoiriyah, S.Pd",R 31
+X AN 1,Senin,9-10,13:40,15:00,CLASS,Bahasa Inggris,"Agus Muharyanto, M.Pd",R 31
+X AN 1,Selasa,1-2-3,07:00,09:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Muashofah, M.Pd",R 31
+X AN 1,Selasa,4-5,09:00,10:40,CLASS,Bahasa Indonesia,"Siti Khoiriyah, S.Pd",R 31
+X AN 1,Selasa,6-7,10:40,12:00,CLASS,Informatika,"Tuhu Eries Kudori, S.Sn",Lab. AN COE 2
+X AN 1,Selasa,8-9-10,13:00,15:00,CLASS,Dasar AN,"Rika Okta Maulida, S.Ds.",Lab. AN COE 2
+X AN 1,Rabu,1-2-3,07:00,09:00,CLASS,Dasar AN,"Dhuana Putri Puspitasary, S.Pd",Lab. AN COE 2
+X AN 1,Rabu,4-5,09:00,10:40,CLASS,Pendidikan Pancasila,"Mega Mahardika, S.Pd",R 31
+X AN 1,Rabu,6-7,10:40,12:00,CLASS,Matematika,"Arvia Rienetasary, S.Pd",R 31
+X AN 1,Rabu,8-9-10,13:00,15:00,CLASS,IPAS,"Indriati, S.Pd",R 31
+X AN 1,Kamis,1-2,07:00,08:20,CLASS,Bahasa Inggris,"Agus Muharyanto, M.Pd",R 31
+X AN 1,Kamis,3-4,08:20,09:40,CLASS,Matematika,"Arvia Rienetasary, S.Pd",R 31
+X AN 1,Kamis,5-6-7,10:00,12:00,CLASS,PJOK,"Bella Prakoso, S.Pd",LAP
+X AN 1,Kamis,8-9-10,13:00,15:00,CLASS,Dasar AN,"Dhuana Putri Puspitasary, S.Pd",Lab. AN COE 2
+X AN 1,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X AN 1,Jumat,2-3-4,07:30,09:00,CLASS,IPAS,"Indriati, S.Pd",R 31
+X AN 1,Jumat,5-6,09:00,10:20,CLASS,Bahasa Jawa,Muhammad Fajar Assidiqi S.Pd,R 31
+X AN 1,Jumat,7-8-9,10:20,13:30,CLASS,Dasar AN,"Rika Okta Maulida, S.Ds.",Lab. AN COE 2
+X AN 1,Jumat,10-11,13:30,14:30,CLASS,Koding dan Kecerdasan Artifisial,"Endik Kuswantoro, S.Kom.,M.T",Lab. AN COE 2
+X AN 1,Jumat,12-13,14:30,15:30,CLASS,Informatika,"Tuhu Eries Kudori, S.Sn",Lab. AN COE 2
+X AN 2,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+X AN 2,Senin,2-3-4,07:40,09:40,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Muashofah, M.Pd",R 60
+X AN 2,Senin,5-6,10:00,11:20,CLASS,Koding dan Kecerdasan Artifisial,"Endik Kuswantoro, S.Kom.,M.T",Lab. AN COE 2
+X AN 2,Senin,7-8,11:20,13:40,CLASS,Sejarah,"Yustin Febrini, S.Pd",R 60
+X AN 2,Senin,9-10,13:40,15:00,CLASS,Matematika,"Ajeng Okvitasari, S.Pd",R 60
+X AN 2,Selasa,1-2-3,07:00,09:00,CLASS,PJOK,"Bella Prakoso, S.Pd",Lapangan
+X AN 2,Selasa,4-5,09:00,10:40,CLASS,Matematika,"Ajeng Okvitasari, S.Pd",R 60
+X AN 2,Selasa,6-7,10:40,12:00,CLASS,Pendidikan Pancasila,"Mega Mahardika, S.Pd",R 60
+X AN 2,Selasa,8-9,13:00,14:20,CLASS,Bahasa Inggris,"Agus Muharyanto, M.Pd",R 60
+X AN 2,Selasa,10,14:20,15:00,CLASS,BK,"Siti Maisaroh, S.Pd",R 60
+X AN 2,Rabu,1-2-3,07:00,09:00,CLASS,IPAS,"Indriati, S.Pd",R 60
+X AN 2,Rabu,4-5,09:00,10:40,CLASS,Bahasa Indonesia,"Siti Khoiriyah, S.Pd",R 60
+X AN 2,Rabu,6-7,10:40,12:00,CLASS,Seni Budaya,"Anang Prasetyo, S.Pd",R 60
+X AN 2,Rabu,8-9-10,13:00,15:00,CLASS,Dasar AN,"Rika Okta Maulida, S.Ds.",Lab. AN COE 2
+X AN 2,Kamis,1-2,07:00,08:20,CLASS,Bahasa Indonesia,"Siti Khoiriyah, S.Pd",R 60
+X AN 2,Kamis,3-4,08:20,09:40,CLASS,Bahasa Inggris,"Agus Muharyanto, M.Pd",R 60
+X AN 2,Kamis,5-6-7,10:00,12:00,CLASS,Dasar AN,"Dhuana Putri Puspitasary, S.Pd",Lab. AN COE 2
+X AN 2,Kamis,8-9-10,13:00,15:00,CLASS,Dasar AN,"Rika Okta Maulida, S.Ds.",Lab. AN COE 1
+X AN 2,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+X AN 2,Jumat,2-3,07:30,08:30,CLASS,Bahasa Jawa,Muhammad Fajar Assidiqi S.Pd,R 60
+X AN 2,Jumat,4-5,08:30,09:30,CLASS,Informatika,"Rika Okta Maulida, S.Ds.",Lab. AN COE 2
+X AN 2,Jumat,6-7-8,09:50,11:20,CLASS,IPAS,"Indriati, S.Pd",R 60
+X AN 2,Jumat,9-10-11,13:00,14:30,CLASS,Dasar AN,"Dhuana Putri Puspitasary, S.Pd",Lab. AN COE 1
+X AN 2,Jumat,12-13,14:30,15:30,CLASS,Informatika,"Rika Okta Maulida, S.Ds.",Lab. AN COE 1
+XI TKI 1,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI TKI 1,Senin,2-3,07:40,09:00,CLASS,Konsentrasi TKI,"Baskoro, S.Si",R 65
+XI TKI 1,Senin,4-5-6,09:00,11:20,CLASS,Konsentrasi TKI,"Ayu Puspitorini, ST",R 65
+XI TKI 1,Senin,7-8-9-10,11:20,15:00,CLASS,Konsentrasi TKI,"Diana Hartanti, S.T., M.Pd",R 65
+XI TKI 1,Selasa,1-2,07:00,08:20,CLASS,Bahasa Jepang,"Rizki Putri Wulandari, S.Pd",R 65
+XI TKI 1,Selasa,3-4,08:20,09:40,CLASS,Bahasa Inggris,"Agus Muharyanto, M.Pd",R 65
+XI TKI 1,Selasa,5-6-7,10:00,12:00,CLASS,"Kreativitas, Inovasi dan Kewirausahaan","Baskoro, S.Si",R 65
+XI TKI 1,Selasa,8-9-10,13:00,15:00,CLASS,Matematika,"Basuki Sarjono, S.Pd",R 65
+XI TKI 1,Rabu,1-2,07:00,08:20,CLASS,Bahasa Jawa,"Yustin Febrini, S.Pd",R 65
+XI TKI 1,Rabu,3-4,08:20,09:40,CLASS,Konsentrasi TKI,"Rifkotin Na'imah, S.Pd",R 65
+XI TKI 1,Rabu,5-6,10:00,11:20,CLASS,"Kreativitas Inovasi, dan Kewirausahaan","Baskoro, S.Si",R 65
+XI TKI 1,Rabu,7-8,11:20,13:40,CLASS,Mapel Pilihan TKI,"Sri Kusumastuti, S.Pd",R 65
+XI TKI 1,Rabu,9-10,13:40,15:00,CLASS,Pendidikan Pancasila,"Sri Kusumastuti, S.Pd",R 65
+XI TKI 1,Kamis,1-2-3,07:00,09:00,CLASS,Bahasa Indonesia,"Yani, S.Pd.",R 65
+XI TKI 1,Kamis,4-5,09:00,10:40,CLASS,Sejarah,"Baskoro, S.Si",R 65
+XI TKI 1,Kamis,6-7,10:40,12:00,CLASS,PJOK,"Ilham Sungeidi, S.Pd",Lapangan
+XI TKI 1,Kamis,8-9-10,13:00,15:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Mufatiroh, S.Ag",R 65
+XI TKI 1,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI TKI 1,Jumat,2-3-4,07:30,09:00,CLASS,Konsentrasi TKI,"Ayu Puspitorini, ST",R 65
+XI TKI 1,Jumat,5-6-7-8,09:00,11:20,CLASS,Konsentrasi TKI,"Diana Hartanti, S.T., M.Pd",R 65
+XI TKI 1,Jumat,9-10,13:00,14:00,CLASS,Bahasa Inggris,"Agus Muharyanto, M.Pd",R 65
+XI TKI 1,Jumat,11-12,14:00,15:00,CLASS,BK,"Yuni Jiastuti, S.Pd",R 65
+XI TKI 2,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI TKI 2,Senin,2-3,07:40,09:00,CLASS,PJOK,"Ilham Sungeidi, S.Pd",LAP
+XI TKI 2,Senin,4-5-6,09:00,11:20,CLASS,Matematika,"Basuki Sarjono, S.Pd",R 66
+XI TKI 2,Senin,7-8,11:20,13:40,CLASS,Bahasa Jepang,"Rizki Putri Wulandari, S.Pd",R 66
+XI TKI 2,Senin,9-10,13:40,15:00,CLASS,Bahasa Inggris,"Komariyah, S.Pd",R 66
+XI TKI 2,Selasa,1-2,07:00,08:20,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Baskoro, S.Si",R 66
+XI TKI 2,Selasa,3-4,08:20,09:40,CLASS,Konsentrasi TKI,"Baskoro, S.Si",R 66
+XI TKI 2,Selasa,5-6,10:00,11:20,CLASS,Konsentrasi TKI,"Rifkotin Na'imah, S.Pd",R 66
+XI TKI 2,Selasa,7-8,11:20,13:40,CLASS,Mapel Pilihan TKI,"Sri Kusumastuti, S.Pd",R 66
+XI TKI 2,Selasa,9-10,13:40,15:00,CLASS,Pendidikan Pancasila,"Sri Kusumastuti, S.Pd",R 66
+XI TKI 2,Rabu,1-2-3,07:00,09:00,CLASS,Bahasa Indonesia,"Yani, S.Pd.",R 66
+XI TKI 2,Rabu,4-5-6,09:00,11:20,CLASS,Konsentrasi TKI,"Ayu Puspitorini, ST",R 66
+XI TKI 2,Rabu,7-8-9-10,11:20,15:00,CLASS,Konsentrasi TKI,"Diana Hartanti, S.T., M.Pd",R 66
+XI TKI 2,Kamis,1-2-3,07:00,09:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Mufatiroh, S.Ag",R 66
+XI TKI 2,Kamis,4-5-6-7,09:00,12:00,CLASS,Konsentrasi TKI,"Diana Hartanti, S.T., M.Pd",R 66
+XI TKI 2,Kamis,8-9-10,13:00,15:00,CLASS,Konsentrasi TKI,"Ayu Puspitorini, ST",R 66
+XI TKI 2,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI TKI 2,Jumat,2-3,07:30,08:30,CLASS,Sejarah,"Baskoro, S.Si",R 66
+XI TKI 2,Jumat,4-5-6,08:30,10:20,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Baskoro, S.Si",R 66
+XI TKI 2,Jumat,7-8,10:20,11:20,CLASS,Bahasa Inggris,"Komariyah, S.Pd",R 66
+XI TKI 2,Jumat,9-10,13:00,14:00,CLASS,BK,"Yuni Jiastuti, S.Pd",R 66
+XI TKI 2,Jumat,11-12,14:00,15:00,CLASS,Bahasa Jawa,"Yustin Febrini, S.Pd",R 66
+XI RPL 1,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI RPL 1,Senin,2-3-4,07:40,09:40,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Mufatiroh, S.Ag",R 57
+XI RPL 1,Senin,5-6,10:00,11:20,CLASS,BK,"Widodo, S.Pd",Lab. RPL 1
+XI RPL 1,Senin,7-8-9-10,11:20,15:00,CLASS,Konsentrasi RPL,"Kurnila Putri Islamawati, S.Pd",Lab. RPL 1
+XI RPL 1,Selasa,1-2-3-4,07:00,09:40,CLASS,Konsentrasi RPL,"Kurnila Putri Islamawati, S.Pd",Lab. RPL 1
+XI RPL 1,Selasa,5-6-7,10:00,12:00,CLASS,Konsentrasi RPL,"Shinta Indyar Shanty Susanto, S.Kom",Lab. RPL 1
+XI RPL 1,Selasa,8-9-10,13:00,15:00,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Anisa Kusumawati, S.Pd",Lab. RPL 1
+XI RPL 1,Rabu,1-2-3-4,07:00,09:40,CLASS,Konsentrasi RPL,"Shinta Indyar Shanty Susanto, S.Kom",Lab. RPL 1
+XI RPL 1,Rabu,5-6,10:00,11:20,CLASS,Bahasa Inggris,"Isti Mufadah, S.Pd",R 57
+XI RPL 1,Rabu,7-8,11:20,13:40,CLASS,Sejarah,"Erna Qoriah, S.E.",R 57
+XI RPL 1,Rabu,9-10,13:40,15:00,CLASS,Bahasa Jawa,"Laili Ermawati, S.Pd",R 57
+XI RPL 1,Kamis,1-2-3,07:00,09:00,CLASS,Konsentrasi RPL,"Shinta Indyar Shanty Susanto, S.Kom",Lab. RPL 1
+XI RPL 1,Kamis,4-5,09:00,10:40,CLASS,Mapel Pilihan RPL,"Hendro Suwignyo, ST",Lab. RPL 1
+XI RPL 1,Kamis,6-7,10:40,12:00,CLASS,PJOK,"Zainul Arifin,S.Pd",LAP
+XI RPL 1,Kamis,8-9-10,13:00,15:00,CLASS,Bahasa Indonesia,"Umi Kulsum, S.Pd",R 57
+XI RPL 1,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI RPL 1,Jumat,2-3,07:30,08:30,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Anisa Kusumawati, S.Pd",R 57
+XI RPL 1,Jumat,4-5,08:30,09:30,CLASS,Pendidikan Pancasila,"Wiwik Yuniarsih, S.Pd",R 57
+XI RPL 1,Jumat,6-7,09:50,10:50,CLASS,Bahasa Jepang,"Sulistyowati, SS",R 57
+XI RPL 1,Jumat,8-9,10:50,13:30,CLASS,Bahasa Inggris,"Isti Mufadah, S.Pd",Lab. RPL 1
+XI RPL 1,Jumat,10-11-12,13:30,15:00,CLASS,Matematika,"Lutfia Marsalina, S.Pd.I, M.Pd.",R 57
+XI RPL 2,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI RPL 2,Senin,2-3-4,07:40,09:40,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Anisa Kusumawati, S.Pd",R 58
+XI RPL 2,Senin,5-6,10:00,11:20,CLASS,Bahasa Inggris,"Fajar Wahyu Pratiwi, S.S",R 58
+XI RPL 2,Senin,7-8-9-10,11:20,15:00,CLASS,Konsentrasi RPL,"Badrus Sulaiman, S.Pd.",Lab. RPL 2
+XI RPL 2,Selasa,1-2-3,07:00,09:00,CLASS,Matematika,"Lutfia Marsalina, S.Pd.I, M.Pd.",R 58
+XI RPL 2,Selasa,4-5,09:00,10:40,CLASS,Bahasa Inggris,"Fajar Wahyu Pratiwi, S.S",R 58
+XI RPL 2,Selasa,6-7,10:40,12:00,CLASS,PJOK,"Zainul Arifin,S.Pd",LAP
+XI RPL 2,Selasa,8-9-10,13:00,15:00,CLASS,Konsentrasi RPL,"Badrus Sulaiman, S.Pd.",Lab. RPL 2
+XI RPL 2,Rabu,1-2-3-4,07:00,09:40,CLASS,Konsentrasi RPL,"Kurnila Putri Islamawati, S.Pd",Lab. RPL 2
+XI RPL 2,Rabu,5-6,10:00,11:20,CLASS,Mapel Pilihan RPL,"Hendro Suwignyo, ST",Lab. RPL 2
+XI RPL 2,Rabu,7-8,11:20,13:40,CLASS,Pendidikan Pancasila,"Wiwik Yuniarsih, S.Pd",R 58
+XI RPL 2,Rabu,9-10,13:40,15:00,CLASS,Sejarah,"Erna Qoriah, S.E.",R 58
+XI RPL 2,Kamis,1-2,07:00,08:20,CLASS,Bahasa Jepang,"Sulistyowati, SS",R 58
+XI RPL 2,Kamis,3-4,08:20,09:40,CLASS,BK,"Widodo, S.Pd",R 58
+XI RPL 2,Kamis,5-6,10:00,11:20,CLASS,Bahasa Jawa,"Laili Ermawati, S.Pd",Lab. RPL 2
+XI RPL 2,Kamis,7-8-9-10,11:20,15:00,CLASS,Konsentrasi RPL,"Kurnila Putri Islamawati, S.Pd",Lab. RPL 2
+XI RPL 2,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI RPL 2,Jumat,2-3-4,07:30,09:00,CLASS,Bahasa Indonesia,"Winartin, S.Pd",R 58
+XI RPL 2,Jumat,5-6-7,09:00,10:50,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Mufatiroh, S.Ag",R 58
+XI RPL 2,Jumat,8-9-10,10:50,14:00,CLASS,Konsentrasi RPL,"Badrus Sulaiman, S.Pd.",Lab. RPL 2
+XI RPL 2,Jumat,11-12,14:00,15:00,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Anisa Kusumawati, S.Pd",Lab. RPL 2
+XI TKJ 1,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI TKJ 1,Senin,2-3,07:40,09:00,CLASS,Bahasa Jepang,"Sulistyowati, SS",Lab. TKJ 1
+XI TKJ 1,Senin,4-5-6,09:00,11:20,CLASS,Bahasa Indonesia,"Sri Rahayu, S.Pd",Lab. TKJ 1
+XI TKJ 1,Senin,7-8-9-10,11:20,15:00,CLASS,Konsentrasi TKJ,"Siti Munawaroh, S.Kom.,M.Pd",Lab. TKJ 1
+XI TKJ 1,Selasa,1-2,07:00,08:20,CLASS,Bahasa Inggris,"Isti Mufadah, S.Pd",Lab. TKJ 1
+XI TKJ 1,Selasa,3-4-5,08:20,10:40,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Niken Dewi Hastika, S.Pd",Lab. TKJ 1
+XI TKJ 1,Selasa,6-7,10:40,12:00,CLASS,PJOK,"Ilham Sungeidi, S.Pd",Lapangan
+XI TKJ 1,Selasa,8-9-10,13:00,15:00,CLASS,Konsentrasi TKJ,"Siswanti Purwaningsih, S.T., M.Pd",Lab. TKJ 1
+XI TKJ 1,Rabu,1-2,07:00,08:20,CLASS,Sejarah,"Baskoro, S.Si",Lab. TKJ 1
+XI TKJ 1,Rabu,3-4,08:20,09:40,CLASS,Bahasa Inggris,"Isti Mufadah, S.Pd",Lab. TKJ 1
+XI TKJ 1,Rabu,5-6,10:00,11:20,CLASS,Mapel Pilihan TKJ,"Listyana Hartati, S.Kom., M.Pd",Lab. TKJ 1
+XI TKJ 1,Rabu,7-8,11:20,13:40,CLASS,Konsentrasi TKJ,"Endang Ary Handayani, S.T., M.Pd",Lab. TKJ 1
+XI TKJ 1,Rabu,9-10,13:40,15:00,CLASS,Bahasa Jawa,"Luluk Munfarida,S.Pd",Lab. TKJ 1
+XI TKJ 1,Kamis,1-2-3,07:00,09:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,Dra. Hanik Pangestuti,Lab. TKJ 1
+XI TKJ 1,Kamis,4-5,09:00,10:40,CLASS,BK,"Nishfu Laili,S.Pd",Lab. TKJ 1
+XI TKJ 1,Kamis,6-7-8-9-10,10:40,15:00,CLASS,Konsentrasi TKJ,"Listyana Hartati, S.Kom.,M.Pd",Lab. TKJ 1
+XI TKJ 1,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI TKJ 1,Jumat,2-3-4,07:30,09:00,CLASS,Matematika,"Lutfia Marsalina, S.Pd.I, M.Pd.",Lab. TKJ 1
+XI TKJ 1,Jumat,5-6-7-8,09:00,11:20,CLASS,Konsentrasi TKJ,"Ary Sunaryo, ST.,M.Pd",Lab. TKJ 1
+XI TKJ 1,Jumat,9-10,13:00,14:00,CLASS,Pendidikan Pancasila,"Fitri Amaliyah, S.Pd",Lab. TKJ 1
+XI TKJ 1,Jumat,11-12,14:00,15:00,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Niken Dewi Hastika, S.Pd",Lab. TKJ 1
+XI TKJ 2,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI TKJ 2,Senin,2-3,07:40,09:00,CLASS,Bahasa Jawa,"Luluk Munfarida,S.Pd",R 34
+XI TKJ 2,Senin,4-5,09:00,10:40,CLASS,Konsentrasi TKJ,"Endang Ary Handayani, S.T., M.Pd",Lab. TKJ 2 (FO)
+XI TKJ 2,Senin,6-7-8,10:40,13:40,CLASS,Pendidikan Agama Islam dan Budi Pekerti,Dra. Hanik Pangestuti,R 34
+XI TKJ 2,Senin,9-10,13:40,15:00,CLASS,Bahasa Inggris,"Isti Mufadah, S.Pd",R 34
+XI TKJ 2,Selasa,1-2-3,07:00,09:00,CLASS,Matematika,"Elysa Yuli Nur'aini, S.Si",R 34
+XI TKJ 2,Selasa,4-5,09:00,10:40,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Erna Qoriah, S.E.",R 34
+XI TKJ 2,Selasa,6-7-8-9-10,10:40,15:00,CLASS,Konsentrasi TKJ,"Listyana Hartati, S.Kom.,M.Pd",Lab. TKJ 2 (FO)
+XI TKJ 2,Rabu,1-2,07:00,08:20,CLASS,PJOK,"Ilham Sungeidi, S.Pd",Lapangan
+XI TKJ 2,Rabu,3-4,08:20,09:40,CLASS,Mapel Pilihan TKJ,"Listyana Hartati, S.Kom., M.Pd",Lab. TKJ 2 (FO)
+XI TKJ 2,Rabu,5-6,10:00,11:20,CLASS,BK,"Nishfu Laili,S.Pd",R 34
+XI TKJ 2,Rabu,7-8-9-10,11:20,15:00,CLASS,Konsentrasi TKJ,"Ary Sunaryo, ST.,M.Pd",Lab. TKJ 2 (FO)
+XI TKJ 2,Kamis,1-2,07:00,08:20,CLASS,Sejarah,"Baskoro, S.Si",R 34
+XI TKJ 2,Kamis,3-4,08:20,09:40,CLASS,Bahasa Inggris,"Isti Mufadah, S.Pd",R 34
+XI TKJ 2,Kamis,5-6-7,10:00,12:00,CLASS,Konsentrasi TKJ,"Siswanti Purwaningsih, S.T., M.Pd",Lab. TKJ 2 (FO)
+XI TKJ 2,Kamis,8-9-10,13:00,15:00,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Erna Qoriah, S.E.",R 34
+XI TKJ 2,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI TKJ 2,Jumat,2-3,07:30,08:30,CLASS,Pendidikan Pancasila,"Fitri Amaliyah, S.Pd",R 34
+XI TKJ 2,Jumat,4-5-6,08:30,10:20,CLASS,Bahasa Indonesia,"Sri Rahayu, S.Pd",R 34
+XI TKJ 2,Jumat,7-8-9-10,10:20,14:00,CLASS,Konsentrasi TKJ,"Siti Munawaroh, S.Kom.,M.Pd",Lab. TKJ 2 (FO)
+XI TKJ 2,Jumat,11-12,14:00,15:00,CLASS,Bahasa Jepang,"Sulistyowati, SS",R 34
+XI BD 1,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI BD 1,Senin,2-3,07:40,09:00,CLASS,Bahasa Jawa,"Muhammad Fajar Assidiqi, S.Pd",R 26
+XI BD 1,Senin,4-5-6,09:00,11:20,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Erna Qoriah, S.E.",R 26
+XI BD 1,Senin,7-8-9-10,11:20,15:00,CLASS,Mapel Pilihan BD,"Andri Krisdianto, SE.,M.Pd",R 26
+XI BD 1,Selasa,1-2,07:00,08:20,CLASS,Pendidikan Pancasila,"Abdul Rohman, S.Pd",R 26
+XI BD 1,Selasa,3-4,08:20,09:40,CLASS,Bahasa Inggris,"Dwi Rini Manfaati, S.Pd",R 26
+XI BD 1,Selasa,5-6-7,10:00,12:00,CLASS,Konsentrasi BD,"Nurul Azizah, S.Pd",R 26
+XI BD 1,Selasa,8-9-10,13:00,15:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Sinta Lestari, S.Pd.I",R 26
+XI BD 1,Rabu,1-2,07:00,08:20,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Erna Qoriah, S.E.",R 26
+XI BD 1,Rabu,3-4-5,08:20,10:40,CLASS,Matematika,"Arvia Rienetasary, S.Pd",R 26
+XI BD 1,Rabu,6-7,10:40,12:00,CLASS,PJOK,"Agus Fahruddy, S.Pd., M.Pd",Lapangan
+XI BD 1,Rabu,8-9-10,13:00,15:00,CLASS,Konsentrasi BD,"Niken Dewi Hastika, S.Pd",R 26
+XI BD 1,Kamis,1-2,07:00,08:20,CLASS,BK,"Nur Eko Wahyuningsih, S.Pd",R 26
+XI BD 1,Kamis,3-4,08:20,09:40,CLASS,Konsentrasi BD,"Andri Krisdianto, SE., M.Pd",R 26
+XI BD 1,Kamis,5-6-7-8,10:00,13:40,CLASS,Konsentrasi BD,"Agung Yulianto, S.Pd",R 26
+XI BD 1,Kamis,9-10,13:40,15:00,CLASS,Konsentrasi BD,"Niken Dewi Hastika, S.Pd",R 26
+XI BD 1,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI BD 1,Jumat,2-3,07:30,08:30,CLASS,Konsentrasi BD,"Nurul Azizah, S.Pd",R 26
+XI BD 1,Jumat,4-5,08:30,09:30,CLASS,Konsentrasi BD,"Luluk Munfarida,S.Pd",R 26
+XI BD 1,Jumat,6-7,09:50,10:50,CLASS,Sejarah,Dra. Anik Indriani,R 26
+XI BD 1,Jumat,8-9-10,10:50,14:00,CLASS,Bahasa Indonesia,"Erna Rinawati, S.Pd",R 26
+XI BD 1,Jumat,11-12,14:00,15:00,CLASS,Bahasa Inggris,"Dwi Rini Manfaati, S.Pd",R 26
+XI BD 2,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI BD 2,Senin,2-3-4-5,07:40,10:40,CLASS,Konsentrasi BD,"Agung Yulianto, S.Pd",R 61
+XI BD 2,Senin,6-7,10:40,12:00,CLASS,Sejarah,Dra. Anik Indriani,R 61
+XI BD 2,Senin,8-9-10,13:00,15:00,CLASS,Bahasa Indonesia,"Erna Rinawati, S.Pd",R 61
+XI BD 2,Selasa,1-2-3,07:00,09:00,CLASS,Matematika,"Arvia Rienetasary, S.Pd",R 61
+XI BD 2,Selasa,4-5-6-7,09:00,12:00,CLASS,Mapel Pilihan BD,"Andri Krisdianto, SE.,M.Pd",R 61
+XI BD 2,Selasa,8-9-10,13:00,15:00,CLASS,Konsentrasi BD,"Nurul Azizah, S.Pd",R 61
+XI BD 2,Rabu,1-2,07:00,08:20,CLASS,PJOK,"Agus Fahruddy, S.Pd., M.Pd",Lapangan
+XI BD 2,Rabu,3-4,08:20,09:40,CLASS,Konsentrasi BD,"Niken Dewi Hastika, S.Pd",R 61
+XI BD 2,Rabu,5-6,10:00,11:20,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Erna Qoriah, S.E.",R 61
+XI BD 2,Rabu,7-8,11:20,13:40,CLASS,Konsentrasi BD,"Andri Krisdianto, SE., M.Pd",R 61
+XI BD 2,Rabu,9-10,13:40,15:00,CLASS,Bahasa Inggris,"Dwi Rini Manfaati, S.Pd",R 61
+XI BD 2,Kamis,1-2-3,07:00,09:00,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Erna Qoriah, S.E.",R 61
+XI BD 2,Kamis,4-5-6,09:00,11:20,CLASS,Konsentrasi BD,"Niken Dewi Hastika, S.Pd",R 61
+XI BD 2,Kamis,7-8,11:20,13:40,CLASS,Pendidikan Pancasila,"Abdul Rohman, S.Pd",R 61
+XI BD 2,Kamis,9-10,13:40,15:00,CLASS,Bahasa Jawa,"Muhammad Fajar Assidiqi, S.Pd",R 61
+XI BD 2,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI BD 2,Jumat,2-3,07:30,08:30,CLASS,Konsentrasi BD,"Luluk Munfarida,S.Pd",R 61
+XI BD 2,Jumat,4-5-6,08:30,10:20,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Sinta Lestari, S.Pd.I",R 61
+XI BD 2,Jumat,7-8,10:20,11:20,CLASS,Bahasa Inggris,"Dwi Rini Manfaati, S.Pd",R 61
+XI BD 2,Jumat,9-10,13:00,14:00,CLASS,BK,"Dian Mawarti, S.Pd",R 61
+XI BD 2,Jumat,11-12,14:00,15:00,CLASS,Konsentrasi BD,"Luluk Munfarida,S.Pd",R 61
+XI BD 3,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI BD 3,Senin,2-3,07:40,09:00,CLASS,Sejarah,Dra. Anik Indriani,Lab. BD Depan
+XI BD 3,Senin,4-5-6-7,09:00,12:00,CLASS,Mapel Pilihan BD,"Niken Dewi Hastika, S.Pd",Lab. BD Depan
+XI BD 3,Senin,8-9-10,13:00,15:00,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Erna Qoriah, S.E.",Lab. BD Depan
+XI BD 3,Selasa,1-2,07:00,08:20,CLASS,BK,"Dian Mawarti, S.Pd",Lab. BD Depan
+XI BD 3,Selasa,3-4,08:20,09:40,CLASS,Konsentrasi BD,"Luluk Munfarida,S.Pd",Lab. BD Depan
+XI BD 3,Selasa,5-6-7-8,10:00,13:40,CLASS,Konsentrasi BD,"Agung Yulianto, S.Pd",Lab. BD Depan
+XI BD 3,Selasa,9-10,13:40,15:00,CLASS,Bahasa Jawa,"Luluk Munfarida,S.Pd",Lab. BD Depan
+XI BD 3,Rabu,1-2,07:00,08:20,CLASS,Konsentrasi BD,"Niken Dewi Hastika, S.Pd",Lab. BD Depan
+XI BD 3,Rabu,3-4,08:20,09:40,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Erna Qoriah, S.E.",Lab. BD Depan
+XI BD 3,Rabu,5-6-7,10:00,12:00,CLASS,Konsentrasi BD,"Nurul Azizah, S.Pd",Lab. BD Depan
+XI BD 3,Rabu,8-9-10,13:00,15:00,CLASS,Bahasa Indonesia,"Umi Kulsum, S.Pd",Lab. BD Depan
+XI BD 3,Kamis,1-2,07:00,08:20,CLASS,Bahasa Inggris,"Dwi Rini Manfaati, S.Pd",Lab. BD Depan
+XI BD 3,Kamis,3-4,08:20,09:40,CLASS,PJOK,"Bella Prakoso, S.Pd",Lapangan
+XI BD 3,Kamis,5-6-7,10:00,12:00,CLASS,Matematika,"Ajeng Okvitasari, S.Pd",Lab. BD Depan
+XI BD 3,Kamis,8-9-10,13:00,15:00,CLASS,Konsentrasi BD,"Nurul Azizah, S.Pd",Lab. BD Depan
+XI BD 3,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI BD 3,Jumat,2-3-4,07:30,09:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Fitria Diah Ayu Hartati, S.Pd",Lab. BD Depan
+XI BD 3,Jumat,5-6,09:00,10:20,CLASS,Bahasa Inggris,"Dwi Rini Manfaati, S.Pd",Lab. BD Depan
+XI BD 3,Jumat,7-8,10:20,11:20,CLASS,Konsentrasi BD,"Anisa Kusumawati, S.Pd",Lab. BD Depan
+XI BD 3,Jumat,9-10,13:00,14:00,CLASS,Konsentrasi BD,"Luluk Munfarida,S.Pd",Lab. BD Depan
+XI BD 3,Jumat,11-12,14:00,15:00,CLASS,Pendidikan Pancasila,"Nurul Azizah, S.Pd",Lab. BD Depan
+XI MP 1,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI MP 1,Senin,2-3-4-5,07:40,10:40,CLASS,Konsentrasi MP,"Martiin, S.Pd",Lab. AP BAWAH
+XI MP 1,Senin,6-7-8,10:40,13:40,CLASS,Bahasa Indonesia,"Purwati,S.Pd",R 6
+XI MP 1,Senin,9-10,13:40,15:00,CLASS,Mapel Pilihan MP,"Tutut Sriatin, S.Pd",R 6
+XI MP 1,Selasa,1-2,07:00,08:20,CLASS,Konsentrasi MP,"Martiin, S.Pd",Lab. AP BAWAH
+XI MP 1,Selasa,3-4-5,08:20,10:40,CLASS,Konsentrasi MP,"Martiin, S.Pd",Lab. AP BAWAH
+XI MP 1,Selasa,6-7-8,10:40,13:40,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Fitria Diah Ayu Hartati, S.Pd",R 6
+XI MP 1,Selasa,9-10,13:40,15:00,CLASS,Bahasa Inggris,"Komariyah, S.Pd",R 6
+XI MP 1,Rabu,1-2,07:00,08:20,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan",Dra. Susakti Yuharini,R 6
+XI MP 1,Rabu,3-4-5-6,08:20,11:20,CLASS,Konsentrasi MP,"Martiin, S.Pd",Lab. AP BAWAH
+XI MP 1,Rabu,7-8,11:20,13:40,CLASS,Pendidikan Pancasila,"Abdul Rohman, S.Pd",R 6
+XI MP 1,Rabu,9-10,13:40,15:00,CLASS,Bahasa Jepang,"Sulistyowati, SS",R 6
+XI MP 1,Kamis,1-2,07:00,08:20,CLASS,PJOK,"Zainul Arifin,S.Pd",LAP
+XI MP 1,Kamis,3-4,08:20,09:40,CLASS,Sejarah,Dra. Anik Indriani,R 6
+XI MP 1,Kamis,5-6-7,10:00,12:00,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan",Dra. Susakti Yuharini,R 6
+XI MP 1,Kamis,8-9-10,13:00,15:00,CLASS,Matematika,"Laili Ermawati, S.Pd",R 6
+XI MP 1,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI MP 1,Jumat,2-3,07:30,08:30,CLASS,Konsentrasi MP,"Martiin, S.Pd",Lab. AP BAWAH
+XI MP 1,Jumat,4-5-6,08:30,10:20,CLASS,Konsentrasi MP,"Martiin, S.Pd",Lab. AP BAWAH
+XI MP 1,Jumat,7-8,10:20,11:20,CLASS,BK,"Veronica Damay Rulitasari, S.Pd",R 6
+XI MP 1,Jumat,9-10,13:00,14:00,CLASS,Bahasa Inggris,"Komariyah, S.Pd",R 6
+XI MP 1,Jumat,11-12,14:00,15:00,CLASS,Bahasa Jawa,"Muhammad Fajar Assidiqi, S.Pd",R 6
+XI MP 2,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI MP 2,Senin,2-3,07:40,09:00,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan",Dra. Susakti Yuharini,R 7
+XI MP 2,Senin,4-5-6,09:00,11:20,CLASS,Matematika,"Laili Ermawati, S.Pd",R 7
+XI MP 2,Senin,7-8-9-10,11:20,15:00,CLASS,Konsentrasi MP,"Sunarti, S.Pd",Lab. AP BAWAH
+XI MP 2,Selasa,1-2-3,07:00,09:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Fitria Diah Ayu Hartati, S.Pd",R 7
+XI MP 2,Selasa,4-5,09:00,10:40,CLASS,PJOK,"Zainul Arifin,S.Pd",Lapangan
+XI MP 2,Selasa,6-7-8,10:40,13:40,CLASS,Konsentrasi MP,"Sunarti, S.Pd",Lab. AP BAWAH
+XI MP 2,Selasa,9-10,13:40,15:00,CLASS,Mapel Pilihan MP,"Tutut Sriatin, S.Pd",R 7
+XI MP 2,Rabu,1-2,07:00,08:20,CLASS,Konsentrasi MP,"Sunarti, S.Pd",Lab. AP BAWAH
+XI MP 2,Rabu,3-4,08:20,09:40,CLASS,Bahasa Jepang,"Sulistyowati, SS",R 7
+XI MP 2,Rabu,5-6,10:00,11:20,CLASS,Pendidikan Pancasila,"Abdul Rohman, S.Pd",R 7
+XI MP 2,Rabu,7-8,11:20,13:40,CLASS,Konsentrasi MP,"Sunarti, S.Pd",Lab. AP BAWAH
+XI MP 2,Rabu,9-10,13:40,15:00,CLASS,Bahasa Inggris,"Komariyah, S.Pd",R 7
+XI MP 2,Kamis,1-2-3,07:00,09:00,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan",Dra. Susakti Yuharini,R 7
+XI MP 2,Kamis,4-5,09:00,10:40,CLASS,Bahasa Jawa,"Muhammad Fajar Assidiqi, S.Pd",R 7
+XI MP 2,Kamis,6-7,10:40,12:00,CLASS,Sejarah,Dra. Anik Indriani,R 7
+XI MP 2,Kamis,8-9-10,13:00,15:00,CLASS,Konsentrasi MP,"Sunarti, S.Pd",Lab. AP BAWAH
+XI MP 2,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI MP 2,Jumat,2-3-4,07:30,09:00,CLASS,Bahasa Indonesia,"Purwati,S.Pd",R 7
+XI MP 2,Jumat,5-6,09:00,10:20,CLASS,Bahasa Inggris,"Komariyah, S.Pd",R 7
+XI MP 2,Jumat,7-8-9-10,10:20,14:00,CLASS,Konsentrasi MP,"Sunarti, S.Pd",Lab. AP BAWAH
+XI MP 2,Jumat,11-12,14:00,15:00,CLASS,BK,"Siti Maisaroh, S.Pd",R 7
+XI MP 3,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI MP 3,Senin,2-3-4,07:40,09:40,CLASS,Matematika,"Rulik Indrawati, S.Pd",R 8
+XI MP 3,Senin,5-6,10:00,11:20,CLASS,Bahasa Jepang,"Sulistyowati, SS",R 8
+XI MP 3,Senin,7-8-9-10,11:20,15:00,CLASS,Konsentrasi MP,"Titik Samsistini, S.Pd",Lab. AP ATAS
+XI MP 3,Selasa,1-2-3,07:00,09:00,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan",Dra. Susakti Yuharini,R 8
+XI MP 3,Selasa,4-5-6,09:00,11:20,CLASS,Bahasa Indonesia,"Endang Safitri, S.Pd",R 8
+XI MP 3,Selasa,7-8,11:20,13:40,CLASS,Konsentrasi MP,"Titik Samsistini, S.Pd",Lab. AP ATAS
+XI MP 3,Selasa,9-10,13:40,15:00,CLASS,Konsentrasi MP,"Titik Samsistini, S.Pd",Lab. AP ATAS
+XI MP 3,Rabu,1-2,07:00,08:20,CLASS,PJOK,"Zainul Arifin,S.Pd",Lapangan
+XI MP 3,Rabu,3-4-5-6,08:20,11:20,CLASS,Konsentrasi MP,"Titik Samsistini, S.Pd",Lab. AP ATAS
+XI MP 3,Rabu,7-8,11:20,13:40,CLASS,Bahasa Inggris,"Andri Retno Yuli Astuti, S.Pd",R 8
+XI MP 3,Rabu,9-10,13:40,15:00,CLASS,Pendidikan Pancasila,"Abdul Rohman, S.Pd",R 8
+XI MP 3,Kamis,1-2-3,07:00,09:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Fitria Diah Ayu Hartati, S.Pd",R 8
+XI MP 3,Kamis,4-5-6,09:00,11:20,CLASS,Konsentrasi MP,"Titik Samsistini, S.Pd",Lab. AP ATAS
+XI MP 3,Kamis,7-8,11:20,13:40,CLASS,BK,"Veronica Damay Rulitasari, S.Pd",R 8
+XI MP 3,Kamis,9-10,13:40,15:00,CLASS,Mapel Pilihan MP,"Tutut Sriatin, S.Pd",R 8
+XI MP 3,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI MP 3,Jumat,2-3,07:30,08:30,CLASS,Sejarah,Dra. Anik Indriani,R 8
+XI MP 3,Jumat,4-5,08:30,09:30,CLASS,Bahasa Jawa,"Rizki Putri Wulandari, S.Pd",R 8
+XI MP 3,Jumat,6-7,09:50,10:50,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan",Dra. Susakti Yuharini,R 8
+XI MP 3,Jumat,8-9-10,10:50,14:00,CLASS,Konsentrasi MP,"Titik Samsistini, S.Pd",Lab. AP ATAS
+XI MP 3,Jumat,11-12,14:00,15:00,CLASS,Bahasa Inggris,"Andri Retno Yuli Astuti, S.Pd",R 8
+XI MP 4,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI MP 4,Senin,2-3-4-5,07:40,10:40,CLASS,Konsentrasi MP,"Mega Mahardika, S.Pd",Lab. AP ATAS
+XI MP 4,Senin,6-7,10:40,12:00,CLASS,BK,"Veronica Damay Rulitasari, S.Pd",R 9
+XI MP 4,Senin,8-9-10,13:00,15:00,CLASS,Matematika,"Rulik Indrawati, S.Pd",R 9
+XI MP 4,Selasa,1-2-3-4,07:00,09:40,CLASS,Konsentrasi MP,"Mega Mahardika, S.Pd",Lab. AP ATAS
+XI MP 4,Selasa,5-6,10:00,11:20,CLASS,Sejarah,Dra. Anik Indriani,R 9
+XI MP 4,Selasa,7-8,11:20,13:40,CLASS,Bahasa Inggris,"Muto'atul Khosi'ah, S.Pd",R 9
+XI MP 4,Selasa,9-10,13:40,15:00,CLASS,Bahasa Jawa,"Rizki Putri Wulandari, S.Pd",R 9
+XI MP 4,Rabu,1-2,07:00,08:20,CLASS,Bahasa Inggris,"Muto'atul Khosi'ah, S.Pd",R 9
+XI MP 4,Rabu,3-4-5,08:20,10:40,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan",Dra. Susakti Yuharini,R 9
+XI MP 4,Rabu,6-7,10:40,12:00,CLASS,PJOK,"Zainul Arifin,S.Pd",Lapangan
+XI MP 4,Rabu,8-9-10,13:00,15:00,CLASS,Konsentrasi MP,"Mega Mahardika, S.Pd",Lab. AP ATAS
+XI MP 4,Kamis,1-2-3,07:00,09:00,CLASS,Konsentrasi MP,"Mega Mahardika, S.Pd",Lab. AP ATAS
+XI MP 4,Kamis,4-5,09:00,10:40,CLASS,Mapel Pilihan MP,"Tutut Sriatin, S.Pd",R 9
+XI MP 4,Kamis,6-7,10:40,12:00,CLASS,Bahasa Jepang,"Sulistyowati, SS",R 9
+XI MP 4,Kamis,8-9-10,13:00,15:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Alfinu Farikh Abdillah, S.Pd.I",R 9
+XI MP 4,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI MP 4,Jumat,2-3,07:30,08:30,CLASS,Pendidikan Pancasila,"Abdul Rohman, S.Pd",R 9
+XI MP 4,Jumat,4-5,08:30,09:30,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan",Dra. Susakti Yuharini,R 9
+XI MP 4,Jumat,6-7,09:50,10:50,CLASS,Konsentrasi MP,"Mega Mahardika, S.Pd",Lab. AP ATAS
+XI MP 4,Jumat,8-9-10,10:50,14:00,CLASS,Bahasa Indonesia,"Endang Safitri, S.Pd",R 9
+XI MP 4,Jumat,11-12,14:00,15:00,CLASS,Konsentrasi MP,"Mega Mahardika, S.Pd",Lab. AP ATAS
+XI AK 1,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI AK 1,Senin,2-3,07:40,09:00,CLASS,Konsentrasi AK,"Kasmi, S.Pd., M.Pd",R 5
+XI AK 1,Senin,4-5,09:00,10:40,CLASS,Sejarah,Dra. Anik Indriani,R 5
+XI AK 1,Senin,6-7-8,10:40,13:40,CLASS,Matematika,"Eko Saputro, S.Pd",R 5
+XI AK 1,Senin,9-10,13:40,15:00,CLASS,Bahasa Jawa,"Muhammad Fajar Assidiqi, S.Pd",R 5
+XI AK 1,Selasa,1-2,07:00,08:20,CLASS,PJOK,"Agus Fahruddy, S.Pd., M.Pd",Lapangan
+XI AK 1,Selasa,3-4,08:20,09:40,CLASS,BK,"Astra Bella Flamboyan, S.Psi",R 5
+XI AK 1,Selasa,5-6-7-8-9-10,10:00,15:00,CLASS,Konsentrasi AK,"Indayah, S.Pd., M.Pd",Lab. AK BAWAH
+XI AK 1,Rabu,1-2,07:00,08:20,CLASS,Bahasa Inggris,"Agus Muharyanto, M.Pd",R 5
+XI AK 1,Rabu,3-4,08:20,09:40,CLASS,Pendidikan Pancasila,"Wiwik Yuniarsih, S.Pd",R 5
+XI AK 1,Rabu,5-6,10:00,11:20,CLASS,Bahasa Jepang,"Sulistyowati, SS",R 5
+XI AK 1,Rabu,7-8-9-10,11:20,15:00,CLASS,Konsentrasi AK,"Septiani, S.Pd.,M.Pd",R 5
+XI AK 1,Kamis,1-2-3,07:00,09:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Alfinu Farikh Abdillah, S.Pd.I",R 5
+XI AK 1,Kamis,4-5,09:00,10:40,CLASS,Konsentrasi AK,"Agustina Mardika Rini, S.Pd.,M.Pd",R 5
+XI AK 1,Kamis,6-7-8-9-10,10:40,15:00,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Kasmi, S.Pd., M.Pd",Lab. AK BAWAH
+XI AK 1,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI AK 1,Jumat,2-3,07:30,08:30,CLASS,Bahasa Inggris,"Agus Muharyanto, M.Pd",R 5
+XI AK 1,Jumat,4-5-6-7,08:30,10:50,CLASS,Konsentrasi AK,"Dyah Esti Rahayu, S.Pd",Lab. AK BAWAH
+XI AK 1,Jumat,8-9-10,10:50,14:00,CLASS,Bahasa Indonesia,"Winartin, S.Pd",R 5
+XI AK 1,Jumat,11-12,14:00,15:00,CLASS,Mapel Pilihan AK,"Yuli Ratnasari, S.Pd",R 5
+XI AK 2,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI AK 2,Senin,2-3-4-5,07:40,10:40,CLASS,Konsentrasi AK,"Dyah Esti Rahayu, S.Pd",Lab. AK BAWAH
+XI AK 2,Senin,6-7-8,10:40,13:40,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Alfinu Farikh Abdillah, S.Pd.I",R 62
+XI AK 2,Senin,9-10,13:40,15:00,CLASS,Bahasa Jepang,"Sulistyowati, SS",R 62
+XI AK 2,Selasa,1-2,07:00,08:20,CLASS,Sejarah,Dra. Anik Indriani,R 62
+XI AK 2,Selasa,3-4,08:20,09:40,CLASS,PJOK,"Agus Fahruddy, S.Pd., M.Pd",LAP
+XI AK 2,Selasa,5-6,10:00,11:20,CLASS,Mapel Pilihan AK,"Yuli Ratnasari, S.Pd",R 62
+XI AK 2,Selasa,7-8-9-10,11:20,15:00,CLASS,Konsentrasi AK,"Yuli Ratnasari, S.Pd",R 62
+XI AK 2,Rabu,1-2-3-4-5-6,07:00,11:20,CLASS,Konsentrasi AK,"Pipit Ambarwati, S.Pd",Lab. AK BAWAH
+XI AK 2,Rabu,7-8,11:20,13:40,CLASS,Bahasa Inggris,"Agus Muharyanto, M.Pd",R 62
+XI AK 2,Rabu,9-10,13:40,15:00,CLASS,Bahasa Jawa,"Muhammad Fajar Assidiqi, S.Pd",R 62
+XI AK 2,Kamis,1-2-3-4-5,07:00,10:40,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Kasmi, S.Pd., M.Pd",Lab. AK BAWAH
+XI AK 2,Kamis,6-7-8,10:40,13:40,CLASS,Bahasa Indonesia,"Winartin, S.Pd",R 62
+XI AK 2,Kamis,9-10,13:40,15:00,CLASS,Konsentrasi AK,"Setiyo Winarko, S.Pd",R 62
+XI AK 2,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI AK 2,Jumat,2-3,07:30,08:30,CLASS,Pendidikan Pancasila,"Wiwik Yuniarsih, S.Pd",R 62
+XI AK 2,Jumat,4-5-6,08:30,10:20,CLASS,Matematika,"Ajeng Okvitasari, S.Pd",R 62
+XI AK 2,Jumat,7-8,10:20,11:20,CLASS,Bahasa Inggris,"Agus Muharyanto, M.Pd",R 62
+XI AK 2,Jumat,9-10,13:00,14:00,CLASS,Konsentrasi AK,"Kasmi, S.Pd., M.Pd",R 62
+XI AK 2,Jumat,11-12,14:00,15:00,CLASS,BK,"Winarsih, S.Pd, M.Pd",R 62
+XI AK 3,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI AK 3,Senin,2-3-4,07:40,09:40,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Alfinu Farikh Abdillah, S.Pd.I",R 63
+XI AK 3,Senin,5-6,10:00,11:20,CLASS,PJOK,"Agus Fahruddy, S.Pd., M.Pd",LAP
+XI AK 3,Senin,7-8-9-10,11:20,15:00,CLASS,Konsentrasi AK,"Atih Wilupi, S.E, M.Pd",R 63
+XI AK 3,Selasa,1-2-3,07:00,09:00,CLASS,Bahasa Indonesia,"Winartin, S.Pd",R 63
+XI AK 3,Selasa,4-5-6-7-8,09:00,13:40,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Ninik Sriwidayati, S.Pd.,M.Pd",Lab. AK ATAS
+XI AK 3,Selasa,9-10,13:40,15:00,CLASS,Konsentrasi AK,"Setiyo Winarko, S.Pd",R 63
+XI AK 3,Rabu,1-2-3-4-5-6,07:00,11:20,CLASS,Konsentrasi AK,"Atih Wilupi, S.E, M.Pd",Lab. AK ATAS
+XI AK 3,Rabu,7-8,11:20,13:40,CLASS,Mapel Pilihan AK,"Yuli Ratnasari, S.Pd",R 63
+XI AK 3,Rabu,9-10,13:40,15:00,CLASS,Bahasa Jawa,"Rizki Putri Wulandari, S.Pd",R 63
+XI AK 3,Kamis,1-2,07:00,08:20,CLASS,Sejarah,Dra. Anik Indriani,R 63
+XI AK 3,Kamis,3-4,08:20,09:40,CLASS,Bahasa Jepang,"Sulistyowati, SS",R 63
+XI AK 3,Kamis,5-6-7-8,10:00,13:40,CLASS,Konsentrasi AK,"Dyah Esti Rahayu, S.Pd",Lab. AK ATAS
+XI AK 3,Kamis,9-10,13:40,15:00,CLASS,Bahasa Inggris,"Andri Retno Yuli Astuti, S.Pd",R 63
+XI AK 3,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI AK 3,Jumat,2-3-4,07:30,09:00,CLASS,Matematika,"Arvia Rienetasary, S.Pd",R 63
+XI AK 3,Jumat,5-6,09:00,10:20,CLASS,Konsentrasi AK,"Indayah, S.Pd., M.Pd",R 63
+XI AK 3,Jumat,7-8,10:20,11:20,CLASS,Pendidikan Pancasila,"Wiwik Yuniarsih, S.Pd",R 63
+XI AK 3,Jumat,9-10,13:00,14:00,CLASS,Bahasa Inggris,"Andri Retno Yuli Astuti, S.Pd",R 63
+XI AK 3,Jumat,11-12,14:00,15:00,CLASS,BK,"Nur Eko Wahyuningsih, S.Pd",R 63
+XI AK 4,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI AK 4,Senin,2-3-4-5-6,07:40,11:20,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Ninik Sriwidayati, S.Pd.,M.Pd",Lab. AK ATAS
+XI AK 4,Senin,7-8,11:20,13:40,CLASS,Bahasa Jepang,"Sulistyowati, SS",R 64
+XI AK 4,Senin,9-10,13:40,15:00,CLASS,Bahasa Inggris,"Andri Retno Yuli Astuti, S.Pd",R 64
+XI AK 4,Selasa,1-2,07:00,08:20,CLASS,Mapel Pilihan AK,"Yuli Ratnasari, S.Pd",R 64
+XI AK 4,Selasa,3-4,08:20,09:40,CLASS,Sejarah,Dra. Anik Indriani,R 64
+XI AK 4,Selasa,5-6,10:00,11:20,CLASS,BK,"Nur Eko Wahyuningsih, S.Pd",R 64
+XI AK 4,Selasa,7-8-9-10,11:20,15:00,CLASS,Konsentrasi AK,"Atih Wilupi, S.E, M.Pd",R 64
+XI AK 4,Rabu,1-2,07:00,08:20,CLASS,Bahasa Jawa,"Rizki Putri Wulandari, S.Pd",R 64
+XI AK 4,Rabu,3-4,08:20,09:40,CLASS,Bahasa Inggris,"Andri Retno Yuli Astuti, S.Pd",R 64
+XI AK 4,Rabu,5-6,10:00,11:20,CLASS,Pendidikan Pancasila,"Wiwik Yuniarsih, S.Pd",R 64
+XI AK 4,Rabu,7-8,11:20,13:40,CLASS,Konsentrasi AK,"Ninik Sriwidayati, S.Pd., M.Pd",R 64
+XI AK 4,Rabu,9-10,13:40,15:00,CLASS,Konsentrasi AK,"Indayah, S.Pd., M.Pd",R 64
+XI AK 4,Kamis,1-2-3-4,07:00,09:40,CLASS,Konsentrasi AK,"Titin Sukmasari, S.Pd., M.Pd",Lab. AK ATAS
+XI AK 4,Kamis,5-6-7,10:00,12:00,CLASS,Bahasa Indonesia,"Siti Khoiriyah, S.Pd",R 64
+XI AK 4,Kamis,8-9-10,13:00,15:00,CLASS,Matematika,"Basuki Sarjono, S.Pd",R 64
+XI AK 4,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI AK 4,Jumat,2-3,07:30,08:30,CLASS,PJOK,"Agus Fahruddy, S.Pd., M.Pd",LAP
+XI AK 4,Jumat,4-5-6-7-8-9,08:30,13:30,CLASS,Konsentrasi AK,"Septiani, S.Pd.,M.Pd",Lab. AK ATAS
+XI AK 4,Jumat,10-11-12,13:30,15:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Muashofah, M.Pd",R 64
+XI ULW,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI ULW,Senin,2-3-4,07:40,09:40,CLASS,Bahasa Indonesia,"Purwati,S.Pd",Lab. UPW 2 (Ticketing)
+XI ULW,Senin,5-6-7-8,10:00,13:40,CLASS,Konsentrasi ULW,"Risqi Nur Imama, S.Tr.Par",Lab. UPW 1 (Guiding)
+XI ULW,Senin,9-10,13:40,15:00,CLASS,Bahasa Inggris,"Fitria Renytasari, S.Pd",Lab. UPW 2 (Ticketing)
+XI ULW,Selasa,1-2,07:00,08:20,CLASS,Bahasa Inggris,"Fitria Renytasari, S.Pd",Lab. UPW 2 (Ticketing)
+XI ULW,Selasa,3-4-5-6,08:20,11:20,CLASS,Konsentrasi ULW,"Risqi Nur Imama, S.Tr.Par",Lab. UPW 1 (Guiding)
+XI ULW,Selasa,7-8,11:20,13:40,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Nur Nastutisari, S.ST.Par.",Lab. UPW 1 (Guiding)
+XI ULW,Selasa,9-10,13:40,15:00,CLASS,Sejarah,"Erna Qoriah, S.E.",Lab. UPW 2 (Ticketing)
+XI ULW,Rabu,1-2,07:00,08:20,CLASS,Bahasa Jepang,"Sulistyowati, SS",Lab. UPW 2 (Ticketing)
+XI ULW,Rabu,3-4-5,08:20,10:40,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Nur Nastutisari, S.ST.Par.",Lab. UPW 2 (Ticketing)
+XI ULW,Rabu,6-7-8,10:40,13:40,CLASS,Konsentrasi ULW,"Nur Nastutisari, S.ST.Par.",Lab. UPW 2 (Ticketing)
+XI ULW,Rabu,9-10,13:40,15:00,CLASS,Bahasa Jawa,"Ajeng Okvitasari, S.Pd",Lab. UPW 2 (Ticketing)
+XI ULW,Kamis,1-2,07:00,08:20,CLASS,PJOK,"Bella Prakoso, S.Pd",Lapangan
+XI ULW,Kamis,3-4-5,08:20,10:40,CLASS,Matematika,"Dwi Nova Setyandari, S.Pd",Lab. UPW 2 (Ticketing)
+XI ULW,Kamis,6-7-8,10:40,13:40,CLASS,Konsentrasi ULW,"Nur Nastutisari, S.ST.Par.",Lab. UPW 2 (Ticketing)
+XI ULW,Kamis,9-10,13:40,15:00,CLASS,Bahasa Jepang,"Sulistyowati, SS",Lab. UPW 2 (Ticketing)
+XI ULW,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI ULW,Jumat,2-3-4,07:30,09:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Muashofah, M.Pd",Lab. UPW 2 (Ticketing)
+XI ULW,Jumat,5-6-7-8,09:00,11:20,CLASS,Konsentrasi ULW,"Risqi Nur Imama, S.Tr.Par",Lab. UPW 1 (Guiding)
+XI ULW,Jumat,9-10,13:00,14:00,CLASS,BK,"Niken Hari Pratiwi, S.Psi., M.Pd",Lab. UPW 2 (Ticketing)
+XI ULW,Jumat,11-12,14:00,15:00,CLASS,Pendidikan Pancasila,"Wiwik Yuniarsih, S.Pd",Lab. UPW 2 (Ticketing)
+XI DKV 1,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI DKV 1,Senin,2-3,07:40,09:00,CLASS,Bahasa Inggris,"Fajar Wahyu Pratiwi, S.S",R 17
+XI DKV 1,Senin,4-5-6,09:00,11:20,CLASS,Konsentrasi DKV,"Danang Anjar Hymawanto, S.Pd",Lab. DKV Komputer
+XI DKV 1,Senin,7-8-9-10,11:20,15:00,CLASS,Konsentrasi DKV,"Istiana Suhartati, S.T",Lab. DKV Komputer
+XI DKV 1,Selasa,1-2-3,07:00,09:00,CLASS,Konsentrasi DKV,"Agus Pramono, S.Sn",R 17
+XI DKV 1,Selasa,4-5-6,09:00,11:20,CLASS,Konsentrasi DKV,"Khoyrotun Hisani, S.Sn",R 17
+XI DKV 1,Selasa,7-8,11:20,13:40,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Mas'an Widodo, S.Pd. M.T",R 17
+XI DKV 1,Selasa,9-10,13:40,15:00,CLASS,Sejarah,"Indriati, S.Pd",R 17
+XI DKV 1,Rabu,1-2,07:00,08:20,CLASS,BK,"Astra Bella Flamboyan, S.Psi",R 17
+XI DKV 1,Rabu,3-4-5,08:20,10:40,CLASS,Konsentrasi DKV,"Khoyrotun Hisani, S.Sn",Lab. DKV Komputer
+XI DKV 1,Rabu,6-7,10:40,12:00,CLASS,Konsentrasi DKV,"Danang Anjar Hymawanto, S.Pd",Lab. DKV Komputer
+XI DKV 1,Rabu,8-9-10,13:00,15:00,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Mas'an Widodo, S.Pd. M.T",Lab. DKV Produksi
+XI DKV 1,Kamis,1-2,07:00,08:20,CLASS,PJOK,"Ilham Sungeidi, S.Pd",LAP
+XI DKV 1,Kamis,3-4,08:20,09:40,CLASS,Bahasa Jawa,"Khoyrotun Hisani, S.Sn",R 17
+XI DKV 1,Kamis,5-6-7,10:00,12:00,CLASS,Bahasa Indonesia,"Endang Safitri, S.Pd",R 17
+XI DKV 1,Kamis,8-9-10,13:00,15:00,CLASS,Matematika,"Elysa Yuli Nur'aini, S.Si",R 17
+XI DKV 1,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI DKV 1,Jumat,2-3-4-5,07:30,09:30,CLASS,Mapel Pilihan DKV,"Endik Kuswantoro, S.Kom.,M.T",Lab. DKV Komputer
+XI DKV 1,Jumat,6-7,09:50,10:50,CLASS,Bahasa Inggris,"Fajar Wahyu Pratiwi, S.S",R 17
+XI DKV 1,Jumat,8-9-10,10:50,14:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Sinta Lestari, S.Pd.I",R 17
+XI DKV 1,Jumat,11-12,14:00,15:00,CLASS,Pendidikan Pancasila,"Abdul Rohman, S.Pd",R 17
+XI DKV 2,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI DKV 2,Senin,2-3,07:40,09:00,CLASS,BK,"Astra Bella Flamboyan, S.Psi",R 18
+XI DKV 2,Senin,4-5-6,09:00,11:20,CLASS,Konsentrasi DKV,"Khoyrotun Hisani, S.Sn",R 18
+XI DKV 2,Senin,7-8,11:20,13:40,CLASS,Bahasa Jawa,"Khoyrotun Hisani, S.Sn",R 18
+XI DKV 2,Senin,9-10,13:40,15:00,CLASS,Pendidikan Pancasila,"Abdul Rohman, S.Pd",R 18
+XI DKV 2,Selasa,1-2-3,07:00,09:00,CLASS,Konsentrasi DKV,"Khoyrotun Hisani, S.Sn",Lab. DKV Komputer
+XI DKV 2,Selasa,4-5-6-7,09:00,12:00,CLASS,Konsentrasi DKV,"Istiana Suhartati, S.T",Lab. DKV Komputer
+XI DKV 2,Selasa,8-9-10,13:00,15:00,CLASS,Konsentrasi DKV,"Danang Anjar Hymawanto, S.Pd",Lab. DKV Komputer
+XI DKV 2,Rabu,1-2,07:00,08:20,CLASS,Konsentrasi DKV,"Danang Anjar Hymawanto, S.Pd",R 18
+XI DKV 2,Rabu,3-4-5,08:20,10:40,CLASS,Bahasa Indonesia,"Endang Safitri, S.Pd",R 18
+XI DKV 2,Rabu,6-7,10:40,12:00,CLASS,PJOK,"Ilham Sungeidi, S.Pd",Lapangan
+XI DKV 2,Rabu,8-9-10,13:00,15:00,CLASS,Matematika,"Elysa Yuli Nur'aini, S.Si",R 18
+XI DKV 2,Kamis,1-2-3,07:00,09:00,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Mas'an Widodo, S.Pd. M.T",R 18
+XI DKV 2,Kamis,4-5,09:00,10:40,CLASS,Sejarah,"Indriati, S.Pd",R 18
+XI DKV 2,Kamis,6-7,10:40,12:00,CLASS,Bahasa Inggris,"Fajar Wahyu Pratiwi, S.S",R 18
+XI DKV 2,Kamis,8-9-10,13:00,15:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Sinta Lestari, S.Pd.I",R 18
+XI DKV 2,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI DKV 2,Jumat,2-3,07:30,08:30,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Mas'an Widodo, S.Pd. M.T",R 18
+XI DKV 2,Jumat,4-5,08:30,09:30,CLASS,Bahasa Inggris,"Fajar Wahyu Pratiwi, S.S",R 18
+XI DKV 2,Jumat,6-7-8-9,09:50,13:30,CLASS,Mapel Pilihan DKV,"Endik Kuswantoro, S.Kom.,M.T",Lab. DKV Komputer
+XI DKV 2,Jumat,10-11-12,13:30,15:00,CLASS,Konsentrasi DKV,"Agus Pramono, S.Sn",R 18
+XI PSPT 1,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI PSPT 1,Senin,2-3-4,07:40,09:40,CLASS,Bahasa Indonesia,"Umi Kulsum, S.Pd",R 40
+XI PSPT 1,Senin,5-6,10:00,11:20,CLASS,Konsentrasi PSPT,"Benny Mamora, S.Kom",Lab. PSPT Editing
+XI PSPT 1,Senin,7-8-9-10,11:20,15:00,CLASS,Konsentrasi PSPT,"Joko Priyanto, S.Kom",Lab. PSPT Studio
+XI PSPT 1,Selasa,1-2,07:00,08:20,CLASS,Konsentrasi PSPT,"Sa'ad Wazis Hiedayat, S.Pd",Lab. PSPT Editing
+XI PSPT 1,Selasa,3-4,08:20,09:40,CLASS,Konsentrasi PSPT,"Sa'ad Wazis Hiedayat, S.Pd",Lab. PSPT Editing
+XI PSPT 1,Selasa,5-6,10:00,11:20,CLASS,Konsentrasi PSPT,"Joko Priyanto, S.Kom",Lab. PSPT Studio
+XI PSPT 1,Selasa,7-8,11:20,13:40,CLASS,Konsentrasi PSPT,"Joko Priyanto, S.Kom",Lab. PSPT Studio
+XI PSPT 1,Selasa,9-10,13:40,15:00,CLASS,BK,"Winarsih, S.Pd, M.Pd",R 40
+XI PSPT 1,Rabu,1-2-3-4,07:00,09:40,CLASS,Konsentrasi PSPT,"Tuhu Eries Kudori, S.Sn",Lab. PSPT Editing
+XI PSPT 1,Rabu,5-6,10:00,11:20,CLASS,Bahasa Inggris,"Fajar Wahyu Pratiwi, S.S",R 40
+XI PSPT 1,Rabu,7-8,11:20,13:40,CLASS,Pendidikan Pancasila,"Fitri Amaliyah, S.Pd",R 40
+XI PSPT 1,Rabu,9-10,13:40,15:00,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Siti Umiharsih, S.Pd",R 40
+XI PSPT 1,Kamis,1-2-3-4,07:00,09:40,CLASS,Mapel Pilihan PSPT,"Tuhu Eries Kudori, S.Sn",Lab. PSPT Editing
+XI PSPT 1,Kamis,5-6-7,10:00,12:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,Dra. Hanik Pangestuti,R 40
+XI PSPT 1,Kamis,8-9-10,13:00,15:00,CLASS,Matematika,"Ajeng Okvitasari, S.Pd",R 40
+XI PSPT 1,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI PSPT 1,Jumat,2-3,07:30,08:30,CLASS,Bahasa Inggris,"Fajar Wahyu Pratiwi, S.S",R 40
+XI PSPT 1,Jumat,4-5,08:30,09:30,CLASS,Sejarah,Dra. Anik Indriani,R 40
+XI PSPT 1,Jumat,6-7,09:50,10:50,CLASS,PJOK,"Bella Prakoso, S.Pd",Lapangan
+XI PSPT 1,Jumat,8-9,10:50,13:30,CLASS,Bahasa Jawa,"Erna Qoriah, S.E.",R 40
+XI PSPT 1,Jumat,10-11-12,13:30,15:00,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Siti Umiharsih, S.Pd",R 40
+XI PSPT 2,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI PSPT 2,Senin,2-3-4,07:40,09:40,CLASS,Matematika,"Eko Saputro, S.Pd",R 41
+XI PSPT 2,Senin,5-6,10:00,11:20,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Siti Umiharsih, S.Pd",R 41
+XI PSPT 2,Senin,7-8-9-10,11:20,15:00,CLASS,Konsentrasi PSPT,"Tuhu Eries Kudori, S.Sn",Lab. PSPT Editing
+XI PSPT 2,Selasa,1-2-3,07:00,09:00,CLASS,Pendidikan Agama Islam dan Budi Pekerti,Dra. Hanik Pangestuti,R 41
+XI PSPT 2,Selasa,4-5-6,09:00,11:20,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Siti Umiharsih, S.Pd",R 41
+XI PSPT 2,Selasa,7-8,11:20,13:40,CLASS,Sejarah,Dra. Anik Indriani,R 41
+XI PSPT 2,Selasa,9-10,13:40,15:00,CLASS,Bahasa Inggris,"Muto'atul Khosi'ah, S.Pd",R 41
+XI PSPT 2,Rabu,1-2-3-4,07:00,09:40,CLASS,Konsentrasi PSPT,"Joko Priyanto, S.Kom",Lab. PSPT Studio
+XI PSPT 2,Rabu,5-6-7-8,10:00,13:40,CLASS,Mapel Pilihan PSPT,"Tuhu Eries Kudori, S.Sn",Lab. PSPT Editing
+XI PSPT 2,Rabu,9-10,13:40,15:00,CLASS,Pendidikan Pancasila,"Wiwik Yuniarsih, S.Pd",R 41
+XI PSPT 2,Kamis,1-2,07:00,08:20,CLASS,Konsentrasi PSPT,"Joko Priyanto, S.Kom",Lab. PSPT Studio
+XI PSPT 2,Kamis,3-4,08:20,09:40,CLASS,Konsentrasi PSPT,"Joko Priyanto, S.Kom",Lab. PSPT Studio
+XI PSPT 2,Kamis,5-6,10:00,11:20,CLASS,Konsentrasi PSPT,"Sa'ad Wazis Hiedayat, S.Pd",Lab. PSPT Editing
+XI PSPT 2,Kamis,7-8,11:20,13:40,CLASS,Konsentrasi PSPT,"Sa'ad Wazis Hiedayat, S.Pd",Lab. PSPT Editing
+XI PSPT 2,Kamis,9-10,13:40,15:00,CLASS,Konsentrasi PSPT,"Benny Mamora, S.Kom",Lab. PSPT Editing
+XI PSPT 2,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI PSPT 2,Jumat,2-3,07:30,08:30,CLASS,PJOK,"Bella Prakoso, S.Pd",Lapangan
+XI PSPT 2,Jumat,4-5,08:30,09:30,CLASS,BK,"Winarsih, S.Pd, M.Pd",R 41
+XI PSPT 2,Jumat,6-7-8,09:50,11:20,CLASS,Bahasa Indonesia,"Umi Kulsum, S.Pd",R 41
+XI PSPT 2,Jumat,9-10,13:00,14:00,CLASS,Bahasa Inggris,"Muto'atul Khosi'ah, S.Pd",R 41
+XI PSPT 2,Jumat,11-12,14:00,15:00,CLASS,Bahasa Jawa,"Erna Qoriah, S.E.",R 41
+XI AN 1,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI AN 1,Senin,2-3-4,07:40,09:40,CLASS,Bahasa Indonesia,"Arif Setyobudi, S.Pd",R 59
+XI AN 1,Senin,5-6,10:00,11:20,CLASS,Bahasa Inggris,"Agus Muharyanto, M.Pd",R 59
+XI AN 1,Senin,7-8,11:20,13:40,CLASS,Konsentrasi AN,"Andika Christian Sasmita, S.ST",Lab. AN COE 2
+XI AN 1,Senin,9-10,13:40,15:00,CLASS,Mapel Pilihan AN,"Endik Kuswantoro, S.Kom.,M.T",Lab. AN COE 2
+XI AN 1,Selasa,1-2-3,07:00,09:00,CLASS,Konsentrasi AN,"Erwan Septyono, S.Pd",Lab. AN COE 1
+XI AN 1,Selasa,4-5-6-7,09:00,12:00,CLASS,Konsentrasi AN,"Rika Okta Maulida, S.Ds.",Lab. AN COE 1
+XI AN 1,Selasa,8-9-10,13:00,15:00,CLASS,Konsentrasi AN,"Dhuana Putri Puspitasary, S.Pd",Lab. AN COE 1
+XI AN 1,Rabu,1-2-3,07:00,09:00,CLASS,Konsentrasi AN,"Endik Kuswantoro, S.Kom.,M.T",Lab. AN COE 1
+XI AN 1,Rabu,4-5-6,09:00,11:20,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Andika Christian Sasmita, S.ST",Lab. AN COE 1
+XI AN 1,Rabu,7-8,11:20,13:40,CLASS,Sejarah,"Yustin Febrini, S.Pd",R 59
+XI AN 1,Rabu,9-10,13:40,15:00,CLASS,Pendidikan Pancasila,"Khuriyatul Kamila, S.Si",R 59
+XI AN 1,Kamis,1-2-3,07:00,09:00,CLASS,Konsentrasi AN,"Erwan Septyono, S.Pd",Lab. AN COE 1
+XI AN 1,Kamis,4-5,09:00,10:40,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Andika Christian Sasmita, S.ST",Lab. AN COE 1
+XI AN 1,Kamis,6-7-8,10:40,13:40,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Muashofah, M.Pd",R 60
+XI AN 1,Kamis,9-10,13:40,15:00,CLASS,Bahasa Inggris,"Agus Muharyanto, M.Pd",R 60
+XI AN 1,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI AN 1,Jumat,2-3,07:30,08:30,CLASS,Mapel Pilihan AN,"Andika Christian Sasmita, S.ST",Lab. AN COE 2
+XI AN 1,Jumat,4-5,08:30,09:30,CLASS,PJOK,"Bella Prakoso, S.Pd",LAP
+XI AN 1,Jumat,6-7-8,09:50,11:20,CLASS,Matematika,"Dwi Nova Setyandari, S.Pd",R 59
+XI AN 1,Jumat,9-10,13:00,14:00,CLASS,BK,"Siti Maisaroh, S.Pd",R 59
+XI AN 1,Jumat,11-12,14:00,15:00,CLASS,Bahasa Jawa,"Ajeng Okvitasari, S.Pd",R 59
+XI AN 2,Senin,1,07:00,07:40,UPACARA,Upacara/Apel,,
+XI AN 2,Senin,2-3-4,07:40,09:40,CLASS,Konsentrasi AN,"Dhuana Putri Puspitasary, S.Pd",Lab. AN COE 1
+XI AN 2,Senin,5-6-7-8,10:00,13:40,CLASS,Konsentrasi AN,"Rika Okta Maulida, S.Ds.",Lab. AN COE 1
+XI AN 2,Senin,9-10,13:40,15:00,CLASS,Konsentrasi AN,"Andika Christian Sasmita, S.ST",Lab. AN COE 1
+XI AN 2,Selasa,1-2-3,07:00,09:00,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Andika Christian Sasmita, S.ST",Lab. AN COE 2
+XI AN 2,Selasa,4-5,09:00,10:40,CLASS,Mapel Pilihan AN,"Endik Kuswantoro, S.Kom.,M.T",Lab. AN COE 2
+XI AN 2,Selasa,6-7,10:40,12:00,CLASS,Bahasa Inggris,"Agus Muharyanto, M.Pd",R 59
+XI AN 2,Selasa,8-9-10,13:00,15:00,CLASS,Bahasa Indonesia,"Arif Setyobudi, S.Pd",R 59
+XI AN 2,Rabu,1-2,07:00,08:20,CLASS,Bahasa Jawa,"Luluk Munfarida,S.Pd",R 59
+XI AN 2,Rabu,3-4,08:20,09:40,CLASS,PJOK,"Bella Prakoso, S.Pd",Lapangan
+XI AN 2,Rabu,5-6-7,10:00,12:00,CLASS,Konsentrasi AN,"Endik Kuswantoro, S.Kom.,M.T",Lab. AN COE 2
+XI AN 2,Rabu,8-9-10,13:00,15:00,CLASS,Konsentrasi AN,"Erwan Septyono, S.Pd",Lab. AN COE 1
+XI AN 2,Kamis,1-2,07:00,08:20,CLASS,BK,"Siti Maisaroh, S.Pd",R 59
+XI AN 2,Kamis,3-4-5,08:20,10:40,CLASS,Pendidikan Agama Islam dan Budi Pekerti,"Muashofah, M.Pd",R 59
+XI AN 2,Kamis,6-7-8,10:40,13:40,CLASS,Matematika,"Dwi Nova Setyandari, S.Pd",R 59
+XI AN 2,Kamis,9-10,13:40,15:00,CLASS,Sejarah,"Yustin Febrini, S.Pd",R 59
+XI AN 2,Jumat,1,07:00,07:30,PEMBIASAAN,Pembiasaan Hari Jumat,,
+XI AN 2,Jumat,2-3-4,07:30,09:00,CLASS,Konsentrasi AN,"Erwan Septyono, S.Pd",Lab. AN COE 1
+XI AN 2,Jumat,5-6,09:00,10:20,CLASS,Mapel Pilihan AN,"Andika Christian Sasmita, S.ST",Lab. AN COE 1
+XI AN 2,Jumat,7-8,10:20,11:20,CLASS,"Kreativitas, Inovasi, dan Kewirausahaan","Andika Christian Sasmita, S.ST",Lab. AN COE 1
+XI AN 2,Jumat,9-10,13:00,14:00,CLASS,Pendidikan Pancasila,"Wiwik Yuniarsih, S.Pd",R 60
+XI AN 2,Jumat,11-12,14:00,15:00,CLASS,Bahasa Inggris,"Agus Muharyanto, M.Pd",R 60

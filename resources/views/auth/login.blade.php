@@ -890,7 +890,7 @@
                             <span class="input-icon">
                                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="13" y2="12"/><line x1="7" y1="16" x2="10" y2="16"/></svg>
                             </span>
-                            <input type="text" id="nisn" name="nisn" class="form-input" placeholder="Contoh: 0099166409" value="{{ old('nisn') }}" maxlength="10" inputmode="numeric" pattern="[0-9]*" required autofocus>
+                            <input type="text" id="nisn" name="nisn" class="form-input" placeholder="Contoh: 0099664400" value="{{ old('nisn') }}" maxlength="10" inputmode="numeric" pattern="[0-9]*" required autofocus>
                         </div>
                     </div>
                     <div class="form-options">

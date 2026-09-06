@@ -145,6 +145,7 @@ CREATE TABLE `guru` (
   `nama_guru` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Peran` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Guru',
   `foto_profil` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id_mapel` int DEFAULT NULL,
   `no_hp` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -2799,11 +2800,6 @@ CREATE TABLE `laporan` (
 -- Dumping data for table `laporan`
 --
 
-INSERT INTO `laporan` (`id_laporan`, `role_pelapor`, `nama_pelapor`, `judul`, `isi_laporan`, `status`, `catatan_admin`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Orang Tua', 'Orang Tua dari Siswa Budi', 'Uji Coba AJAX Laporan', 'Isi detail laporan untuk pengujian AJAX response.', 'ditolak', NULL, '2026-08-21 18:29:59', '2026-08-21 23:26:15', NULL),
-(2, 'Guru', 'abid rizky', 'kendala absensi', 'ga bisa absen', 'selesai', NULL, '2026-08-21 18:33:06', '2026-08-21 23:25:59', NULL),
-(3, 'Kepala Sekolah', 'tresss', 'ga bisa ngizinin izin', 'errororororor', 'dibatalkan', NULL, '2026-08-21 18:34:01', '2026-08-21 18:57:21', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -3037,6 +3033,7 @@ CREATE TABLE `siswa` (
   `jenis_kelamin` enum('L','P') COLLATE utf8mb4_unicode_ci NOT NULL,
   `id_kelas` int NOT NULL,
   `is_aktif` tinyint(1) NOT NULL DEFAULT '1',
+  `no_hp_ortu` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -6048,7 +6045,7 @@ ALTER TABLE `izin_guru`
 -- Constraints for table `jadwal_mengajar`
 --
 ALTER TABLE `jadwal_mengajar`
-  ADD CONSTRAINT `jadwal_mengajar_ibfk_1` FOREIGN KEY (`id_guru`) REFERENCES `guru` (`id_guru`),
+  ADD CONSTRAINT `jadwal_mengajar_ibfk_1` FOREIGN KEY (`id_guru`) REFERENCES `guru` (`id_guru`) ON DELETE SET NULL,
   ADD CONSTRAINT `jadwal_mengajar_ibfk_2` FOREIGN KEY (`id_mapel`) REFERENCES `mapel` (`id_mapel`),
   ADD CONSTRAINT `jadwal_mengajar_ibfk_3` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`),
   ADD CONSTRAINT `jadwal_mengajar_ibfk_4` FOREIGN KEY (`id_jam`) REFERENCES `jam_pelajaran` (`id_jam`),
@@ -6071,7 +6068,7 @@ ALTER TABLE `jurnal_siswa_tidak_hadir`
 -- Constraints for table `kelas`
 --
 ALTER TABLE `kelas`
-  ADD CONSTRAINT `fk_kelas_wali` FOREIGN KEY (`id_wali_kelas`) REFERENCES `guru` (`id_guru`),
+  ADD CONSTRAINT `fk_kelas_wali` FOREIGN KEY (`id_wali_kelas`) REFERENCES `guru` (`id_guru`) ON DELETE SET NULL,
   ADD CONSTRAINT `kelas_ibfk_1` FOREIGN KEY (`id_tahun_ajaran`) REFERENCES `tahun_ajaran` (`id_tahun_ajaran`);
 
 --

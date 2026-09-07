@@ -480,6 +480,182 @@
             .nisn-helper { padding: 9px 12px; font-size: 11.5px; }
         }
         @media (max-height: 600px) { .hero-quote { display: none; } }
+
+        /* ══════════ NEW DESIGN OVERRIDE (sesuai desain halaman login) ══════════ */
+        body { background: #e8edf8; overflow: auto; }
+
+        .login-container {
+            display: grid;
+            grid-template-columns: 1.05fr 1fr;
+            min-height: 100vh;
+        }
+
+        /* ── LEFT: blob navy dengan lengkung kanan ── */
+        .left-hero {
+            background:
+                radial-gradient(circle at 85% 15%, rgba(59,130,246,0.35) 0%, transparent 45%),
+                radial-gradient(circle at 20% 85%, rgba(37,99,235,0.30) 0%, transparent 50%),
+                linear-gradient(150deg, #0a173f 0%, #0d2160 45%, #0a1a4f 100%);
+            border-radius: 0 48% 44% 0 / 0 52% 50% 0;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 8% 40px 6%;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+        .left-hero::before {
+            content: '';
+            position: absolute;
+            width: 560px; height: 560px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(59,130,246,0.22) 0%, transparent 65%);
+            filter: blur(40px);
+            top: -140px; right: -100px;
+            pointer-events: none;
+        }
+        .left-hero::after {
+            content: '';
+            position: absolute;
+            width: 420px; height: 420px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255,255,255,0.08);
+            bottom: -120px; left: -120px;
+            pointer-events: none;
+        }
+
+        /* ilustrasi tengah: lingkaran glow + logo */
+        .hero-illus {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin: auto;
+        }
+        .illus-ring {
+            width: clamp(180px, 22vw, 280px);
+            height: clamp(180px, 22vw, 280px);
+            border-radius: 50%;
+            background: linear-gradient(160deg, rgba(96,165,250,0.25), rgba(37,99,235,0.12));
+            border: 1.5px solid rgba(147,197,253,0.35);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 80px rgba(59,130,246,0.45), inset 0 0 40px rgba(59,130,246,0.18);
+            position: relative;
+        }
+        .illus-ring::before {
+            content: '';
+            position: absolute;
+            inset: -22px;
+            border-radius: 50%;
+            border: 1.5px dashed rgba(147,197,253,0.25);
+            animation: spinRing 24s linear infinite;
+        }
+        @keyframes spinRing { to { transform: rotate(360deg); } }
+        .illus-ring img {
+            width: 62%; height: 62%;
+            object-fit: contain;
+            border-radius: 24px;
+            filter: drop-shadow(0 10px 24px rgba(0,0,0,0.35));
+        }
+        .illus-badge {
+            position: absolute;
+            right: -8px; bottom: 6px;
+            width: 58px; height: 58px;
+            border-radius: 50%;
+            background: linear-gradient(160deg, #60a5fa, #1d4ed8);
+            border: 3px solid rgba(255,255,255,0.25);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(29,78,216,0.5);
+        }
+        .illus-title {
+            margin-top: clamp(20px,3vw,34px);
+            font-size: clamp(34px, 4.6vw, 58px);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #fff;
+            text-shadow: 0 4px 30px rgba(59,130,246,0.55);
+        }
+        .illus-sub {
+            margin-top: 8px;
+            font-size: clamp(12px,1.2vw,14.5px);
+            color: rgba(255,255,255,0.55);
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .left-footer { position: absolute; bottom: 22px; left: 0; right: 0; text-align: center; }
+
+        /* sembunyikan elemen hero lama yang tak terpakai */
+        .wave-bottom, .orb, .dot-grid, .hero-body, .brand-header { display: none !important; }
+
+        /* ── RIGHT: latar terang + kartu putih ── */
+        .right-form {
+            background:
+                radial-gradient(circle at 100% 0%, rgba(59,130,246,0.10) 0%, transparent 40%),
+                linear-gradient(180deg, #f2f5fb 0%, #e9eef8 100%);
+            padding: 40px 24px;
+        }
+        .form-card {
+            max-width: 460px;
+            border-radius: 22px;
+            border: 1px solid #eef2f9;
+            box-shadow: 0 24px 60px rgba(15,40,100,0.12);
+            padding: clamp(28px, 3vw, 44px);
+        }
+        .lock-icon-circle { display: none; }
+        .form-header { text-align: left; margin-bottom: 22px; }
+        .form-header h2 { font-size: clamp(21px,2.2vw,26px); font-weight: 800; color: #0d1b3e; }
+        .form-header p { color: #7c8aa5; margin-top: 6px; }
+
+        /* ── TOMBOL MASUK GRADIENT DENGAN PANAH ── */
+        .form-input {
+            height: 50px;
+            border-radius: 12px;
+            border: 1.5px solid #e2e8f2;
+            background: #f8fafd;
+        }
+        .form-input:focus { background: #fff; border-color: #2563eb; box-shadow: 0 0 0 4px rgba(37,99,235,0.10); }
+        .form-options { justify-content: space-between; }
+        .remember-me {
+            display: inline-flex; align-items: center; gap: 7px;
+            font-size: 12.5px; font-weight: 600; color: #44536e; cursor: pointer;
+        }
+        .remember-me input { width: 15px; height: 15px; accent-color: #1d4ed8; cursor: pointer; }
+
+        /* ── TOMBOL MASUK GRADIENT DENGAN PANAH ── */
+        .btn-submit {
+            height: 52px;
+            border-radius: 13px;
+            justify-content: center;
+            gap: 10px;
+            padding: 0 22px;
+            font-size: 15px;
+        }
+        .btn-admin, .btn-guru, .btn-gurupiket, .btn-walikelas,
+        .btn-satpam, .btn-wakasdm, .btn-wali {
+            background: linear-gradient(90deg, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%);
+            box-shadow: 0 10px 26px rgba(37,99,235,0.38);
+        }
+
+        /* ── RESPONSIVE BARU ── */
+        @media (max-width: 900px) {
+            .login-container { grid-template-columns: 1fr; }
+            .left-hero {
+                height: auto;
+                min-height: 320px;
+                border-radius: 0 0 48% 48% / 0 0 22% 22%;
+                padding: 44px 20px 48px;
+                position: static;
+            }
+            .illus-ring { width: 150px; height: 150px; }
+            .illus-title { font-size: 32px; }
+        }
+        @media (max-width: 480px) {
+            .form-card { padding: 22px 14px 18px; }
+        }
     </style>
     <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
 </head>
@@ -488,75 +664,27 @@
 
     <!-- ─── LEFT HERO ─── -->
     <div class="left-hero">
-        <div class="dot-grid"></div>
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-        <svg class="wave-bottom" viewBox="0 0 600 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0,80 C100,20 220,120 360,60 C480,10 540,90 600,60 L600,120 L0,120 Z" fill="rgba(99,102,241,0.08)"/>
-            <path d="M0,100 C80,50 200,120 340,90 C460,65 540,110 600,90 L600,120 L0,120 Z" fill="rgba(59,130,246,0.06)"/>
-        </svg>
-
-        <div class="left-content">
-            <div class="brand-header">
-                <div class="brand-icon-box">
-                    <img src="{{ asset('logo.png') }}" alt="Logo PresensiKita" style="width:100%;height:100%;object-fit:contain;border-radius:12px;">
-                </div>
-                <div>
-                    <div class="brand-title">PresensiKita</div>
-                    <div class="brand-sub">Sistem Informasi Kehadiran Siswa</div>
+        <div class="hero-illus">
+            <div class="illus-ring">
+                <img src="{{ asset('logo.png') }}" alt="Logo PresensiKita">
+                <div class="illus-badge">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 16 11 18 15 14"/></svg>
                 </div>
             </div>
-
-            <div class="hero-body">
-                <div class="hero-badge">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5"/></svg>
-                    Platform Digital Sekolah
-                </div>
-                <h1 class="hero-title">Kelola Kehadiran Siswa<br>Lebih <span class="accent">Mudah &amp; Terorganisir</span></h1>
-                <p class="hero-desc">Catat, pantau, dan rekap kehadiran siswa setiap hari secara digital, akurat, dan efisien. Tersedia untuk Admin, Guru, Guru Piket, Wali Kelas, Satpam, dan Wali Murid.</p>
-                <div class="feature-list">
-                    <div class="feature-item">
-                        <div class="feature-icon-badge">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 16 11 18 15 14"/></svg>
-                        </div>
-                        <div><div class="feature-title">Pencatatan Cepat</div><div class="feature-sub">Input kehadiran harian siswa hanya dalam beberapa klik.</div></div>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon-badge">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-                        </div>
-                        <div><div class="feature-title">Rekap Otomatis</div><div class="feature-sub">Laporan dan grafik kehadiran secara otomatis dan real-time.</div></div>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon-badge">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                        </div>
-                        <div><div class="feature-title">Multi-Role Akses</div><div class="feature-sub">Admin, Guru, Guru Piket, Wali Kelas, Satpam, dan Wali Murid memiliki akses dan fitur tersendiri.</div></div>
-                    </div>
-                </div>
-                <div class="hero-quote">
-                    <p>&#10077; Disiplin hari ini, sukses di masa depan.<br>Mari bersama wujudkan sekolah yang tertib dan berprestasi. &#10078;</p>
-                </div>
-            </div>
-
-            <div class="left-footer">&copy; {{ date('Y') }} PresensiKita. All rights reserved.</div>
+            <div class="illus-title">PresensiKita</div>
+            <div class="illus-sub">Sistem Informasi Kehadiran Siswa</div>
         </div>
+        <div class="left-footer">&copy; {{ date('Y') }} PresensiKita. All rights reserved.</div>
     </div>
 
     <!-- ─── RIGHT FORM ─── -->
     <div class="right-form">
         <div class="form-card">
 
-            <!-- Lock icon -->
-            <div class="lock-icon-circle">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            </div>
-
             <!-- Header -->
             <div class="form-header">
-                <h2>Selamat Datang!</h2>
-                <p>Pilih peran Anda untuk masuk ke sistem.</p>
+                <h2>Login ke akun Anda</h2>
+                <p>Silakan pilih peran Anda, lalu masukkan kredensial.</p>
             </div>
 
             <!-- ─── ROLE SELECTOR (SINGLE) ─── -->
@@ -568,78 +696,53 @@
                 <div class="role-display" role="group" aria-label="Pilih Role Login">
                     <div class="role-card active" id="card-admin">
                         <div class="role-card-icon role-card-icon-admin">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 2l8 3v6c0 5-4 9-8 10C8 20 4 16 4 11V5l8-3z"/>
-                            </svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3v6c0 5-4 9-8 10C8 20 4 16 4 11V5l8-3z"/></svg>
                         </div>
                         <div class="role-card-name">Admin</div>
                     </div>
                     <div class="role-card" id="card-guru">
                         <div class="role-card-icon role-card-icon-guru">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-                                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-                            </svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
                         </div>
                         <div class="role-card-name">Guru</div>
                     </div>
                     <div class="role-card" id="card-gurupiket">
                         <div class="role-card-icon role-card-icon-gurupiket">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 2l8 3v6c0 5-4 9-8 10-4-1-8-5-8-10V5l8-3z"/>
-                                <path d="M9 12l2 2 4-4"/>
-                            </svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3v6c0 5-4 9-8 10-4-1-8-5-8-10V5l8-3z"/><path d="M9 12l2 2 4-4"/></svg>
                         </div>
                         <div class="role-card-name">Guru Piket</div>
                     </div>
                     <div class="role-card" id="card-walikelas">
                         <div class="role-card-icon role-card-icon-walikelas">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-                                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-                                <path d="M9 12v5M15 12v5"/>
-                            </svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/><path d="M9 12v5M15 12v5"/></svg>
                         </div>
                         <div class="role-card-name">Wali Kelas</div>
                     </div>
                     <div class="role-card" id="card-satpam">
                         <div class="role-card-icon role-card-icon-satpam">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 2l8 3v6c0 5-4 9-8 10-4-1-8-5-8-10V5l8-3z"/>
-                                <path d="M9 12l2 2 4-4"/>
-                            </svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3v6c0 5-4 9-8 10-4-1-8-5-8-10V5l8-3z"/><path d="M9 12l2 2 4-4"/></svg>
                         </div>
                         <div class="role-card-name">Satpam</div>
                     </div>
                     <div class="role-card" id="card-wakasdm">
                         <div class="role-card-icon role-card-icon-wakasdm">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                                <circle cx="9" cy="7" r="4"/>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                            </svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                         </div>
                         <div class="role-card-name">Waka SDM</div>
                     </div>
                     <div class="role-card" id="card-wali">
                         <div class="role-card-icon role-card-icon-wali">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                                <circle cx="9" cy="7" r="4"/>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                            </svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                         </div>
                         <div class="role-card-name">Wali Murid</div>
                     </div>
                 </div>
- 
+
                 <button type="button" class="role-arrow" id="arrow-next" onclick="nextRole()" aria-label="Role berikutnya">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
                 </button>
             </div>
- 
+
             <div class="role-dots">
                 <button type="button" class="role-dot active" data-role="admin" aria-label="Pilih Admin"></button>
                 <button type="button" class="role-dot" data-role="guru" aria-label="Pilih Guru"></button>
@@ -685,11 +788,12 @@
                         </div>
                     </div>
                     <div class="form-options">
+                        <label class="remember-me"><input type="checkbox" name="remember"> Ingat saya</label>
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi superadmin untuk me-reset password.')" class="forgot-link">Lupa password?</a>
                     </div>
                     <button type="submit" class="btn-submit btn-admin" id="btn-admin">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                        <span>Masuk sebagai Admin</span>
+                        <span>Masuk</span>
                     </button>
                 </form>
             </div>
@@ -721,11 +825,12 @@
                         </div>
                     </div>
                     <div class="form-options">
+                        <label class="remember-me"><input type="checkbox" name="remember"> Ingat saya</label>
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
                     </div>
                     <button type="submit" class="btn-submit btn-guru" id="btn-guru">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                        <span>Masuk sebagai Guru</span>
+                        <span>Masuk</span>
                     </button>
                 </form>
             </div>
@@ -757,11 +862,12 @@
                         </div>
                     </div>
                     <div class="form-options">
+                        <label class="remember-me"><input type="checkbox" name="remember"> Ingat saya</label>
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
                     </div>
                     <button type="submit" class="btn-submit btn-gurupiket" id="btn-gurupiket">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                        <span>Masuk sebagai Guru Piket</span>
+                        <span>Masuk</span>
                     </button>
                 </form>
             </div>
@@ -793,11 +899,12 @@
                         </div>
                     </div>
                     <div class="form-options">
+                        <label class="remember-me"><input type="checkbox" name="remember"> Ingat saya</label>
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
                     </div>
                     <button type="submit" class="btn-submit btn-walikelas" id="btn-walikelas">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                        <span>Masuk sebagai Wali Kelas</span>
+                        <span>Masuk</span>
                     </button>
                 </form>
             </div>
@@ -830,11 +937,12 @@
                         </div>
                     </div>
                     <div class="form-options">
+                        <label class="remember-me"><input type="checkbox" name="remember"> Ingat saya</label>
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
                     </div>
                     <button type="submit" class="btn-submit btn-satpam" id="btn-satpam">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                        <span>Masuk sebagai Satpam</span>
+                        <span>Masuk</span>
                     </button>
                 </form>
             </div>
@@ -867,11 +975,12 @@
                         </div>
                     </div>
                     <div class="form-options">
+                        <label class="remember-me"><input type="checkbox" name="remember"> Ingat saya</label>
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
                     </div>
                     <button type="submit" class="btn-submit btn-wakasdm" id="btn-wakasdm">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                        <span>Masuk sebagai Waka SDM</span>
+                        <span>Masuk</span>
                     </button>
                 </form>
             </div>
@@ -894,18 +1003,19 @@
                         </div>
                     </div>
                     <div class="form-options">
+                        <label class="remember-me"><input type="checkbox" name="remember"> Ingat saya</label>
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password.')" class="forgot-link">Lupa password?</a>
                     </div>
                     <button type="submit" class="btn-submit btn-wali" id="btn-wali">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-                        <span>Masuk ke Portal Wali Murid</span>
+                        <span>Masuk</span>
                     </button>
                 </form>
             </div>
 
             <!-- Footer -->
             <div class="form-footer-text">
-                Butuh bantuan? <a href="{{ route('laporan.public') }}">Buat laporan ke admin.</a>
+                Ada kendala? <a href="{{ route('laporan.public') }}">Laporkan Admin.</a>
             </div>
 
         </div>
@@ -913,7 +1023,7 @@
 </div>
 
 <script>
-    // ── Role switching (single display)
+    // ── Role switching (chips per role)
     const roles = ['admin', 'guru', 'gurupiket', 'walikelas', 'satpam', 'wakasdm', 'wali'];
     let currentRoleIndex = 0;
 

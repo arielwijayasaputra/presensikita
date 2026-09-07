@@ -55,6 +55,12 @@
                     <input type="text" class="filter-input" id="piket-set-wa-endpoint" value="{{ $waGatewayEndpoint ?? 'http://127.0.0.1:3000/send-message' }}" placeholder="http://127.0.0.1:3000/send-message" style="width:100%;margin-top:5px" readonly>
                     <div style="font-size:11.5px;color:#94a3b8;margin-top:4px">Endpoint default lokal port 3000 untuk service background Baileys.</div>
                 </div>
+
+                <div>
+                    <label style="font-size:12.5px;font-weight:600;color:#475569">URL Publik / Domain WhatsApp Link <span style="font-size:11px;color:#64748b;font-weight:400">(Opsional, misal: ngrok / domain)</span></label>
+                    <input type="text" class="filter-input" id="piket-set-wa-public-url" value="{{ $waPublicUrl ?? '' }}" placeholder="Contoh: https://xxxx.ngrok-free.app (Kosongkan jika menggunakan IP LAN otomatis)" style="width:100%;margin-top:5px">
+                    <div style="font-size:11.5px;color:#64748b;margin-top:4px">Jika diisi dengan domain (misal ngrok), link di WhatsApp akan otomatis berwarna biru &amp; dapat dibuka dari luar jaringan sekolah.</div>
+                </div>
             </div>
         </div>
 
@@ -137,6 +143,7 @@ function simpanPengaturanWaPiketPage(event) {
     const kepsek = document.getElementById('piket-set-wa-kepsek')?.value?.trim() ?? '';
     const wakaSdm = document.getElementById('piket-set-wa-waka-sdm')?.value?.trim() ?? '';
     const wakaKesiswaan = document.getElementById('piket-set-wa-waka-kesiswaan')?.value?.trim() ?? '';
+    const publicUrl = document.getElementById('piket-set-wa-public-url')?.value?.trim() ?? '';
     const gatewayAktif = document.getElementById('piket-set-wa-gateway-aktif')?.checked ? 1 : 0;
 
     fetch(@json(route('struktural.pengaturan.update-wa')), {
@@ -150,6 +157,7 @@ function simpanPengaturanWaPiketPage(event) {
             wa_nomor_kepsek: kepsek,
             wa_nomor_waka_sdm: wakaSdm,
             wa_nomor_waka_kesiswaan: wakaKesiswaan,
+            wa_public_url: publicUrl,
             wa_gateway_aktif: gatewayAktif
         })
     })
@@ -180,32 +188,33 @@ function simpanPengaturanWaPiketPage(event) {
     });
 }
 
-function cekStatusBotPiketPage(showAlert = true) {
-    const badge = document.getElementById('piket-wa-bot-badge');
-    const qrBox = document.getElementById('piket-wa-qr-box');
-    const qrImg = document.getElementById('piket-wa-qr-img');
-
-    if (badge) {
-        badge.className = 'badge badge-info';
-        badge.innerHTML = '<span style="width:8px;height:8px;background:#3b82f6;border-radius:50%;display:inline-block"></span> Memeriksa...';
-    }
-
+function pollStatusBotPiket(attempt = 1, maxAttempts = 6) {
     fetch(@json(route('struktural.pengaturan.qr-wa')), {
         headers: { 'Accept': 'application/json' }
     })
     .then(r => r.json())
     .then(data => {
+        const badge = document.getElementById('piket-wa-bot-badge');
+        const qrBox = document.getElementById('piket-wa-qr-box');
+        const qrImg = document.getElementById('piket-wa-qr-img');
+
         if (data.status === 'connected') {
+            Swal.close();
             if (badge) {
                 badge.className = 'badge badge-success';
                 badge.style.cssText = 'font-size:12px;padding:6px 14px;display:inline-flex;align-items:center;gap:6px';
                 badge.innerHTML = '<span style="width:8px;height:8px;background:#22c55e;border-radius:50%;display:inline-block"></span> Online' + (data.user ? ' (' + data.user + ')' : '');
             }
             if (qrBox) qrBox.style.display = 'none';
-            if (showAlert) {
-                Swal.fire({ icon: 'success', title: 'Bot WhatsApp Online!', text: data.message || 'Bot terhubung dan siap digunakan.', timer: 2000, showConfirmButton: false });
-            }
+            Swal.fire({
+                icon: 'success',
+                title: 'WhatsApp Bot Online!',
+                text: 'Bot WhatsApp berhasil terhubung' + (data.user ? ' (Nomor: ' + data.user + ')' : '') + '.',
+                timer: 2500,
+                showConfirmButton: false
+            });
         } else if (data.status === 'waiting_qr' && data.qr_image) {
+            Swal.close();
             if (badge) {
                 badge.className = 'badge badge-warning';
                 badge.style.cssText = 'font-size:12px;padding:6px 14px;display:inline-flex;align-items:center;gap:6px;background:#fef3c7;color:#92400e;border:1px solid #fde68a';
@@ -215,31 +224,68 @@ function cekStatusBotPiketPage(showAlert = true) {
                 qrImg.src = data.qr_image;
                 qrBox.style.display = 'block';
             }
-            if (showAlert) {
-                Swal.fire({ icon: 'info', title: 'Perlu Scan QR Code', text: 'Silakan scan QR Code yang muncul di layar dengan aplikasi WhatsApp Anda.' });
-            }
+            Swal.fire({
+                icon: 'info',
+                title: 'Scan QR Code',
+                text: 'Silakan scan QR Code yang muncul di layar dengan WhatsApp di HP Anda.'
+            });
         } else {
-            if (badge) {
-                badge.className = 'badge badge-danger';
-                badge.style.cssText = 'font-size:12px;padding:6px 14px;display:inline-flex;align-items:center;gap:6px';
-                badge.innerHTML = '<span style="width:8px;height:8px;background:#ef4444;border-radius:50%;display:inline-block"></span> Offline';
-            }
-            if (qrBox) qrBox.style.display = 'none';
-            if (showAlert) {
-                Swal.fire({ icon: 'warning', title: 'Bot Offline', text: data.message || 'Server bot WhatsApp belum aktif. Klik "Hubungkan Ulang Bot" untuk menyalakan.', confirmButtonColor: '#ea580c' });
+            if (attempt < maxAttempts) {
+                setTimeout(() => pollStatusBotPiket(attempt + 1, maxAttempts), 1500);
+            } else {
+                Swal.close();
+                if (badge) {
+                    badge.className = 'badge badge-danger';
+                    badge.style.cssText = 'font-size:12px;padding:6px 14px;display:inline-flex;align-items:center;gap:6px';
+                    badge.innerHTML = '<span style="width:8px;height:8px;background:#ef4444;border-radius:50%;display:inline-block"></span> Offline';
+                }
+                if (qrBox) qrBox.style.display = 'none';
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Bot Belum Terhubung',
+                    html: `
+                        <div style="font-size:13px;line-height:1.6;text-align:left">
+                            Server bot WhatsApp belum aktif di background.<br><br>
+                            <strong>Cara Menyalakan Langsung:</strong><br>
+                            Buka folder project presensikita dan <strong>klik 2x file <code>start-bot.bat</code></strong>.
+                        </div>
+                    `,
+                    confirmButtonColor: '#ea580c'
+                });
             }
         }
     })
-    .catch(err => {
-        if (badge) {
-            badge.className = 'badge badge-danger';
-            badge.innerHTML = '<span style="width:8px;height:8px;background:#ef4444;border-radius:50%;display:inline-block"></span> Offline';
-        }
-        if (qrBox) qrBox.style.display = 'none';
-        if (showAlert) {
-            Swal.fire({ icon: 'warning', title: 'Bot Belum Aktif', text: 'Server bot belum berjalan. Klik tombol "Hubungkan Ulang Bot" untuk mengaktifkan.', confirmButtonColor: '#ea580c' });
+    .catch(() => {
+        if (attempt < maxAttempts) {
+            setTimeout(() => pollStatusBotPiket(attempt + 1, maxAttempts), 1500);
+        } else {
+            Swal.close();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Bot Belum Terhubung',
+                html: `
+                    <div style="font-size:13px;line-height:1.6;text-align:left">
+                        Server bot WhatsApp belum aktif.<br><br>
+                        <strong>Solusi Cepat:</strong><br>
+                        Buka folder project presensikita dan <strong>klik 2x file <code>start-bot.bat</code></strong>.
+                    </div>
+                `,
+                confirmButtonColor: '#ea580c'
+            });
         }
     });
+}
+
+function cekStatusBotPiketPage(showAlert = true) {
+    if (showAlert) {
+        Swal.fire({
+            title: 'Memeriksa Status...',
+            text: 'Menghubungi gateway bot WhatsApp...',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+    }
+    pollStatusBotPiket(1, showAlert ? 3 : 1);
 }
 
 function restartBotPiketPage() {
@@ -264,15 +310,13 @@ function restartBotPiketPage() {
     .then(r => r.json())
     .then(() => {
         setTimeout(() => {
-            Swal.close();
-            cekStatusBotPiketPage(true);
-        }, 2500);
+            pollStatusBotPiket(1, 6);
+        }, 1500);
     })
     .catch(() => {
         setTimeout(() => {
-            Swal.close();
-            cekStatusBotPiketPage(true);
-        }, 2000);
+            pollStatusBotPiket(1, 5);
+        }, 1500);
     })
     .finally(() => {
         if (btn) btn.disabled = false;

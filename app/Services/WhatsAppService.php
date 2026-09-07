@@ -148,29 +148,29 @@ class WhatsAppService
 
         $botDir = base_path('whatsapp-bot');
         $serverJs = $botDir.DIRECTORY_SEPARATOR.'server.js';
+        $vbsFile = base_path('run-bot.vbs');
 
         if (file_exists($serverJs)) {
             if (strncasecmp(PHP_OS, 'WIN', 3) === 0) {
                 $nodeBin = static::findNodeBinary();
                 $started = false;
 
-                // 1. Coba WScript.Shell (paling mulus di Windows)
-                if (class_exists(\COM::class)) {
+                // 1. Eksekusi file run-bot.vbs via wscript (100% detached background di Windows)
+                if (file_exists($vbsFile)) {
                     try {
-                        $wsh = new \COM('WScript.Shell');
-                        $wsh->CurrentDirectory = $botDir;
-                        $wsh->Run('"'.$nodeBin.'" "'.$serverJs.'"', 0, false);
+                        @pclose(@popen('wscript.exe "'.$vbsFile.'"', 'r'));
                         $started = true;
                     } catch (\Throwable $th) {
                         $started = false;
                     }
                 }
 
-                // 2. Coba PowerShell Start-Process detached di background
-                if (! $started) {
+                // 2. Fallback COM WScript.Shell
+                if (! $started && class_exists(\COM::class)) {
                     try {
-                        $psCmd = 'powershell -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -Command "Start-Process -FilePath \''.$nodeBin.'\' -ArgumentList \''.$serverJs.'\' -WorkingDirectory \''.$botDir.'\' -WindowStyle Hidden" > NUL 2>&1';
-                        @pclose(@popen($psCmd, 'r'));
+                        $wsh = new \COM('WScript.Shell');
+                        $wsh->CurrentDirectory = $botDir;
+                        $wsh->Run('"'.$nodeBin.'" "'.$serverJs.'"', 0, false);
                         $started = true;
                     } catch (\Throwable $th) {
                         $started = false;
@@ -191,8 +191,8 @@ class WhatsAppService
             }
 
             // Berikan jeda agar node sempat listen di port
-            for ($i = 0; $i < 4; $i++) {
-                usleep(500000); // 0.5 detik x 4 = 2 detik
+            for ($i = 0; $i < 6; $i++) {
+                usleep(500000); // 0.5 detik x 6 = 3 detik
                 $check = static::checkBotStatus();
                 if ($check['online'] || ($check['status'] ?? '') === 'waiting_qr') {
                     break;
@@ -208,7 +208,7 @@ class WhatsAppService
                 ? 'WhatsApp Bot berhasil dijalankan dan terhubung!'
                 : (($newStatus['status'] ?? '') === 'waiting_qr'
                     ? 'WhatsApp Bot berjalan. Silakan scan QR Code yang muncul.'
-                    : 'Server bot WhatsApp sedang dimulai di background. Klik "Cek Koneksi Bot" setelah beberapa detik.'),
+                    : 'Server bot WhatsApp sedang dimulai di background. Tunggu beberapa detik lalu klik Cek Koneksi.'),
             'status' => $newStatus['status'] ?? 'starting',
             'details' => $newStatus,
         ];
@@ -219,17 +219,20 @@ class WhatsAppService
      */
     public static function restartBot(): array
     {
-        $endpoint = static::getEndpoint();
-        $baseHost = preg_replace('#/send-message.*$#', '', $endpoint);
-        $restartUrl = rtrim($baseHost, '/').'/restart';
+        $status = static::checkBotStatus();
+        if ($status['online']) {
+            $endpoint = static::getEndpoint();
+            $baseHost = preg_replace('#/send-message.*$#', '', $endpoint);
+            $restartUrl = rtrim($baseHost, '/').'/restart';
 
-        try {
-            $response = Http::timeout(4)->post($restartUrl);
-            if ($response->successful()) {
-                return $response->json();
+            try {
+                $response = Http::timeout(2)->post($restartUrl);
+                if ($response->successful()) {
+                    return $response->json();
+                }
+            } catch (\Throwable $e) {
+                // Lanjut restart lokal jika API restart error
             }
-        } catch (\Throwable $e) {
-            // Jika bot mati, jalankan bot secara lokal
         }
 
         return static::startLocalBot();
@@ -326,8 +329,8 @@ class WhatsAppService
             ."• *Tanggal:* {$tanggal}\n"
             ."• *Alasan:* {$alasan}\n"
             ."• *Guru Piket:* {$namaPiket}\n\n"
-            ."Silakan klik link berikut untuk melihat surat & memberikan persetujuan:\n"
-            ."🔗 {$linkWaka}\n\n"
+            ."Silakan buka link persetujuan di bawah ini:\n\n"
+            ."{$linkWaka}\n\n"
             ."_Pesan otomatis dari Sistem PresensiKita._";
 
         $hasilKirim = ! empty($nomorWaka) ? static::kirimPesan($nomorWaka, $pesan) : ['success' => false, 'error' => 'Nomor WA Waka Kesiswaan belum diatur.'];
@@ -366,8 +369,8 @@ class WhatsAppService
             ."• *Tanggal Izin:* {$tanggal}\n"
             ."• *Alasan:* {$alasan}\n"
             ."• *Guru Piket:* {$namaPiket}\n\n"
-            ."Silakan klik link berikut untuk melihat detail surat & memberikan persetujuan:\n"
-            ."🔗 {$linkKepsek}\n\n"
+            ."Silakan buka link persetujuan di bawah ini:\n\n"
+            ."{$linkKepsek}\n\n"
             ."_Pesan otomatis dari Sistem PresensiKita._";
 
         // Pesan untuk Waka SDM
@@ -379,8 +382,8 @@ class WhatsAppService
             ."• *Tanggal Izin:* {$tanggal}\n"
             ."• *Alasan:* {$alasan}\n"
             ."• *Guru Piket:* {$namaPiket}\n\n"
-            ."Silakan klik link berikut untuk melihat detail surat & memberikan persetujuan:\n"
-            ."🔗 {$linkWaka}\n\n"
+            ."Silakan buka link persetujuan di bawah ini:\n\n"
+            ."{$linkWaka}\n\n"
             ."_Pesan otomatis dari Sistem PresensiKita._";
 
         $hasilKepsek = ! empty($nomorKepsek)
@@ -428,24 +431,30 @@ class WhatsAppService
     public static function generateLanSignedRoute(string $name, $expiration, array $parameters = []): string
     {
         try {
-            $lanIp = gethostbyname(gethostname());
-            $port = 8000;
-            $scheme = 'http';
+            // Cek apakah ada URL publik kustom (seperti ngrok / domain) di pengaturan
+            $customPublicUrl = trim(Pengaturan::get('wa_public_url', ''));
+            if (! empty($customPublicUrl)) {
+                \Illuminate\Support\Facades\URL::forceRootUrl(rtrim($customPublicUrl, '/'));
+            } else {
+                $lanIp = gethostbyname(gethostname());
+                $port = 8000;
+                $scheme = 'http';
 
-            try {
-                if (request()) {
-                    $scheme = request()->getScheme() ?: 'http';
-                    $reqPort = request()->getPort();
-                    if ($reqPort && ! in_array($reqPort, [80, 443])) {
-                        $port = $reqPort;
+                try {
+                    if (request()) {
+                        $scheme = request()->getScheme() ?: 'http';
+                        $reqPort = request()->getPort();
+                        if ($reqPort && ! in_array($reqPort, [80, 443])) {
+                            $port = $reqPort;
+                        }
                     }
+                } catch (\Throwable $e) {
                 }
-            } catch (\Throwable $e) {
-            }
 
-            if (! empty($lanIp) && $lanIp !== '127.0.0.1' && ! str_starts_with($lanIp, '127.')) {
-                $portStr = ($port && ! in_array($port, [80, 443])) ? ':'.$port : '';
-                \Illuminate\Support\Facades\URL::forceRootUrl("{$scheme}://{$lanIp}{$portStr}");
+                if (! empty($lanIp) && $lanIp !== '127.0.0.1' && ! str_starts_with($lanIp, '127.')) {
+                    $portStr = ($port && ! in_array($port, [80, 443])) ? ':'.$port : '';
+                    \Illuminate\Support\Facades\URL::forceRootUrl("{$scheme}://{$lanIp}{$portStr}");
+                }
             }
 
             $signedUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute($name, $expiration, $parameters);

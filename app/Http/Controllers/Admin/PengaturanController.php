@@ -55,6 +55,9 @@ class PengaturanController extends Controller
         if ($request->filled('wa_gateway_endpoint')) {
             Pengaturan::set('wa_gateway_endpoint', trim($request->wa_gateway_endpoint));
         }
+        if ($request->has('wa_public_url')) {
+            Pengaturan::set('wa_public_url', trim($request->wa_public_url ?? ''));
+        }
         Pengaturan::set('wa_nomor_bot', trim($request->wa_nomor_bot ?? ''));
         Pengaturan::set('wa_nomor_waka_kesiswaan', trim($request->wa_nomor_waka_kesiswaan ?? ''));
         Pengaturan::set('wa_nomor_waka_sdm', trim($request->wa_nomor_waka_sdm ?? ''));
@@ -104,6 +107,9 @@ class PengaturanController extends Controller
         if ($request->has('wa_gateway_aktif')) {
             Pengaturan::set('wa_gateway_aktif', $request->boolean('wa_gateway_aktif') ? '1' : '0');
         }
+        if ($request->has('wa_public_url')) {
+            Pengaturan::set('wa_public_url', trim($request->wa_public_url ?? ''));
+        }
         if ($request->has('wa_nomor_bot')) {
             Pengaturan::set('wa_nomor_bot', trim($request->wa_nomor_bot ?? ''));
         }
@@ -121,6 +127,7 @@ class PengaturanController extends Controller
             'status' => 'success',
             'message' => 'Pengaturan nomor WhatsApp notifikasi berhasil diperbarui!',
             'data' => [
+                'wa_public_url' => Pengaturan::get('wa_public_url', ''),
                 'wa_nomor_bot' => Pengaturan::get('wa_nomor_bot', ''),
                 'wa_nomor_kepsek' => Pengaturan::get('wa_nomor_kepsek', ''),
                 'wa_nomor_waka_sdm' => Pengaturan::get('wa_nomor_waka_sdm', ''),

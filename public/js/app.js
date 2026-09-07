@@ -739,6 +739,7 @@ function simpanPengaturan() {
     const izinEdit        = document.getElementById('set-izin-edit')?.checked ? '1' : '0';
     const waGatewayAktif  = document.getElementById('set-wa-gateway-aktif')?.checked ? '1' : '0';
     const waEndpoint      = document.getElementById('set-wa-endpoint')?.value?.trim();
+    const waPublicUrl     = document.getElementById('set-wa-public-url')?.value?.trim();
     const waWakaKesiswaan = document.getElementById('set-wa-waka-kesiswaan')?.value?.trim();
     const waWakaSdm       = document.getElementById('set-wa-waka-sdm')?.value?.trim();
     const waKepsek        = document.getElementById('set-wa-kepsek')?.value?.trim();
@@ -772,6 +773,7 @@ function simpanPengaturan() {
             izin_edit_jurnal:        izinEdit,
             wa_gateway_aktif:        waGatewayAktif,
             wa_gateway_endpoint:     waEndpoint,
+            wa_public_url:           waPublicUrl,
             wa_nomor_waka_kesiswaan: waWakaKesiswaan,
             wa_nomor_waka_sdm:       waWakaSdm,
             wa_nomor_kepsek:         waKepsek,
@@ -796,7 +798,7 @@ function simpanPengaturan() {
     });
 }
 
-function cekStatusBotWa() {
+function pollStatusBotWa(attempt = 1, maxAttempts = 6) {
     const badge = document.getElementById('wa-bot-status-badge');
     if (badge) {
         badge.className = 'badge badge-info';
@@ -808,6 +810,7 @@ function cekStatusBotWa() {
     .then(r => r.json())
     .then(data => {
         if (data.online) {
+            Swal.close();
             if (badge) {
                 badge.className = 'badge badge-success';
                 badge.style.cssText = 'font-size:11.5px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px';
@@ -816,31 +819,68 @@ function cekStatusBotWa() {
             Swal.fire({
                 icon: 'success',
                 title: 'Bot WhatsApp Terhubung!',
-                text: data.message,
-                timer: 2000,
+                text: data.message + (data.user ? ' (Nomor: ' + data.user + ')' : ''),
+                timer: 2500,
                 showConfirmButton: false
             });
         } else {
+            if (attempt < maxAttempts) {
+                setTimeout(() => pollStatusBotWa(attempt + 1, maxAttempts), 1500);
+            } else {
+                Swal.close();
+                if (badge) {
+                    badge.className = 'badge badge-danger';
+                    badge.style.cssText = 'font-size:11.5px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px';
+                    badge.innerHTML = '<span style="width:7px;height:7px;background:#ef4444;border-radius:50%;display:inline-block"></span> Offline';
+                }
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Bot Belum Terhubung',
+                    html: `
+                        <div style="font-size:13px;line-height:1.6;text-align:left">
+                            Server bot WhatsApp belum aktif.<br><br>
+                            <strong>Solusi Cepat:</strong><br>
+                            Buka folder project dan <strong>klik 2x file <code>start-bot.bat</code></strong>.
+                        </div>
+                    `,
+                    confirmButtonColor: '#ea580c'
+                });
+            }
+        }
+    })
+    .catch(() => {
+        if (attempt < maxAttempts) {
+            setTimeout(() => pollStatusBotWa(attempt + 1, maxAttempts), 1500);
+        } else {
+            Swal.close();
             if (badge) {
                 badge.className = 'badge badge-danger';
-                badge.style.cssText = 'font-size:11.5px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px';
                 badge.innerHTML = '<span style="width:7px;height:7px;background:#ef4444;border-radius:50%;display:inline-block"></span> Offline';
             }
             Swal.fire({
                 icon: 'warning',
                 title: 'Bot Belum Terhubung',
-                text: data.message || 'Server bot WA tidak dapat dihubungi.',
+                html: `
+                    <div style="font-size:13px;line-height:1.6;text-align:left">
+                        Server bot WhatsApp belum aktif.<br><br>
+                        <strong>Solusi Cepat:</strong><br>
+                        Buka folder project dan <strong>klik 2x file <code>start-bot.bat</code></strong>.
+                    </div>
+                `,
                 confirmButtonColor: '#ea580c'
             });
         }
-    })
-    .catch(err => {
-        if (badge) {
-            badge.className = 'badge badge-danger';
-            badge.innerHTML = '<span style="width:7px;height:7px;background:#ef4444;border-radius:50%;display:inline-block"></span> Error';
-        }
-        Swal.fire({ icon: 'error', title: 'Gagal Cek Status', text: err.message || 'Terjadi kesalahan jaringan.' });
     });
+}
+
+function cekStatusBotWa() {
+    Swal.fire({
+        title: 'Memeriksa Status...',
+        text: 'Menghubungi server bot WhatsApp...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+    });
+    pollStatusBotWa(1, 3);
 }
 
 function startAtauRestartBotPengaturan() {
@@ -862,15 +902,13 @@ function startAtauRestartBotPengaturan() {
     .then(r => r.json())
     .then(() => {
         setTimeout(() => {
-            Swal.close();
-            cekStatusBotWa();
-        }, 2500);
+            pollStatusBotWa(1, 6);
+        }, 1500);
     })
     .catch(() => {
         setTimeout(() => {
-            Swal.close();
-            cekStatusBotWa();
-        }, 2000);
+            pollStatusBotWa(1, 5);
+        }, 1500);
     });
 }
 

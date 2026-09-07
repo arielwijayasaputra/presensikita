@@ -8,7 +8,42 @@ const {
 const pino = require('pino');
 const qrcode = require('qrcode-terminal');
 const QRCode = require('qrcode');
+const fs = require('fs');
 const path = require('path');
+
+const logFile = path.join(__dirname, 'bot.log');
+function log(msg) {
+    const timestamp = new Date().toISOString();
+    const line = `[${timestamp}] ${msg}\n`;
+    try {
+        fs.appendFileSync(logFile, line);
+    } catch (e) {}
+    try {
+        console.log(msg);
+    } catch (e) {}
+}
+
+if (process.stdout) {
+    process.stdout.on('error', (err) => {
+        if (err.code === 'EPIPE') return;
+    });
+}
+if (process.stderr) {
+    process.stderr.on('error', (err) => {
+        if (err.code === 'EPIPE') return;
+    });
+}
+
+process.on('uncaughtException', (err) => {
+    log(`[UncaughtException] ${err.stack || err}`);
+});
+
+process.on('unhandledRejection', (reason) => {
+    log(`[UnhandledRejection] ${reason}`);
+});
+
+// Heartbeat agar event loop tidak pernah idle/exit
+setInterval(() => {}, 60000);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,63 +53,78 @@ app.use(express.json());
 let sock = null;
 let isConnected = false;
 let qrCodeString = null;
+let isStarting = false;
 
 async function startWhatsApp() {
-    const authPath = path.join(__dirname, 'auth_info_baileys');
-    const { state, saveCreds } = await useMultiFileAuthState(authPath);
-    const { version } = await fetchLatestBaileysVersion();
+    if (isStarting) return;
+    isStarting = true;
 
-    console.log(`\n==============================================`);
-    console.log(`🤖 Memulai WhatsApp Bot Gateway PresensiKita`);
-    console.log(`📦 Versi Baileys: ${version.join('.')}`);
-    console.log(`==============================================\n`);
+    try {
+        const authPath = path.join(__dirname, 'auth_info_baileys');
+        const { state, saveCreds } = await useMultiFileAuthState(authPath);
+        const { version } = await fetchLatestBaileysVersion().catch(() => ({ version: [2, 3000, 1015901307] }));
 
-    sock = makeWASocket({
-        version,
-        auth: state,
-        logger: pino({ level: 'silent' }),
-        printQRInTerminal: false,
-        browser: ['PresensiKita', 'Chrome', '1.0.0']
-    });
+        log(`🤖 Memulai WhatsApp Bot Gateway (Baileys v${version.join('.')})`);
 
-    sock.ev.on('creds.update', saveCreds);
-
-    sock.ev.on('connection.update', (update) => {
-        const { connection, lastDisconnect, qr } = update;
-
-        if (qr) {
-            qrCodeString = qr;
-            console.log('\n📱 Silakan Scan QR Code di bawah dengan WhatsApp:');
-            qrcode.generate(qr, { small: true });
-            console.log('Menunggu pemindaian QR Code...\n');
+        if (sock) {
+            try {
+                sock.ev.removeAllListeners();
+                sock.end(undefined);
+            } catch (e) {}
+            sock = null;
         }
 
-        if (connection === 'close') {
-            isConnected = false;
-            const statusCode = lastDisconnect?.error?.output?.statusCode;
-            const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
+        sock = makeWASocket({
+            version,
+            auth: state,
+            logger: pino({ level: 'silent' }),
+            printQRInTerminal: false,
+            browser: ['PresensiKita', 'Chrome', '1.0.0']
+        });
 
-            console.log(`⚠️ Koneksi terputus (status: ${statusCode}). Reconnect: ${shouldReconnect}`);
+        sock.ev.on('creds.update', saveCreds);
 
-            if (shouldReconnect) {
-                setTimeout(() => {
-                    console.log('🔄 Mencoba menghubungkan kembali...');
-                    startWhatsApp();
-                }, 3000);
-            } else {
-                console.log('❌ Anda telah logout dari WhatsApp. Hapus folder auth_info_baileys untuk scan ulang.');
+        sock.ev.on('connection.update', (update) => {
+            const { connection, lastDisconnect, qr } = update;
+
+            if (qr) {
+                qrCodeString = qr;
+                log('📱 QR Code baru telah dibuat, menunggu pemindaian.');
+                try {
+                    if (process.stdout && process.stdout.isTTY) {
+                        qrcode.generate(qr, { small: true });
+                    }
+                } catch (e) {}
             }
-        } else if (connection === 'open') {
-            isConnected = true;
-            qrCodeString = null;
-            const userPhone = sock.user?.id?.split(':')[0] || 'Unknown';
-            console.log('\n==============================================');
-            console.log(`✅ WhatsApp Bot BERHASIL TERHUBUNG!`);
-            console.log(`📱 Nomor Bot: ${userPhone}`);
-            console.log(`🚀 Siap mengirim pesan notifikasi & persetujuan.`);
-            console.log('==============================================\n');
-        }
-    });
+
+            if (connection === 'close') {
+                isConnected = false;
+                const statusCode = lastDisconnect?.error?.output?.statusCode;
+                const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
+
+                log(`⚠️ Koneksi terputus (status: ${statusCode}). Reconnect: ${shouldReconnect}`);
+
+                if (shouldReconnect) {
+                    setTimeout(() => {
+                        log('🔄 Mencoba menghubungkan kembali...');
+                        isStarting = false;
+                        startWhatsApp().catch((e) => log(`Gagal reconnect: ${e}`));
+                    }, 3000);
+                } else {
+                    log('❌ Sesi telah logout dari WhatsApp.');
+                }
+            } else if (connection === 'open') {
+                isConnected = true;
+                qrCodeString = null;
+                const userPhone = sock.user?.id?.split(':')[0] || 'Unknown';
+                log(`✅ WhatsApp Bot BERHASIL TERHUBUNG! Nomor: ${userPhone}`);
+            }
+        });
+    } catch (err) {
+        log(`❌ Error saat inisialisasi WhatsApp: ${err.message || err}`);
+    } finally {
+        isStarting = false;
+    }
 }
 
 function formatJid(number) {

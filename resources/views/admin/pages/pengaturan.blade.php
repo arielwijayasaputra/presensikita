@@ -135,6 +135,11 @@
                     </div>
 
                     <div>
+                        <label style="font-size:12px;font-weight:600;color:#475569">URL Publik / Domain WhatsApp Link <span style="font-size:11px;color:#64748b;font-weight:400">(Opsional, misal: ngrok / domain)</span></label>
+                        <input type="text" class="filter-input" id="set-wa-public-url" value="{{ $waPublicUrl ?? '' }}" placeholder="Contoh: https://xxxx.ngrok-free.app (Kosongkan jika menggunakan IP LAN)" style="width:100%;margin-top:4px">
+                    </div>
+
+                    <div>
                         <label style="font-size:12px;font-weight:600;color:#475569">Nomor WhatsApp Waka Kesiswaan (Dispen Siswa)</label>
                         <input type="text" class="filter-input" id="set-wa-waka-kesiswaan" value="{{ $waNomorWakaKesiswaan ?? '' }}" placeholder="Contoh: 081234567890 atau 6281234567890" style="width:100%;margin-top:4px">
                     </div>

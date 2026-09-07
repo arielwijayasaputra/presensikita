@@ -380,6 +380,7 @@ class DashboardController extends Controller
         // Pengaturan Bot WhatsApp
         $waGatewayAktif = Pengaturan::get('wa_gateway_aktif', '1');
         $waGatewayEndpoint = Pengaturan::get('wa_gateway_endpoint', 'http://127.0.0.1:3000/send-message');
+        $waPublicUrl = Pengaturan::get('wa_public_url', '');
         $waNomorBot = Pengaturan::get('wa_nomor_bot', '');
         $waNomorWakaKesiswaan = Pengaturan::get('wa_nomor_waka_kesiswaan', '');
         $waNomorWakaSdm = Pengaturan::get('wa_nomor_waka_sdm', '');
@@ -405,7 +406,7 @@ class DashboardController extends Controller
             'waliTglMulaiAbsen', 'waliTglSelesaiAbsen', 'waliRekapAbsensiRange',
             'waliTglMulaiJurnal', 'waliTglSelesaiJurnal', 'waliRekapJurnalList',
             'satpamTanggal', 'satpamDispenRiwayat',
-            'waGatewayAktif', 'waGatewayEndpoint', 'waNomorBot', 'waNomorWakaKesiswaan', 'waNomorWakaSdm', 'waNomorKepsek', 'waBotStatus'
+            'waGatewayAktif', 'waGatewayEndpoint', 'waPublicUrl', 'waNomorBot', 'waNomorWakaKesiswaan', 'waNomorWakaSdm', 'waNomorKepsek', 'waBotStatus'
         ));
     }
 

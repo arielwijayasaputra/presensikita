@@ -30,13 +30,15 @@ class GuruJadwalTest extends TestCase
             ['jam_mulai' => '07:00:00', 'jam_selesai' => '07:40:00']
         );
 
-        JadwalMengajar::firstOrCreate([
+        JadwalMengajar::withTrashed()->where('id_kelas', $kelas->id_kelas)->forceDelete();
+
+        JadwalMengajar::create([
+            'id_kelas' => $kelas->id_kelas,
+            'hari' => $hariIni,
+            'id_jam' => $jam->id_jam,
+            'id_tahun_ajaran' => $tahun->id_tahun_ajaran,
             'id_guru' => $guru->id_guru,
             'id_mapel' => $mapel->id_mapel,
-            'id_kelas' => $kelas->id_kelas,
-            'id_jam' => $jam->id_jam,
-            'hari' => $hariIni,
-            'id_tahun_ajaran' => $tahun->id_tahun_ajaran,
         ]);
 
         $response = $this->withSession([

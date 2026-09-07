@@ -7,9 +7,20 @@
     <meta name="description" content="Masuk ke sistem PresensiKita untuk mengelola kehadiran siswa secara digital.">
     <link rel="icon" type="image/png" href="{{ asset('logo_white.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('logo_white.png') }}">
+    <!-- Theme Initialization (Prevent FOUC) -->
+    <script>
+        (function(){
+            var t = localStorage.getItem('presensikita_theme');
+            if(!t){
+                t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+            }
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <script src="{{ asset('js/theme-toggle.js') }}"></script>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { height: 100%; }
@@ -701,10 +712,67 @@
         @media (max-width: 480px) {
             .form-card { padding: 20px 14px 16px; }
         }
+        /* ── Dark Mode Overrides untuk Login ── */
+        .login-theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 120;
+        }
+        [data-theme="dark"] .right-form {
+            background: #0b1324;
+        }
+        [data-theme="dark"] .form-card {
+            background: #152238;
+            border-color: #243552;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+        }
+        [data-theme="dark"] .form-header h2 { color: #f8fafc; }
+        [data-theme="dark"] .form-header p { color: #94a3b8; }
+        [data-theme="dark"] .role-selector { background: #0f1a2e; border-color: #243552; }
+        [data-theme="dark"] .role-arrow { background: #152238; color: #cbd5e1; }
+        [data-theme="dark"] .role-arrow:hover { background: #243552; color: #fff; }
+        [data-theme="dark"] .role-card-name { color: #cbd5e1; }
+        [data-theme="dark"] .role-dot { background: #243552; }
+        [data-theme="dark"] .role-dot.active { background: #3b82f6; }
+        [data-theme="dark"] .form-input {
+            background: #0f1a2e;
+            border-color: #2a3c5a;
+            color: #f8fafc;
+        }
+        [data-theme="dark"] .form-input:focus {
+            border-color: #3b82f6;
+            background: #0f1a2e;
+        }
+        [data-theme="dark"] .form-label { color: #cbd5e1; }
+        [data-theme="dark"] .forgot-link { color: #60a5fa; }
+        [data-theme="dark"] .form-footer-text { color: #94a3b8; }
+        [data-theme="dark"] .form-footer-text a { color: #60a5fa; }
     </style>
     <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
 </head>
 <body>
+
+<!-- Floating Theme Toggle Button -->
+<div class="login-theme-toggle">
+    <button class="theme-toggle-btn" type="button" onclick="toggleDarkMode()" aria-label="Ganti Tema" title="Ganti Mode Gelap / Terang">
+        <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+    </button>
+</div>
+
 <div class="login-container">
 
     <!-- ─── LEFT HERO ─── -->

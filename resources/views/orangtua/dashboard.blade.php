@@ -8,9 +8,19 @@
     <link rel="icon" type="image/png" href="{{ asset('logo_white.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Theme Initialization (Prevent FOUC) -->
+    <script>
+        (function(){
+            var t = localStorage.getItem('presensikita_theme');
+            if(!t){
+                t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+            }
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
+    <script src="{{ asset('js/theme-toggle.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
     function confirmKeluar(formId) {
@@ -986,6 +996,57 @@
         }
         .badge-info { background-color: #dbeafe; color: #1d4ed8; }
         .custom-table th { background-color: #f8fafc; color: #475569; }
+
+        /* ── Dark Mode Overrides untuk Orang Tua Portal ── */
+        [data-theme="dark"] .top-navbar {
+            background: #121d33;
+            border-bottom-color: #243552;
+        }
+        [data-theme="dark"] .nav-brand-title { color: #f8fafc; }
+        [data-theme="dark"] .school-badge { background: #152238; border-color: #243552; color: #94a3b8; }
+        [data-theme="dark"] .school-badge strong { color: #f8fafc; }
+        [data-theme="dark"] .student-hero-card {
+            background: #152238;
+            border-color: #243552;
+        }
+        [data-theme="dark"] .student-name { color: #f8fafc; }
+        [data-theme="dark"] .meta-pill { background: #0f1a2e; color: #94a3b8; border: 1px solid #243552; }
+        [data-theme="dark"] .card-main-box,
+        [data-theme="dark"] .dispen-tracker-card {
+            background: #152238;
+            border-color: #243552;
+        }
+        [data-theme="dark"] .card-box-header { border-bottom-color: #243552; }
+        [data-theme="dark"] .card-box-title { color: #f8fafc; }
+        [data-theme="dark"] .jam-row-item {
+            background: #0f1a2e;
+            border-color: #243552;
+        }
+        [data-theme="dark"] .subject-title { color: #f8fafc; }
+        [data-theme="dark"] .custom-table th {
+            background: #101a2c;
+            color: #94a3b8;
+            border-bottom-color: #243552;
+        }
+        [data-theme="dark"] .custom-table td {
+            border-bottom-color: #1c2b44;
+            color: #f8fafc;
+        }
+        [data-theme="dark"] .date-filter-form {
+            background: #0f1a2e;
+            border-color: #243552;
+        }
+        [data-theme="dark"] .date-filter-form input {
+            background: transparent;
+            color: #f8fafc;
+        }
+        [data-theme="dark"] .stat-card {
+            background: #152238;
+            border-color: #243552;
+        }
+        [data-theme="dark"] .stat-val { color: #f8fafc; }
+        [data-theme="dark"] .stepper-step { background: transparent; }
+        [data-theme="dark"] .stepper-title { color: #f8fafc; }
     </style>
 </head>
 <body>
@@ -1007,6 +1068,24 @@
                 <strong>{{ $namaSekolah }}</strong>
                 <span>TA {{ $tahunAjaran->tahun_ajaran ?? '' }} ({{ $tahunAjaran->semester ?? '' }})</span>
             </div>
+
+            {{-- Tombol Dark / Light Mode --}}
+            <button class="theme-toggle-btn" type="button" onclick="toggleDarkMode()" aria-label="Ganti Tema" title="Ganti Mode Gelap / Terang">
+                <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+                <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                    <circle cx="12" cy="12" r="5"/>
+                    <line x1="12" y1="1" x2="12" y2="3"/>
+                    <line x1="12" y1="21" x2="12" y2="23"/>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                    <line x1="1" y1="12" x2="3" y2="12"/>
+                    <line x1="21" y1="12" x2="23" y2="12"/>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                </svg>
+            </button>
 
             <button type="button" onclick="bukaModalLaporOrangTua()" class="btn-logout" style="background-color: #dbeafe; color: #2563eb; border-color: #93c5fd; margin-right: 8px;" title="Laporkan Kendala">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">

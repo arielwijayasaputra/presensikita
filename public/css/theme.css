@@ -1,17 +1,17 @@
 /*
  * ══════════════════════════════════════════════════════════════════════════
- *  PresensiKita — Global UI Theme
+ *  PresensiKita — Global UI Theme (Light & Dark Mode)
  *  Satu sumber tunggal gaya elemen UI (button, card, form, badge, alert)
- *  Nilai-nilai di bawah MENGIKUTI patokan panel Admin (public/css/style.css)
- *  sehingga setiap halaman web memiliki tampilan elemen yang sama persis.
  * ══════════════════════════════════════════════════════════════════════════
  */
 
 *, *::before, *::after { box-sizing: border-box; }
+
 :root {
     --body-bg: #f1f5f9;
     --card-bg: #ffffff;
     --border: #e2e8f0;
+    --border-subtle: #f1f5f9;
     --text-primary: #1e293b;
     --text-secondary: #64748b;
     --text-muted: #94a3b8;
@@ -23,14 +23,40 @@
     --yellow-light: #fef3c7;
     --blue-light: #dbeafe;
     --red-light: #fee2e2;
+    --header-bg: #ffffff;
+    --sidebar-bg: linear-gradient(160deg, #1a3a6e 0%, #1e4080 50%, #1a3368 100%);
     --radius: 12px;
     --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
     --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    --input-bg: #ffffff;
+    --input-border: #cbd5e1;
+}
+
+[data-theme="dark"] {
+    --body-bg: #0b1324;
+    --card-bg: #152238;
+    --border: #243552;
+    --border-subtle: #1c2b44;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --green-light: rgba(34, 197, 94, 0.18);
+    --yellow-light: rgba(245, 158, 11, 0.18);
+    --blue-light: rgba(59, 130, 246, 0.18);
+    --red-light: rgba(239, 68, 68, 0.18);
+    --header-bg: #121d33;
+    --sidebar-bg: linear-gradient(160deg, #091122 0%, #0d172e 50%, #091122 100%);
+    --shadow: 0 1px 4px rgba(0,0,0,0.45);
+    --shadow-md: 0 4px 14px rgba(0,0,0,0.6);
+    --input-bg: #0f1a2e;
+    --input-border: #2a3c5a;
 }
 
 body {
     font-family: 'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--text-primary);
+    background: var(--body-bg);
+    transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 /* ── BUTTON ─────────────────────────────────────────────────────────────── */
@@ -65,7 +91,6 @@ body {
     box-shadow: 0 6px 16px rgba(37, 99, 235, 0.45);
 }
 
-/* CTA sukses (setujui / kirim sukses) — senada dengan badge-success admin */
 .btn-success {
     background: linear-gradient(135deg, #16a34a, #15803d);
     color: #ffffff;
@@ -75,7 +100,6 @@ body {
     box-shadow: 0 6px 16px rgba(22, 163, 74, 0.45);
 }
 
-/* Tindakan negatif/danger — senada dengan tombol konfirmasi hapus admin */
 .btn-danger {
     background: linear-gradient(135deg, #ef4444, #dc2626);
     color: #ffffff;
@@ -85,22 +109,56 @@ body {
     box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
 }
 
-/* Tombol outline/netral — identik .btn-secondary admin */
 .btn-secondary {
-    background: #ffffff;
-    color: #1e293b;
-    border: 1px solid #e2e8f0;
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
     padding: 10px 18px;
     font-weight: 600;
     box-shadow: none;
 }
 .btn-secondary:hover {
-    background: #f8fafc;
-    border-color: #cbd5e1;
+    background: var(--body-bg);
+    border-color: var(--text-muted);
     transform: none;
 }
 
 .btn-block { width: 100%; justify-content: center; }
+
+/* ── THEME TOGGLE BUTTON ─────────────────────────────────────────────────── */
+.theme-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.theme-toggle-btn:hover {
+    background: var(--body-bg);
+    color: var(--text-primary);
+    border-color: #3b82f6;
+    transform: translateY(-1px);
+}
+.theme-toggle-btn:active {
+    transform: translateY(0);
+}
+.theme-toggle-btn svg {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.theme-toggle-btn:hover svg {
+    transform: rotate(15deg);
+}
 
 /* ── CARD ───────────────────────────────────────────────────────────────── */
 .card {
@@ -109,6 +167,7 @@ body {
     border: 1px solid var(--border);
     box-shadow: var(--shadow);
     padding: 20px;
+    transition: background-color 0.25s ease, border-color 0.25s ease;
 }
 
 /* ── FORM ───────────────────────────────────────────────────────────────── */
@@ -116,7 +175,7 @@ body {
     display: block;
     font-size: 12px;
     font-weight: 700;
-    color: #475569;
+    color: var(--text-secondary);
     margin-bottom: 6px;
 }
 .form-label .req { color: var(--red); margin-left: 2px; }
@@ -126,25 +185,25 @@ body {
 .form-textarea {
     width: 100%;
     padding: 10px 14px;
-    border: 1.5px solid #cbd5e1;
+    border: 1.5px solid var(--input-border);
     border-radius: 10px;
     font-size: 13.5px;
     font-family: inherit;
-    color: #1e293b;
-    background: #ffffff;
+    color: var(--text-primary);
+    background: var(--input-bg);
     outline: none;
     box-sizing: border-box;
-    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
 }
 .form-control:focus,
 .form-select:focus,
 .form-textarea:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-    background: #ffffff;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+    background: var(--input-bg);
 }
 .form-control::placeholder,
-.form-textarea::placeholder { color: #94a3b8; }
+.form-textarea::placeholder { color: var(--text-muted); }
 .form-select {
     appearance: none;
     -webkit-appearance: none;
@@ -166,10 +225,15 @@ body {
     display: inline-block;
     line-height: 1.4;
 }
-.badge-success { background: var(--green-light); color: #15803d; }
-.badge-warning { background: var(--yellow-light); color: #b45309; }
-.badge-info    { background: var(--blue-light); color: #1d4ed8; }
-.badge-danger  { background: var(--red-light); color: #b91c1c; }
+.badge-success { background: var(--green-light); color: #22c55e; }
+.badge-warning { background: var(--yellow-light); color: #f59e0b; }
+.badge-info    { background: var(--blue-light); color: #3b82f6; }
+.badge-danger  { background: var(--red-light); color: #ef4444; }
+
+[data-theme="dark"] .badge-success { color: #4ade80; }
+[data-theme="dark"] .badge-warning { color: #fbbf24; }
+[data-theme="dark"] .badge-info    { color: #60a5fa; }
+[data-theme="dark"] .badge-danger  { color: #f87171; }
 
 /* ── ALERT ──────────────────────────────────────────────────────────────── */
 .alert {
@@ -188,3 +252,28 @@ body {
 .alert-danger  { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
 .alert-warning { background: #fffbeb; color: #b45309; border-color: #fde68a; }
 .alert-info    { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+
+[data-theme="dark"] .alert-success { background: rgba(34, 197, 94, 0.12); color: #4ade80; border-color: rgba(34, 197, 94, 0.3); }
+[data-theme="dark"] .alert-danger  { background: rgba(239, 68, 68, 0.12); color: #f87171; border-color: rgba(239, 68, 68, 0.3); }
+[data-theme="dark"] .alert-warning { background: rgba(245, 158, 11, 0.12); color: #fbbf24; border-color: rgba(245, 158, 11, 0.3); }
+[data-theme="dark"] .alert-info    { background: rgba(59, 130, 246, 0.12); color: #60a5fa; border-color: rgba(59, 130, 246, 0.3); }
+
+/* ── SWEETALERT2 DARK OVERRIDE ──────────────────────────────────────────── */
+[data-theme="dark"] .swal2-popup {
+    background: #152238 !important;
+    color: #f8fafc !important;
+    border: 1px solid #243552 !important;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.6) !important;
+}
+[data-theme="dark"] .swal2-title {
+    color: #f8fafc !important;
+}
+[data-theme="dark"] .swal2-html-container {
+    color: #94a3b8 !important;
+}
+[data-theme="dark"] .swal2-input,
+[data-theme="dark"] .swal2-textarea {
+    background: #0f1a2e !important;
+    border-color: #2a3c5a !important;
+    color: #f8fafc !important;
+}

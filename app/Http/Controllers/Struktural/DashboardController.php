@@ -377,6 +377,15 @@ class DashboardController extends Controller
             $waliRekapJurnalList = collect();
         }
 
+        // Pengaturan Bot WhatsApp
+        $waGatewayAktif = Pengaturan::get('wa_gateway_aktif', '1');
+        $waGatewayEndpoint = Pengaturan::get('wa_gateway_endpoint', 'http://127.0.0.1:3000/send-message');
+        $waNomorBot = Pengaturan::get('wa_nomor_bot', '');
+        $waNomorWakaKesiswaan = Pengaturan::get('wa_nomor_waka_kesiswaan', '');
+        $waNomorWakaSdm = Pengaturan::get('wa_nomor_waka_sdm', '');
+        $waNomorKepsek = Pengaturan::get('wa_nomor_kepsek', '');
+        $waBotStatus = \App\Services\WhatsAppService::checkBotStatus();
+
         return view('struktural.dashboard', compact(
             'guru',
             'namaSekolah',
@@ -395,7 +404,8 @@ class DashboardController extends Controller
             'waliTanggalHariIni', 'waliAbsensiHariIniList', 'waliStatsHariIni', 'waliJadwalHariIni', 'waliStatsJurnalHariIni',
             'waliTglMulaiAbsen', 'waliTglSelesaiAbsen', 'waliRekapAbsensiRange',
             'waliTglMulaiJurnal', 'waliTglSelesaiJurnal', 'waliRekapJurnalList',
-            'satpamTanggal', 'satpamDispenRiwayat'
+            'satpamTanggal', 'satpamDispenRiwayat',
+            'waGatewayAktif', 'waGatewayEndpoint', 'waNomorBot', 'waNomorWakaKesiswaan', 'waNomorWakaSdm', 'waNomorKepsek', 'waBotStatus'
         ));
     }
 

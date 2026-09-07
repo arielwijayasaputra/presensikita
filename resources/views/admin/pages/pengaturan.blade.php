@@ -150,12 +150,16 @@
                         </div>
                     </div>
 
-                    <div style="display:flex;gap:10px;margin-top:4px">
-                        <button type="button" class="btn-secondary" onclick="cekStatusBotWa()" style="flex:1;border-radius:8px;padding:8px 12px;font-size:12.5px;display:flex;align-items:center;justify-content:center;gap:6px">
+                    <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
+                        <button type="button" class="btn-secondary" onclick="startAtauRestartBotPengaturan()" style="flex:1;min-width:130px;border-radius:8px;padding:8px 10px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:5px;background:#f0fdf4;border-color:#bbf7d0;color:#15803d">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                            Hubungkan Ulang Bot
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="cekStatusBotWa()" style="flex:1;min-width:110px;border-radius:8px;padding:8px 10px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:5px">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
                             Cek Koneksi Bot
                         </button>
-                        <button type="button" class="btn-secondary" onclick="modalTestKirimWa()" style="flex:1;border-radius:8px;padding:8px 12px;font-size:12.5px;display:flex;align-items:center;justify-content:center;gap:6px;background:#f0fdf4;border-color:#bbf7d0;color:#15803d">
+                        <button type="button" class="btn-secondary" onclick="modalTestKirimWa()" style="flex:1;min-width:110px;border-radius:8px;padding:8px 10px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:5px;background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                             Test Kirim WA
                         </button>

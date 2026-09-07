@@ -142,14 +142,77 @@
                 width: 100%;
             }
         }
+    <!-- Theme Initialization (Prevent FOUC) -->
+    <script>
+        (function(){
+            var t = localStorage.getItem('presensikita_theme');
+            if(!t){
+                t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+            }
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+    <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
+    <script src="{{ asset('js/theme-toggle.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #050a14 0%, #0d172e 50%, #050a14 100%);
+            color: #f8fafc;
+        }
+        [data-theme="dark"] .box {
+            background: #152238;
+            border-color: #243552;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+        }
+        [data-theme="dark"] .info {
+            background: #0f1a2e;
+            border-color: #243552;
+        }
+        [data-theme="dark"] .row {
+            border-bottom-color: #243552;
+        }
+        [data-theme="dark"] .label {
+            color: #94a3b8;
+        }
+        [data-theme="dark"] .decision h2 {
+            color: #f8fafc;
+        }
+        [data-theme="dark"] .decision {
+            border-top-color: #243552;
+        }
+        .header-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
 <main class="box">
     <div class="box-header">
-        <div class="brand-badge">
-            <img src="{{ asset('logo.png') }}" alt="Logo" style="width:16px;height:16px;object-fit:contain;background:#fff;border-radius:4px;">
-            PresensiKita
+        <div class="header-top-row">
+            <div class="brand-badge" style="margin-bottom:0">
+                <img src="{{ asset('logo.png') }}" alt="Logo" style="width:16px;height:16px;object-fit:contain;background:#fff;border-radius:4px;">
+                PresensiKita
+            </div>
+            <button class="theme-toggle-btn" type="button" onclick="toggleDarkMode()" aria-label="Ganti Tema" title="Ganti Mode Gelap / Terang" style="background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.25);color:#fff">
+                <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+                <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                    <circle cx="12" cy="12" r="5"/>
+                    <line x1="12" y1="1" x2="12" y2="3"/>
+                    <line x1="12" y1="21" x2="12" y2="23"/>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                    <line x1="1" y1="12" x2="3" y2="12"/>
+                    <line x1="21" y1="12" x2="23" y2="12"/>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                </svg>
+            </button>
         </div>
         <h1 class="box-title">Persetujuan Dispensasi Siswa</h1>
         <p class="intro">Halaman khusus {{ $role === 'waka' ? 'Waka Kesiswaan' : 'Guru Piket' }}. Keputusan langsung tercatat di sistem.</p>

@@ -85,8 +85,8 @@ class IzinGuruController extends Controller
             ['izin' => $izin->id_izin_guru]
         );
 
-        $kepsekLink = URL::temporarySignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'kepsek']);
-        $wakaLink = URL::temporarySignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'waka']);
+        $kepsekLink = WhatsAppService::generateLanSignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'kepsek']);
+        $wakaLink = WhatsAppService::generateLanSignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'waka']);
 
         $waNotification = WhatsAppService::kirimNotifikasiIzinGuru($izin, $kepsekLink, $wakaLink);
 

@@ -143,16 +143,65 @@
             .laporan-body { padding: 24px 20px; }
             .laporan-title { font-size: 20px; }
         }
-    </style>
+    <!-- Theme Initialization (Prevent FOUC) -->
+    <script>
+        (function(){
+            var t = localStorage.getItem('presensikita_theme');
+            if(!t){
+                t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+            }
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
     <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
+    <script src="{{ asset('js/theme-toggle.js') }}"></script>
+    <style>
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #050a14 0%, #0d172e 50%, #050a14 100%);
+            color: #f8fafc;
+        }
+        [data-theme="dark"] .laporan-card {
+            background: #152238;
+            border-color: #243552;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+        }
+        [data-theme="dark"] .form-label { color: #cbd5e1; }
+        [data-theme="dark"] .form-hint { color: #94a3b8; }
+        [data-theme="dark"] .back-link { color: #94a3b8; }
+        [data-theme="dark"] .back-link:hover { color: #60a5fa; }
+        .header-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+    </style>
 </head>
 <body>
 
 <div class="laporan-card">
     <div class="laporan-header">
-        <div class="brand-pill">
-            <img src="{{ asset('logo.png') }}" alt="Logo PresensiKita" style="width:18px;height:18px;object-fit:contain;background:#fff;border-radius:5px;">
-            PresensiKita
+        <div class="header-top-row">
+            <div class="brand-pill" style="margin-bottom:0">
+                <img src="{{ asset('logo.png') }}" alt="Logo PresensiKita" style="width:18px;height:18px;object-fit:contain;background:#fff;border-radius:5px;">
+                PresensiKita
+            </div>
+            <button class="theme-toggle-btn" type="button" onclick="toggleDarkMode()" aria-label="Ganti Tema" title="Ganti Mode Gelap / Terang" style="background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.25);color:#fff">
+                <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+                <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                    <circle cx="12" cy="12" r="5"/>
+                    <line x1="12" y1="1" x2="12" y2="3"/>
+                    <line x1="12" y1="21" x2="12" y2="23"/>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                    <line x1="1" y1="12" x2="3" y2="12"/>
+                    <line x1="21" y1="12" x2="23" y2="12"/>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                </svg>
+            </button>
         </div>
         <h1 class="laporan-title">Form Laporan / Pengaduan</h1>
         <p class="laporan-subtitle">Sampaikan saran, masalah, atau laporan Anda langsung kepada Administrator sekolah.</p>

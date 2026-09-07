@@ -843,6 +843,37 @@ function cekStatusBotWa() {
     });
 }
 
+function startAtauRestartBotPengaturan() {
+    Swal.fire({
+        title: 'Menghubungkan Bot...',
+        text: 'Memulai server bot WhatsApp di background...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+    });
+
+    fetch('/pengaturan/restart-wa', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json'
+        }
+    })
+    .then(r => r.json())
+    .then(() => {
+        setTimeout(() => {
+            Swal.close();
+            cekStatusBotWa();
+        }, 2500);
+    })
+    .catch(() => {
+        setTimeout(() => {
+            Swal.close();
+            cekStatusBotWa();
+        }, 2000);
+    });
+}
+
 function modalTestKirimWa() {
     const defaultNomor = document.getElementById('set-wa-waka-kesiswaan')?.value?.trim()
         || document.getElementById('set-wa-kepsek')?.value?.trim()
@@ -1058,6 +1089,10 @@ let laporanCharts = { donut: null, line: null, bar: null };
 let laporanPage = 1;
 let laporanChartsReady = false;
 
+function getChartGridColor() {
+    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'rgba(255,255,255,0.08)' : '#f1f5f9';
+}
+
 function initChart(){
     const ctx = document.getElementById('lineChart');
     if (!ctx) return;
@@ -1083,7 +1118,7 @@ function initChart(){
             },
             scales: {
                 x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 11, family: 'Inter' } } },
-                y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { color: '#94a3b8', font: { size: 11, family: 'Inter' } } }
+                y: { beginAtZero: true, grid: { color: getChartGridColor() }, ticks: { color: '#94a3b8', font: { size: 11, family: 'Inter' } } }
             },
             interaction: { mode: 'index', intersect: false }
         }

@@ -25,3 +25,9 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# WhatsApp Bot Session & Dependencies
+/whatsapp-bot/auth_info_baileys
+/whatsapp-bot/node_modules
+whatsapp-bot/auth_info_baileys/
+whatsapp-bot/node_modules/

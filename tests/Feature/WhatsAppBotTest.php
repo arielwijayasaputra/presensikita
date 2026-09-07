@@ -113,4 +113,27 @@ class WhatsAppBotTest extends TestCase
         $testResponse->assertStatus(200);
         $testResponse->assertJson(['status' => 'success']);
     }
+
+    public function test_admin_can_update_wa_via_dedicated_endpoint()
+    {
+        $admin = $this->authenticateAdmin();
+
+        $response = $this->withSession([
+            'auth_admin_id' => $admin->id_admin,
+            'auth_is_admin' => 1,
+            'auth_role' => 'admin',
+        ])->postJson('/pengaturan/update-wa', [
+            'wa_gateway_aktif' => true,
+            'wa_nomor_waka_kesiswaan' => '0899999999',
+            'wa_nomor_waka_sdm' => '0888888888',
+            'wa_nomor_kepsek' => '0877777777',
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson(['status' => 'success']);
+        $this->assertEquals('0899999999', Pengaturan::get('wa_nomor_waka_kesiswaan'));
+        $this->assertEquals('0888888888', Pengaturan::get('wa_nomor_waka_sdm'));
+        $this->assertEquals('0877777777', Pengaturan::get('wa_nomor_kepsek'));
+        $this->assertEquals('1', Pengaturan::get('wa_gateway_aktif'));
+    }
 }

@@ -28,6 +28,13 @@ Route::middleware('auth.struktural')->group(function () {
 
     Route::post('/satpam/izinkan-keluar/{dispen}', [DashboardController::class, 'izinkanKeluar'])->name('satpam.izinkan-keluar');
     Route::post('/satpam/izinkan-masuk/{dispen}', [DashboardController::class, 'izinkanMasuk'])->name('satpam.izinkan-masuk');
+
+    // Pengaturan WhatsApp Bot Gateway untuk Struktural / Guru Piket
+    Route::post('/struktural/pengaturan/update-wa', [PengaturanController::class, 'updateWa'])->name('struktural.pengaturan.update-wa');
+    Route::post('/struktural/pengaturan/test-wa', [PengaturanController::class, 'testKirimWa'])->name('struktural.pengaturan.test-wa');
+    Route::get('/struktural/pengaturan/status-wa', [PengaturanController::class, 'statusBotWa'])->name('struktural.pengaturan.status-wa');
+    Route::post('/struktural/pengaturan/restart-wa', [PengaturanController::class, 'restartBotWa'])->name('struktural.pengaturan.restart-wa');
+    Route::get('/struktural/pengaturan/qr-wa', [PengaturanController::class, 'qrBotWa'])->name('struktural.pengaturan.qr-wa');
 });
 
 Route::get('/persetujuan-izin-guru/{izin}', [IzinGuruController::class, 'publicShow'])

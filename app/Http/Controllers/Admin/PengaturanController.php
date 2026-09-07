@@ -55,6 +55,7 @@ class PengaturanController extends Controller
         if ($request->filled('wa_gateway_endpoint')) {
             Pengaturan::set('wa_gateway_endpoint', trim($request->wa_gateway_endpoint));
         }
+        Pengaturan::set('wa_nomor_bot', trim($request->wa_nomor_bot ?? ''));
         Pengaturan::set('wa_nomor_waka_kesiswaan', trim($request->wa_nomor_waka_kesiswaan ?? ''));
         Pengaturan::set('wa_nomor_waka_sdm', trim($request->wa_nomor_waka_sdm ?? ''));
         Pengaturan::set('wa_nomor_kepsek', trim($request->wa_nomor_kepsek ?? ''));
@@ -82,6 +83,49 @@ class PengaturanController extends Controller
                 'semester' => trim($request->semester),
                 'sistem_absensi' => trim($request->sistem_absensi ?? Pengaturan::get('sistem_absensi')),
                 'batas_waktu_jurnal' => trim($request->batas_waktu_jurnal ?? '23:59'),
+            ],
+        ]);
+    }
+
+    /**
+     * Memperbarui pengaturan khusus nomor bot WhatsApp (Nomor Bot, Kepsek, Waka SDM, Waka Kesiswaan).
+     *
+     * @return JsonResponse
+     */
+    public function updateWa(Request $request)
+    {
+        $request->validate([
+            'wa_nomor_bot' => 'nullable|string|max:30',
+            'wa_nomor_kepsek' => 'nullable|string|max:30',
+            'wa_nomor_waka_sdm' => 'nullable|string|max:30',
+            'wa_nomor_waka_kesiswaan' => 'nullable|string|max:30',
+        ]);
+
+        if ($request->has('wa_gateway_aktif')) {
+            Pengaturan::set('wa_gateway_aktif', $request->boolean('wa_gateway_aktif') ? '1' : '0');
+        }
+        if ($request->has('wa_nomor_bot')) {
+            Pengaturan::set('wa_nomor_bot', trim($request->wa_nomor_bot ?? ''));
+        }
+        if ($request->has('wa_nomor_kepsek')) {
+            Pengaturan::set('wa_nomor_kepsek', trim($request->wa_nomor_kepsek ?? ''));
+        }
+        if ($request->has('wa_nomor_waka_sdm')) {
+            Pengaturan::set('wa_nomor_waka_sdm', trim($request->wa_nomor_waka_sdm ?? ''));
+        }
+        if ($request->has('wa_nomor_waka_kesiswaan')) {
+            Pengaturan::set('wa_nomor_waka_kesiswaan', trim($request->wa_nomor_waka_kesiswaan ?? ''));
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Pengaturan nomor WhatsApp notifikasi berhasil diperbarui!',
+            'data' => [
+                'wa_nomor_bot' => Pengaturan::get('wa_nomor_bot', ''),
+                'wa_nomor_kepsek' => Pengaturan::get('wa_nomor_kepsek', ''),
+                'wa_nomor_waka_sdm' => Pengaturan::get('wa_nomor_waka_sdm', ''),
+                'wa_nomor_waka_kesiswaan' => Pengaturan::get('wa_nomor_waka_kesiswaan', ''),
+                'wa_gateway_aktif' => Pengaturan::get('wa_gateway_aktif', '1'),
             ],
         ]);
     }
@@ -128,6 +172,42 @@ class PengaturanController extends Controller
         $status = \App\Services\WhatsAppService::checkBotStatus();
 
         return response()->json($status);
+    }
+
+    /**
+     * Memulai server bot WhatsApp lokal di background.
+     *
+     * @return JsonResponse
+     */
+    public function startBotWa()
+    {
+        $hasil = \App\Services\WhatsAppService::startLocalBot();
+
+        return response()->json($hasil);
+    }
+
+    /**
+     * Memulai ulang / menghubungkan kembali bot WhatsApp.
+     *
+     * @return JsonResponse
+     */
+    public function restartBotWa()
+    {
+        $hasil = \App\Services\WhatsAppService::restartBot();
+
+        return response()->json($hasil);
+    }
+
+    /**
+     * Mengambil QR code jika bot belum terhubung.
+     *
+     * @return JsonResponse
+     */
+    public function qrBotWa()
+    {
+        $qr = \App\Services\WhatsAppService::getQrCode();
+
+        return response()->json($qr);
     }
 
     /**

@@ -105,7 +105,7 @@ class DispenSiswaController extends Controller
             throw $exception;
         }
 
-        $wakaLink = URL::temporarySignedRoute('dispen-siswa.public', now()->addDays(2), ['dispen' => $dispen->id_dispen_siswa, 'role' => 'waka']);
+        $wakaLink = WhatsAppService::generateLanSignedRoute('dispen-siswa.public', now()->addDays(2), ['dispen' => $dispen->id_dispen_siswa, 'role' => 'waka']);
 
         $waNotification = WhatsAppService::kirimNotifikasiDispenSiswa($dispen, $wakaLink);
 

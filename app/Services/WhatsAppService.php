@@ -64,9 +64,10 @@ class WhatsAppService
                 $data = $response->json();
 
                 return [
-                    'online' => true,
+                    'online' => ($data['status'] ?? '') === 'connected',
                     'status' => $data['status'] ?? 'connected',
-                    'message' => 'Server bot WhatsApp aktif dan terhubung.',
+                    'message' => $data['message'] ?? 'Server bot WhatsApp aktif.',
+                    'user' => $data['user'] ?? null,
                 ];
             }
 
@@ -82,6 +83,156 @@ class WhatsAppService
                 'message' => 'Server bot tidak dapat dihubungi di '.$statusUrl.' ('.$e->getMessage().')',
             ];
         }
+    }
+
+    /**
+     * Mengambil QR code (Data URL) jika bot membutuhkan scan login.
+     */
+    public static function getQrCode(): array
+    {
+        $endpoint = static::getEndpoint();
+        $baseHost = preg_replace('#/send-message.*$#', '', $endpoint);
+        $qrUrl = rtrim($baseHost, '/').'/qr';
+
+        try {
+            $response = Http::timeout(3)->get($qrUrl);
+            if ($response->successful()) {
+                return $response->json();
+            }
+        } catch (\Throwable $e) {
+            // Abaikan
+        }
+
+        return [
+            'status' => 'offline',
+            'message' => 'Server bot WhatsApp belum aktif.',
+        ];
+    }
+
+    /**
+     * Mencari path binary node.exe di sistem Windows/Linux.
+     */
+    public static function findNodeBinary(): string
+    {
+        $candidates = [
+            'D:\\nodeJS\\node.exe',
+            'C:\\Program Files\\nodejs\\node.exe',
+            'C:\\Program Files (x86)\\nodejs\\node.exe',
+            'C:\\laragon\\bin\\nodejs\\node.exe',
+            'D:\\laragon\\bin\\nodejs\\node.exe',
+        ];
+
+        foreach ($candidates as $path) {
+            if (file_exists($path)) {
+                return $path;
+            }
+        }
+
+        return 'node';
+    }
+
+    /**
+     * Menjalankan server bot WhatsApp lokal di background Windows/Linux.
+     */
+    public static function startLocalBot(): array
+    {
+        $status = static::checkBotStatus();
+        if ($status['online']) {
+            return [
+                'success' => true,
+                'message' => 'Bot WhatsApp sudah aktif dan terhubung.',
+                'status' => 'connected',
+                'details' => $status,
+            ];
+        }
+
+        $botDir = base_path('whatsapp-bot');
+        $serverJs = $botDir.DIRECTORY_SEPARATOR.'server.js';
+
+        if (file_exists($serverJs)) {
+            if (strncasecmp(PHP_OS, 'WIN', 3) === 0) {
+                $nodeBin = static::findNodeBinary();
+                $started = false;
+
+                // 1. Coba WScript.Shell (paling mulus di Windows)
+                if (class_exists(\COM::class)) {
+                    try {
+                        $wsh = new \COM('WScript.Shell');
+                        $wsh->CurrentDirectory = $botDir;
+                        $wsh->Run('"'.$nodeBin.'" "'.$serverJs.'"', 0, false);
+                        $started = true;
+                    } catch (\Throwable $th) {
+                        $started = false;
+                    }
+                }
+
+                // 2. Coba PowerShell Start-Process detached di background
+                if (! $started) {
+                    try {
+                        $psCmd = 'powershell -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -Command "Start-Process -FilePath \''.$nodeBin.'\' -ArgumentList \''.$serverJs.'\' -WorkingDirectory \''.$botDir.'\' -WindowStyle Hidden" > NUL 2>&1';
+                        @pclose(@popen($psCmd, 'r'));
+                        $started = true;
+                    } catch (\Throwable $th) {
+                        $started = false;
+                    }
+                }
+
+                // 3. Fallback start /B CMD
+                if (! $started) {
+                    try {
+                        @pclose(@popen('start "" /B "'.$nodeBin.'" "'.$serverJs.'" > NUL 2>&1', 'r'));
+                        $started = true;
+                    } catch (\Throwable $th) {
+                        $started = false;
+                    }
+                }
+            } else {
+                exec('cd '.escapeshellarg($botDir).' && node server.js > /dev/null 2>&1 &');
+            }
+
+            // Berikan jeda agar node sempat listen di port
+            for ($i = 0; $i < 4; $i++) {
+                usleep(500000); // 0.5 detik x 4 = 2 detik
+                $check = static::checkBotStatus();
+                if ($check['online'] || ($check['status'] ?? '') === 'waiting_qr') {
+                    break;
+                }
+            }
+        }
+
+        $newStatus = static::checkBotStatus();
+
+        return [
+            'success' => $newStatus['online'] || ($newStatus['status'] ?? '') === 'waiting_qr',
+            'message' => $newStatus['online']
+                ? 'WhatsApp Bot berhasil dijalankan dan terhubung!'
+                : (($newStatus['status'] ?? '') === 'waiting_qr'
+                    ? 'WhatsApp Bot berjalan. Silakan scan QR Code yang muncul.'
+                    : 'Server bot WhatsApp sedang dimulai di background. Klik "Cek Koneksi Bot" setelah beberapa detik.'),
+            'status' => $newStatus['status'] ?? 'starting',
+            'details' => $newStatus,
+        ];
+    }
+
+    /**
+     * Memulai ulang / menghubungkan kembali bot WhatsApp.
+     */
+    public static function restartBot(): array
+    {
+        $endpoint = static::getEndpoint();
+        $baseHost = preg_replace('#/send-message.*$#', '', $endpoint);
+        $restartUrl = rtrim($baseHost, '/').'/restart';
+
+        try {
+            $response = Http::timeout(4)->post($restartUrl);
+            if ($response->successful()) {
+                return $response->json();
+            }
+        } catch (\Throwable $e) {
+            // Jika bot mati, jalankan bot secara lokal
+        }
+
+        return static::startLocalBot();
     }
 
     /**
@@ -267,5 +418,42 @@ class WhatsAppService
         }
 
         return 'https://wa.me/'.$normalized.'?text='.rawurlencode($message);
+    }
+
+    /**
+     * Membuat temporary signed URL khusus untuk link WhatsApp yang dibuka di HP.
+     * Menggunakan IP LAN komputer secara dinamis dan langsung di-sign dengan IP tersebut
+     * tanpa mengubah setelan URL halaman lain.
+     */
+    public static function generateLanSignedRoute(string $name, $expiration, array $parameters = []): string
+    {
+        try {
+            $lanIp = gethostbyname(gethostname());
+            $port = 8000;
+            $scheme = 'http';
+
+            try {
+                if (request()) {
+                    $scheme = request()->getScheme() ?: 'http';
+                    $reqPort = request()->getPort();
+                    if ($reqPort && ! in_array($reqPort, [80, 443])) {
+                        $port = $reqPort;
+                    }
+                }
+            } catch (\Throwable $e) {
+            }
+
+            if (! empty($lanIp) && $lanIp !== '127.0.0.1' && ! str_starts_with($lanIp, '127.')) {
+                $portStr = ($port && ! in_array($port, [80, 443])) ? ':'.$port : '';
+                \Illuminate\Support\Facades\URL::forceRootUrl("{$scheme}://{$lanIp}{$portStr}");
+            }
+
+            $signedUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute($name, $expiration, $parameters);
+        } finally {
+            // Selalu kembalikan URL root ke setelan semula agar tidak mempengaruhi halaman lain
+            \Illuminate\Support\Facades\URL::forceRootUrl(null);
+        }
+
+        return $signedUrl;
     }
 }

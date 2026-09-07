@@ -243,6 +243,13 @@ class DashboardController extends Controller
         $istirahatJumat2Mulai = Pengaturan::get('jam_istirahat_jumat_2_mulai', '11:20');
         $istirahatJumat2Selesai = Pengaturan::get('jam_istirahat_jumat_2_selesai', '13:00');
 
+        $waGatewayAktif = Pengaturan::get('wa_gateway_aktif', '1');
+        $waGatewayEndpoint = Pengaturan::get('wa_gateway_endpoint', 'http://127.0.0.1:3000/send-message');
+        $waNomorWakaKesiswaan = Pengaturan::get('wa_nomor_waka_kesiswaan', '');
+        $waNomorWakaSdm = Pengaturan::get('wa_nomor_waka_sdm', '');
+        $waNomorKepsek = Pengaturan::get('wa_nomor_kepsek', '');
+        $waBotStatus = \App\Services\WhatsAppService::checkBotStatus();
+
         // ── Naik Kelas data ──
         $allKelasForNk = Kelas::withCount('siswa')
             ->whereNull('deleted_at')
@@ -343,6 +350,7 @@ class DashboardController extends Controller
             'izinEditJurnal',
             'istirahat1Mulai', 'istirahat1Selesai', 'istirahat2Mulai', 'istirahat2Selesai',
             'istirahatJumat1Mulai', 'istirahatJumat1Selesai', 'istirahatJumat2Mulai', 'istirahatJumat2Selesai',
+            'waGatewayAktif', 'waGatewayEndpoint', 'waNomorWakaKesiswaan', 'waNomorWakaSdm', 'waNomorKepsek', 'waBotStatus',
             'ringkasanNk',
             'alumniTahunan',
             'allAlumni',

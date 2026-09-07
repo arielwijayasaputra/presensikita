@@ -32,7 +32,20 @@
             <div style="margin-bottom:14px"><label for="dispen-foto">Foto surat keterangan <small style="color:#94a3b8">(opsional)</small></label><input id="dispen-foto" type="file" name="foto_surat" accept="image/jpeg,image/png,image/webp" style="display:block;width:100%;margin-top:6px;font-size:13px"><small style="display:block;color:#64748b;margin-top:5px">Format JPG, PNG, atau WEBP. Maksimal 5 MB.</small></div>
             <button type="submit" class="btn-primary" style="border-radius:8px;padding:10px 16px;font-size:13px">Simpan &amp; Absen ke Jurnal</button>
         </form>
-        <div id="dispen-links" style="display:none;margin-top:16px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:9px;padding:14px"><strong style="display:block;font-size:12px;color:#1d4ed8;margin-bottom:10px">Link persetujuan Waka</strong><div style="display:flex;gap:8px;align-items:center"><input id="dispen-waka-link" class="filter-input" readonly style="flex:1;font-size:12px"><button type="button" class="btn-secondary" onclick="salinDispen('dispen-waka-link')">Salin</button></div></div>
+        <div id="dispen-links" style="display:none;margin-top:16px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:9px;padding:14px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                <strong style="font-size:12px;color:#1d4ed8">Link persetujuan Waka Kesiswaan</strong>
+                <div id="dispen-wa-status-badge"></div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+                <input id="dispen-waka-link" class="filter-input" readonly style="flex:1;font-size:12px">
+                <button type="button" class="btn-secondary" onclick="salinDispen('dispen-waka-link')">Salin</button>
+                <a id="dispen-waka-wa-btn" href="#" target="_blank" class="btn-secondary" style="font-size:12px;display:inline-flex;align-items:center;gap:4px;background:#f0fdf4;border-color:#bbf7d0;color:#15803d;text-decoration:none">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    Kirim WA
+                </a>
+            </div>
+        </div>
     </div>
     <div class="card" style="padding:22px 24px;margin-top:20px">
         <div class="card-header" style="margin-bottom:16px">
@@ -95,7 +108,39 @@
     </div>
 </div>
 <script>
-function buatDispen(event){event.preventDefault();fetch(@json(route('dispen-siswa.store')),{method:'POST',headers:{'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content,'Accept':'application/json'},body:new FormData(document.getElementById('dispen-form'))}).then(async r=>{const d=await r.json();if(!r.ok)throw new Error(d.message||'Gagal membuat dispensasi.');return d}).then(d=>{document.getElementById('dispen-waka-link').value=d.waka_link;document.getElementById('dispen-links').style.display='block';Swal.fire({icon:'success',title:'Link berhasil dibuat',text:d.message,confirmButtonColor:'#ea580c'})}).catch(e=>Swal.fire({icon:'error',title:'Gagal',text:e.message,confirmButtonColor:'#dc2626'}));}
+function buatDispen(event){
+    event.preventDefault();
+    fetch(@json(route('dispen-siswa.store')),{
+        method:'POST',
+        headers:{'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content,'Accept':'application/json'},
+        body:new FormData(document.getElementById('dispen-form'))
+    })
+    .then(async r=>{
+        const d=await r.json();
+        if(!r.ok) throw new Error(d.message||'Gagal membuat dispensasi.');
+        return d;
+    })
+    .then(d=>{
+        document.getElementById('dispen-waka-link').value=d.waka_link;
+
+        const waUrl = d.wa_notification?.wa_me_link || ('https://wa.me/?text=' + encodeURIComponent(d.waka_link));
+        const btnWa = document.getElementById('dispen-waka-wa-btn');
+        if (btnWa) btnWa.href = waUrl;
+
+        const statusBadge = document.getElementById('dispen-wa-status-badge');
+        if (statusBadge) {
+            if (d.wa_notification?.sent) {
+                statusBadge.innerHTML = '<span class="badge badge-success" style="font-size:11px;padding:3px 8px">● WA Terkirim ke Waka Kesiswaan</span>';
+            } else {
+                statusBadge.innerHTML = '<span class="badge badge-secondary" style="font-size:11px;padding:3px 8px">WA Belum Terkirim Otomatis</span>';
+            }
+        }
+
+        document.getElementById('dispen-links').style.display='block';
+        Swal.fire({icon:'success',title:'Berhasil Dibuat!',text:d.message,confirmButtonColor:'#ea580c'});
+    })
+    .catch(e=>Swal.fire({icon:'error',title:'Gagal',text:e.message,confirmButtonColor:'#dc2626'}));
+}
 function salinDispen(id){navigator.clipboard.writeText(document.getElementById(id).value).then(()=>Swal.fire({icon:'success',title:'Link disalin',timer:1200,showConfirmButton:false}));}
 
 function toggleDispenSiswaDropdown(show){var dd=document.getElementById('dispen-siswa-dropdown');if(dd)dd.style.display=show?'block':'none';}

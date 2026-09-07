@@ -69,6 +69,8 @@ Route::middleware('auth.admin')->group(function () {
 
     // Pengaturan & Profil
     Route::post('/pengaturan/update', [PengaturanController::class, 'update'])->name('pengaturan.update');
+    Route::post('/pengaturan/test-wa', [PengaturanController::class, 'testKirimWa'])->name('pengaturan.test-wa');
+    Route::get('/pengaturan/status-wa', [PengaturanController::class, 'statusBotWa'])->name('pengaturan.status-wa');
     Route::post('/profil/update', [PengaturanController::class, 'updateProfil'])->name('profil.update');
 
     // Naik Kelas

@@ -93,6 +93,76 @@
                 </div>
             </div>
 
+            {{-- 3. WhatsApp Gateway & Bot Notifikasi --}}
+            <div class="card" style="padding:22px 24px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid #f1f5f9">
+                    <div style="display:flex;align-items:center;gap:12px">
+                        <div style="width:40px;height:40px;background:#ecfdf5;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#059669;flex-shrink:0">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        </div>
+                        <div>
+                            <h3 style="font-size:15.5px;font-weight:700;color:#1e293b">WhatsApp Bot Gateway</h3>
+                            <div style="font-size:12px;color:#64748b">Kirim otomatis link izin &amp; dispensasi via WhatsApp</div>
+                        </div>
+                    </div>
+                    <div>
+                        @if(($waBotStatus['online'] ?? false))
+                            <span class="badge badge-success" id="wa-bot-status-badge" style="font-size:11.5px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px">
+                                <span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block"></span> Online
+                            </span>
+                        @else
+                            <span class="badge badge-danger" id="wa-bot-status-badge" style="font-size:11.5px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px">
+                                <span style="width:7px;height:7px;background:#ef4444;border-radius:50%;display:inline-block"></span> Offline
+                            </span>
+                        @endif
+                    </div>
+                </div>
+
+                <div style="display:grid;gap:14px">
+                    <div style="background:#f8fafc;border:1px solid #e2e8f0;padding:12px 14px;border-radius:10px">
+                        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none">
+                            <input type="checkbox" id="set-wa-gateway-aktif" {{ ($waGatewayAktif ?? '1') === '1' ? 'checked' : '' }} style="width:16px;height:16px;accent-color:#059669">
+                            <div>
+                                <div style="font-size:13px;font-weight:700;color:#1e293b">Aktifkan Notifikasi WhatsApp Otomatis</div>
+                                <div style="font-size:12px;color:#64748b">Kirim link persetujuan langsung saat Guru Piket input surat.</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label style="font-size:12px;font-weight:600;color:#475569">Endpoint Gateway Bot (Baileys / Node.js)</label>
+                        <input type="text" class="filter-input" id="set-wa-endpoint" value="{{ $waGatewayEndpoint ?? 'http://127.0.0.1:3000/send-message' }}" placeholder="http://127.0.0.1:3000/send-message" style="width:100%;margin-top:4px">
+                    </div>
+
+                    <div>
+                        <label style="font-size:12px;font-weight:600;color:#475569">Nomor WhatsApp Waka Kesiswaan (Dispen Siswa)</label>
+                        <input type="text" class="filter-input" id="set-wa-waka-kesiswaan" value="{{ $waNomorWakaKesiswaan ?? '' }}" placeholder="Contoh: 081234567890 atau 6281234567890" style="width:100%;margin-top:4px">
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                        <div>
+                            <label style="font-size:12px;font-weight:600;color:#475569">Nomor WA Waka SDM (Izin Guru)</label>
+                            <input type="text" class="filter-input" id="set-wa-waka-sdm" value="{{ $waNomorWakaSdm ?? '' }}" placeholder="081234567890" style="width:100%;margin-top:4px">
+                        </div>
+                        <div>
+                            <label style="font-size:12px;font-weight:600;color:#475569">Nomor WA Kepala Sekolah (Izin Guru)</label>
+                            <input type="text" class="filter-input" id="set-wa-kepsek" value="{{ $waNomorKepsek ?? '' }}" placeholder="081234567890" style="width:100%;margin-top:4px">
+                        </div>
+                    </div>
+
+                    <div style="display:flex;gap:10px;margin-top:4px">
+                        <button type="button" class="btn-secondary" onclick="cekStatusBotWa()" style="flex:1;border-radius:8px;padding:8px 12px;font-size:12.5px;display:flex;align-items:center;justify-content:center;gap:6px">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                            Cek Koneksi Bot
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="modalTestKirimWa()" style="flex:1;border-radius:8px;padding:8px 12px;font-size:12.5px;display:flex;align-items:center;justify-content:center;gap:6px;background:#f0fdf4;border-color:#bbf7d0;color:#15803d">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                            Test Kirim WA
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         {{-- ══ KOLOM KANAN ══ --}}

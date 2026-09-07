@@ -50,6 +50,15 @@ class PengaturanController extends Controller
         Pengaturan::set('batas_waktu_jurnal', trim($request->batas_waktu_jurnal ?? '23:59'));
         Pengaturan::set('izin_edit_jurnal', $request->has('izin_edit_jurnal') ? '1' : '0');
 
+        // Pengaturan Bot WhatsApp
+        Pengaturan::set('wa_gateway_aktif', $request->has('wa_gateway_aktif') ? '1' : '0');
+        if ($request->filled('wa_gateway_endpoint')) {
+            Pengaturan::set('wa_gateway_endpoint', trim($request->wa_gateway_endpoint));
+        }
+        Pengaturan::set('wa_nomor_waka_kesiswaan', trim($request->wa_nomor_waka_kesiswaan ?? ''));
+        Pengaturan::set('wa_nomor_waka_sdm', trim($request->wa_nomor_waka_sdm ?? ''));
+        Pengaturan::set('wa_nomor_kepsek', trim($request->wa_nomor_kepsek ?? ''));
+
         $tahun = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
         if ($tahun) {
             $tahun->update([
@@ -75,6 +84,50 @@ class PengaturanController extends Controller
                 'batas_waktu_jurnal' => trim($request->batas_waktu_jurnal ?? '23:59'),
             ],
         ]);
+    }
+
+    /**
+     * Uji coba pengiriman pesan WhatsApp melalui bot.
+     *
+     * @return JsonResponse
+     */
+    public function testKirimWa(Request $request)
+    {
+        $request->validate([
+            'target_phone' => 'required|string',
+            'pesan' => 'nullable|string|max:1000',
+        ], [
+            'target_phone.required' => 'Nomor WhatsApp tujuan wajib diisi.',
+        ]);
+
+        $pesan = trim($request->pesan ?? '') ?: 'Halo, ini adalah pesan uji coba integrasi WhatsApp Bot PresensiKita.';
+        $hasil = \App\Services\WhatsAppService::kirimPesan($request->target_phone, $pesan);
+
+        if ($hasil['success']) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Pesan uji coba berhasil dikirim ke nomor '.$request->target_phone,
+                'details' => $hasil,
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Gagal mengirim pesan uji coba: '.($hasil['error'] ?? 'Terjadi kesalahan.'),
+            'details' => $hasil,
+        ], 422);
+    }
+
+    /**
+     * Memeriksa status kesehatan server bot WhatsApp.
+     *
+     * @return JsonResponse
+     */
+    public function statusBotWa()
+    {
+        $status = \App\Services\WhatsAppService::checkBotStatus();
+
+        return response()->json($status);
     }
 
     /**

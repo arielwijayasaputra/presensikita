@@ -6,6 +6,7 @@ use App\Models\Guru;
 use App\Models\Hari;
 use App\Models\IzinGuru;
 use App\Models\JurnalKelas;
+use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
@@ -84,12 +85,33 @@ class IzinGuruController extends Controller
             ['izin' => $izin->id_izin_guru]
         );
 
+        $kepsekLink = URL::temporarySignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'kepsek']);
+        $wakaLink = URL::temporarySignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'waka']);
+
+        $waNotification = WhatsAppService::kirimNotifikasiIzinGuru($izin, $kepsekLink, $wakaLink);
+
+        $waSentCount = 0;
+        if (! empty($waNotification['kepsek']['sent'])) {
+            $waSentCount++;
+        }
+        if (! empty($waNotification['waka_sdm']['sent'])) {
+            $waSentCount++;
+        }
+
+        $message = 'Permintaan izin berhasil dibuat.';
+        if ($waSentCount === 2) {
+            $message .= ' Notifikasi WhatsApp otomatis berhasil dikirim ke Kepala Sekolah dan Waka SDM.';
+        } elseif ($waSentCount === 1) {
+            $message .= ' Notifikasi WhatsApp berhasil dikirim ke salah satu penerima.';
+        }
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Link permintaan izin berhasil dibuat.',
+            'message' => $message,
             'link' => $link,
-            'kepsek_link' => URL::temporarySignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'kepsek']),
-            'waka_link' => URL::temporarySignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'waka']),
+            'kepsek_link' => $kepsekLink,
+            'waka_link' => $wakaLink,
+            'wa_notification' => $waNotification,
         ]);
     }
 

@@ -9,6 +9,7 @@ use App\Models\JurnalKelas;
 use App\Models\JurnalSiswaTidakHadir;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
+use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -104,10 +105,20 @@ class DispenSiswaController extends Controller
             throw $exception;
         }
 
+        $wakaLink = URL::temporarySignedRoute('dispen-siswa.public', now()->addDays(2), ['dispen' => $dispen->id_dispen_siswa, 'role' => 'waka']);
+
+        $waNotification = WhatsAppService::kirimNotifikasiDispenSiswa($dispen, $wakaLink);
+
+        $message = 'Siswa berhasil diabsen dan surat berhasil disimpan.';
+        if (! empty($waNotification['sent'])) {
+            $message .= ' Notifikasi WhatsApp otomatis telah terkirim ke Waka Kesiswaan.';
+        }
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Siswa berhasil diabsen dan surat berhasil disimpan.',
-            'waka_link' => URL::temporarySignedRoute('dispen-siswa.public', now()->addDays(2), ['dispen' => $dispen->id_dispen_siswa, 'role' => 'waka']),
+            'message' => $message,
+            'waka_link' => $wakaLink,
+            'wa_notification' => $waNotification,
         ]);
     }
 

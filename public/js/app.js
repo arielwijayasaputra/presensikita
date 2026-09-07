@@ -726,17 +726,22 @@ function updateProfilSubmit(e) {
 }
 
 function simpanPengaturan() {
-    const namaSekolah    = document.getElementById('set-nama-sekolah')?.value?.trim();
-    const npsn           = document.getElementById('set-npsn')?.value?.trim();
-    const kepsek         = document.getElementById('set-kepsek')?.value?.trim();
-    const alamat         = document.getElementById('set-alamat')?.value?.trim();
-    const emailSekolah   = document.getElementById('set-email')?.value?.trim();
-    const teleponSekolah = document.getElementById('set-telepon')?.value?.trim();
-    const tahunAjaran    = document.getElementById('set-tahun-ajaran')?.value?.trim();
-    const semester       = document.getElementById('set-semester')?.value;
-    const sistemAbsensi  = document.getElementById('set-sistem-absensi')?.value;
-    const batasWaktu     = document.getElementById('set-batas-waktu')?.value;
-    const izinEdit       = document.getElementById('set-izin-edit')?.checked ? '1' : '0';
+    const namaSekolah     = document.getElementById('set-nama-sekolah')?.value?.trim();
+    const npsn            = document.getElementById('set-npsn')?.value?.trim();
+    const kepsek          = document.getElementById('set-kepsek')?.value?.trim();
+    const alamat          = document.getElementById('set-alamat')?.value?.trim();
+    const emailSekolah    = document.getElementById('set-email')?.value?.trim();
+    const teleponSekolah  = document.getElementById('set-telepon')?.value?.trim();
+    const tahunAjaran     = document.getElementById('set-tahun-ajaran')?.value?.trim();
+    const semester        = document.getElementById('set-semester')?.value;
+    const sistemAbsensi   = document.getElementById('set-sistem-absensi')?.value;
+    const batasWaktu      = document.getElementById('set-batas-waktu')?.value;
+    const izinEdit        = document.getElementById('set-izin-edit')?.checked ? '1' : '0';
+    const waGatewayAktif  = document.getElementById('set-wa-gateway-aktif')?.checked ? '1' : '0';
+    const waEndpoint      = document.getElementById('set-wa-endpoint')?.value?.trim();
+    const waWakaKesiswaan = document.getElementById('set-wa-waka-kesiswaan')?.value?.trim();
+    const waWakaSdm       = document.getElementById('set-wa-waka-sdm')?.value?.trim();
+    const waKepsek        = document.getElementById('set-wa-kepsek')?.value?.trim();
 
     if (!namaSekolah) {
         Swal.fire({ icon: 'warning', title: 'Perhatian', text: 'Nama sekolah tidak boleh kosong.', customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title', confirmButton: 'custom-swal-confirm' }, buttonsStyling: false });
@@ -754,17 +759,22 @@ function simpanPengaturan() {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify({
-            nama_sekolah:       namaSekolah,
-            npsn:               npsn,
-            kepsek:             kepsek,
-            alamat:             alamat,
-            email_sekolah:      emailSekolah,
-            telepon_sekolah:    teleponSekolah,
-            tahun_ajaran:       tahunAjaran,
-            semester:           semester,
-            sistem_absensi:     sistemAbsensi,
-            batas_waktu_jurnal: batasWaktu,
-            izin_edit_jurnal:   izinEdit,
+            nama_sekolah:            namaSekolah,
+            npsn:                    npsn,
+            kepsek:                  kepsek,
+            alamat:                  alamat,
+            email_sekolah:           emailSekolah,
+            telepon_sekolah:         teleponSekolah,
+            tahun_ajaran:            tahunAjaran,
+            semester:                semester,
+            sistem_absensi:          sistemAbsensi,
+            batas_waktu_jurnal:      batasWaktu,
+            izin_edit_jurnal:        izinEdit,
+            wa_gateway_aktif:        waGatewayAktif,
+            wa_gateway_endpoint:     waEndpoint,
+            wa_nomor_waka_kesiswaan: waWakaKesiswaan,
+            wa_nomor_waka_sdm:       waWakaSdm,
+            wa_nomor_kepsek:         waKepsek,
         })
     })
     .then(res => res.json())
@@ -783,6 +793,129 @@ function simpanPengaturan() {
     })
     .catch(() => {
         Swal.fire({ icon: 'error', title: 'Error', text: 'Gagal terhubung ke server.' });
+    });
+}
+
+function cekStatusBotWa() {
+    const badge = document.getElementById('wa-bot-status-badge');
+    if (badge) {
+        badge.className = 'badge badge-info';
+        badge.innerHTML = '<span style="width:7px;height:7px;background:#3b82f6;border-radius:50%;display:inline-block"></span> Memeriksa...';
+    }
+    fetch('/pengaturan/status-wa', {
+        headers: { 'Accept': 'application/json' }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.online) {
+            if (badge) {
+                badge.className = 'badge badge-success';
+                badge.style.cssText = 'font-size:11.5px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px';
+                badge.innerHTML = '<span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block"></span> Online';
+            }
+            Swal.fire({
+                icon: 'success',
+                title: 'Bot WhatsApp Terhubung!',
+                text: data.message,
+                timer: 2000,
+                showConfirmButton: false
+            });
+        } else {
+            if (badge) {
+                badge.className = 'badge badge-danger';
+                badge.style.cssText = 'font-size:11.5px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px';
+                badge.innerHTML = '<span style="width:7px;height:7px;background:#ef4444;border-radius:50%;display:inline-block"></span> Offline';
+            }
+            Swal.fire({
+                icon: 'warning',
+                title: 'Bot Belum Terhubung',
+                text: data.message || 'Server bot WA tidak dapat dihubungi.',
+                confirmButtonColor: '#ea580c'
+            });
+        }
+    })
+    .catch(err => {
+        if (badge) {
+            badge.className = 'badge badge-danger';
+            badge.innerHTML = '<span style="width:7px;height:7px;background:#ef4444;border-radius:50%;display:inline-block"></span> Error';
+        }
+        Swal.fire({ icon: 'error', title: 'Gagal Cek Status', text: err.message || 'Terjadi kesalahan jaringan.' });
+    });
+}
+
+function modalTestKirimWa() {
+    const defaultNomor = document.getElementById('set-wa-waka-kesiswaan')?.value?.trim()
+        || document.getElementById('set-wa-kepsek')?.value?.trim()
+        || document.getElementById('set-wa-waka-sdm')?.value?.trim()
+        || '';
+
+    Swal.fire({
+        title: 'Uji Coba Kirim Pesan WA',
+        html: `
+            <div style="text-align:left;display:grid;gap:10px;margin-top:10px">
+                <div>
+                    <label style="font-size:12px;font-weight:600;color:#475569">Nomor WhatsApp Tujuan:</label>
+                    <input type="text" id="swal-test-phone" class="swal2-input" style="margin:4px 0 0 0;width:100%" placeholder="Contoh: 081234567890" value="${defaultNomor}">
+                </div>
+                <div>
+                    <label style="font-size:12px;font-weight:600;color:#475569">Isi Pesan Uji Coba:</label>
+                    <textarea id="swal-test-pesan" class="swal2-textarea" style="margin:4px 0 0 0;width:100%;height:80px" placeholder="Pesan tes...">Halo! Ini adalah pesan uji coba integrasi WhatsApp Bot PresensiKita.</textarea>
+                </div>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Kirim Pesan',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#16a34a',
+        preConfirm: () => {
+            const phone = document.getElementById('swal-test-phone').value.trim();
+            const msg = document.getElementById('swal-test-pesan').value.trim();
+            if (!phone) {
+                Swal.showValidationMessage('Nomor WhatsApp tujuan wajib diisi.');
+                return false;
+            }
+            return { target_phone: phone, pesan: msg };
+        }
+    }).then(result => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: 'Mengirim Pesan...',
+                text: 'Menghubungi server bot WhatsApp...',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
+            });
+
+            fetch('/pengaturan/test-wa', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(result.value)
+            })
+            .then(async res => {
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message || 'Gagal mengirim pesan.');
+                return data;
+            })
+            .then(data => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil Terkirim!',
+                    text: data.message,
+                    confirmButtonColor: '#16a34a'
+                });
+            })
+            .catch(err => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Kirim Pesan',
+                    text: err.message,
+                    confirmButtonColor: '#ef4444'
+                });
+            });
+        }
     });
 }
 

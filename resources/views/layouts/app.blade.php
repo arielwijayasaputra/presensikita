@@ -22,7 +22,7 @@
 @include($sidebar ?? 'partials.sidebar')
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebarMobile()"></div>
 
-<div class="main-content">
+<div class="main-content{{ session('auth_role') === 'admin' ? ' is-admin' : '' }}">
     @include('partials.header')
 
     @yield('content')

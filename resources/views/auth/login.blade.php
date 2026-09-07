@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Login - PresensiKita</title>
     <meta name="description" content="Masuk ke sistem PresensiKita untuk mengelola kehadiran siswa secara digital.">
     <link rel="icon" type="image/png" href="{{ asset('logo_white.png') }}">
@@ -642,19 +642,52 @@
 
         /* ── RESPONSIVE BARU ── */
         @media (max-width: 900px) {
-            .login-container { grid-template-columns: 1fr; }
+            body { overflow-x: hidden; height: auto; }
+            .login-container {
+                grid-template-columns: 1fr;
+                height: auto;
+                min-height: 100vh;
+                min-height: 100dvh;
+            }
             .left-hero {
                 height: auto;
-                min-height: 320px;
-                border-radius: 0 0 48% 48% / 0 0 22% 22%;
-                padding: 44px 20px 48px;
+                min-height: 0;
+                border-radius: 0 0 44% 44% / 0 0 18% 18%;
+                padding: 26px 20px 34px;
                 position: static;
+                flex: none;
             }
-            .illus-ring { width: 150px; height: 150px; }
-            .illus-title { font-size: 32px; }
+            .illus-ring { width: 108px; height: 108px; }
+            .illus-ring::before { inset: -14px; }
+            .illus-badge { width: 42px; height: 42px; right: -4px; bottom: 2px; }
+            .illus-badge svg { width: 18px; height: 18px; }
+            .illus-title { font-size: 26px; margin-top: 14px; }
+            .illus-sub { font-size: 10px; }
+            .left-footer { display: none; }
+
+            .right-form {
+                padding: 18px 16px 32px;
+                overflow: visible;
+            }
+            .form-card {
+                padding: 22px 18px 18px;
+                border-radius: 16px;
+                box-shadow: 0 12px 32px rgba(15,40,100,0.12);
+            }
+            .form-header { margin-bottom: 16px; }
+            .form-header h2 { font-size: 20px; }
+            .form-header p { font-size: 12.5px; }
+
+            /* cegah auto-zoom iOS saat input difokuskan */
+            .form-input { font-size: 16px; height: 46px; }
+            .btn-submit { height: 48px; font-size: 15px; }
+            .role-display { height: 92px; max-width: 170px; }
+            .role-card-icon { width: 40px; height: 40px; }
+            .role-card-name { font-size: 13px; }
+            .role-arrow { width: 38px; height: 38px; }
         }
         @media (max-width: 480px) {
-            .form-card { padding: 22px 14px 18px; }
+            .form-card { padding: 20px 14px 16px; }
         }
     </style>
     <link rel="stylesheet" href="{{ asset('css/theme.css') }}">

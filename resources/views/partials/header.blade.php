@@ -92,7 +92,7 @@
             </svg>
             <span id="header-time">{{ $now->format('H:i:s') }}</span>
         </div>
-        <div class="header-date" aria-label="Jam pelajaran saat ini" title="{{ $initialPeriodTitle }}">
+        <div class="header-date header-period-box" aria-label="Jam pelajaran saat ini" title="{{ $initialPeriodTitle }}">
             <span id="header-period" title="{{ $initialPeriodTitle }}">{{ $initialPeriodText }}</span>
         </div>
 

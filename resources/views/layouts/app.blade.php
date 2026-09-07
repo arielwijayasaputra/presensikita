@@ -23,6 +23,12 @@
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebarMobile()"></div>
 
 <div class="main-content{{ session('auth_role') === 'admin' ? ' is-admin' : '' }}">
+    @if(session('auth_role') === 'admin')
+        <div class="admin-mobile-notice" style="display:none;background:#fef3c7;border-bottom:1px solid #fde68a;color:#92400e;padding:10px 16px;font-size:12.5px;font-weight:600;align-items:center;gap:8px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>Panel Administrator dirancang khusus untuk layar Desktop / Laptop.</span>
+        </div>
+    @endif
     @include('partials.header')
 
     @yield('content')

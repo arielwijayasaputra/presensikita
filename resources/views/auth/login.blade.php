@@ -683,6 +683,13 @@
             .form-header h2 { font-size: 20px; }
             .form-header p { font-size: 12.5px; }
 
+            /* Sembunyikan Role Admin di HP/Mobile */
+            #card-admin,
+            .role-dot[data-role="admin"],
+            #panel-admin {
+                display: none !important;
+            }
+
             /* cegah auto-zoom iOS saat input difokuskan */
             .form-input { font-size: 16px; height: 46px; }
             .btn-submit { height: 48px; font-size: 15px; }
@@ -1062,14 +1069,31 @@
 
 <script>
     // ── Role switching (chips per role)
-    const roles = ['admin', 'guru', 'gurupiket', 'walikelas', 'satpam', 'wakasdm', 'wali'];
-    let currentRoleIndex = 0;
+    const allRoles = ['admin', 'guru', 'gurupiket', 'walikelas', 'satpam', 'wakasdm', 'wali'];
+    let currentRole = 'admin';
+
+    function isMobileScreen() {
+        return window.innerWidth <= 900;
+    }
+
+    function getAvailableRoles() {
+        return isMobileScreen()
+            ? ['guru', 'gurupiket', 'walikelas', 'satpam', 'wakasdm', 'wali']
+            : allRoles;
+    }
 
     function switchRole(role, options) {
         const opts = options || {};
-        const idx = roles.indexOf(role);
-        if (idx === -1) return;
-        currentRoleIndex = idx;
+        const available = getAvailableRoles();
+        let targetRole = role;
+
+        // Jika di HP dan mencoba memilih admin, otomatis alihkan ke guru
+        if (isMobileScreen() && targetRole === 'admin') {
+            targetRole = 'guru';
+        }
+
+        if (!allRoles.includes(targetRole)) return;
+        currentRole = targetRole;
 
         // Kosongkan semua input form saat pindah role (kecuali dipanggil untuk
         // mengembalikan panel saat ada error login, yang tetap mempertahankan input).
@@ -1080,41 +1104,62 @@
             document.querySelectorAll('.form-panel select').forEach(sel => sel.value = '');
         }
 
-        roles.forEach(r => {
+        allRoles.forEach(r => {
             const card = document.getElementById('card-' + r);
             const panel = document.getElementById('panel-' + r);
-            const isActive = (r === role);
-            card.classList.toggle('active', isActive);
-            if (isActive) {
-                panel.classList.add('active');
-                // Trigger animation restart
-                panel.style.animation = 'none';
-                panel.offsetHeight; // reflow
-                panel.style.animation = '';
-            } else {
-                panel.classList.remove('active');
+            const isActive = (r === targetRole);
+            if (card) card.classList.toggle('active', isActive);
+            if (panel) {
+                if (isActive) {
+                    panel.classList.add('active');
+                    // Trigger animation restart
+                    panel.style.animation = 'none';
+                    panel.offsetHeight; // reflow
+                    panel.style.animation = '';
+                } else {
+                    panel.classList.remove('active');
+                }
             }
         });
 
-        document.querySelectorAll('.role-dot').forEach((dot, i) => {
-            dot.classList.toggle('active', i === idx);
+        document.querySelectorAll('.role-dot').forEach(dot => {
+            dot.classList.toggle('active', dot.dataset.role === targetRole);
         });
 
         // Focus first input in the active panel
         setTimeout(() => {
-            const activePanel = document.getElementById('panel-' + role);
-            const firstInput = activePanel.querySelector('input');
+            const activePanel = document.getElementById('panel-' + targetRole);
+            const firstInput = activePanel?.querySelector('input:not([type="hidden"])');
             if (firstInput) firstInput.focus();
         }, 50);
     }
 
     function nextRole() {
-        switchRole(roles[(currentRoleIndex + 1) % roles.length]);
+        const currentRoles = getAvailableRoles();
+        let idx = currentRoles.indexOf(currentRole);
+        if (idx === -1) idx = 0;
+        switchRole(currentRoles[(idx + 1) % currentRoles.length]);
     }
 
     function prevRole() {
-        switchRole(roles[(currentRoleIndex - 1 + roles.length) % roles.length]);
+        const currentRoles = getAvailableRoles();
+        let idx = currentRoles.indexOf(currentRole);
+        if (idx === -1) idx = 0;
+        switchRole(currentRoles[(idx - 1 + currentRoles.length) % currentRoles.length]);
     }
+
+    // Inisialisasi awal role di mobile vs desktop
+    document.addEventListener('DOMContentLoaded', function() {
+        if (isMobileScreen() && currentRole === 'admin') {
+            switchRole('guru', { clear: false });
+        }
+    });
+
+    window.addEventListener('resize', function() {
+        if (isMobileScreen() && currentRole === 'admin') {
+            switchRole('guru', { clear: false });
+        }
+    });
 
     // ── Keyboard navigation with arrow keys
     document.addEventListener('keydown', function(e) {
@@ -1148,6 +1193,9 @@
             @if($errors->has('nisn') || !empty(old('nisn')))
                 target = target || 'wali';
             @endif
+            if (isMobileScreen() && target === 'admin') {
+                target = 'guru';
+            }
             if (target && typeof switchRole === 'function') {
                 switchRole(target, { clear: false });
             }
@@ -1180,6 +1228,7 @@
     document.getElementById('form-gurupiket').addEventListener('submit',  () => setLoading('btn-gurupiket',  'Memproses...'));
     document.getElementById('form-walikelas').addEventListener('submit', () => setLoading('btn-walikelas', 'Memproses...'));
     document.getElementById('form-satpam').addEventListener('submit',  () => setLoading('btn-satpam', 'Memproses...'));
+    document.getElementById('form-wakasdm')?.addEventListener('submit', () => setLoading('btn-wakasdm', 'Memproses...'));
     document.getElementById('form-wali').addEventListener('submit',  () => setLoading('btn-wali',  'Memeriksa NISN...'));
 
     // ── NISN: only allow digits

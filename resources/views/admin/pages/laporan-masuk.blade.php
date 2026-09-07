@@ -333,6 +333,15 @@
             confirmButtonColor: newStatus === 'ditolak' || newStatus === 'dibatalkan' ? '#ef4444' : '#2563eb',
         }).then((result) => {
             if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Memproses...',
+                    text: 'Sedang memperbarui status laporan',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
                 fetch(`/laporan-masuk/${id}/status`, {
                     method: 'POST',
                     headers: {
@@ -349,10 +358,11 @@
                             icon: 'success',
                             title: 'Berhasil!',
                             text: data.message,
-                            timer: 1500,
+                            timer: 800,
                             showConfirmButton: false
                         }).then(() => {
-                            window.location.href = '{{ route('admin.index') }}#laporan-masuk';
+                            window.location.hash = 'laporan-masuk';
+                            window.location.reload();
                         });
                     } else {
                         Swal.fire('Gagal', data.message || 'Gagal mengubah status.', 'error');
@@ -377,6 +387,15 @@
             confirmButtonColor: '#ef4444'
         }).then((res) => {
             if (res.isConfirmed) {
+                Swal.fire({
+                    title: 'Menghapus...',
+                    text: 'Sedang menghapus data laporan',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
                 fetch(`/laporan-masuk/${id}`, {
                     method: 'DELETE',
                     headers: {
@@ -387,12 +406,22 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === 'success') {
-                        Swal.fire('Berhasil', data.message, 'success').then(() => {
-                            window.location.href = '{{ route('admin.index') }}#laporan-masuk';
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: data.message,
+                            timer: 800,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.hash = 'laporan-masuk';
+                            window.location.reload();
                         });
                     } else {
                         Swal.fire('Gagal', data.message, 'error');
                     }
+                })
+                .catch(err => {
+                    Swal.fire('Error', 'Gagal menghapus laporan.', 'error');
                 });
             }
         });

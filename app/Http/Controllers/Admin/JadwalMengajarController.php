@@ -323,7 +323,9 @@ class JadwalMengajarController extends Controller
                 }
 
                 $assignedGuruId = $guru?->id_guru;
-                if ($assignedGuruId) {
+                if ($mapel->isUpacara()) {
+                    $assignedGuruId = null;
+                } elseif ($assignedGuruId) {
                     // Cek apakah guru sudah mengajar di kelas lain pada hari & jam yang sama
                     $bentrokLain = JadwalMengajar::whereNull('deleted_at')
                         ->where('hari', $hari)
@@ -341,7 +343,7 @@ class JadwalMengajarController extends Controller
                 }
 
                 try {
-                    $jadwal = JadwalMengajar::whereNull('deleted_at')
+                    $jadwal = JadwalMengajar::withTrashed()
                         ->where('hari', $hari)
                         ->where('id_jam', $jam->id_jam)
                         ->where('id_kelas', $kelas->id_kelas)
@@ -349,9 +351,11 @@ class JadwalMengajarController extends Controller
                         ->first();
 
                     if ($jadwal) {
+                        $jadwal->deleted_at = null;
                         $jadwal->update([
                             'id_mapel' => $mapel->id_mapel,
                             'id_guru' => $assignedGuruId,
+                            'deleted_at' => null,
                         ]);
                         $updated++;
                     } else {
@@ -616,6 +620,13 @@ class JadwalMengajarController extends Controller
     {
         $jadwal = JadwalMengajar::findOrFail($id);
 
+        if ($jadwal->isUpacara()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Jadwal upacara tidak memerlukan guru pengajar.',
+            ], 422);
+        }
+
         $request->validate([
             'id_guru' => ['required', 'integer', 'exists:guru,id_guru'],
         ], [
@@ -664,14 +675,20 @@ class JadwalMengajarController extends Controller
     public function update(Request $request, $id)
     {
         $jadwal = JadwalMengajar::findOrFail($id);
+        $mapel = Mapel::findOrFail($request->id_mapel);
+        $isUpacara = $mapel->isUpacara();
 
         $data = $request->validate([
-            'id_guru' => ['required', 'integer', 'exists:guru,id_guru'],
+            'id_guru' => ['nullable', 'integer', 'exists:guru,id_guru'],
             'id_mapel' => ['required', 'integer', 'exists:mapel,id_mapel'],
             'id_kelas' => ['required', 'integer', 'exists:kelas,id_kelas'],
             'id_jam' => ['required', 'integer', 'exists:jam_pelajaran,id_jam'],
             'hari' => ['required', 'in:Senin,Selasa,Rabu,Kamis,Jumat'],
         ]);
+
+        if ($isUpacara) {
+            $data['id_guru'] = null;
+        }
 
         $jadwal->update($data);
 
@@ -688,8 +705,11 @@ class JadwalMengajarController extends Controller
      */
     public function store(Request $request)
     {
+        $mapel = Mapel::findOrFail($request->id_mapel);
+        $isUpacara = $mapel->isUpacara();
+
         $data = $request->validate([
-            'id_guru' => ['required', 'integer', 'exists:guru,id_guru'],
+            'id_guru' => ['nullable', 'integer', 'exists:guru,id_guru'],
             'id_mapel' => ['required', 'integer', 'exists:mapel,id_mapel'],
             'id_kelas' => ['required', 'integer', 'exists:kelas,id_kelas'],
             'id_jam' => ['required', 'integer', 'exists:jam_pelajaran,id_jam'],
@@ -697,7 +717,23 @@ class JadwalMengajarController extends Controller
             'id_tahun_ajaran' => ['required', 'integer', 'exists:tahun_ajaran,id_tahun_ajaran'],
         ]);
 
-        JadwalMengajar::create($data);
+        if ($isUpacara) {
+            $data['id_guru'] = null;
+        }
+
+        $existing = JadwalMengajar::withTrashed()
+            ->where('hari', $data['hari'])
+            ->where('id_jam', $data['id_jam'])
+            ->where('id_kelas', $data['id_kelas'])
+            ->where('id_tahun_ajaran', $data['id_tahun_ajaran'])
+            ->first();
+
+        if ($existing) {
+            $existing->deleted_at = null;
+            $existing->update($data);
+        } else {
+            JadwalMengajar::create($data);
+        }
 
         return response()->json([
             'status' => 'success',

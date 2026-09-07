@@ -219,7 +219,7 @@ class DashboardController extends Controller
             ->get();
 
         $totalJadwalAktif = $allJadwal->count();
-        $totalJadwalTanpaGuru = $allJadwal->whereNull('id_guru')->count();
+        $totalJadwalTanpaGuru = $allJadwal->whereNull('id_guru')->filter(fn ($item) => !Mapel::isUpacaraName($item->nama_mapel))->count();
 
         $adminId = session('auth_admin_id') ?? session('auth_guru_id');
         $admin = ($adminId ? AkunAdmin::find($adminId) : null) ?? AkunAdmin::first();

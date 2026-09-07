@@ -321,7 +321,7 @@ class JadwalImportTest extends TestCase
 
         $csvContent = implode("\n", [
             'Hari,Kelas,Jam,MataPelajaran,NIP',
-            'Senin,X TKI NIP Test,5,Bahasa Inggris,19880312-2010-1-001',
+            'Senin,X TKI NIP Test,5,Bahasa Inggris,19880312-201001-1-001',
         ]);
         $file = UploadedFile::fake()->createWithContent('jadwal_nip.csv', $csvContent);
 

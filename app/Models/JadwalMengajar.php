@@ -30,4 +30,18 @@ class JadwalMengajar extends Model
     {
         return $this->belongsTo(Mapel::class, 'id_mapel', 'id_mapel');
     }
+
+    /**
+     * Memeriksa apakah jadwal ini merupakan upacara/apel.
+     */
+    public function isUpacara(): bool
+    {
+        if ($this->relationLoaded('mapel') && $this->mapel) {
+            return $this->mapel->isUpacara();
+        }
+
+        $mapel = $this->mapel ?? Mapel::find($this->id_mapel);
+
+        return $mapel ? $mapel->isUpacara() : false;
+    }
 }

@@ -7,7 +7,7 @@
     </div>
 
     @php
-        $jadwalKosongList = $allJadwal->filter(fn($item) => empty($item->id_guru))->values();
+        $jadwalKosongList = $allJadwal->filter(fn($item) => empty($item->id_guru) && !\App\Models\Mapel::isUpacaraName($item->nama_mapel))->values();
     @endphp
 
     <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px">
@@ -68,6 +68,7 @@
                     <option value="">Semua Status</option>
                     <option value="kosong">Jadwal Kosong (Tanpa Guru)</option>
                     <option value="terisi">Jadwal Terisi</option>
+                    <option value="upacara">Jadwal Upacara (Tidak Ada Guru)</option>
                 </select>
             </div>
             <span id="jadwal-count" style="font-size:12px;color:#64748b;padding-bottom:9px">{{ count($allJadwal) }} jadwal</span>
@@ -81,18 +82,23 @@
                 <tbody id="jadwal-table-body">
                     @forelse($allJadwal as $jadwalItem)
                         @php
+                            $isUpacara = \App\Models\Mapel::isUpacaraName($jadwalItem->nama_mapel);
                             $isKosong = empty($jadwalItem->id_guru);
                         @endphp
                         <tr class="jadwal-row"
-                            data-search="{{ strtolower(($jadwalItem->nama_guru ?? 'kosong belum ada pengampu tanpa guru') . ' ' . $jadwalItem->nama_mapel . ' ' . $jadwalItem->nama_kelas . ' ' . $jadwalItem->hari . ' ' . $jadwalItem->jam_ke) }}"
+                            data-search="{{ strtolower(($isUpacara ? 'tidak ada guru upacara' : ($jadwalItem->nama_guru ?? 'kosong belum ada pengampu tanpa guru')) . ' ' . $jadwalItem->nama_mapel . ' ' . $jadwalItem->nama_kelas . ' ' . $jadwalItem->hari . ' ' . $jadwalItem->jam_ke) }}"
                             data-hari="{{ $jadwalItem->hari }}"
                             data-kelas="{{ $jadwalItem->id_kelas }}"
-                            data-status="{{ $isKosong ? 'kosong' : 'terisi' }}">
+                            data-status="{{ $isUpacara ? 'upacara' : ($isKosong ? 'kosong' : 'terisi') }}">
                             <td><strong>{{ $jadwalItem->hari }}</strong></td>
                             <td><span class="badge badge-info">Jam ke-{{ $jadwalItem->jam_ke >= 100 ? $jadwalItem->jam_ke - 100 : $jadwalItem->jam_ke }}</span></td>
                             <td>{{ $jadwalItem->nama_mapel }}</td>
                             <td>
-                                @if(!$isKosong)
+                                @if($isUpacara)
+                                    <span class="badge" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;padding:4px 8px;border-radius:6px;font-size:12px;font-weight:700">
+                                        Tidak Ada Guru
+                                    </span>
+                                @elseif(!$isKosong)
                                     <span style="font-weight:600;color:#1e293b">{{ $jadwalItem->nama_guru }}</span>
                                 @else
                                     <span class="badge badge-warning" style="background:#fef3c7;color:#b45309;padding:4px 8px;border-radius:6px;font-size:12px;font-weight:700">
@@ -102,7 +108,11 @@
                             </td>
                             <td><strong>{{ $jadwalItem->nama_kelas }}</strong></td>
                             <td>
-                                @if($isKosong)
+                                @if($isUpacara)
+                                    <button type="button" class="btn-secondary" onclick='editJadwal(@json($jadwalItem))' style="padding:6px 12px;font-size:12px">
+                                        Edit
+                                    </button>
+                                @elseif($isKosong)
                                     <button type="button" class="btn-primary" onclick="pilihGuruJadwalKosong({{ $jadwalItem->id_jadwal }}, '{{ $jadwalItem->hari }}', {{ $jadwalItem->jam_ke }}, {{ $jadwalItem->id_jam }}, '{{ htmlspecialchars($jadwalItem->nama_kelas) }}', '{{ htmlspecialchars($jadwalItem->nama_mapel) }}')" style="padding:6px 12px;font-size:12px;background:#d97706;border-color:#b45309;font-weight:700">
                                         Tugaskan Guru
                                     </button>
@@ -114,7 +124,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" style="text-align:center;color:#64748b;padding:24px">Belum ada data jadwal.</td></tr>
+                        <tr><td colspan="6" style="text-align:center;color:#64748b;padding:24px">Belum ada data jadwal.</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -134,8 +144,19 @@
                 <div><label>Hari</label><select id="form-jadwal-hari" class="filter-select" disabled required style="width:100%;margin-top:4px;background:#f1f5f9;color:#64748b;cursor:not-allowed">@foreach(\App\Models\Hari::getWeekdayNames() as $hari)<option value="{{ $hari }}">{{ $hari }}</option>@endforeach</select></div>
                 <div><label>Jam Ke-</label><select id="form-jadwal-jam" class="filter-select" disabled required style="width:100%;margin-top:4px;background:#f1f5f9;color:#64748b;cursor:not-allowed">@foreach($allJamPelajaran as $jamItem)<option value="{{ $jamItem->id_jam }}">{{ $jamItem->jam_ke >= 100 ? $jamItem->jam_ke - 100 : $jamItem->jam_ke }} ({{ substr($jamItem->jam_mulai, 0, 5) }} - {{ substr($jamItem->jam_selesai, 0, 5) }})</option>@endforeach</select></div>
                 <div><label>Kelas</label><select id="form-jadwal-kelas" class="filter-select" required style="width:100%;margin-top:4px">@foreach($allKelas as $kelasItem)<option value="{{ $kelasItem->id_kelas }}">{{ $kelasItem->nama_kelas }}</option>@endforeach</select></div>
-                <div><label>Guru Pengampu</label><select id="form-jadwal-guru" class="filter-select" required style="width:100%;margin-top:4px"><option value="">-- Pilih Guru Pengampu --</option>@foreach($allGuru as $guruItem)<option value="{{ $guruItem->id_guru }}">{{ $guruItem->nama_guru }}</option>@endforeach</select></div>
-                <div><label>Mata Pelajaran</label><select id="form-jadwal-mapel" class="filter-select" required style="width:100%;margin-top:4px">@foreach($allMapel as $mapelItem)<option value="{{ $mapelItem->id_mapel }}">{{ $mapelItem->nama_mapel }}</option>@endforeach</select></div>
+                <div><label>Mata Pelajaran</label><select id="form-jadwal-mapel" onchange="onMapelChange()" class="filter-select" required style="width:100%;margin-top:4px"><option value="">-- Pilih Mata Pelajaran --</option>@foreach($allMapel as $mapelItem)<option value="{{ $mapelItem->id_mapel }}" data-is-upacara="{{ $mapelItem->isUpacara() ? '1' : '0' }}">{{ $mapelItem->nama_mapel }}</option>@endforeach</select></div>
+                <div>
+                    <label>Guru Pengampu</label>
+                    <select id="form-jadwal-guru" class="filter-select" style="width:100%;margin-top:4px">
+                        <option value="">-- Pilih Guru Pengampu --</option>
+                        @foreach($allGuru as $guruItem)
+                            <option value="{{ $guruItem->id_guru }}">{{ $guruItem->nama_guru }}</option>
+                        @endforeach
+                    </select>
+                    <div id="guru-upacara-info" style="display:none;font-size:12px;color:#64748b;margin-top:5px;font-weight:600">
+                        <span style="color:#0284c7;">ℹ</span> Jadwal Upacara tidak memerlukan guru pengajar (otomatis <strong>Tidak Ada Guru</strong>).
+                    </div>
+                </div>
             </div>
             <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px"><button type="button" class="btn-secondary" onclick="tutupFormJadwal()">Batal</button><button type="submit" class="btn-primary">Simpan</button></div>
         </form>
@@ -208,6 +229,31 @@
 </div>
 
 <script>
+function onMapelChange() {
+    const mapelSelect = document.getElementById('form-jadwal-mapel');
+    const guruSelect = document.getElementById('form-jadwal-guru');
+    const upacaraInfo = document.getElementById('guru-upacara-info');
+    if (!mapelSelect || !guruSelect) return;
+
+    const selectedOption = mapelSelect.options[mapelSelect.selectedIndex];
+    const isUpacara = selectedOption && selectedOption.dataset.isUpacara === '1';
+
+    if (isUpacara) {
+        guruSelect.value = '';
+        guruSelect.disabled = true;
+        guruSelect.style.background = '#f1f5f9';
+        guruSelect.style.color = '#64748b';
+        guruSelect.style.cursor = 'not-allowed';
+        if (upacaraInfo) upacaraInfo.style.display = 'block';
+    } else {
+        guruSelect.disabled = false;
+        guruSelect.style.background = '#fff';
+        guruSelect.style.color = '#1e293b';
+        guruSelect.style.cursor = 'default';
+        if (upacaraInfo) upacaraInfo.style.display = 'none';
+    }
+}
+
 function filterJadwal() {
     const keyword = document.getElementById('jadwal-cari').value.trim().toLowerCase();
     const hari = document.getElementById('jadwal-hari').value;
@@ -238,6 +284,9 @@ function tutupModalJadwalKosong() {
 
 function bukaFormJadwal() {
     document.getElementById('jadwal-id').value = '';
+    document.getElementById('form-jadwal-mapel').value = '';
+    document.getElementById('form-jadwal-guru').value = '';
+    onMapelChange();
     document.getElementById('jadwal-modal-title').textContent = 'Tambah Jadwal';
     document.getElementById('jadwal-modal').style.display = 'flex';
 }
@@ -250,8 +299,9 @@ function editJadwal(jadwal) {
     document.getElementById('jadwal-id').value = jadwal.id_jadwal;
     document.getElementById('form-jadwal-hari').value = jadwal.hari;
     document.getElementById('form-jadwal-kelas').value = jadwal.id_kelas;
-    document.getElementById('form-jadwal-guru').value = jadwal.id_guru || '';
     document.getElementById('form-jadwal-mapel').value = jadwal.id_mapel;
+    onMapelChange();
+    document.getElementById('form-jadwal-guru').value = jadwal.id_guru || '';
     document.getElementById('form-jadwal-jam').value = jadwal.id_jam;
     document.getElementById('jadwal-modal-title').textContent = 'Edit Jadwal Mengajar';
     document.getElementById('jadwal-modal').style.display = 'flex';
@@ -260,11 +310,15 @@ function editJadwal(jadwal) {
 function simpanJadwal(event) {
     event.preventDefault();
     const id = document.getElementById('jadwal-id').value;
+    const mapelSelect = document.getElementById('form-jadwal-mapel');
+    const selectedOption = mapelSelect.options[mapelSelect.selectedIndex];
+    const isUpacara = selectedOption && selectedOption.dataset.isUpacara === '1';
+
     const data = new FormData();
     data.append('_token', document.querySelector('meta[name="csrf-token"]').content);
     data.append('hari', document.getElementById('form-jadwal-hari').value);
     data.append('id_kelas', document.getElementById('form-jadwal-kelas').value);
-    data.append('id_guru', document.getElementById('form-jadwal-guru').value);
+    data.append('id_guru', isUpacara ? '' : (document.getElementById('form-jadwal-guru').value || ''));
     data.append('id_mapel', document.getElementById('form-jadwal-mapel').value);
     data.append('id_jam', document.getElementById('form-jadwal-jam').value);
     if (!id) data.append('id_tahun_ajaran', @json($tahunAjaran->id_tahun_ajaran ?? 1));

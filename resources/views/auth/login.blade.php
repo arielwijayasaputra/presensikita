@@ -482,12 +482,18 @@
         @media (max-height: 600px) { .hero-quote { display: none; } }
 
         /* ══════════ NEW DESIGN OVERRIDE (sesuai desain halaman login) ══════════ */
-        body { background: #e8edf8; overflow: auto; }
+        body {
+            background:
+                radial-gradient(circle at 100% 0%, rgba(59,130,246,0.08) 0%, transparent 40%),
+                #f2f5fb;
+            overflow: auto;
+        }
 
         .login-container {
             display: grid;
             grid-template-columns: 1.05fr 1fr;
             min-height: 100vh;
+            background: transparent;
         }
 
         /* ── LEFT: blob navy dengan lengkung kanan ── */
@@ -503,6 +509,7 @@
             position: sticky;
             top: 0;
             height: 100vh;
+            box-shadow: 16px 0 48px rgba(10,23,63,0.08);
         }
         .left-hero::before {
             content: '';
@@ -593,9 +600,7 @@
 
         /* ── RIGHT: latar terang + kartu putih ── */
         .right-form {
-            background:
-                radial-gradient(circle at 100% 0%, rgba(59,130,246,0.10) 0%, transparent 40%),
-                linear-gradient(180deg, #f2f5fb 0%, #e9eef8 100%);
+            background: transparent;
             padding: 40px 24px;
         }
         .form-card {

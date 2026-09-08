@@ -562,31 +562,44 @@
             box-shadow: 0 0 80px rgba(59,130,246,0.45), inset 0 0 40px rgba(59,130,246,0.18);
             position: relative;
         }
-        .illus-ring::before {
-            content: '';
+        .orbit-track {
             position: absolute;
             inset: -22px;
             border-radius: 50%;
-            border: 1.5px dashed rgba(147,197,253,0.25);
-            animation: spinRing 24s linear infinite;
+            border: 1.5px dashed rgba(147,197,253,0.35);
+            animation: orbitTrackSpin 18s linear infinite;
+            pointer-events: none;
         }
-        @keyframes spinRing { to { transform: rotate(360deg); } }
+        .orbit-satellite {
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .illus-badge {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(160deg, #38bdf8, #1d4ed8);
+            border: 2.5px solid rgba(255,255,255,0.9);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff;
+            box-shadow: 0 0 22px rgba(56,189,248,0.65), 0 6px 18px rgba(0,0,0,0.35);
+            animation: counterOrbitSpin 18s linear infinite;
+        }
+        @keyframes orbitTrackSpin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+        @keyframes counterOrbitSpin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(-360deg); }
+        }
         .illus-ring img {
             width: 62%; height: 62%;
             object-fit: contain;
             border-radius: 24px;
             filter: drop-shadow(0 10px 24px rgba(0,0,0,0.35));
-        }
-        .illus-badge {
-            position: absolute;
-            right: -8px; bottom: 6px;
-            width: 58px; height: 58px;
-            border-radius: 50%;
-            background: linear-gradient(160deg, #60a5fa, #1d4ed8);
-            border: 3px solid rgba(255,255,255,0.25);
-            display: flex; align-items: center; justify-content: center;
-            color: #fff;
-            box-shadow: 0 8px 24px rgba(29,78,216,0.5);
         }
         .illus-title {
             margin-top: clamp(20px,3vw,34px);
@@ -604,6 +617,64 @@
             text-transform: uppercase;
             font-weight: 600;
         }
+        /* Floating Hero Badge Kiri (Presensi Realtime Hijau - Compact & Sleek) */
+        .hero-float-badge {
+            position: absolute;
+            background: rgba(14, 30, 64, 0.72);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 12px;
+            padding: 7px 13px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: #fff;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.28), 0 0 16px rgba(16, 185, 129, 0.12);
+            z-index: 5;
+            pointer-events: auto;
+            animation: heroFloatSoft 5s ease-in-out infinite;
+        }
+        .hero-float-badge.badge-realtime-left {
+            top: 6%;
+            left: 5%;
+        }
+        .float-badge-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(16, 185, 129, 0.4);
+        }
+        .float-badge-icon svg {
+            width: 15px;
+            height: 15px;
+        }
+        .float-badge-title {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.2;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .float-badge-desc {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.65);
+            margin-top: 2px;
+            line-height: 1.2;
+        }
+        @keyframes heroFloatSoft {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+
         .left-footer { position: absolute; bottom: 22px; left: 0; right: 0; text-align: center; }
 
         /* sembunyikan elemen hero lama yang tak terpakai */
@@ -712,42 +783,369 @@
         @media (max-width: 480px) {
             .form-card { padding: 20px 14px 16px; }
         }
-        /* ── Dark Mode Overrides untuk Login ── */
+        /* ── Dark Mode Overrides untuk Login (Cohesive & Modern) ── */
         .login-theme-toggle {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 120;
         }
-        [data-theme="dark"] .right-form {
-            background: #0b1324;
+        .login-theme-toggle .theme-toggle-btn {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
         }
-        [data-theme="dark"] .form-card {
-            background: #152238;
-            border-color: #243552;
-            box-shadow: 0 16px 40px rgba(0,0,0,0.5);
-        }
-        [data-theme="dark"] .form-header h2 { color: #f8fafc; }
-        [data-theme="dark"] .form-header p { color: #94a3b8; }
-        [data-theme="dark"] .role-selector { background: #0f1a2e; border-color: #243552; }
-        [data-theme="dark"] .role-arrow { background: #152238; color: #cbd5e1; }
-        [data-theme="dark"] .role-arrow:hover { background: #243552; color: #fff; }
-        [data-theme="dark"] .role-card-name { color: #cbd5e1; }
-        [data-theme="dark"] .role-dot { background: #243552; }
-        [data-theme="dark"] .role-dot.active { background: #3b82f6; }
-        [data-theme="dark"] .form-input {
-            background: #0f1a2e;
-            border-color: #2a3c5a;
+
+        [data-theme="dark"] body {
+            background:
+                radial-gradient(circle at 100% 0%, rgba(37, 99, 235, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 0% 100%, rgba(30, 58, 138, 0.16) 0%, transparent 45%),
+                #070d19;
             color: #f8fafc;
         }
-        [data-theme="dark"] .form-input:focus {
-            border-color: #3b82f6;
-            background: #0f1a2e;
+
+        [data-theme="dark"] .login-container {
+            background: transparent;
         }
-        [data-theme="dark"] .form-label { color: #cbd5e1; }
-        [data-theme="dark"] .forgot-link { color: #60a5fa; }
-        [data-theme="dark"] .form-footer-text { color: #94a3b8; }
-        [data-theme="dark"] .form-footer-text a { color: #60a5fa; }
+
+        [data-theme="dark"] .left-hero {
+            background:
+                radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.28) 0%, transparent 50%),
+                radial-gradient(circle at 20% 85%, rgba(37, 99, 235, 0.22) 0%, transparent 50%),
+                linear-gradient(150deg, #081226 0%, #0c1c42 45%, #08132d 100%);
+            border-right: 1px solid rgba(59, 130, 246, 0.15);
+            box-shadow: 20px 0 60px rgba(0, 0, 0, 0.6);
+        }
+
+        [data-theme="dark"] .left-hero::before {
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.18) 0%, transparent 65%);
+        }
+
+        [data-theme="dark"] .left-hero::after {
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        [data-theme="dark"] .illus-ring {
+            background: linear-gradient(160deg, rgba(59, 130, 246, 0.2), rgba(15, 23, 42, 0.6));
+            border-color: rgba(96, 165, 250, 0.35);
+            box-shadow: 0 0 80px rgba(37, 99, 235, 0.35), inset 0 0 40px rgba(59, 130, 246, 0.15);
+        }
+
+        [data-theme="dark"] .illus-ring::before {
+            border-color: rgba(96, 165, 250, 0.28);
+        }
+
+        [data-theme="dark"] .illus-badge {
+            background: linear-gradient(160deg, #3b82f6, #1d4ed8);
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 24px rgba(29, 78, 216, 0.6);
+        }
+
+        [data-theme="dark"] .illus-title {
+            color: #ffffff;
+            text-shadow: 0 4px 30px rgba(59, 130, 246, 0.65);
+        }
+
+        [data-theme="dark"] .illus-sub {
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        [data-theme="dark"] .left-footer {
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        [data-theme="dark"] .right-form {
+            background: transparent;
+        }
+
+        [data-theme="dark"] .form-card {
+            background: rgba(18, 29, 51, 0.88);
+            border: 1px solid rgba(59, 130, 246, 0.22);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        [data-theme="dark"] .form-header h2 {
+            color: #f8fafc;
+        }
+
+        [data-theme="dark"] .form-header p {
+            color: #94a3b8;
+        }
+
+        /* Role Selector */
+        [data-theme="dark"] .role-arrow {
+            background: #142038;
+            border-color: #243754;
+            color: #94a3b8;
+        }
+
+        [data-theme="dark"] .role-arrow:hover {
+            background: #1c2e4f;
+            border-color: #3b82f6;
+            color: #60a5fa;
+            box-shadow: 0 2px 10px rgba(59, 130, 246, 0.25);
+        }
+
+        [data-theme="dark"] .role-card {
+            background: #142038;
+            border-color: #243754;
+        }
+
+        [data-theme="dark"] .role-card.active {
+            background: #172744;
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="dark"] .role-card-icon {
+            background: rgba(255, 255, 255, 0.06);
+            color: #94a3b8;
+        }
+
+        [data-theme="dark"] .role-card-name {
+            color: #f8fafc;
+        }
+
+        [data-theme="dark"] .role-hint {
+            color: #64748b;
+        }
+
+        [data-theme="dark"] .role-hint .key {
+            background: #142038;
+            border-color: #243754;
+            color: #94a3b8;
+        }
+
+        [data-theme="dark"] .role-dot {
+            background: #243754;
+        }
+
+        [data-theme="dark"] .role-dot.active {
+            background: #3b82f6;
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+        }
+
+        /* Inputs & Form Groups */
+        [data-theme="dark"] .form-label {
+            color: #cbd5e1;
+        }
+
+        [data-theme="dark"] .input-icon {
+            color: #64748b;
+        }
+
+        [data-theme="dark"] .form-input {
+            background: #142038 !important;
+            border-color: #243754 !important;
+            color: #f8fafc !important;
+        }
+
+        [data-theme="dark"] .form-input::placeholder {
+            color: #64748b !important;
+        }
+
+        [data-theme="dark"] .form-input:focus {
+            background: #16243f !important;
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.18) !important;
+        }
+
+        [data-theme="dark"] .btn-eye-toggle {
+            color: #64748b;
+        }
+
+        [data-theme="dark"] .btn-eye-toggle:hover {
+            color: #94a3b8;
+        }
+
+        [data-theme="dark"] .remember-me {
+            color: #94a3b8;
+        }
+
+        [data-theme="dark"] .remember-me:hover {
+            color: #cbd5e1;
+        }
+
+        [data-theme="dark"] .remember-me input {
+            accent-color: #3b82f6;
+        }
+
+        [data-theme="dark"] .forgot-link {
+            color: #60a5fa;
+        }
+
+        [data-theme="dark"] .forgot-link:hover {
+            color: #93c5fd;
+        }
+
+        [data-theme="dark"] .btn-submit {
+            background: linear-gradient(90deg, #1d4ed8 0%, #2563eb 55%, #3b82f6 100%);
+            box-shadow: 0 8px 26px rgba(37, 99, 235, 0.45);
+        }
+
+        [data-theme="dark"] .btn-submit:hover {
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.55);
+            filter: brightness(1.1);
+        }
+
+        [data-theme="dark"] .nisn-helper {
+            background: rgba(124, 58, 237, 0.14);
+            border-color: rgba(139, 92, 246, 0.35);
+            color: #ddd6fe;
+        }
+
+        [data-theme="dark"] .alert-danger {
+            background: rgba(239, 68, 68, 0.14);
+            border-color: rgba(239, 68, 68, 0.35);
+            color: #fca5a5;
+        }
+
+        [data-theme="dark"] .divider-line {
+            background: #243754;
+        }
+
+        [data-theme="dark"] .divider-text {
+            color: #64748b;
+        }
+
+        [data-theme="dark"] .form-footer-text {
+            color: #94a3b8;
+        }
+
+        [data-theme="dark"] .form-footer-text a {
+            color: #60a5fa;
+        }
+
+        [data-theme="dark"] .login-theme-toggle .theme-toggle-btn {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+        }
+
+        @media (max-width: 900px) {
+            [data-theme="dark"] .left-hero {
+                border-right: none;
+                border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+                box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+            }
+        }
+
+        /* ── Submit Spinner & Button Submitting State ── */
+        .btn-spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            animation: btnSpin 0.7s linear infinite;
+            flex-shrink: 0;
+        }
+        .btn-submit.is-submitting .btn-spinner {
+            display: inline-block;
+        }
+        .btn-submit.is-submitting > svg:not(.btn-spinner) {
+            display: none;
+        }
+        @keyframes btnSpin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
+        /* ── Minimalist Clean Hero Animations ── */
+        .hero-live-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            margin-top: 24px;
+            padding: 8px 18px;
+            border-radius: 99px;
+            background: rgba(255, 255, 255, 0.09);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 0 16px rgba(59, 130, 246, 0.12);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .hero-live-pill:hover {
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(96, 165, 250, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22), 0 0 24px rgba(59, 130, 246, 0.25);
+        }
+        .live-dot-pulse {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 10px #10b981;
+            animation: livePulse 2s infinite ease-in-out;
+            flex-shrink: 0;
+        }
+        @keyframes livePulse {
+            0%, 100% { transform: scale(0.9); opacity: 1; }
+            50% { transform: scale(1.35); opacity: 0.55; }
+        }
+        .live-pill-text {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.92);
+            letter-spacing: 0.01em;
+        }
+
+        /* Dynamic Greeting Badge */
+        .greeting-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 99px;
+            background: rgba(37, 99, 235, 0.08);
+            border: 1px solid rgba(37, 99, 235, 0.18);
+            color: #2563eb;
+            font-size: 12.5px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        [data-theme="dark"] .greeting-pill {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.3);
+            color: #93c5fd;
+        }
+        .greeting-wave {
+            display: inline-block;
+            animation: waveHand 2.2s infinite;
+            transform-origin: 70% 70%;
+        }
+        @keyframes waveHand {
+            0%, 60%, 100% { transform: rotate(0deg); }
+            10%, 30% { transform: rotate(14deg); }
+            20% { transform: rotate(-8deg); }
+            40% { transform: rotate(10deg); }
+            50% { transform: rotate(-4deg); }
+        }
+
+        /* Role switch pop animation */
+        .role-card.active {
+            animation: rolePop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes rolePop {
+            0% { transform: scale(0.92); }
+            100% { transform: scale(1); }
+        }
+
+        [data-theme="dark"] .hero-live-pill {
+            background: rgba(18, 29, 51, 0.7);
+            border-color: rgba(59, 130, 246, 0.25);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(59, 130, 246, 0.15);
+        }
+
+        .alert-danger {
+            animation: alertShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+        @keyframes alertShake {
+            10%, 90% { transform: translateX(-2px); }
+            20%, 80% { transform: translateX(3px); }
+            30%, 50%, 70% { transform: translateX(-4px); }
+            40%, 60% { transform: translateX(4px); }
+        }
     </style>
     <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
 </head>
@@ -759,7 +1157,7 @@
         <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
         </svg>
-        <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+        <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="5"/>
             <line x1="12" y1="1" x2="12" y2="3"/>
             <line x1="12" y1="21" x2="12" y2="23"/>
@@ -777,15 +1175,41 @@
 
     <!-- ─── LEFT HERO ─── -->
     <div class="left-hero">
+        <!-- Floating Badge Hijau: Presensi Realtime (Kiri Atas) -->
+        <div class="hero-float-badge badge-realtime-left">
+            <div class="float-badge-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+            </div>
+            <div>
+                <div class="float-badge-title">Presensi Realtime</div>
+                <div class="float-badge-desc" id="live-realtime-badge-desc">06:45:00 WIB • Tepat Waktu ✨</div>
+            </div>
+        </div>
+
         <div class="hero-illus">
             <div class="illus-ring">
-                <img src="{{ asset('logo.png') }}" alt="Logo PresensiKita">
-                <div class="illus-badge">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 16 11 18 15 14"/></svg>
+                <!-- Orbiting Checkmark Badge along dashed ring -->
+                <div class="orbit-track">
+                    <div class="orbit-satellite">
+                        <div class="illus-badge" title="Sistem Presensi Terverifikasi">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
+                <img src="{{ asset('logo.png') }}" alt="Logo PresensiKita">
             </div>
             <div class="illus-title">PresensiKita</div>
             <div class="illus-sub">Sistem Informasi Kehadiran Siswa</div>
+
+            <!-- Single Minimalist Live Status Pill (Clean & Spacious) -->
+            <div class="hero-live-pill">
+                <span class="live-dot-pulse"></span>
+                <span class="live-pill-text" id="live-school-clock">SMKN 1 Boyolangu • Sistem Aktif</span>
+            </div>
         </div>
         <div class="left-footer">&copy; {{ date('Y') }} PresensiKita. All rights reserved.</div>
     </div>
@@ -794,8 +1218,12 @@
     <div class="right-form">
         <div class="form-card">
 
-            <!-- Header -->
+            <!-- Header with Dynamic Greeting -->
             <div class="form-header">
+                <div class="greeting-pill">
+                    <span class="greeting-wave">👋</span>
+                    <span id="dynamic-greeting-text">Selamat Datang!</span>
+                </div>
                 <h2>Login ke akun Anda</h2>
                 <p>Silakan pilih peran Anda, lalu masukkan kredensial.</p>
             </div>
@@ -905,6 +1333,7 @@
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi superadmin untuk me-reset password.')" class="forgot-link">Lupa password?</a>
                     </div>
                     <button type="submit" class="btn-submit btn-admin" id="btn-admin">
+                        <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
                         <span>Masuk</span>
                     </button>
@@ -942,6 +1371,7 @@
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
                     </div>
                     <button type="submit" class="btn-submit btn-guru" id="btn-guru">
+                        <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
                         <span>Masuk</span>
                     </button>
@@ -979,6 +1409,7 @@
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
                     </div>
                     <button type="submit" class="btn-submit btn-gurupiket" id="btn-gurupiket">
+                        <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
                         <span>Masuk</span>
                     </button>
@@ -1016,6 +1447,7 @@
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
                     </div>
                     <button type="submit" class="btn-submit btn-walikelas" id="btn-walikelas">
+                        <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
                         <span>Masuk</span>
                     </button>
@@ -1054,6 +1486,7 @@
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
                     </div>
                     <button type="submit" class="btn-submit btn-satpam" id="btn-satpam">
+                        <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
                         <span>Masuk</span>
                     </button>
@@ -1092,6 +1525,7 @@
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
                     </div>
                     <button type="submit" class="btn-submit btn-wakasdm" id="btn-wakasdm">
+                        <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
                         <span>Masuk</span>
                     </button>
@@ -1120,6 +1554,7 @@
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password.')" class="forgot-link">Lupa password?</a>
                     </div>
                     <button type="submit" class="btn-submit btn-wali" id="btn-wali">
+                        <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
                         <span>Masuk</span>
                     </button>
@@ -1243,8 +1678,6 @@
     });
 
     // ── Auto-activate tab based on error (if redirected back with error)
-    // Dipetakan dari old('role') ke id panel form yang sesuai, agar setiap
-    // kesalahan input pada role tertentu tetap kembali ke panel role tersebut.
     @if($errors->any())
         (function() {
             var roleMap = {
@@ -1281,28 +1714,73 @@
             pwd.type = 'password';
             icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
         }
+    // ── Button Submit State
+    function attachLoginSubmit(formId, btnId, initialText) {
+        const form = document.getElementById(formId);
+        if (!form) return;
+
+        form.addEventListener('submit', function() {
+            const btn = document.getElementById(btnId);
+            if (btn) {
+                btn.classList.add('is-submitting');
+                btn.style.pointerEvents = 'none';
+                const span = btn.querySelector('span');
+                if (span) span.textContent = initialText || 'Memproses...';
+            }
+        });
     }
 
-    // ── Loading state on submit
-    function setLoading(btnId, text) {
-        const btn = document.getElementById(btnId);
-        btn.style.opacity = '0.8';
-        btn.style.pointerEvents = 'none';
-        btn.querySelector('span').textContent = text;
-    }
-
-    document.getElementById('form-admin').addEventListener('submit', () => setLoading('btn-admin', 'Memproses...'));
-    document.getElementById('form-guru').addEventListener('submit',  () => setLoading('btn-guru',  'Memproses...'));
-    document.getElementById('form-gurupiket').addEventListener('submit',  () => setLoading('btn-gurupiket',  'Memproses...'));
-    document.getElementById('form-walikelas').addEventListener('submit', () => setLoading('btn-walikelas', 'Memproses...'));
-    document.getElementById('form-satpam').addEventListener('submit',  () => setLoading('btn-satpam', 'Memproses...'));
-    document.getElementById('form-wakasdm')?.addEventListener('submit', () => setLoading('btn-wakasdm', 'Memproses...'));
-    document.getElementById('form-wali').addEventListener('submit',  () => setLoading('btn-wali',  'Memeriksa NISN...'));
+    attachLoginSubmit('form-admin', 'btn-admin', 'Memproses...');
+    attachLoginSubmit('form-guru', 'btn-guru', 'Memproses...');
+    attachLoginSubmit('form-gurupiket', 'btn-gurupiket', 'Memproses...');
+    attachLoginSubmit('form-walikelas', 'btn-walikelas', 'Memproses...');
+    attachLoginSubmit('form-satpam', 'btn-satpam', 'Memproses...');
+    attachLoginSubmit('form-wakasdm', 'btn-wakasdm', 'Memproses...');
+    attachLoginSubmit('form-wali', 'btn-wali', 'Memeriksa NISN...');
 
     // ── NISN: only allow digits
-    document.getElementById('nisn').addEventListener('input', function() {
-        this.value = this.value.replace(/\D/g, '').slice(0, 10);
-    });
+    const nisnInput = document.getElementById('nisn');
+    if (nisnInput) {
+        nisnInput.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 10);
+        });
+    }
+
+    // ── Live School Clock & Dynamic Greeting
+    (function() {
+        function updateSchoolClock() {
+            const now = new Date();
+            const hrs = String(now.getHours()).padStart(2, '0');
+            const mins = String(now.getMinutes()).padStart(2, '0');
+            const secs = String(now.getSeconds()).padStart(2, '0');
+            const clockText = `${hrs}:${mins}:${secs} WIB`;
+            
+            const el = document.getElementById('live-school-clock');
+            if (el) {
+                el.textContent = `SMKN 1 Boyolangu • ${clockText}`;
+            }
+
+            const badgeDesc = document.getElementById('live-realtime-badge-desc');
+            if (badgeDesc) {
+                badgeDesc.textContent = `${clockText} • Tepat Waktu ✨`;
+            }
+        }
+        updateSchoolClock();
+        setInterval(updateSchoolClock, 1000);
+
+        function setDynamicGreeting() {
+            const hr = new Date().getHours();
+            let greeting = 'Halo Sobat PresensiKita!';
+            if (hr >= 4 && hr < 11) greeting = 'Selamat Pagi, Semangat Belajar! 🌅';
+            else if (hr >= 11 && hr < 15) greeting = 'Selamat Siang, Tetap Semangat! ☀️';
+            else if (hr >= 15 && hr < 18) greeting = 'Selamat Sore, Sobat Hebat! 🌤️';
+            else greeting = 'Selamat Malam, Istirahat Cukup! 🌙';
+
+            const greetingEl = document.getElementById('dynamic-greeting-text');
+            if (greetingEl) greetingEl.textContent = greeting;
+        }
+        setDynamicGreeting();
+    })();
 </script>
 </body>
 </html>

@@ -6,20 +6,26 @@
         </div>
     </div>
 
-    @if($jadwalGuruAktif->isEmpty())
-        <div id="jadwal-status-alert" class="alert-card" style="background:#fff7ed;border-color:#fed7aa;margin-bottom:16px"><div class="alert-text"><p>Belum ada jam mengajar yang aktif</p><span>Form jurnal akan tersedia saat waktu sekarang sesuai jadwal mengajar Anda.</span></div></div>
+    @if($jadwalMengajarHariIni->isEmpty())
+        <div id="jadwal-status-alert" class="alert-card" style="background:#fff7ed;border-color:#fed7aa;margin-bottom:16px"><div class="alert-text"><p>Belum ada jadwal mengajar hari ini</p><span>Anda tidak memiliki jadwal mengajar yang terjadwal untuk hari ini.</span></div></div>
     @endif
 
-    <div id="jurnal-form-card" class="card" style="padding:24px;{{ $jadwalGuruAktif->isEmpty() ? 'opacity:.6' : '' }}">
-        <div class="card-heading" style="font-size:15px;font-weight:700;color:#1e293b;margin-bottom:16px">
+    <div id="jurnal-form-card" class="card" style="padding:24px;{{ $jadwalMengajarHariIni->isEmpty() ? 'opacity:.6' : '' }}">
+        <div class="card-heading" style="font-size:15px;font-weight:700;color:#1e293b;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
             <span>Form Jurnal Mengajar</span>
+            @if($jadwalGuruAktif->isNotEmpty())
+                <span class="badge badge-success" style="font-size:12px;padding:4px 10px;font-weight:700;display:inline-flex;align-items:center;gap:6px">
+                    <span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.5s infinite"></span>
+                    Sesi Aktif: {{ $jadwalGuruAktif->first()->nama_kelas }} (Jam ke-{{ $jadwalGuruAktif->first()->jam_ke >= 100 ? $jadwalGuruAktif->first()->jam_ke - 100 : $jadwalGuruAktif->first()->jam_ke }})
+                </span>
+            @endif
         </div>
         <div class="jurnal-form-grid">
             <div class="form-field">
                 <label for="pilih-kelas">Pilih Kelas</label>
-                <select id="pilih-kelas" class="form-select" onchange="loadSiswaByKelas(this.value)" {{ $jadwalGuruAktif->isEmpty() ? 'disabled' : '' }}>
-                    @foreach($kelasJurnalAktif as $k)
-                    <option value="{{ $k->id_kelas }}" {{ $selectedKelas->id_kelas == $k->id_kelas ? 'selected' : '' }}>
+                <select id="pilih-kelas" class="form-select" onchange="loadSiswaByKelas(this.value)" {{ $jadwalMengajarHariIni->isEmpty() ? 'disabled' : '' }}>
+                    @foreach($kelases as $k)
+                    <option value="{{ $k->id_kelas }}" {{ (isset($selectedKelas->id_kelas) && $selectedKelas->id_kelas == $k->id_kelas) ? 'selected' : '' }}>
                         {{ $k->nama_kelas }}
                     </option>
                     @endforeach
@@ -31,7 +37,7 @@
             </div>
             <div class="form-field">
                 <label for="input-materi">Materi Pembelajaran</label>
-                <input type="text" id="input-materi" class="form-input" placeholder="Tuliskan materi pembelajaran hari ini..." {{ $jadwalGuruAktif->isEmpty() ? 'disabled' : '' }}>
+                <input type="text" id="input-materi" class="form-input" placeholder="Tuliskan materi pembelajaran hari ini..." {{ $jadwalMengajarHariIni->isEmpty() ? 'disabled' : '' }}>
             </div>
         </div>
     </div>
@@ -44,7 +50,7 @@
             </div>
             <div class="tandai-row">
                 <input type="text" class="form-input search-input" placeholder="Cari nama siswa..." onkeyup="filterSiswa(this.value)" style="width:220px">
-                <button class="btn-tandai green" onclick="tandaiSemua('H')" {{ $jadwalGuruAktif->isEmpty() ? 'disabled' : '' }}>Tandai Semua Hadir</button>
+                <button class="btn-tandai green" onclick="tandaiSemua('H')" {{ $jadwalMengajarHariIni->isEmpty() ? 'disabled' : '' }}>Tandai Semua Hadir</button>
             </div>
         </div>
 
@@ -76,7 +82,7 @@
                 <div class="rekap-chip izin">Izin: <span id="rekap-izin">0</span></div>
                 <div class="rekap-chip alpa">Alpa: <span id="rekap-alpa">0</span></div>
             </div>
-            <button id="btn-submit-jurnal" class="btn-submit-jurnal" onclick="submitAbsensi()" {{ $jadwalGuruAktif->isEmpty() ? 'disabled' : '' }}>Simpan Jurnal &amp; Absensi</button>
+            <button id="btn-submit-jurnal" class="btn-submit-jurnal" onclick="submitAbsensi()" {{ $jadwalMengajarHariIni->isEmpty() ? 'disabled' : '' }}>Simpan Jurnal &amp; Absensi</button>
         </div>
     </div>
 </div>

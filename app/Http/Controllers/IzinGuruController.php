@@ -6,6 +6,8 @@ use App\Models\Guru;
 use App\Models\Hari;
 use App\Models\IzinGuru;
 use App\Models\JurnalKelas;
+use App\Models\JurnalSiswaTidakHadir;
+use App\Models\Siswa;
 use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -187,12 +189,44 @@ class IzinGuruController extends Controller
             return;
         }
 
-        $jadwalIds = DB::table('jadwal_mengajar')
+        $jadwals = DB::table('jadwal_mengajar')
             ->where('id_guru', $izin->id_guru)
             ->where('hari', $hari)
-            ->pluck('id_jadwal');
+            ->whereNull('deleted_at')
+            ->select('id_jadwal', 'id_kelas')
+            ->get();
 
-        foreach ($jadwalIds as $jadwalId) {
+        foreach ($jadwals as $jadwal) {
+            $jadwalId = $jadwal->id_jadwal;
+            $kelasId = $jadwal->id_kelas;
+
+            // Cari data absensi siswa sebelumnya untuk kelas ini
+            // Prioritas 1: Jurnal lain di kelas yang sama pada hari yang sama (sebelum jam izin)
+            // Prioritas 2: Jurnal terakhir sebelum hari ini di kelas yang sama
+            $jurnalAcuan = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
+                ->where('jadwal_mengajar.id_kelas', $kelasId)
+                ->where('jurnal_kelas.id_jadwal', '!=', $jadwalId)
+                ->whereNull('jadwal_mengajar.deleted_at')
+                ->where(function ($q) use ($izin) {
+                    $q->whereDate('jurnal_kelas.tanggal', $izin->tanggal_izin)
+                        ->orWhereDate('jurnal_kelas.tanggal', '<', $izin->tanggal_izin);
+                })
+                ->orderByDesc('jurnal_kelas.tanggal')
+                ->orderByDesc('jurnal_kelas.waktu_input')
+                ->select('jurnal_kelas.*')
+                ->first();
+
+            $totalSiswaKelas = Siswa::where('id_kelas', $kelasId)->where('is_aktif', 1)->count();
+            $copiedTidakHadir = collect();
+
+            if ($jurnalAcuan) {
+                $copiedTidakHadir = JurnalSiswaTidakHadir::where('id_jurnal', $jurnalAcuan->id_jurnal)->get();
+                $jumlahHadir = max(0, $totalSiswaKelas - $copiedTidakHadir->count());
+            } else {
+                // Jika belum ada acuan sama sekali, default semua siswa aktif hadir
+                $jumlahHadir = $totalSiswaKelas;
+            }
+
             $jurnal = JurnalKelas::where('id_jadwal', $jadwalId)
                 ->whereDate('tanggal', $izin->tanggal_izin)
                 ->first();
@@ -201,21 +235,31 @@ class IzinGuruController extends Controller
                 $jurnal->update([
                     'status_kehadiran_guru' => 'Tidak Hadir',
                     'materi' => 'Izin guru: '.$izin->alasan,
+                    'jumlah_hadir' => $jumlahHadir,
                     'waktu_input' => now(),
                 ]);
-
-                continue;
+            } else {
+                $jurnal = JurnalKelas::create([
+                    'id_jadwal' => $jadwalId,
+                    'id_guru' => $izin->id_guru,
+                    'tanggal' => $izin->tanggal_izin,
+                    'status_kehadiran_guru' => 'Tidak Hadir',
+                    'materi' => 'Izin guru: '.$izin->alasan,
+                    'jumlah_hadir' => $jumlahHadir,
+                    'waktu_input' => now(),
+                ]);
             }
 
-            JurnalKelas::create([
-                'id_jadwal' => $jadwalId,
-                'id_guru' => $izin->id_guru,
-                'tanggal' => $izin->tanggal_izin,
-                'status_kehadiran_guru' => 'Tidak Hadir',
-                'materi' => 'Izin guru: '.$izin->alasan,
-                'jumlah_hadir' => 0,
-                'waktu_input' => now(),
-            ]);
+            // Otomatis salin status siswa yang tidak hadir sesuai data absensi sebelumnya
+            JurnalSiswaTidakHadir::withTrashed()->where('id_jurnal', $jurnal->id_jurnal)->forceDelete();
+            foreach ($copiedTidakHadir as $th) {
+                JurnalSiswaTidakHadir::create([
+                    'id_jurnal' => $jurnal->id_jurnal,
+                    'id_siswa' => $th->id_siswa,
+                    'status' => $th->status,
+                    'keterangan' => $th->keterangan,
+                ]);
+            }
         }
     }
 }

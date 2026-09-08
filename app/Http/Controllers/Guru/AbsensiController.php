@@ -66,31 +66,21 @@ class AbsensiController extends Controller
             ->whereNull('kelas.deleted_at')
             ->whereNull('mapel.deleted_at')
             ->where('jadwal_mengajar.id_guru', $guru->id_guru)
-            ->where('jadwal_mengajar.hari', $hariMap[now()->format('l')] ?? '')
+            ->where('jadwal_mengajar.hari', $hariIni)
             ->whereTime('jam_pelajaran.jam_mulai', '<=', now()->format('H:i:s'))
             ->whereTime('jam_pelajaran.jam_selesai', '>=', now()->format('H:i:s'))
             ->select('jadwal_mengajar.id_jadwal', 'jadwal_mengajar.id_kelas', 'kelas.nama_kelas', 'mapel.nama_mapel', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
             ->orderBy('jam_pelajaran.jam_ke')
             ->get();
-        $jadwalGuruAktif = $jadwalGuruAktif->take(1);
-        $kelasJurnalAktif = Kelas::whereIn('id_kelas', $jadwalGuruAktif->pluck('id_kelas')->unique())->orderBy('nama_kelas')->get();
-        if ($jadwalGuruAktif->isNotEmpty()) {
-            $kelasAktif = $jadwalGuruAktif->first();
-            $kelases = $kelasJurnalAktif;
-            $totalKelasHariIni = 1;
-            $totalSiswaHariIni = Siswa::where('id_kelas', $kelasAktif->id_kelas)->where('is_aktif', 1)->count();
-            $namaKelasDiajarHariIni = $kelasAktif->nama_kelas;
-        } else {
-            $kelases = collect();
-            $totalKelasHariIni = 0;
-            $totalSiswaHariIni = null;
-            $namaKelasDiajarHariIni = '-';
-        }
-        if ($kelasJurnalAktif->isNotEmpty() && ! $kelasJurnalAktif->contains('id_kelas', $selectedKelas->id_kelas)) {
-            $selectedKelas = $kelasJurnalAktif->first();
+        $kelasJurnalAktif = $kelases;
+        
+        $activeKelasId = $jadwalGuruAktif->first()?->id_kelas ?? $kelases->first()?->id_kelas;
+        $selectedKelasId = $request->get('kelas_id', $activeKelasId);
+        $selectedKelas = $kelases->firstWhere('id_kelas', $selectedKelasId) ?? Kelas::find($selectedKelasId) ?? $kelases->first() ?? (object)['id_kelas' => 0, 'nama_kelas' => '-'];
+
+        if (isset($selectedKelas->id_kelas) && $selectedKelas->id_kelas > 0) {
             $siswaList = Siswa::where('id_kelas', $selectedKelas->id_kelas)->where('is_aktif', 1)->orderBy('nama_siswa')->get();
-        }
-        if ($jadwalGuruAktif->isEmpty()) {
+        } else {
             $siswaList = collect();
         }
         $namaSekolah = Pengaturan::get('nama_sekolah', 'SMKN 1 Boyolangu');
@@ -202,7 +192,9 @@ class AbsensiController extends Controller
 
     public function jadwalAktif()
     {
+        $guruId = session('auth_guru_id') ?? Guru::first()?->id_guru;
         $hariMap = Hari::getActiveDays()->pluck('nama_hari', 'nama_inggris')->toArray();
+        $hariIni = $hariMap[now()->format('l')] ?? now()->format('l');
         $jadwal = DB::table('jadwal_mengajar')
             ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
             ->join('kelas', 'jadwal_mengajar.id_kelas', '=', 'kelas.id_kelas')
@@ -211,17 +203,29 @@ class AbsensiController extends Controller
             ->whereNull('jam_pelajaran.deleted_at')
             ->whereNull('kelas.deleted_at')
             ->whereNull('mapel.deleted_at')
-            ->where('jadwal_mengajar.id_guru', session('auth_guru_id'))
-            ->where('jadwal_mengajar.hari', $hariMap[now()->format('l')] ?? '')
+            ->where('jadwal_mengajar.id_guru', $guruId)
+            ->where('jadwal_mengajar.hari', $hariIni)
             ->whereTime('jam_pelajaran.jam_mulai', '<=', now()->format('H:i:s'))
             ->whereTime('jam_pelajaran.jam_selesai', '>=', now()->format('H:i:s'))
-            ->select('jadwal_mengajar.id_jadwal', 'jadwal_mengajar.id_kelas', 'kelas.nama_kelas', 'mapel.nama_mapel', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
+            ->select('jadwal_mengajar.id_jadwal', 'jadwal_mengajar.id_kelas', 'kelas.nama_kelas', 'mapel.nama_mapel', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
             ->orderBy('jam_pelajaran.jam_ke')
             ->first();
+
+        $kelasHariIni = DB::table('jadwal_mengajar')
+            ->join('kelas', 'jadwal_mengajar.id_kelas', '=', 'kelas.id_kelas')
+            ->whereNull('jadwal_mengajar.deleted_at')
+            ->whereNull('kelas.deleted_at')
+            ->where('jadwal_mengajar.id_guru', $guruId)
+            ->where('jadwal_mengajar.hari', $hariIni)
+            ->select('kelas.id_kelas', 'kelas.nama_kelas')
+            ->distinct()
+            ->orderBy('kelas.nama_kelas')
+            ->get();
 
         return response()->json([
             'status' => 'success',
             'jadwal' => $jadwal,
+            'kelas_hari_ini' => $kelasHariIni,
             'waktu_server' => now()->format('H:i:s'),
         ]);
     }
@@ -312,33 +316,31 @@ class AbsensiController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Kelas wajib dipilih.'], 422);
         }
 
+        $guruId = session('auth_guru_id') ?? Guru::first()?->id_guru;
         $hariMap = Hari::getActiveDays()->pluck('nama_hari', 'nama_inggris')->toArray();
-        $jadwalAktif = DB::table('jadwal_mengajar')
+        $hariIni = $hariMap[now()->format('l')] ?? now()->format('l');
+
+        $jadwalHariIni = DB::table('jadwal_mengajar')
             ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
             ->whereNull('jadwal_mengajar.deleted_at')
             ->whereNull('jam_pelajaran.deleted_at')
-            ->where('jadwal_mengajar.id_guru', session('auth_guru_id'))
+            ->where('jadwal_mengajar.id_guru', $guruId)
             ->where('jadwal_mengajar.id_kelas', $kelasId)
-            ->where('jadwal_mengajar.hari', $hariMap[now()->format('l')] ?? '')
-            ->whereTime('jam_pelajaran.jam_mulai', '<=', now()->format('H:i:s'))
-            ->whereTime('jam_pelajaran.jam_selesai', '>=', now()->format('H:i:s'))
-            ->select('jadwal_mengajar.id_jadwal')
-            ->first();
+            ->where('jadwal_mengajar.hari', $hariIni)
+            ->select('jadwal_mengajar.id_jadwal', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
+            ->orderBy('jam_pelajaran.jam_ke')
+            ->get();
 
-        if (! $jadwalAktif || $tanggal !== now()->toDateString()) {
-            return response()->json([
-                'status' => 'success',
-                'jurnal' => null,
-                'siswa' => [],
-            ]);
+        $jurnal = null;
+        if ($jadwalHariIni->isNotEmpty()) {
+            $jadwalIds = $jadwalHariIni->pluck('id_jadwal');
+            $jurnal = JurnalKelas::whereIn('id_jadwal', $jadwalIds)
+                ->whereDate('tanggal', $tanggal)
+                ->select('jurnal_kelas.*')
+                ->orderByDesc('jurnal_kelas.waktu_input')
+                ->orderByDesc('jurnal_kelas.id_jurnal')
+                ->first();
         }
-
-        $jurnal = JurnalKelas::where('id_jadwal', $jadwalAktif->id_jadwal)
-            ->whereDate('tanggal', $tanggal)
-            ->select('jurnal_kelas.*')
-            ->orderByDesc('jurnal_kelas.waktu_input')
-            ->orderByDesc('jurnal_kelas.id_jurnal')
-            ->first();
 
         $jurnalIds = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
             ->where('jadwal_mengajar.id_kelas', $kelasId)
@@ -413,7 +415,7 @@ class AbsensiController extends Controller
                 }
             }
 
-            $idGuru = session('auth_guru_id');
+            $idGuru = session('auth_guru_id') ?? Guru::first()?->id_guru;
             $kelasId = (int) $request->id_kelas;
             $tanggal = $request->tanggal;
             if ($tanggal !== now()->toDateString()) {
@@ -423,22 +425,28 @@ class AbsensiController extends Controller
             }
 
             $hariMap = Hari::getActiveDays()->pluck('nama_hari', 'nama_inggris')->toArray();
-            $jadwalAktif = DB::table('jadwal_mengajar')
+            $hariIni = $hariMap[now()->format('l')] ?? now()->format('l');
+            $jadwalGuruHariIni = DB::table('jadwal_mengajar')
                 ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
                 ->whereNull('jadwal_mengajar.deleted_at')
                 ->whereNull('jam_pelajaran.deleted_at')
                 ->where('jadwal_mengajar.id_guru', $idGuru)
-                ->where('jadwal_mengajar.hari', $hariMap[now()->format('l')] ?? '')
-                ->whereTime('jam_pelajaran.jam_mulai', '<=', now()->format('H:i:s'))
-                ->whereTime('jam_pelajaran.jam_selesai', '>=', now()->format('H:i:s'))
-                ->select('jadwal_mengajar.id_jadwal', 'jadwal_mengajar.id_kelas')
+                ->where('jadwal_mengajar.id_kelas', $kelasId)
+                ->where('jadwal_mengajar.hari', $hariIni)
+                ->select('jadwal_mengajar.id_jadwal', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
                 ->orderBy('jam_pelajaran.jam_ke')
-                ->first();
-            if (! $jadwalAktif || (int) $jadwalAktif->id_kelas !== $kelasId) {
+                ->get();
+
+            if ($jadwalGuruHariIni->isEmpty()) {
                 DB::rollBack();
 
-                return response()->json(['status' => 'error', 'message' => 'Jurnal hanya dapat diisi sesuai jadwal dan jam mengajar yang sedang aktif.'], 422);
+                return response()->json(['status' => 'error', 'message' => 'Anda tidak memiliki jadwal mengajar di kelas ini untuk hari ini.'], 422);
             }
+
+            $currentTime = now()->format('H:i:s');
+            $jadwalTarget = $jadwalGuruHariIni->first(function ($j) use ($currentTime) {
+                return $currentTime >= $j->jam_mulai && $currentTime <= $j->jam_selesai;
+            }) ?? $jadwalGuruHariIni->first();
 
             $guruSedangIzin = IzinGuru::where('id_guru', $idGuru)
                 ->whereDate('tanggal_izin', $tanggal)
@@ -447,18 +455,19 @@ class AbsensiController extends Controller
                 ->exists();
             $statusKehadiranGuru = $guruSedangIzin ? 'Tidak Hadir' : 'Hadir';
 
-            // Cari jurnal yang sudah ada untuk kelas + tanggal ini
-            $existing = JurnalKelas::where('id_jadwal', $jadwalAktif->id_jadwal)
-                ->whereDate('jurnal_kelas.tanggal', $tanggal)
-                ->select('jurnal_kelas.id_jurnal')
-                ->orderByDesc('jurnal_kelas.waktu_input')
-                ->orderByDesc('jurnal_kelas.id_jurnal')
+            // Cari jurnal yang sudah ada untuk jadwal mengajar kelas ini pada tanggal hari ini
+            $jadwalIdsKelasHariIni = $jadwalGuruHariIni->pluck('id_jadwal');
+            $existing = JurnalKelas::whereIn('id_jadwal', $jadwalIdsKelasHariIni)
+                ->whereDate('tanggal', $tanggal)
+                ->orderByDesc('waktu_input')
+                ->orderByDesc('id_jurnal')
                 ->first();
 
             if ($existing) {
-                // Perbarui jurnal yang sudah ada (ganti data tidak hadir dengan data terbaru)
-                $jurnal = JurnalKelas::findOrFail($existing->id_jurnal);
+                // Perbarui jurnal yang sudah ada
+                $jurnal = $existing;
                 $jurnal->update([
+                    'id_jadwal' => $jadwalTarget->id_jadwal,
                     'id_guru' => $idGuru,
                     'status_kehadiran_guru' => $statusKehadiranGuru,
                     'materi' => $request->materi ?? $jurnal->materi,
@@ -466,10 +475,11 @@ class AbsensiController extends Controller
                     'waktu_input' => now(),
                 ]);
 
-                JurnalSiswaTidakHadir::where('id_jurnal', $jurnal->id_jurnal)->delete();
+                // Hapus tuntas (force delete) data ketidakhadiran sebelumnya agar tidak terjadi bentrok unique constraint
+                JurnalSiswaTidakHadir::withTrashed()->where('id_jurnal', $jurnal->id_jurnal)->forceDelete();
             } else {
                 $jurnal = JurnalKelas::create([
-                    'id_jadwal' => $jadwalAktif->id_jadwal,
+                    'id_jadwal' => $jadwalTarget->id_jadwal,
                     'id_guru' => $idGuru,
                     'tanggal' => $tanggal,
                     'status_kehadiran_guru' => $statusKehadiranGuru,
@@ -477,6 +487,8 @@ class AbsensiController extends Controller
                     'jumlah_hadir' => $jumlahHadir,
                     'waktu_input' => now(),
                 ]);
+
+                JurnalSiswaTidakHadir::withTrashed()->where('id_jurnal', $jurnal->id_jurnal)->forceDelete();
             }
 
             foreach ($tidakHadirList as $th) {

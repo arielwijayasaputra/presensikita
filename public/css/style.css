@@ -1298,6 +1298,21 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     color: #fff;
 }
 
+[data-theme="dark"] .absensi-card .absensi-status-btn {
+    background: #0f1a2e;
+    border-color: #2a3c5a;
+    color: #94a3b8;
+}
+[data-theme="dark"] .absensi-card .absensi-status-btn.selected {
+    background: #1c2b44;
+    color: #fff;
+}
+[data-theme="dark"] .absensi-card .absensi-ket-input {
+    background: #0f1a2e !important;
+    border-color: #2a3c5a !important;
+    color: #f8fafc !important;
+}
+
 /* Notice banners */
 [data-theme="dark"] .admin-mobile-notice div {
     background: rgba(245, 158, 11, 0.15) !important;
@@ -1305,3 +1320,445 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     color: #fbbf24 !important;
 }
 
+
+/* ════════════════════════════════════════════════════════════════════════════
+   GURU — Jurnal & Absensi (Mobile Card Layout)
+   Di layar kecil, baris tabel absensi diubah menjadi kartu agar tidak perlu
+   scroll horizontal. Hanya aktif di layar ≤ 768px; desktop tetap memakai tabel.
+   ════════════════════════════════════════════════════════════════════════════ */
+.absensi-card { display: none; }
+
+@media (max-width: 768px) {
+    /* Sembunyikan tabel & tampilkan kartu hanya di halaman guru (jurnal & absensi) */
+    #page-jurnal-absensi thead { display: none; }
+    #page-jurnal-absensi table { min-width: 0 !important; display: block; overflow: visible; }
+    #page-jurnal-absensi tbody { display: block; }
+    #page-jurnal-absensi tbody tr { display: none; }
+    #page-jurnal-absensi tbody tr td { display: none; }
+    #page-jurnal-absensi .absensi-card {
+        display: block;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 10px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+    }
+    #page-jurnal-absensi .absensi-card-head {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    #page-jurnal-absensi .absensi-card-no {
+        flex: none;
+        width: 24px;
+        height: 24px;
+        border-radius: 8px;
+        background: #eff6ff;
+        color: #2563eb;
+        font-size: 12px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1px;
+    }
+    #page-jurnal-absensi .absensi-card-nama {
+        font-size: 14px;
+        font-weight: 700;
+        color: #1e293b;
+        line-height: 1.3;
+    }
+    #page-jurnal-absensi .absensi-card-nisn {
+        font-size: 11px;
+        font-weight: 600;
+        color: #94a3b8;
+        font-family: monospace;
+        margin-top: 2px;
+    }
+    #page-jurnal-absensi .absensi-status-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        margin-bottom: 10px;
+    }
+    #page-jurnal-absensi .absensi-status-btn {
+        position: relative;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 8px;
+        background: #f8fafc;
+        color: #64748b;
+        font-size: 12.5px;
+        font-weight: 700;
+        padding: 9px 0;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.15s;
+    }
+    #page-jurnal-absensi .absensi-status-btn input { position: absolute; opacity: 0; pointer-events: none; }
+    #page-jurnal-absensi .absensi-status-btn.selected[data-status="H"] { background: #dcfce7; border-color: #22c55e; color: #15803d; }
+    #page-jurnal-absensi .absensi-status-btn.selected[data-status="S"] { background: #fef3c7; border-color: #f59e0b; color: #b45309; }
+    #page-jurnal-absensi .absensi-status-btn.selected[data-status="I"] { background: #dbeafe; border-color: #3b82f6; color: #1d4ed8; }
+    #page-jurnal-absensi .absensi-status-btn.selected[data-status="A"] { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
+    #page-jurnal-absensi .absensi-ket-input {
+        width: 100%;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 8px 10px;
+        font-size: 12.5px;
+        font-family: inherit;
+        outline: none;
+        background: #fff;
+        color: #1e293b;
+    }
+    #page-jurnal-absensi .absensi-ket-input:focus { border-color: #2563eb; }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   MOBILE CARD — Semua Halaman Absensi Siswa (Admin, Wali Kelas)
+   Tabel absensi lebar diubah menjadi kartu di layar ≤ 768px tanpa duplikasi
+   input (aman untuk form submit & tabel rekap).
+   ════════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    /* ── Helper umum: sel jadi blok dalam kartu ── */
+    #absensi-table, #table-wali-harian { min-width: 0 !important; }
+    #absensi-table thead, #table-wali-harian thead { display: none; }
+    #absensi-table tbody, #table-wali-harian tbody,
+    #absensi-table tbody tr, #table-wali-harian tbody tr,
+    #absensi-table tbody td, #table-wali-harian tbody td { display: block; width: 100% !important; }
+    #absensi-table, #absensi-table tbody, #table-wali-harian, #table-wali-harian tbody { overflow: visible; }
+    #absensi-table tbody tr, #table-wali-harian tbody tr {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 10px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+    }
+    #absensi-table tbody td, #table-wali-harian tbody td { border: none !important; padding: 4px 0 !important; }
+
+    /* ── Admin: Absensi Harian (read-only) ── */
+    #page-absensi-harian #absensi-table tbody tr td:nth-child(1) { display: none; } /* No. */
+    #page-absensi-harian #absensi-table tbody tr td:nth-child(2) { /* NISN */
+        font-family: monospace; font-size: 11px; color: #94a3b8; font-weight: 600; margin-top: -6px;
+    }
+    #page-absensi-harian #absensi-table tbody tr td:nth-child(3) { /* Nama */
+        font-size: 14.5px; font-weight: 700; color: #1e293b;
+    }
+    #page-absensi-harian #absensi-table tbody tr td.td-status {
+        width: auto !important; padding: 6px 0 !important;
+        display: flex !important; align-items: center; gap: 10px;
+    }
+    #page-absensi-harian #absensi-table tbody tr td.td-status::before {
+        font-size: 12.5px; font-weight: 700; min-width: 48px;
+    }
+    #page-absensi-harian #absensi-table tbody tr td.td-status:nth-child(4)::before { content: "Hadir"; color: #15803d; }
+    #page-absensi-harian #absensi-table tbody tr td.td-status:nth-child(5)::before { content: "Sakit"; color: #b45309; }
+    #page-absensi-harian #absensi-table tbody tr td.td-status:nth-child(6)::before { content: "Izin"; color: #1d4ed8; }
+    #page-absensi-harian #absensi-table tbody tr td.td-status:nth-child(7)::before { content: "Alpa"; color: #b91c1c; }
+    #page-absensi-harian #absensi-table tbody tr td.td-status .radio-wrapper input[type="radio"] {
+        width: 22px; height: 22px;
+    }
+    #page-absensi-harian #absensi-table tbody tr td:nth-child(8) input { /* Keterangan */
+        width: 100%; border: 1px solid #e2e8f0; border-radius: 8px;
+        padding: 8px 10px; font-size: 12.5px; font-family: inherit;
+        background: #f8fafc; color: #475569; margin-top: 6px;
+    }
+
+    /* ── Wali Kelas: Presensi Harian (form isi) ── */
+    #table-wali-harian tbody tr td:nth-child(1), /* No */
+    #table-wali-harian tbody tr td:nth-child(4)  /* L/P */ { display: none; }
+    #table-wali-harian tbody tr td:nth-child(2) { /* NISN */
+        font-family: monospace; font-size: 11px; color: #94a3b8; font-weight: 600; margin-top: -6px;
+    }
+    #table-wali-harian tbody tr td:nth-child(3) { /* Nama */
+        font-size: 14.5px; font-weight: 700; color: #0f172a;
+    }
+    #table-wali-harian tbody tr td:nth-child(5) { /* Status */
+        width: auto !important; margin: 8px 0;
+    }
+    #table-wali-harian tbody tr td:nth-child(5) > div {
+        display: grid !important; grid-template-columns: repeat(4, 1fr); gap: 6px;
+    }
+    #table-wali-harian tbody tr td:nth-child(5) label {
+        display: flex !important; justify-content: center !important;
+        border: 1.5px solid #e2e8f0; border-radius: 8px;
+        background: #f8fafc; padding: 9px 0 !important;
+        font-size: 12.5px !important;
+        transition: all 0.15s;
+    }
+    #table-wali-harian tbody tr td:nth-child(5) label:has(input:checked[value="H"]) { background: #dcfce7; border-color: #22c55e; color: #15803d; }
+    #table-wali-harian tbody tr td:nth-child(5) label:has(input:checked[value="S"]) { background: #fef3c7; border-color: #f59e0b; color: #b45309; }
+    #table-wali-harian tbody tr td:nth-child(5) label:has(input:checked[value="I"]) { background: #dbeafe; border-color: #3b82f6; color: #1d4ed8; }
+    #table-wali-harian tbody tr td:nth-child(5) label:has(input:checked[value="A"]) { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
+    #table-wali-harian tbody tr td:nth-child(5) label:has(input:checked[value="D"]) { background: #cffafe; border-color: #06b6d4; color: #0e7490; }
+    #table-wali-harian tbody tr td:nth-child(6) input { /* Keterangan */
+        width: 100%; border: 1px solid #e2e8f0; border-radius: 8px;
+        padding: 8px 10px; font-size: 12.5px; font-family: inherit;
+    }
+    #table-wali-harian tbody tr td:nth-child(7) { /* Aksi Ortu */ margin-top: 4px; }
+    #table-wali-harian tbody tr td:nth-child(7) a {
+        display: flex !important; justify-content: center;
+        padding: 9px 0 !important; border-radius: 8px; font-size: 13px !important;
+    }
+}
+
+/* ── Wali Kelas: Rekap Absensi (tabel rekap jadi kartu) ── */
+@media (max-width: 768px) {
+    #table-wali-rekap-absensi-tbl { min-width: 0 !important; }
+    #table-wali-rekap-absensi-tbl thead { display: none; }
+    #table-wali-rekap-absensi-tbl tbody,
+    #table-wali-rekap-absensi-tbl tbody tr,
+    #table-wali-rekap-absensi-tbl tbody td { display: block; width: 100% !important; text-align: left !important; }
+    #table-wali-rekap-absensi-tbl tbody tr {
+        background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+        padding: 14px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+    }
+    #table-wali-rekap-absensi-tbl tbody td { border: none !important; padding: 4px 0 !important; }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(1), /* No */
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(4)  /* L/P */ { display: none; }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(2) {
+        font-family: monospace; font-size: 11px; color: #94a3b8; font-weight: 600;
+    }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(3) {
+        font-size: 14.5px; font-weight: 700; color: #0f172a; margin-bottom: 4px;
+    }
+    /* Baris statistik H/S/I/A — tampil berdampingan dengan label */
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(5),
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(6),
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(7),
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(8) {
+        display: inline-block !important; width: auto !important; margin-right: 12px;
+    }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(5)::before { content: "H: "; color: #15803d; font-weight: 700; font-size: 12px; }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(6)::before { content: "S: "; color: #b45309; font-weight: 700; font-size: 12px; }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(7)::before { content: "I: "; color: #1d4ed8; font-weight: 700; font-size: 12px; }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(8)::before { content: "A: "; color: #b91c1c; font-weight: 700; font-size: 12px; }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(9) { margin-top: 6px; } /* Persentase */
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(9) > div { justify-content: flex-start !important; }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(10),
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(11) { display: inline-block !important; width: auto !important; margin-right: 10px; }
+}
+
+/* ── Guru: Riwayat Jurnal (tabel 760px jadi kartu) ── */
+@media (max-width: 768px) {
+    #page-riwayat-jurnal table { min-width: 0 !important; }
+    #page-riwayat-jurnal thead { display: none; }
+    #page-riwayat-jurnal tbody,
+    #page-riwayat-jurnal tbody tr,
+    #page-riwayat-jurnal tbody td { display: block; width: 100% !important; text-align: left !important; }
+    #page-riwayat-jurnal tbody tr {
+        background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+        padding: 14px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+    }
+    #page-riwayat-jurnal tbody td { border: none !important; padding: 3px 0 !important; }
+    #page-riwayat-jurnal tbody tr td:nth-child(1) { display: none; } /* No. */
+    #page-riwayat-jurnal tbody tr td:nth-child(2) { /* Kelas */
+        font-size: 14.5px; font-weight: 700; color: #1e293b;
+    }
+    #page-riwayat-jurnal tbody tr td:nth-child(3) {
+        font-size: 12px; color: #64748b; font-weight: 600;
+    }
+    #page-riwayat-jurnal tbody tr td:nth-child(4) {
+        font-size: 12.5px; color: #475569;
+    }
+    /* Statistik hadir/S/I/A + total siswa berdampingan */
+    #page-riwayat-jurnal tbody tr td:nth-child(5),
+    #page-riwayat-jurnal tbody tr td:nth-child(6),
+    #page-riwayat-jurnal tbody tr td:nth-child(7),
+    #page-riwayat-jurnal tbody tr td:nth-child(8),
+    #page-riwayat-jurnal tbody tr td:nth-child(9) {
+        display: inline-block !important; width: auto !important; margin-right: 14px; margin-top: 6px;
+    }
+    #page-riwayat-jurnal tbody tr td:nth-child(5)::before { content: "Hadir: "; color: #64748b; font-size: 12px; font-weight: 600; }
+    #page-riwayat-jurnal tbody tr td:nth-child(6)::before { content: "S: "; color: #64748b; font-size: 12px; font-weight: 600; }
+    #page-riwayat-jurnal tbody tr td:nth-child(7)::before { content: "I: "; color: #64748b; font-size: 12px; font-weight: 600; }
+    #page-riwayat-jurnal tbody tr td:nth-child(8)::before { content: "A: "; color: #64748b; font-size: 12px; font-weight: 600; }
+    #page-riwayat-jurnal tbody tr td:nth-child(9)::before { content: "Total: "; color: #64748b; font-size: 12px; font-weight: 600; }
+}
+
+/* ── Guru: Jadwal Mengajar Hari Ini (tabel 750px jadi kartu, tanpa geser) ── */
+@media (max-width: 768px) {
+    #page-jadwal-mengajar table.data-table { min-width: 0 !important; }
+    #page-jadwal-mengajar thead { display: none; }
+    #page-jadwal-mengajar .card > div[style*="overflow-x"] { overflow: visible !important; }
+    #page-jadwal-mengajar tbody,
+    #page-jadwal-mengajar tbody tr,
+    #page-jadwal-mengajar tbody td { display: block; width: 100% !important; text-align: left !important; }
+    #page-jadwal-mengajar tbody tr.jadwal-row-item {
+        background: #fff !important;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 10px;
+        box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+    }
+    #page-jadwal-mengajar tbody tr.jadwal-row-item:has(.badge-success) {
+        border-color: #86efac; background: #f0fdf4 !important;
+    }
+    #page-jadwal-mengajar tbody td { border: none !important; padding: 4px 0 !important; }
+
+    /* Baris 1: Jam ke- + rentang waktu berdampingan */
+    #page-jadwal-mengajar tbody tr td:nth-child(1),
+    #page-jadwal-mengajar tbody tr td:nth-child(2) {
+        display: inline-block !important; width: auto !important; margin-right: 10px;
+    }
+    /* Baris 2: Kelas + Mapel */
+    #page-jadwal-mengajar tbody tr td:nth-child(3) {
+        font-size: 15px; font-weight: 800; color: #1e3a8a; margin-top: 6px;
+    }
+    #page-jadwal-mengajar tbody tr td:nth-child(4) {
+        font-size: 13.5px; font-weight: 600; color: #1e293b;
+    }
+    #page-jadwal-mengajar tbody tr td:nth-child(4)::before {
+        content: "Mapel: "; font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    /* Baris 3: Status */
+    #page-jadwal-mengajar tbody tr td.status-cell {
+        margin-top: 6px; width: auto !important; text-align: left !important;
+    }
+    #page-jadwal-mengajar tbody tr td.status-cell .badge { font-size: 12px !important; }
+    /* Baris 4: Aksi — tombol full width mudah dijentik */
+    #page-jadwal-mengajar tbody tr td.action-cell {
+        margin-top: 10px; width: auto !important; text-align: left !important;
+    }
+    #page-jadwal-mengajar tbody tr td.action-cell button {
+        width: 100% !important; justify-content: center !important;
+        padding: 10px 0 !important; font-size: 13px !important;
+    }
+}
+
+/* ── Guru: Jadwal Mengajar di Dashboard Guru (#page-guru-dashboard, tabel 700px jadi kartu) ── */
+@media (max-width: 768px) {
+    #page-guru-dashboard table.data-table { min-width: 0 !important; }
+    #page-guru-dashboard thead { display: none; }
+    #page-guru-dashboard .card > div[style*="overflow-x"] { overflow: visible !important; }
+    #page-guru-dashboard tbody,
+    #page-guru-dashboard tbody tr,
+    #page-guru-dashboard tbody td { display: block; width: 100% !important; text-align: left !important; }
+    #page-guru-dashboard tbody tr {
+        background: #fff !important;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 10px;
+        box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+    }
+    #page-guru-dashboard tbody tr:has(.badge-success) {
+        border-color: #86efac;
+        background: #f0fdf4 !important;
+    }
+    #page-guru-dashboard tbody td { border: none !important; padding: 3px 0 !important; }
+
+    /* Baris 1: Jam Ke- dan Waktu berdampingan */
+    #page-guru-dashboard tbody tr td:nth-child(1),
+    #page-guru-dashboard tbody tr td:nth-child(2) {
+        display: inline-block !important;
+        width: auto !important;
+        margin-right: 10px;
+    }
+    #page-guru-dashboard tbody tr td:nth-child(2) {
+        font-weight: 600;
+        color: #475569;
+        font-size: 13px;
+    }
+
+    /* Baris 2: Kelas (besar, tebal) */
+    #page-guru-dashboard tbody tr td:nth-child(3) {
+        font-size: 15px;
+        font-weight: 800;
+        color: #1e3a8a;
+        margin-top: 6px;
+    }
+
+    /* Baris 3: Mata Pelajaran */
+    #page-guru-dashboard tbody tr td:nth-child(4) {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: #1e293b;
+    }
+    #page-guru-dashboard tbody tr td:nth-child(4)::before {
+        content: "Mapel: ";
+        font-size: 11px;
+        font-weight: 700;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+
+    /* Baris 4: Status sesi */
+    #page-guru-dashboard tbody tr td:nth-child(5) {
+        margin-top: 6px;
+        width: auto !important;
+    }
+    #page-guru-dashboard tbody tr td:nth-child(5) .badge {
+        font-size: 12px !important;
+    }
+}
+
+/* ── Guru: Riwayat Izin Saya (#page-izin-guru, tabel 950px jadi kartu) ── */
+@media (max-width: 768px) {
+    #page-izin-guru table.data-table { min-width: 0 !important; }
+    #page-izin-guru thead { display: none; }
+    #page-izin-guru .card > div[style*="overflow-x"] { overflow: visible !important; }
+    #page-izin-guru tbody,
+    #page-izin-guru tbody tr,
+    #page-izin-guru tbody td { display: block; width: 100% !important; text-align: left !important; }
+    #page-izin-guru tbody tr {
+        background: #fff !important;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 10px;
+        box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+    }
+    #page-izin-guru tbody td { border: none !important; padding: 3px 0 !important; }
+
+    /* Baris 1: Tanggal */
+    #page-izin-guru tbody tr td:nth-child(1) {
+        font-size: 14px;
+        font-weight: 800;
+        color: #1e293b;
+    }
+
+    /* Baris 2: Alasan */
+    #page-izin-guru tbody tr td:nth-child(2) {
+        font-size: 13px;
+        color: #475569;
+        margin: 4px 0;
+    }
+    #page-izin-guru tbody tr td:nth-child(2)::before {
+        content: "Alasan: ";
+        font-weight: 700;
+        color: #64748b;
+    }
+
+    /* Baris 3: Surat */
+    #page-izin-guru tbody tr td:nth-child(3) {
+        font-size: 12.5px;
+    }
+    #page-izin-guru tbody tr td:nth-child(3)::before {
+        content: "Surat: ";
+        font-weight: 700;
+        color: #64748b;
+    }
+
+    /* Baris 4: Status Kepsek & Waka */
+    #page-izin-guru tbody tr td:nth-child(4),
+    #page-izin-guru tbody tr td:nth-child(5) {
+        display: inline-block !important;
+        width: auto !important;
+        margin-right: 12px;
+        font-size: 12px;
+        color: #64748b;
+    }
+    #page-izin-guru tbody tr td:nth-child(4)::before { content: "Kepsek: "; font-weight: 700; }
+    #page-izin-guru tbody tr td:nth-child(5)::before { content: "Waka: "; font-weight: 700; }
+
+    /* Baris 5: Status Akhir (Badge) */
+    #page-izin-guru tbody tr td:nth-child(6) {
+        margin-top: 6px;
+        width: auto !important;
+    }
+}

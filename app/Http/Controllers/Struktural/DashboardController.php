@@ -763,7 +763,7 @@ class DashboardController extends Controller
                         'jumlah_hadir' => $jumlahHadir,
                         'waktu_input' => now(),
                     ]);
-                    JurnalSiswaTidakHadir::where('id_jurnal', $jurnal->id_jurnal)->delete();
+                    JurnalSiswaTidakHadir::withTrashed()->where('id_jurnal', $jurnal->id_jurnal)->forceDelete();
                 } else {
                     $jurnal = JurnalKelas::create([
                         'id_jadwal' => $idJadwal,
@@ -774,6 +774,7 @@ class DashboardController extends Controller
                         'jumlah_hadir' => $jumlahHadir,
                         'waktu_input' => now(),
                     ]);
+                    JurnalSiswaTidakHadir::withTrashed()->where('id_jurnal', $jurnal->id_jurnal)->forceDelete();
                 }
 
                 foreach ($tidakHadirList as $th) {

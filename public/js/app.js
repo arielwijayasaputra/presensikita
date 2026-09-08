@@ -164,6 +164,8 @@ function refreshJadwalGuru(){
             if (data.status !== 'success') return;
 
             const jadwal = data.jadwal;
+            const kelasHariIni = data.kelas_hari_ini || [];
+            const hasJadwalHariIni = kelasHariIni.length > 0 || !!jadwal;
             const jadwalId = jadwal ? String(jadwal.id_jadwal) : null;
             const jadwalBerubah = jadwalId !== activeJadwalGuruId;
             const kelasSelect = page.querySelector('#pilih-kelas');
@@ -173,34 +175,42 @@ function refreshJadwalGuru(){
             const formCard = page.querySelector('#jurnal-form-card');
             let alert = page.querySelector('#jadwal-status-alert');
 
-            if (jadwal && kelasSelect) {
-                let option = Array.from(kelasSelect.options).find(item => item.value === String(jadwal.id_kelas));
-                if (!option) {
-                    option = new Option(jadwal.nama_kelas, jadwal.id_kelas);
-                    kelasSelect.appendChild(option);
-                }
+            if (kelasSelect && kelasHariIni.length > 0) {
+                kelasHariIni.forEach(k => {
+                    let option = Array.from(kelasSelect.options).find(item => item.value === String(k.id_kelas));
+                    if (!option) {
+                        option = new Option(k.nama_kelas, k.id_kelas);
+                        kelasSelect.appendChild(option);
+                    }
+                });
+            }
+
+            if (jadwal && kelasSelect && (!kelasSelect.value || kelasSelect.value === '0')) {
                 kelasSelect.value = String(jadwal.id_kelas);
             }
 
             [kelasSelect, materiInput, submitButton, ...tandaiButtons].forEach(control => {
-                if (control) control.disabled = !jadwal;
+                if (control) control.disabled = !hasJadwalHariIni;
             });
-            page.querySelectorAll('#siswa-tbody input').forEach(control => { control.disabled = !jadwal; });
-            if (formCard) formCard.style.opacity = jadwal ? '1' : '.6';
+            page.querySelectorAll('#siswa-tbody input').forEach(control => { control.disabled = !hasJadwalHariIni; });
+            page.querySelectorAll('.absensi-status-btn').forEach(btn => { btn.style.pointerEvents = hasJadwalHariIni ? '' : 'none'; btn.style.opacity = hasJadwalHariIni ? '' : '.6'; });
+            if (formCard) formCard.style.opacity = hasJadwalHariIni ? '1' : '.6';
 
-            if (!jadwal && !alert) {
+            if (!hasJadwalHariIni && !alert) {
                 alert = document.createElement('div');
                 alert.id = 'jadwal-status-alert';
                 alert.className = 'alert-card';
                 alert.style.cssText = 'background:#fff7ed;border-color:#fed7aa;margin-bottom:16px';
-                alert.innerHTML = '<div class="alert-text"><p>Belum ada jam mengajar yang aktif</p><span>Form jurnal akan tersedia saat waktu sekarang sesuai jadwal mengajar Anda.</span></div>';
+                alert.innerHTML = '<div class="alert-text"><p>Belum ada jadwal mengajar hari ini</p><span>Anda tidak memiliki jadwal mengajar yang terjadwal untuk hari ini.</span></div>';
                 page.insertBefore(alert, formCard);
-            } else if (jadwal && alert) {
+            } else if (hasJadwalHariIni && alert) {
                 alert.remove();
             }
 
             activeJadwalGuruId = jadwalId;
-            if (jadwalBerubah && jadwal && kelasSelect && kelasSelect.value) loadSiswaByKelas(kelasSelect.value);
+            if (jadwalBerubah && jadwal && kelasSelect && kelasSelect.value === String(jadwal.id_kelas)) {
+                loadSiswaByKelas(kelasSelect.value);
+            }
         })
         .catch(err => console.error('Error mengecek jadwal aktif:', err));
 }
@@ -240,11 +250,14 @@ function muatAbsensiTersimpan(){
                     if (rec && rec.keterangan) {
                         const ket = qs(`#ket-${s.id_siswa}`, root);
                         if (ket) ket.value = rec.keterangan;
+                        const ketCard = document.querySelector(`.absensi-card[data-siswa-id="${s.id_siswa}"] .absensi-ket-input`);
+                        if (ketCard) ketCard.value = rec.keterangan;
                     }
                 });
             }
 
             updateRekap();
+            syncAbsensiCards();
         })
         .catch(err => console.error('Error fetching saved absensi:', err));
 }
@@ -278,11 +291,63 @@ function renderTable(data){
             <td class="td-status"><div class="radio-wrapper"><input type="radio" name="st-${id}" value="S" ${radioAttr} style="accent-color:#f59e0b;${isAdmin ? 'pointer-events:none;cursor:default;' : ''}"></div></td>
             <td class="td-status"><div class="radio-wrapper"><input type="radio" name="st-${id}" value="I" ${radioAttr} style="accent-color:#3b82f6;${isAdmin ? 'pointer-events:none;cursor:default;' : ''}"></div></td>
             <td class="td-status"><div class="radio-wrapper"><input type="radio" name="st-${id}" value="A" ${radioAttr} style="accent-color:#ef4444;${isAdmin ? 'pointer-events:none;cursor:default;' : ''}"></div></td>
-            <td><input type="text" id="ket-${id}" ${ketAttr}></td>
+            <td><input type="text" id="ket-${id}" ${ketAttr}${isAdmin ? '' : ` oninput="mirrorKetGuru(this, '${id}')"`}></td>
         `;
         tbody.appendChild(r);
+
+        if(!isAdmin){
+            // Kartu mobile (tampil hanya di layar ≤ 768px, sinkron dengan input tabel)
+            const card=document.createElement('div');
+            card.className='absensi-card';
+            card.dataset.siswaId=id;
+            const stBtn=(v,label)=>`
+                <button type="button" class="absensi-status-btn ${v==='H'?'selected':''}" data-status="${v}" data-sid="${id}" onclick="pickAbsensiStatus(this)">${label}<input type="radio" name="st-${id}" value="${v}" ${v==='H'?'checked':''} onchange="updateRekap()"></button>`;
+            card.innerHTML=`
+                <div class="absensi-card-head">
+                    <span class="absensi-card-no">${idx+1}</span>
+                    <div>
+                        <div class="absensi-card-nama">${nama}</div>
+                        <div class="absensi-card-nisn">NISN: ${nisn}</div>
+                    </div>
+                </div>
+                <div class="absensi-status-row">${stBtn('H','Hadir')}${stBtn('S','Sakit')}${stBtn('I','Izin')}${stBtn('A','Alpa')}</div>
+                <input type="text" class="absensi-ket-input" data-ket-sid="${id}" placeholder="Keterangan (opsional)..." oninput="mirrorKetGuru(this, '${id}')">
+            `;
+            tbody.appendChild(card);
+        }
     });
     updateRekap();
+    syncAbsensiCards();
+}
+
+// Mirror nilai keterangan antara input tabel dan input kartu mobile
+function mirrorKetGuru(src, sid){
+    const isCard = src.classList.contains('absensi-ket-input');
+    const target = isCard
+        ? document.getElementById(`ket-${sid}`)
+        : document.querySelector(`.absensi-card[data-siswa-id="${sid}"] .absensi-ket-input`);
+    if(target) target.value = src.value;
+}
+
+// Sinkronkan radio tabel <-> kartu mobile + highlight tombol status
+function syncAbsensiCards(){
+    if(!currentSiswaList) return;
+    currentSiswaList.forEach(d=>{
+        const checked = document.querySelector(`input[name="st-${d.id_siswa}"]:checked`);
+        if(!checked) return;
+        const card = document.querySelector(`.absensi-card[data-siswa-id="${d.id_siswa}"]`);
+        if(!card) return;
+        card.querySelectorAll('.absensi-status-btn').forEach(b=>b.classList.toggle('selected', b.dataset.status===checked.value));
+    });
+}
+
+function pickAbsensiStatus(btn){
+    const sid = btn.dataset.sid;
+    const val = btn.dataset.status;
+    const radio = document.querySelector(`input[name="st-${sid}"][value="${val}"]`);
+    if(radio){ radio.checked = true; radio.dispatchEvent(new Event('change', {bubbles:true})); }
+    const card = btn.closest('.absensi-card');
+    if(card) card.querySelectorAll('.absensi-status-btn').forEach(b=>b.classList.toggle('selected', b===btn));
 }
 
 function updateRekap(){
@@ -307,6 +372,7 @@ function tandaiSemua(v){
         if(r) r.checked=true;
     });
     updateRekap();
+    syncAbsensiCards();
 }
 
 function filterSiswa(q){

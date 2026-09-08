@@ -131,9 +131,6 @@ CREATE TABLE `dispen_siswa` (
 --
 
 INSERT INTO `dispen_siswa` (`id_dispen_siswa`, `id_siswa`, `id_guru_piket`, `tanggal_dispen`, `alasan`, `jenis_absen`, `foto_surat`, `id_jurnal`, `status_waka`, `status_guru_piket`, `catatan_waka`, `catatan_guru_piket`, `disetujui_waka_pada`, `disetujui_guru_piket_pada`, `created_at`, `updated_at`, `waktu_keluar`, `waktu_masuk`, `deleted_at`) VALUES
-(2, 320, 1, '2026-08-25', 'mabar dulu pak', 'D', 'surat-dispen/9S193NKH60rU4LVdX6mtncTE8aHl5T0eNouwDbBk.png', 2, 'ditolak', 'disetujui', NULL, NULL, NULL, '2026-08-24 22:05:04', '2026-08-24 22:05:04', '2026-08-30 23:52:14', '2026-08-24 22:16:35', '2026-08-24 22:16:43', NULL),
-(3, 80, 1, '2026-08-31', 'Lomba', 'D', NULL, 3, 'disetujui', 'disetujui', NULL, NULL, '2026-08-30 23:49:31', '2026-08-30 23:48:09', '2026-08-30 23:48:09', '2026-08-30 23:49:31', NULL, NULL, NULL),
-(4, 104, 1, '2026-08-31', 'Sepur', 'D', NULL, 3, 'ditolak', 'disetujui', 'Alasan', NULL, NULL, '2026-08-30 23:51:21', '2026-08-30 23:51:21', '2026-08-30 23:51:56', NULL, NULL, NULL),
 (5, 939, 125, '2026-09-07', 'lomba', 'D', NULL, 4, 'menunggu', 'disetujui', NULL, NULL, NULL, '2026-09-07 06:27:45', '2026-09-07 06:27:45', '2026-09-07 06:49:35', '2026-09-07 06:49:29', '2026-09-07 06:49:35', NULL),
 (6, 939, 125, '2026-09-07', 'lombaa', 'D', NULL, 4, 'menunggu', 'disetujui', NULL, NULL, NULL, '2026-09-07 06:54:51', '2026-09-07 06:54:51', '2026-09-07 06:54:51', NULL, NULL, NULL),
 (7, 940, 125, '2026-09-07', 'lombaa', 'D', NULL, 4, 'menunggu', 'disetujui', NULL, NULL, NULL, '2026-09-07 06:55:09', '2026-09-07 06:55:09', '2026-09-07 06:55:09', NULL, NULL, NULL);
@@ -2639,14 +2636,6 @@ CREATE TABLE `jurnal_siswa_tidak_hadir` (
 --
 
 INSERT INTO `jurnal_siswa_tidak_hadir` (`id_absen`, `id_jurnal`, `id_siswa`, `status`, `keterangan`, `deleted_at`) VALUES
-(1, 1, 72, 'A', NULL, NULL),
-(2, 1, 85, 'I', NULL, NULL),
-(3, 1, 86, 'A', NULL, NULL),
-(4, 1, 89, 'S', NULL, NULL),
-(5, 1, 96, 'A', NULL, NULL),
-(6, 2, 320, 'I', 'D: mabar dulu pak', NULL),
-(7, 3, 80, 'I', 'D: Lomba', NULL),
-(8, 3, 104, 'I', 'D: Sepur', NULL),
 (9, 4, 939, 'I', 'D: lombaa', NULL),
 (10, 4, 940, 'I', 'D: lombaa', NULL);
 

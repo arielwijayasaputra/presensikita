@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Sep 03, 2026 at 01:51 AM
+-- Generation Time: Sep 08, 2026 at 12:16 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.5.9
 
@@ -49,7 +49,7 @@ CREATE TABLE `akun_admin` (
 --
 
 INSERT INTO `akun_admin` (`id_admin`, `nama`, `username`, `password`, `password_hash`, `no_tlp`, `no_hp`, `foto_profil`, `update_pw_at`, `update_usn_at`, `is_aktif`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Administrator', 'admin', '$2y$04$7HgDnOgBHpM9cNEcZ4cs4eHwV3iF0HAcD.Z1dUeVqsPz1wSy8cs.W', '$2y$04$7HgDnOgBHpM9cNEcZ4cs4eHwV3iF0HAcD.Z1dUeVqsPz1wSy8cs.W', NULL, NULL, NULL, NULL, NULL, 1, '2026-09-01 04:35:19', '2026-09-02 18:36:58', NULL);
+(1, 'Administrator', 'admin', '$2y$04$Vg9RXXfa81bak8Cw.dik1.ZpK4sNG9gUh/jLEuOGdI7wM3YhYURmW', '$2y$04$Vg9RXXfa81bak8Cw.dik1.ZpK4sNG9gUh/jLEuOGdI7wM3YhYURmW', NULL, NULL, NULL, NULL, NULL, 1, '2026-09-01 04:35:19', '2026-09-07 05:41:15', NULL);
 
 -- --------------------------------------------------------
 
@@ -75,7 +75,7 @@ CREATE TABLE `akun_satpam` (
 --
 
 INSERT INTO `akun_satpam` (`id_satpam`, `nama`, `username`, `password_hash`, `no_hp`, `foto_profil`, `is_aktif`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Satpam', 'satpam', '$2y$04$2KCNNebzHanOaCcBYdtepelCJlmRG0XsNcDSb2iRB9jfProrbQd7K', NULL, NULL, 1, '2026-09-01 18:52:45', '2026-09-02 18:36:59', NULL);
+(1, 'Satpam', 'satpam', '$2y$04$I35E2thjHFbSq2d786z.A.TJhygHW1qXoBfg/dnv/fuRgcHzfhSBS', NULL, NULL, 1, '2026-09-01 18:52:45', '2026-09-07 05:41:23', NULL);
 
 -- --------------------------------------------------------
 
@@ -130,8 +130,13 @@ CREATE TABLE `dispen_siswa` (
 -- Dumping data for table `dispen_siswa`
 --
 
--- Baris dispen_siswa yang merujuk id_siswa (320, 80, 104) yang sudah tidak ada di tabel siswa dihapus
--- agar foreign key dispen_siswa_id_siswa_foreign valid saat import.
+INSERT INTO `dispen_siswa` (`id_dispen_siswa`, `id_siswa`, `id_guru_piket`, `tanggal_dispen`, `alasan`, `jenis_absen`, `foto_surat`, `id_jurnal`, `status_waka`, `status_guru_piket`, `catatan_waka`, `catatan_guru_piket`, `disetujui_waka_pada`, `disetujui_guru_piket_pada`, `created_at`, `updated_at`, `waktu_keluar`, `waktu_masuk`, `deleted_at`) VALUES
+(2, 320, 1, '2026-08-25', 'mabar dulu pak', 'D', 'surat-dispen/9S193NKH60rU4LVdX6mtncTE8aHl5T0eNouwDbBk.png', 2, 'ditolak', 'disetujui', NULL, NULL, NULL, '2026-08-24 22:05:04', '2026-08-24 22:05:04', '2026-08-30 23:52:14', '2026-08-24 22:16:35', '2026-08-24 22:16:43', NULL),
+(3, 80, 1, '2026-08-31', 'Lomba', 'D', NULL, 3, 'disetujui', 'disetujui', NULL, NULL, '2026-08-30 23:49:31', '2026-08-30 23:48:09', '2026-08-30 23:48:09', '2026-08-30 23:49:31', NULL, NULL, NULL),
+(4, 104, 1, '2026-08-31', 'Sepur', 'D', NULL, 3, 'ditolak', 'disetujui', 'Alasan', NULL, NULL, '2026-08-30 23:51:21', '2026-08-30 23:51:21', '2026-08-30 23:51:56', NULL, NULL, NULL),
+(5, 939, 125, '2026-09-07', 'lomba', 'D', NULL, 4, 'menunggu', 'disetujui', NULL, NULL, NULL, '2026-09-07 06:27:45', '2026-09-07 06:27:45', '2026-09-07 06:49:35', '2026-09-07 06:49:29', '2026-09-07 06:49:35', NULL),
+(6, 939, 125, '2026-09-07', 'lombaa', 'D', NULL, 4, 'menunggu', 'disetujui', NULL, NULL, NULL, '2026-09-07 06:54:51', '2026-09-07 06:54:51', '2026-09-07 06:54:51', NULL, NULL, NULL),
+(7, 940, 125, '2026-09-07', 'lombaa', 'D', NULL, 4, 'menunggu', 'disetujui', NULL, NULL, NULL, '2026-09-07 06:55:09', '2026-09-07 06:55:09', '2026-09-07 06:55:09', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -145,7 +150,6 @@ CREATE TABLE `guru` (
   `nama_guru` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Peran` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Guru',
   `foto_profil` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `id_mapel` int DEFAULT NULL,
   `no_hp` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -288,7 +292,13 @@ INSERT INTO `guru` (`id_guru`, `nip`, `nama_guru`, `Peran`, `foto_profil`, `no_h
 (126, NULL, 'Rizki Putri Wulandari, S.Pd', 'Guru', NULL, NULL, 'rizki', '$2y$12$B3NSGjVrEsqDCrCDAhifBug5.MphnJR9srQkyjLs.2IV.at2MOvbW', 0, 1, '2026-09-01 17:57:40', NULL),
 (127, NULL, 'Pdt. Juklianus Steven Immanuel Bahihi, S.Pdk., M.Pd', 'Guru', NULL, NULL, 'juklianus', '$2y$12$z/4TXu/QQPe0knAkUCqw6uTWsWW4H/cNqskCZtujcPez84DJJolpq', 0, 1, '2026-09-01 17:57:40', NULL),
 (128, NULL, 'Sukamto, S.Ag', 'Guru', NULL, NULL, 'sukamto', '$2y$12$/.yJl.SHGaQTjZT4xn2VZeiQFMD.DulHpf5FY8poeot6ZQeD83gKW', 0, 1, '2026-09-01 17:57:41', NULL),
-(131, NULL, 'Muto\'atul Khosi\'ah Import Test, S.Pd', 'Guru', NULL, NULL, 'mutoatul_import_test', '$2y$04$08s/yN3VDrBTPt3dJ62JBekqafURwDykTnljmTMelhbATZXjCcIiq', 0, 1, '2026-09-03 01:32:08', NULL);
+(131, NULL, 'Muto\'atul Khosi\'ah Import Test, S.Pd', 'Guru', NULL, NULL, 'mutoatul_import_test', '$2y$04$08s/yN3VDrBTPt3dJ62JBekqafURwDykTnljmTMelhbATZXjCcIiq', 0, 1, '2026-09-03 01:32:08', NULL),
+(132, NULL, 'Guru ID Import Test, S.Pd', 'Guru', NULL, NULL, 'idguru_import_test', '$2y$04$eHKIO/kqwHb11kLTMboQleHTs.Yyq31W6PTmZ7Jo7BrLcJWRF2dnG', 0, 1, '2026-09-07 12:08:48', NULL),
+(133, '198803122010011001', 'Guru NIP Import Test, S.Pd', 'Guru', NULL, NULL, 'nip_import_test', '$2y$04$lAo0qry6oXzbvWjAqh.7f.WBXzI6MJh68x.e7W3LXelYmKoHp3hbq', 0, 1, '2026-09-07 12:08:48', NULL),
+(134, NULL, 'Guru Upacara Test, S.Pd', 'Guru', NULL, NULL, 'guru_upacara_test', '$2y$04$MuvSInFbcnCS4T6gHrguv.QF2RC3zk6xuxVyQ5RcgN3D/DVcUkfgK', 0, 1, '2026-09-07 12:08:48', NULL),
+(135, NULL, 'Guru Store Test, S.Pd', 'Guru', NULL, NULL, 'guru_store_test', '$2y$04$.B4FdYkKR.RcleXXOUkR2.UZElwnOux7TfkBTv4YtsqNOhLcsaJg2', 0, 1, '2026-09-07 12:08:48', NULL),
+(136, NULL, 'Guru Update Test, S.Pd', 'Guru', NULL, NULL, 'guru_update_test', '$2y$04$nLbPK/bOcm.h46Q6S.xz0u55dGcXW4p7lSanuk1wWhW6GHS6WwdLy', 0, 1, '2026-09-07 12:08:49', NULL),
+(137, NULL, 'Guru Tugaskan Test, S.Pd', 'Guru', NULL, NULL, 'guru_tugaskan_test', '$2y$04$rEJDkKxJd..yg2YXddOGMOXBJjh.1vw4vkrNQ52RESy4L9YWZ5r4e', 0, 1, '2026-09-07 12:08:49', NULL);
 
 -- --------------------------------------------------------
 
@@ -320,8 +330,11 @@ INSERT INTO `guru_piket` (`id_guru_piket`, `id_guru`, `tanggal`, `created_at`, `
 (66, 40, '2026-09-01', '2026-08-31 00:13:48', '2026-09-01 17:08:36', '2026-09-01 17:08:36'),
 (71, 91, '2026-09-02', '2026-09-01 18:15:23', '2026-09-02 17:16:29', '2026-09-02 17:16:29'),
 (72, 49, '2026-09-02', '2026-09-01 18:15:23', '2026-09-02 17:16:29', '2026-09-02 17:16:29'),
-(73, 25, '2026-09-09', '2026-09-01 18:15:23', '2026-09-01 18:15:23', NULL),
-(74, 47, '2026-09-09', '2026-09-01 18:15:23', '2026-09-01 18:15:23', NULL);
+(79, 125, '2026-09-07', '2026-09-07 00:27:48', '2026-09-07 17:12:50', '2026-09-07 17:12:50'),
+(80, 91, '2026-09-07', '2026-09-07 00:27:48', '2026-09-07 17:12:50', '2026-09-07 17:12:50'),
+(83, 91, '2026-09-08', '2026-09-07 17:13:33', '2026-09-07 17:13:33', NULL),
+(84, 25, '2026-09-09', '2026-09-07 17:13:33', '2026-09-07 17:13:33', NULL),
+(85, 47, '2026-09-09', '2026-09-07 17:13:33', '2026-09-07 17:13:33', NULL);
 
 -- --------------------------------------------------------
 
@@ -385,7 +398,10 @@ INSERT INTO `izin_guru` (`id_izin_guru`, `id_guru`, `id_guru_piket`, `tanggal_iz
 (3, 10, 1, '2026-08-22', 'lagi mabar', NULL, 'menunggu', 'menunggu', NULL, NULL, NULL, NULL, '2026-08-22 00:54:13', '2026-08-22 00:54:13', NULL),
 (4, 11, 1, '2026-08-22', 'menikah', NULL, 'disetujui', 'ditolak', NULL, NULL, '2026-08-22 00:56:09', NULL, '2026-08-22 00:55:49', '2026-08-22 01:00:20', NULL),
 (5, 9, 1, '2026-08-22', 'lagi dakwah', NULL, 'menunggu', 'menunggu', NULL, NULL, NULL, NULL, '2026-08-22 00:59:00', '2026-08-22 00:59:00', NULL),
-(6, 10, 1, '2026-08-24', 'masih mabar epep', NULL, 'disetujui', 'menunggu', NULL, NULL, '2026-08-23 20:17:01', NULL, '2026-08-23 20:16:20', '2026-08-23 20:17:01', NULL);
+(6, 10, 1, '2026-08-24', 'masih mabar epep', NULL, 'disetujui', 'menunggu', NULL, NULL, '2026-08-23 20:17:01', NULL, '2026-08-23 20:16:20', '2026-08-23 20:17:01', NULL),
+(7, 47, 125, '2026-09-07', 'sakit', NULL, 'menunggu', 'menunggu', NULL, NULL, NULL, NULL, '2026-09-07 06:14:40', '2026-09-07 06:14:40', NULL),
+(8, 25, 125, '2026-09-07', 'sekolah lagi', NULL, 'menunggu', 'menunggu', NULL, NULL, NULL, NULL, '2026-09-07 06:33:28', '2026-09-07 06:33:28', NULL),
+(9, 91, 125, '2026-09-07', 'kayaknya lagi main epep', NULL, 'menunggu', 'menunggu', NULL, NULL, NULL, NULL, '2026-09-07 06:51:56', '2026-09-07 06:51:56', NULL);
 
 -- --------------------------------------------------------
 
@@ -2271,225 +2287,235 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (2358, 76, 14, 48, 20, 'Jumat', 1, '2026-09-02 18:42:01'),
 (2359, 118, 6, 48, 21, 'Jumat', 1, '2026-09-02 18:42:01'),
 (2360, 118, 6, 48, 22, 'Jumat', 1, '2026-09-02 18:42:01'),
-(2361, 113, 2, 1, 1, 'Senin', 1, '2026-09-02 18:42:01'),
-(2363, NULL, 2, 1, 2, 'Senin', 1, '2026-09-02 18:42:01'),
-(2364, NULL, 2, 1, 3, 'Senin', 1, '2026-09-02 18:42:01'),
-(2365, NULL, 47, 1, 11, 'Jumat', 1, '2026-09-02 18:42:01'),
-(2366, NULL, 2, 1, 12, 'Jumat', 1, '2026-09-02 18:42:01'),
-(2367, NULL, 2, 1, 13, 'Jumat', 1, '2026-09-02 18:42:01'),
-(2368, 113, 2, 1, 14, 'Jumat', 1, '2026-09-02 18:42:01'),
-(2369, 131, 2, 73, 1, 'Senin', 1, '2026-09-02 18:42:01'),
-(2370, 131, 2, 73, 2, 'Senin', 1, '2026-09-02 18:42:01'),
-(2371, 131, 2, 73, 3, 'Senin', 1, '2026-09-02 18:42:01'),
-(2372, NULL, 47, 73, 11, 'Jumat', 1, '2026-09-02 18:42:01'),
-(2373, 131, 2, 73, 12, 'Jumat', 1, '2026-09-02 18:42:01'),
-(2374, 131, 2, 73, 13, 'Jumat', 1, '2026-09-02 18:42:01'),
-(2375, 131, 2, 73, 14, 'Jumat', 1, '2026-09-02 18:42:01'),
-(2379, 112, 26, 1, 7, 'Senin', 1, NULL),
-(2380, 112, 26, 1, 8, 'Senin', 1, NULL),
-(2381, 58, 36, 1, 9, 'Senin', 1, NULL),
-(2382, 58, 36, 1, 10, 'Senin', 1, NULL),
-(2387, 55, 26, 1, 31, 'Selasa', 1, NULL),
-(2392, 58, 26, 1, 36, 'Rabu', 1, NULL),
-(2393, 112, 15, 1, 37, 'Rabu', 1, NULL),
-(2394, 112, 15, 1, 38, 'Rabu', 1, NULL),
-(2395, 112, 15, 1, 39, 'Rabu', 1, NULL),
-(2396, 115, 8, 1, 40, 'Rabu', 1, NULL),
-(2397, 115, 8, 1, 41, 'Rabu', 1, NULL),
-(2398, 4, 15, 1, 42, 'Rabu', 1, NULL),
-(2399, 4, 15, 1, 43, 'Rabu', 1, NULL),
-(2400, 120, 36, 1, 44, 'Kamis', 1, NULL),
-(2401, 120, 36, 1, 45, 'Kamis', 1, NULL),
-(2402, 120, 36, 1, 46, 'Kamis', 1, NULL),
-(2403, 112, 15, 1, 47, 'Kamis', 1, NULL),
-(2404, 27, 5, 1, 51, 'Kamis', 1, NULL),
-(2405, 47, 2, 1, 52, 'Kamis', 1, NULL),
-(2406, 47, 2, 1, 53, 'Kamis', 1, NULL),
-(2412, 41, 7, 1, 17, 'Jumat', 1, NULL),
-(2414, 97, 3, 1, 19, 'Jumat', 1, NULL),
-(2419, NULL, 46, 2, 1, 'Senin', 1, NULL),
-(2420, 55, 26, 2, 2, 'Senin', 1, NULL),
-(2421, 55, 26, 2, 3, 'Senin', 1, NULL),
-(2422, 55, 26, 2, 4, 'Senin', 1, NULL),
-(2423, 80, 26, 2, 5, 'Senin', 1, NULL),
-(2429, 112, 15, 2, 25, 'Selasa', 1, NULL),
-(2430, 112, 15, 2, 26, 'Selasa', 1, NULL),
-(2431, 58, 36, 2, 27, 'Selasa', 1, NULL),
-(2432, 58, 36, 2, 28, 'Selasa', 1, NULL),
-(2433, 93, 36, 2, 29, 'Selasa', 1, NULL),
-(2434, 7, 8, 2, 30, 'Selasa', 1, NULL),
-(2435, 7, 8, 2, 31, 'Selasa', 1, NULL),
-(2436, 113, 2, 2, 32, 'Selasa', 1, NULL),
-(2437, 113, 2, 2, 33, 'Selasa', 1, NULL),
-(2442, 58, 26, 2, 38, 'Rabu', 1, NULL),
-(2443, 58, 26, 2, 39, 'Rabu', 1, NULL),
-(2446, 88, 6, 2, 42, 'Rabu', 1, NULL),
-(2447, 88, 6, 2, 43, 'Rabu', 1, NULL),
-(2448, 78, 26, 2, 44, 'Kamis', 1, NULL),
-(2449, 78, 26, 2, 45, 'Kamis', 1, NULL),
-(2450, 27, 5, 2, 46, 'Kamis', 1, NULL),
-(2451, 27, 5, 2, 47, 'Kamis', 1, NULL),
-(2453, 82, 26, 2, 49, 'Kamis', 1, NULL),
-(2454, 90, 2, 2, 50, 'Kamis', 1, NULL),
-(2455, NULL, 47, 2, 11, 'Jumat', 1, NULL),
-(2456, 57, 15, 2, 12, 'Jumat', 1, NULL),
-(2457, 57, 15, 2, 13, 'Jumat', 1, NULL),
-(2458, 110, 7, 2, 14, 'Jumat', 1, NULL),
-(2459, 112, 15, 2, 18, 'Jumat', 1, NULL),
-(2460, 88, 6, 2, 19, 'Jumat', 1, NULL),
-(2461, 88, 6, 2, 20, 'Jumat', 1, NULL),
-(2465, 80, 26, 1, 27, 'Selasa', 1, NULL),
-(2466, 80, 26, 1, 28, 'Selasa', 1, NULL),
-(2467, 80, 26, 1, 29, 'Selasa', 1, NULL),
-(2469, 55, 26, 1, 32, 'Selasa', 1, NULL),
-(2470, 55, 26, 1, 33, 'Selasa', 1, NULL),
-(2471, 58, 26, 1, 34, 'Rabu', 1, NULL),
-(2472, 58, 26, 1, 35, 'Rabu', 1, NULL),
-(2473, 112, 15, 1, 48, 'Kamis', 1, NULL),
-(2474, 27, 5, 1, 49, 'Kamis', 1, NULL),
-(2475, 27, 5, 1, 50, 'Kamis', 1, NULL),
-(2481, 41, 7, 1, 16, 'Jumat', 1, NULL),
-(2482, 105, 5, 1, 18, 'Jumat', 1, NULL),
-(2483, 105, 5, 1, 20, 'Jumat', 1, NULL),
-(2484, 110, 3, 1, 21, 'Jumat', 1, NULL),
-(2485, 110, 3, 1, 22, 'Jumat', 1, NULL),
-(2486, 120, 12, 1, 23, 'Jumat', 1, NULL),
-(2487, 80, 26, 2, 6, 'Senin', 1, NULL),
-(2488, 80, 26, 2, 7, 'Senin', 1, NULL),
-(2489, 112, 15, 2, 24, 'Selasa', 1, NULL),
-(2490, 72, 3, 2, 34, 'Rabu', 1, NULL),
-(2491, 72, 3, 2, 35, 'Rabu', 1, NULL),
-(2494, 58, 26, 2, 40, 'Rabu', 1, NULL),
-(2495, 120, 36, 2, 41, 'Rabu', 1, NULL),
-(2496, 27, 5, 2, 48, 'Kamis', 1, NULL),
-(2497, 47, 2, 2, 21, 'Jumat', 1, NULL),
-(2498, 47, 2, 2, 22, 'Jumat', 1, NULL),
-(2499, 80, 12, 2, 23, 'Jumat', 1, NULL),
-(2501, 62, 26, 1, 5, 'Senin', 1, NULL),
-(2502, 62, 26, 1, 6, 'Senin', 1, NULL),
-(2503, 82, 26, 1, 24, 'Selasa', 1, NULL),
-(2504, 82, 26, 1, 25, 'Selasa', 1, NULL),
-(2505, 82, 26, 1, 26, 'Selasa', 1, NULL),
-(2508, 80, 26, 2, 8, 'Senin', 1, NULL),
-(2509, 112, 26, 2, 9, 'Senin', 1, NULL),
-(2510, 112, 26, 2, 10, 'Senin', 1, NULL),
-(2512, 115, 8, 2, 52, 'Kamis', 1, NULL),
-(2513, 115, 8, 2, 53, 'Kamis', 1, NULL),
-(2514, 112, 36, 2, 15, 'Jumat', 1, NULL),
-(2515, 112, 36, 2, 16, 'Jumat', 1, NULL),
-(2516, 112, 15, 2, 17, 'Jumat', 1, NULL),
-(2520, 17, 1, 1, 4, 'Senin', 1, NULL),
-(2528, NULL, 46, 3, 1, 'Senin', 1, NULL),
-(2531, 76, 5, 3, 4, 'Senin', 1, NULL),
-(2533, 29, 1, 3, 25, 'Selasa', 1, NULL),
-(2535, 72, 26, 3, 27, 'Selasa', 1, NULL),
-(2536, 125, 6, 3, 28, 'Selasa', 1, NULL),
-(2538, 24, 15, 3, 30, 'Selasa', 1, NULL),
-(2539, 24, 15, 3, 31, 'Selasa', 1, NULL),
-(2540, 30, 1, 3, 32, 'Selasa', 1, NULL),
-(2541, 30, 1, 3, 33, 'Selasa', 1, NULL),
-(2542, 28, 26, 3, 34, 'Rabu', 1, NULL),
-(2543, 28, 26, 3, 35, 'Rabu', 1, NULL),
-(2544, 28, 26, 3, 36, 'Rabu', 1, NULL),
-(2545, 28, 26, 3, 37, 'Rabu', 1, NULL),
-(2546, 28, 26, 3, 38, 'Rabu', 1, NULL),
-(2547, 28, 26, 3, 39, 'Rabu', 1, NULL),
-(2550, 126, 3, 3, 42, 'Rabu', 1, NULL),
-(2551, 126, 3, 3, 43, 'Rabu', 1, NULL),
-(2552, 7, 8, 3, 44, 'Kamis', 1, NULL),
-(2553, 7, 8, 3, 45, 'Kamis', 1, NULL),
-(2554, 70, 26, 3, 49, 'Kamis', 1, NULL),
-(2555, 70, 26, 3, 50, 'Kamis', 1, NULL),
-(2556, 70, 26, 3, 51, 'Kamis', 1, NULL),
-(2557, 95, 36, 3, 52, 'Kamis', 1, NULL),
-(2558, NULL, 47, 3, 11, 'Jumat', 1, NULL),
-(2559, 7, 8, 3, 12, 'Jumat', 1, NULL),
-(2560, 7, 8, 3, 13, 'Jumat', 1, NULL),
-(2561, 9, 7, 3, 14, 'Jumat', 1, NULL),
-(2562, 16, 26, 3, 15, 'Jumat', 1, NULL),
-(2563, 108, 15, 3, 16, 'Jumat', 1, NULL),
-(2564, 88, 6, 3, 17, 'Jumat', 1, NULL),
-(2565, 88, 6, 3, 18, 'Jumat', 1, NULL),
-(2569, 68, 6, 3, 22, 'Jumat', 1, NULL),
-(2570, 123, 1, 3, 23, 'Jumat', 1, NULL),
-(2572, 78, 26, 1, 30, 'Selasa', 1, NULL),
-(2574, 58, 36, 1, 15, 'Jumat', 1, NULL),
-(2575, 41, 7, 2, 51, 'Kamis', 1, NULL),
-(2582, 29, 1, 3, 24, 'Selasa', 1, NULL),
-(2583, 29, 1, 3, 26, 'Selasa', 1, NULL),
-(2585, 37, 16, 3, 41, 'Rabu', 1, NULL),
-(2586, 87, 4, 3, 47, 'Kamis', 1, NULL),
-(2587, 70, 26, 3, 48, 'Kamis', 1, NULL),
-(2588, 95, 36, 3, 53, 'Kamis', 1, NULL),
-(2589, 72, 26, 3, 19, 'Jumat', 1, NULL),
-(2590, 43, 2, 3, 20, 'Jumat', 1, NULL),
-(2591, 68, 6, 3, 21, 'Jumat', 1, NULL),
-(2592, NULL, 46, 4, 1, 'Senin', 1, NULL),
-(2593, 24, 15, 4, 5, 'Senin', 1, NULL),
-(2594, 24, 15, 4, 6, 'Senin', 1, NULL),
-(2595, 87, 4, 4, 7, 'Senin', 1, NULL),
-(2596, 87, 4, 4, 8, 'Senin', 1, NULL),
-(2597, 18, 7, 4, 9, 'Senin', 1, NULL),
-(2598, 18, 7, 4, 10, 'Senin', 1, NULL),
-(2599, 7, 8, 4, 27, 'Selasa', 1, NULL),
-(2600, 7, 8, 4, 28, 'Selasa', 1, NULL),
-(2603, 126, 3, 4, 34, 'Rabu', 1, NULL),
-(2604, 126, 3, 4, 35, 'Rabu', 1, NULL),
-(2605, 108, 15, 4, 36, 'Rabu', 1, NULL),
-(2606, 108, 15, 4, 37, 'Rabu', 1, NULL),
-(2607, 88, 6, 4, 38, 'Rabu', 1, NULL),
-(2608, 88, 6, 4, 39, 'Rabu', 1, NULL),
-(2610, 24, 26, 4, 41, 'Rabu', 1, NULL),
-(2611, 16, 26, 4, 42, 'Rabu', 1, NULL),
-(2612, 16, 26, 4, 43, 'Rabu', 1, NULL),
-(2615, 37, 26, 4, 47, 'Kamis', 1, NULL),
-(2616, 30, 1, 4, 48, 'Kamis', 1, NULL),
-(2617, 87, 4, 4, 49, 'Kamis', 1, NULL),
-(2618, 87, 4, 4, 50, 'Kamis', 1, NULL),
-(2619, 76, 5, 4, 51, 'Kamis', 1, NULL),
-(2620, 76, 5, 4, 52, 'Kamis', 1, NULL),
-(2621, 76, 5, 4, 53, 'Kamis', 1, NULL),
-(2622, NULL, 47, 4, 11, 'Jumat', 1, NULL),
-(2626, 48, 26, 4, 15, 'Jumat', 1, NULL),
-(2627, 48, 26, 4, 16, 'Jumat', 1, NULL),
-(2628, 48, 26, 4, 17, 'Jumat', 1, NULL),
-(2629, 48, 26, 4, 18, 'Jumat', 1, NULL),
-(2630, 123, 1, 4, 19, 'Jumat', 1, NULL),
-(2631, 27, 5, 4, 20, 'Jumat', 1, NULL),
-(2632, 27, 5, 4, 21, 'Jumat', 1, NULL),
-(2633, 27, 5, 4, 22, 'Jumat', 1, NULL),
-(2634, 37, 16, 4, 23, 'Jumat', 1, NULL),
-(2642, 78, 26, 2, 37, 'Rabu', 1, NULL),
-(2643, 87, 4, 3, 5, 'Senin', 1, NULL),
-(2645, 28, 26, 3, 7, 'Senin', 1, NULL),
-(2646, 28, 26, 3, 8, 'Senin', 1, NULL),
-(2649, 91, 26, 3, 29, 'Selasa', 1, NULL),
-(2650, 68, 26, 3, 40, 'Rabu', 1, NULL),
-(2651, 126, 3, 3, 46, 'Kamis', 1, NULL),
-(2652, 103, 26, 4, 2, 'Senin', 1, NULL),
-(2653, 103, 26, 4, 3, 'Senin', 1, NULL),
-(2654, 93, 36, 4, 24, 'Selasa', 1, NULL),
-(2655, 93, 36, 4, 25, 'Selasa', 1, NULL),
-(2658, 28, 26, 4, 30, 'Selasa', 1, NULL),
-(2659, 28, 26, 4, 31, 'Selasa', 1, NULL),
-(2662, 30, 1, 4, 40, 'Rabu', 1, NULL),
-(2663, 125, 6, 4, 12, 'Jumat', 1, NULL),
-(2664, 125, 6, 4, 13, 'Jumat', 1, NULL),
-(2665, 48, 26, 4, 14, 'Jumat', 1, NULL),
-(2678, 98, 26, 2, 36, 'Rabu', 1, NULL),
-(2711, 76, 5, 3, 2, 'Senin', 1, NULL),
-(2712, 76, 5, 3, 3, 'Senin', 1, NULL),
-(2713, 87, 4, 3, 6, 'Senin', 1, NULL),
-(2714, 28, 26, 3, 9, 'Senin', 1, NULL),
-(2715, 28, 26, 3, 10, 'Senin', 1, NULL),
-(2723, 103, 26, 4, 4, 'Senin', 1, NULL),
-(2724, 7, 8, 4, 26, 'Selasa', 1, NULL),
-(2725, 7, 8, 4, 29, 'Selasa', 1, NULL),
-(2726, 28, 26, 4, 32, 'Selasa', 1, NULL),
-(2727, 28, 26, 4, 33, 'Selasa', 1, NULL),
-(2728, 37, 26, 4, 44, 'Kamis', 1, NULL),
-(2729, 37, 26, 4, 45, 'Kamis', 1, NULL),
-(2730, 37, 26, 4, 46, 'Kamis', 1, NULL);
+(2361, NULL, 46, 1, 1, 'Senin', 1, '2026-09-07 05:08:47'),
+(2363, NULL, 1, 1, 2, 'Senin', 1, '2026-09-07 05:08:47'),
+(2364, NULL, 1, 1, 3, 'Senin', 1, '2026-09-07 05:08:47'),
+(2365, NULL, 47, 1, 11, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2366, 112, 36, 1, 12, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2367, 112, 36, 1, 13, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2368, NULL, 8, 1, 14, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2369, 131, 2, 73, 1, 'Senin', 1, '2026-09-07 05:41:18'),
+(2370, 131, 2, 73, 2, 'Senin', 1, '2026-09-07 05:41:18'),
+(2371, 131, 2, 73, 3, 'Senin', 1, '2026-09-07 05:41:18'),
+(2372, NULL, 47, 73, 11, 'Jumat', 1, '2026-09-07 05:41:18'),
+(2373, 131, 2, 73, 12, 'Jumat', 1, '2026-09-07 05:41:18'),
+(2374, 131, 2, 73, 13, 'Jumat', 1, '2026-09-07 05:41:18'),
+(2375, 131, 2, 73, 14, 'Jumat', 1, '2026-09-07 05:41:18'),
+(2379, 112, 26, 1, 7, 'Senin', 1, '2026-09-07 05:08:47'),
+(2380, 112, 26, 1, 8, 'Senin', 1, '2026-09-07 05:08:47'),
+(2381, 58, 36, 1, 9, 'Senin', 1, '2026-09-07 05:08:47'),
+(2382, 58, 36, 1, 10, 'Senin', 1, '2026-09-07 05:08:47'),
+(2387, 55, 26, 1, 31, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2392, 58, 26, 1, 36, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2393, 112, 15, 1, 37, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2394, 112, 15, 1, 38, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2395, 112, 15, 1, 39, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2396, 115, 8, 1, 40, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2397, 115, 8, 1, 41, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2398, NULL, 6, 1, 42, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2399, NULL, 6, 1, 43, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2400, 120, 36, 1, 44, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2401, 120, 36, 1, 45, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2402, 120, 36, 1, 46, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2403, 112, 15, 1, 47, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2404, 27, 5, 1, 51, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2405, 47, 2, 1, 52, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2406, 47, 2, 1, 53, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2412, 41, 7, 1, 17, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2414, 97, 3, 1, 19, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2419, NULL, 46, 2, 1, 'Senin', 1, '2026-09-07 05:08:47'),
+(2420, 55, 26, 2, 2, 'Senin', 1, '2026-09-07 05:08:47'),
+(2421, 55, 26, 2, 3, 'Senin', 1, '2026-09-07 05:08:47'),
+(2422, 55, 26, 2, 4, 'Senin', 1, '2026-09-07 05:08:47'),
+(2423, 80, 26, 2, 5, 'Senin', 1, '2026-09-07 05:08:47'),
+(2429, 112, 15, 2, 25, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2430, 112, 15, 2, 26, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2431, 58, 36, 2, 27, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2432, 58, 36, 2, 28, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2433, NULL, 2, 2, 29, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2434, NULL, 2, 2, 30, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2435, NULL, 1, 2, 31, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2436, NULL, 1, 2, 32, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2437, NULL, 1, 2, 33, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2442, 58, 26, 2, 38, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2443, 58, 26, 2, 39, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2446, 88, 6, 2, 42, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2447, 88, 6, 2, 43, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2448, 78, 26, 2, 44, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2449, 78, 26, 2, 45, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2450, 27, 5, 2, 46, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2451, 27, 5, 2, 47, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2453, NULL, 7, 2, 49, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2454, NULL, 7, 2, 50, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2455, NULL, 47, 2, 11, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2456, 57, 15, 2, 12, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2457, 57, 15, 2, 13, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2458, NULL, 2, 2, 14, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2459, 112, 15, 2, 18, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2460, 88, 6, 2, 19, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2461, 88, 6, 2, 20, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2465, 80, 26, 1, 27, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2466, 80, 26, 1, 28, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2467, 80, 26, 1, 29, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2469, 55, 26, 1, 32, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2470, 55, 26, 1, 33, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2471, 58, 26, 1, 34, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2472, 58, 26, 1, 35, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2473, 112, 15, 1, 48, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2474, 27, 5, 1, 49, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2475, 27, 5, 1, 50, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2481, 41, 7, 1, 16, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2482, NULL, 7, 1, 18, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2483, NULL, 15, 1, 20, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2484, 110, 3, 1, 21, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2485, 110, 3, 1, 22, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2486, 120, 12, 1, 23, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2487, 80, 26, 2, 6, 'Senin', 1, '2026-09-07 05:08:47'),
+(2488, 80, 26, 2, 7, 'Senin', 1, '2026-09-07 05:08:47'),
+(2489, 112, 15, 2, 24, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2490, 72, 3, 2, 34, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2491, 72, 3, 2, 35, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2494, 58, 26, 2, 40, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2495, 120, 36, 2, 41, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2496, 27, 5, 2, 48, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2497, 47, 2, 2, 21, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2498, 47, 2, 2, 22, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2499, 80, 12, 2, 23, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2501, NULL, 2, 1, 5, 'Senin', 1, '2026-09-07 05:08:47'),
+(2502, NULL, 2, 1, 6, 'Senin', 1, '2026-09-07 05:08:47'),
+(2503, 82, 26, 1, 24, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2504, 82, 26, 1, 25, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2505, 82, 26, 1, 26, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2508, 80, 26, 2, 8, 'Senin', 1, '2026-09-07 05:08:47'),
+(2509, 112, 26, 2, 9, 'Senin', 1, '2026-09-07 05:08:47'),
+(2510, 112, 26, 2, 10, 'Senin', 1, '2026-09-07 05:08:47'),
+(2512, 115, 8, 2, 52, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2513, 115, 8, 2, 53, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2514, 112, 36, 2, 15, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2515, 112, 36, 2, 16, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2516, 112, 15, 2, 17, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2520, NULL, 1, 1, 4, 'Senin', 1, '2026-09-07 05:08:47'),
+(2528, NULL, 46, 3, 1, 'Senin', 1, '2026-09-07 05:08:47'),
+(2531, 76, 5, 3, 4, 'Senin', 1, '2026-09-07 05:08:47'),
+(2533, 29, 1, 3, 25, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2535, NULL, 15, 3, 27, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2536, NULL, 15, 3, 28, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2538, 24, 15, 3, 30, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2539, 24, 15, 3, 31, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2540, NULL, 26, 3, 32, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2541, NULL, 26, 3, 33, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2542, 28, 26, 3, 34, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2543, 28, 26, 3, 35, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2544, 28, 26, 3, 36, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2545, 28, 26, 3, 37, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2546, 28, 26, 3, 38, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2547, 28, 26, 3, 39, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2550, 126, 3, 3, 42, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2551, 126, 3, 3, 43, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2552, 7, 8, 3, 44, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2553, 7, 8, 3, 45, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2554, 70, 26, 3, 49, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2555, 70, 26, 3, 50, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2556, 70, 26, 3, 51, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2557, NULL, 2, 3, 52, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2558, NULL, 47, 3, 11, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2559, NULL, 7, 3, 12, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2560, NULL, 7, 3, 13, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2561, 9, 7, 3, 14, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2562, 16, 26, 3, 15, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2563, NULL, 26, 3, 16, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2564, 88, 6, 3, 17, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2565, 88, 6, 3, 18, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2569, NULL, 2, 3, 22, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2570, 123, 1, 3, 23, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2572, NULL, 26, 1, 30, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2574, NULL, 8, 1, 15, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2575, 41, 7, 2, 51, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2582, 29, 1, 3, 24, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2583, 29, 1, 3, 26, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2585, NULL, 36, 3, 41, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2586, 87, 4, 3, 47, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2587, 70, 26, 3, 48, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2588, NULL, 2, 3, 53, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2589, NULL, 2, 3, 19, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2590, 43, 2, 3, 20, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2591, NULL, 2, 3, 21, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2592, NULL, 46, 4, 1, 'Senin', 1, '2026-09-07 05:08:47'),
+(2593, 24, 15, 4, 5, 'Senin', 1, '2026-09-07 05:08:47'),
+(2594, 24, 15, 4, 6, 'Senin', 1, '2026-09-07 05:08:47'),
+(2595, 87, 4, 4, 7, 'Senin', 1, '2026-09-07 05:08:47'),
+(2596, 87, 4, 4, 8, 'Senin', 1, '2026-09-07 05:08:47'),
+(2597, NULL, 2, 4, 9, 'Senin', 1, '2026-09-07 05:08:47'),
+(2598, NULL, 2, 4, 10, 'Senin', 1, '2026-09-07 05:08:47'),
+(2599, 7, 8, 4, 27, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2600, 7, 8, 4, 28, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2603, 126, 3, 4, 34, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2604, 126, 3, 4, 35, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2605, NULL, 2, 4, 36, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2606, NULL, 2, 4, 37, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2607, 88, 6, 4, 38, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2608, 88, 6, 4, 39, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2610, 24, 26, 4, 41, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2611, 16, 26, 4, 42, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2612, 16, 26, 4, 43, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2615, 37, 26, 4, 47, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2616, 30, 1, 4, 48, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2617, NULL, 1, 4, 49, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2618, NULL, 1, 4, 50, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2619, NULL, 7, 4, 51, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2620, NULL, 7, 4, 52, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2621, NULL, 7, 4, 53, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2622, NULL, 47, 4, 11, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2626, 48, 26, 4, 15, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2627, 48, 26, 4, 16, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2628, 48, 26, 4, 17, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2629, 48, 26, 4, 18, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2630, NULL, 26, 4, 19, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2631, 27, 5, 4, 20, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2632, 27, 5, 4, 21, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2633, 27, 5, 4, 22, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2634, 37, 16, 4, 23, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2642, 78, 26, 2, 37, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2643, 87, 4, 3, 5, 'Senin', 1, '2026-09-07 05:08:47'),
+(2645, 28, 26, 3, 7, 'Senin', 1, '2026-09-07 05:08:47'),
+(2646, 28, 26, 3, 8, 'Senin', 1, '2026-09-07 05:08:47'),
+(2649, NULL, 15, 3, 29, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2650, NULL, 36, 3, 40, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2651, NULL, 4, 3, 46, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2652, NULL, 15, 4, 2, 'Senin', 1, '2026-09-07 05:08:47'),
+(2653, NULL, 15, 4, 3, 'Senin', 1, '2026-09-07 05:08:47'),
+(2654, 93, 36, 4, 24, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2655, 93, 36, 4, 25, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2658, 28, 26, 4, 30, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2659, 28, 26, 4, 31, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2662, NULL, 26, 4, 40, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2663, 125, 6, 4, 12, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2664, 125, 6, 4, 13, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2665, 48, 26, 4, 14, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2678, NULL, 26, 2, 36, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2711, 76, 5, 3, 2, 'Senin', 1, '2026-09-07 05:08:47'),
+(2712, 76, 5, 3, 3, 'Senin', 1, '2026-09-07 05:08:47'),
+(2713, 87, 4, 3, 6, 'Senin', 1, '2026-09-07 05:08:47'),
+(2714, 28, 26, 3, 9, 'Senin', 1, '2026-09-07 05:08:47'),
+(2715, 28, 26, 3, 10, 'Senin', 1, '2026-09-07 05:08:47'),
+(2723, NULL, 15, 4, 4, 'Senin', 1, '2026-09-07 05:08:47'),
+(2724, 7, 8, 4, 26, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2725, 7, 8, 4, 29, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2726, 28, 26, 4, 32, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2727, 28, 26, 4, 33, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2728, 37, 26, 4, 44, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2729, 37, 26, 4, 45, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2730, 37, 26, 4, 46, 'Kamis', 1, '2026-09-07 05:08:47'),
+(6928, NULL, 2, 74, 2, 'Senin', 1, '2026-09-07 05:41:18'),
+(11092, 132, 2, 76, 4, 'Senin', 1, NULL),
+(11093, 133, 2, 77, 5, 'Senin', 1, NULL),
+(11094, NULL, 46, 79, 1, 'Senin', 1, NULL),
+(11095, NULL, 46, 80, 1, 'Senin', 1, NULL),
+(11096, NULL, 46, 81, 1, 'Senin', 1, NULL),
+(11097, NULL, 46, 82, 1, 'Senin', 1, NULL),
+(11098, NULL, 46, 83, 1, 'Senin', 1, NULL),
+(11104, 1, 1, 75, 1, 'Senin', 1, '2026-09-07 05:41:18'),
+(11105, 125, 1, 70, 1, 'Senin', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -2590,7 +2616,8 @@ CREATE TABLE `jurnal_kelas` (
 INSERT INTO `jurnal_kelas` (`id_jurnal`, `id_jadwal`, `id_guru`, `tanggal`, `status_kehadiran_guru`, `materi`, `jumlah_hadir`, `waktu_input`, `deleted_at`) VALUES
 (1, 868, 117, '2026-08-15', 'Hadir', 'Pembelajaran Harian', 29, '2026-08-15 14:30:46', NULL),
 (2, 562, 1, '2026-08-25', 'Hadir', 'Absensi Guru Piket', 35, '2026-08-24 22:05:04', NULL),
-(3, 868, 1, '2026-08-31', 'Hadir', 'Absensi Guru Piket', 38, '2026-08-30 23:48:09', NULL);
+(3, 868, 1, '2026-08-31', 'Hadir', 'Absensi Guru Piket', 38, '2026-08-30 23:48:09', NULL),
+(4, 11105, 125, '2026-09-07', 'Hadir', 'Absensi Guru Piket', 33, '2026-09-07 06:27:45', NULL);
 
 -- --------------------------------------------------------
 
@@ -2611,9 +2638,17 @@ CREATE TABLE `jurnal_siswa_tidak_hadir` (
 -- Dumping data for table `jurnal_siswa_tidak_hadir`
 --
 
--- Data tabel `jurnal_siswa_tidak_hadir` dihapus semua karena id_siswa (72, 85, 86, 89, 96, 320, 80, 104)
--- merujuk siswa yang tidak ada di tabel siswa pada dump ini, sehingga foreign key
--- jurnal_siswa_tidak_hadir_ibfk_2 dapat valid saat import.
+INSERT INTO `jurnal_siswa_tidak_hadir` (`id_absen`, `id_jurnal`, `id_siswa`, `status`, `keterangan`, `deleted_at`) VALUES
+(1, 1, 72, 'A', NULL, NULL),
+(2, 1, 85, 'I', NULL, NULL),
+(3, 1, 86, 'A', NULL, NULL),
+(4, 1, 89, 'S', NULL, NULL),
+(5, 1, 96, 'A', NULL, NULL),
+(6, 2, 320, 'I', 'D: mabar dulu pak', NULL),
+(7, 3, 80, 'I', 'D: Lomba', NULL),
+(8, 3, 104, 'I', 'D: Sepur', NULL),
+(9, 4, 939, 'I', 'D: lombaa', NULL),
+(10, 4, 940, 'I', 'D: lombaa', NULL);
 
 --
 -- Triggers `jurnal_siswa_tidak_hadir`
@@ -2775,7 +2810,17 @@ INSERT INTO `kelas` (`id_kelas`, `nama_kelas`, `tingkat_kelas`, `jurusan`, `id_t
 (70, 'XII TKJ 1', 'XII', 'TKJ', 1, 44, NULL),
 (71, 'XII TKJ 2', 'XII', 'TKJ', 1, 111, NULL),
 (72, 'XII ULW', 'XII', 'ULW', 1, 94, NULL),
-(73, 'X TKI Import Test', 'X', 'TKI', 1, NULL, NULL);
+(73, 'X TKI Import Test', 'X', 'TKI', 1, NULL, NULL),
+(74, 'X TKI Header Typo Test', 'X', 'TKI', 1, NULL, NULL),
+(75, 'X Test GuruJadwal', 'X', 'TKI', 1, NULL, NULL),
+(76, 'X TKI ID Guru Test', 'X', 'TKI', 1, NULL, NULL),
+(77, 'X TKI NIP Test', 'X', 'TKI', 1, NULL, NULL),
+(78, 'X TKI Unmatched Test', 'X', 'TKI', 1, NULL, NULL),
+(79, 'X Test Upacara Import', 'X', 'TKI', 1, NULL, NULL),
+(80, 'X Test Upacara Store', 'X', 'TKI', 1, NULL, NULL),
+(81, 'X Test Upacara Update', 'X', 'TKI', 1, NULL, NULL),
+(82, 'X Test Upacara Tugaskan', 'X', 'TKI', 1, NULL, NULL),
+(83, 'X Test Upacara Display', 'X', 'TKI', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2799,6 +2844,14 @@ CREATE TABLE `laporan` (
 --
 -- Dumping data for table `laporan`
 --
+
+INSERT INTO `laporan` (`id_laporan`, `role_pelapor`, `nama_pelapor`, `judul`, `isi_laporan`, `status`, `catatan_admin`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'Orang Tua', 'Orang Tua dari Siswa Budi', 'Uji Coba AJAX Laporan', 'Isi detail laporan untuk pengujian AJAX response.', 'ditolak', NULL, '2026-08-21 18:29:59', '2026-08-21 23:26:15', NULL),
+(2, 'Guru', 'abid rizky', 'kendala absensi', 'ga bisa absen', 'selesai', NULL, '2026-08-21 18:33:06', '2026-08-21 23:25:59', NULL),
+(3, 'Kepala Sekolah', 'tresss', 'ga bisa ngizinin izin', 'errororororor', 'dibatalkan', NULL, '2026-08-21 18:34:01', '2026-08-21 18:57:21', NULL),
+(5, 'Masyarakat / Umum', 'Woi woi ingpo', 'Ngeleg', 'Beh', 'ditolak', NULL, '2026-09-06 23:50:37', '2026-09-06 23:50:52', NULL),
+(6, 'Kepsek', 'Tresno', 'Tresno wibowo', 'Akun ku rung dadi boss', 'dibatalkan', NULL, '2026-09-06 23:51:30', '2026-09-07 00:20:41', NULL),
+(7, 'Waka', 'Okee', 'Bdhdjd', 'Bdbdjdjd', 'diterima', NULL, '2026-09-07 00:20:23', '2026-09-07 00:20:54', NULL);
 
 -- --------------------------------------------------------
 
@@ -2962,14 +3015,20 @@ INSERT INTO `pengaturan` (`kunci`, `nilai`) VALUES
 ('alamat', ''),
 ('batas_waktu_jurnal', '23:59'),
 ('email_sekolah', ''),
-('izin_edit_jurnal', '1'),
+('izin_edit_jurnal', '0'),
 ('jam_istirahat_2_mulai', '11:45'),
 ('jam_istirahat_2_selesai', '13:15'),
 ('kepsek', ''),
-('nama_sekolah', 'SMKN 1 BOYOLANGU'),
+('nama_sekolah', 'SMKN 1 Boyolangu'),
 ('npsn', ''),
 ('sistem_absensi', 'Absensi Realtime & Otomatis Rekap'),
-('telepon_sekolah', '');
+('telepon_sekolah', ''),
+('wa_gateway_aktif', '1'),
+('wa_gateway_endpoint', 'http://127.0.0.1:3000/send-message'),
+('wa_nomor_bot', ''),
+('wa_nomor_kepsek', '0881036073441'),
+('wa_nomor_waka_kesiswaan', '0881036073441'),
+('wa_nomor_waka_sdm', '0881036073441');
 
 -- --------------------------------------------------------
 
@@ -3033,7 +3092,6 @@ CREATE TABLE `siswa` (
   `jenis_kelamin` enum('L','P') COLLATE utf8mb4_unicode_ci NOT NULL,
   `id_kelas` int NOT NULL,
   `is_aktif` tinyint(1) NOT NULL DEFAULT '1',
-  `no_hp_ortu` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -5913,31 +5971,31 @@ ALTER TABLE `alumni`
 -- AUTO_INCREMENT for table `dispen_siswa`
 --
 ALTER TABLE `dispen_siswa`
-  MODIFY `id_dispen_siswa` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_dispen_siswa` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `guru`
 --
 ALTER TABLE `guru`
-  MODIFY `id_guru` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
+  MODIFY `id_guru` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
 
 --
 -- AUTO_INCREMENT for table `guru_piket`
 --
 ALTER TABLE `guru_piket`
-  MODIFY `id_guru_piket` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `id_guru_piket` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- AUTO_INCREMENT for table `izin_guru`
 --
 ALTER TABLE `izin_guru`
-  MODIFY `id_izin_guru` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_izin_guru` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `jadwal_mengajar`
 --
 ALTER TABLE `jadwal_mengajar`
-  MODIFY `id_jadwal` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2758;
+  MODIFY `id_jadwal` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11108;
 
 --
 -- AUTO_INCREMENT for table `jam_pelajaran`
@@ -5949,13 +6007,13 @@ ALTER TABLE `jam_pelajaran`
 -- AUTO_INCREMENT for table `jurnal_kelas`
 --
 ALTER TABLE `jurnal_kelas`
-  MODIFY `id_jurnal` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_jurnal` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `jurnal_siswa_tidak_hadir`
 --
 ALTER TABLE `jurnal_siswa_tidak_hadir`
-  MODIFY `id_absen` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_absen` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `jurusan`
@@ -5967,13 +6025,13 @@ ALTER TABLE `jurusan`
 -- AUTO_INCREMENT for table `kelas`
 --
 ALTER TABLE `kelas`
-  MODIFY `id_kelas` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id_kelas` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- AUTO_INCREMENT for table `laporan`
 --
 ALTER TABLE `laporan`
-  MODIFY `id_laporan` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_laporan` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `mapel`
@@ -6045,7 +6103,7 @@ ALTER TABLE `izin_guru`
 -- Constraints for table `jadwal_mengajar`
 --
 ALTER TABLE `jadwal_mengajar`
-  ADD CONSTRAINT `jadwal_mengajar_ibfk_1` FOREIGN KEY (`id_guru`) REFERENCES `guru` (`id_guru`) ON DELETE SET NULL,
+  ADD CONSTRAINT `jadwal_mengajar_ibfk_1` FOREIGN KEY (`id_guru`) REFERENCES `guru` (`id_guru`),
   ADD CONSTRAINT `jadwal_mengajar_ibfk_2` FOREIGN KEY (`id_mapel`) REFERENCES `mapel` (`id_mapel`),
   ADD CONSTRAINT `jadwal_mengajar_ibfk_3` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`),
   ADD CONSTRAINT `jadwal_mengajar_ibfk_4` FOREIGN KEY (`id_jam`) REFERENCES `jam_pelajaran` (`id_jam`),
@@ -6068,7 +6126,7 @@ ALTER TABLE `jurnal_siswa_tidak_hadir`
 -- Constraints for table `kelas`
 --
 ALTER TABLE `kelas`
-  ADD CONSTRAINT `fk_kelas_wali` FOREIGN KEY (`id_wali_kelas`) REFERENCES `guru` (`id_guru`) ON DELETE SET NULL,
+  ADD CONSTRAINT `fk_kelas_wali` FOREIGN KEY (`id_wali_kelas`) REFERENCES `guru` (`id_guru`),
   ADD CONSTRAINT `kelas_ibfk_1` FOREIGN KEY (`id_tahun_ajaran`) REFERENCES `tahun_ajaran` (`id_tahun_ajaran`);
 
 --

@@ -727,43 +727,106 @@
             box-shadow: 0 10px 26px rgba(37,99,235,0.38);
         }
 
-        /* ── RESPONSIVE BARU ── */
+        /* ── RESPONSIVE TERTATA & MODERN ── */
         @media (max-width: 900px) {
-            body { overflow-x: hidden; height: auto; }
+            body {
+                overflow-y: auto;
+                overflow-x: hidden;
+                height: auto;
+                min-height: 100vh;
+                min-height: 100dvh;
+            }
             .login-container {
-                grid-template-columns: 1fr;
+                display: flex;
+                flex-direction: column;
                 height: auto;
                 min-height: 100vh;
                 min-height: 100dvh;
             }
             .left-hero {
                 height: auto;
-                min-height: 0;
-                border-radius: 0 0 44% 44% / 0 0 18% 18%;
-                padding: 26px 20px 34px;
-                position: static;
+                min-height: auto;
+                border-radius: 0 0 28px 28px;
+                padding: 24px 20px 26px;
+                position: relative;
                 flex: none;
+                box-shadow: 0 12px 32px rgba(10, 23, 63, 0.18);
             }
-            .illus-ring { width: 108px; height: 108px; }
-            .illus-ring::before { inset: -14px; }
-            .illus-badge { width: 42px; height: 42px; right: -4px; bottom: 2px; }
-            .illus-badge svg { width: 18px; height: 18px; }
-            .illus-title { font-size: 26px; margin-top: 14px; }
-            .illus-sub { font-size: 10px; }
+            .left-hero::before, .left-hero::after {
+                display: none;
+            }
+            /* Sembunyikan floating badge di HP / Mobile agar tampilan hero sangat ringkas & fokus */
+            .hero-float-badge {
+                display: none !important;
+            }
+
+            .hero-illus {
+                margin: 0 auto;
+            }
+            .illus-ring {
+                width: 100px;
+                height: 100px;
+                box-shadow: 0 0 35px rgba(59,130,246,0.35);
+            }
+            .orbit-track {
+                inset: -14px;
+                border-width: 1.2px;
+            }
+            .orbit-satellite {
+                top: -16px;
+            }
+            .illus-badge {
+                width: 32px;
+                height: 32px;
+                box-shadow: 0 0 14px rgba(56,189,248,0.5);
+            }
+            .illus-badge svg {
+                width: 14px;
+                height: 14px;
+            }
+            .illus-title {
+                font-size: 22px;
+                margin-top: 10px;
+            }
+            .illus-sub {
+                font-size: 10.5px;
+                letter-spacing: 0.08em;
+                margin-top: 4px;
+            }
+            .hero-live-pill {
+                margin-top: 12px;
+                padding: 5px 14px;
+            }
+            .live-pill-text {
+                font-size: 11px;
+            }
             .left-footer { display: none; }
 
             .right-form {
-                padding: 18px 16px 32px;
+                padding: 20px 16px 36px;
                 overflow: visible;
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
             .form-card {
-                padding: 22px 18px 18px;
-                border-radius: 16px;
-                box-shadow: 0 12px 32px rgba(15,40,100,0.12);
+                width: 100%;
+                max-width: 440px;
+                padding: 24px 20px;
+                border-radius: 20px;
+                box-shadow: 0 12px 36px rgba(15,40,100,0.1);
             }
-            .form-header { margin-bottom: 16px; }
-            .form-header h2 { font-size: 20px; }
-            .form-header p { font-size: 12.5px; }
+            .form-header {
+                text-align: center;
+                margin-bottom: 18px;
+            }
+            .form-header h2 {
+                font-size: 20px;
+            }
+            .form-header p {
+                font-size: 12.5px;
+            }
 
             /* Sembunyikan Role Admin di HP/Mobile */
             #card-admin,
@@ -772,16 +835,67 @@
                 display: none !important;
             }
 
-            /* cegah auto-zoom iOS saat input difokuskan */
-            .form-input { font-size: 16px; height: 46px; }
-            .btn-submit { height: 48px; font-size: 15px; }
-            .role-display { height: 92px; max-width: 170px; }
-            .role-card-icon { width: 40px; height: 40px; }
-            .role-card-name { font-size: 13px; }
-            .role-arrow { width: 38px; height: 38px; }
+            /* Ukuran & kenyamanan input di mobile */
+            .form-input {
+                font-size: 15px;
+                height: 48px;
+            }
+            .btn-submit {
+                height: 50px;
+                font-size: 15px;
+            }
+            .role-selector {
+                gap: 10px;
+                margin-bottom: 12px;
+            }
+            .role-display {
+                height: 94px;
+                max-width: 180px;
+            }
+            .role-card-icon {
+                width: 40px;
+                height: 40px;
+            }
+            .role-card-name {
+                font-size: 13px;
+            }
+            .role-arrow {
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+            }
+            .role-dots {
+                gap: 6px;
+                margin-bottom: 18px;
+            }
         }
+
         @media (max-width: 480px) {
-            .form-card { padding: 20px 14px 16px; }
+            .left-hero {
+                padding: 20px 14px 22px;
+                border-radius: 0 0 24px 24px;
+            }
+            .illus-ring {
+                width: 90px;
+                height: 90px;
+            }
+            .illus-title {
+                font-size: 20px;
+            }
+            .right-form {
+                padding: 16px 12px 28px;
+            }
+            .form-card {
+                padding: 20px 16px 18px;
+                border-radius: 18px;
+            }
+            .form-header h2 {
+                font-size: 18.5px;
+            }
+            .role-display {
+                max-width: 160px;
+                height: 90px;
+            }
         }
         /* ── Dark Mode Overrides untuk Login (Cohesive & Modern) ── */
         .login-theme-toggle {
@@ -1090,38 +1204,6 @@
             letter-spacing: 0.01em;
         }
 
-        /* Dynamic Greeting Badge */
-        .greeting-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
-            border-radius: 99px;
-            background: rgba(37, 99, 235, 0.08);
-            border: 1px solid rgba(37, 99, 235, 0.18);
-            color: #2563eb;
-            font-size: 12.5px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-        [data-theme="dark"] .greeting-pill {
-            background: rgba(59, 130, 246, 0.15);
-            border-color: rgba(59, 130, 246, 0.3);
-            color: #93c5fd;
-        }
-        .greeting-wave {
-            display: inline-block;
-            animation: waveHand 2.2s infinite;
-            transform-origin: 70% 70%;
-        }
-        @keyframes waveHand {
-            0%, 60%, 100% { transform: rotate(0deg); }
-            10%, 30% { transform: rotate(14deg); }
-            20% { transform: rotate(-8deg); }
-            40% { transform: rotate(10deg); }
-            50% { transform: rotate(-4deg); }
-        }
-
         /* Role switch pop animation */
         .role-card.active {
             animation: rolePop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -1218,12 +1300,8 @@
     <div class="right-form">
         <div class="form-card">
 
-            <!-- Header with Dynamic Greeting -->
+            <!-- Header -->
             <div class="form-header">
-                <div class="greeting-pill">
-                    <span class="greeting-wave">👋</span>
-                    <span id="dynamic-greeting-text">Selamat Datang!</span>
-                </div>
                 <h2>Login ke akun Anda</h2>
                 <p>Silakan pilih peran Anda, lalu masukkan kredensial.</p>
             </div>
@@ -1652,11 +1730,17 @@
     }
 
     // Inisialisasi awal role di mobile vs desktop
-    document.addEventListener('DOMContentLoaded', function() {
+    function initRoleState() {
         if (isMobileScreen() && currentRole === 'admin') {
             switchRole('guru', { clear: false });
+        } else {
+            switchRole(currentRole, { clear: false });
         }
-    });
+    }
+
+    // Jalankan segera dan pasang listener
+    initRoleState();
+    document.addEventListener('DOMContentLoaded', initRoleState);
 
     window.addEventListener('resize', function() {
         if (isMobileScreen() && currentRole === 'admin') {
@@ -1707,6 +1791,7 @@
     function togglePassword(inputId, iconId) {
         const pwd  = document.getElementById(inputId);
         const icon = document.getElementById(iconId);
+        if (!pwd || !icon) return;
         if (pwd.type === 'password') {
             pwd.type = 'text';
             icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
@@ -1714,6 +1799,8 @@
             pwd.type = 'password';
             icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
         }
+    }
+
     // ── Button Submit State
     function attachLoginSubmit(formId, btnId, initialText) {
         const form = document.getElementById(formId);
@@ -1746,7 +1833,7 @@
         });
     }
 
-    // ── Live School Clock & Dynamic Greeting
+    // ── Live School Clock
     (function() {
         function updateSchoolClock() {
             const now = new Date();
@@ -1767,19 +1854,6 @@
         }
         updateSchoolClock();
         setInterval(updateSchoolClock, 1000);
-
-        function setDynamicGreeting() {
-            const hr = new Date().getHours();
-            let greeting = 'Halo Sobat PresensiKita!';
-            if (hr >= 4 && hr < 11) greeting = 'Selamat Pagi, Semangat Belajar! 🌅';
-            else if (hr >= 11 && hr < 15) greeting = 'Selamat Siang, Tetap Semangat! ☀️';
-            else if (hr >= 15 && hr < 18) greeting = 'Selamat Sore, Sobat Hebat! 🌤️';
-            else greeting = 'Selamat Malam, Istirahat Cukup! 🌙';
-
-            const greetingEl = document.getElementById('dynamic-greeting-text');
-            if (greetingEl) greetingEl.textContent = greeting;
-        }
-        setDynamicGreeting();
     })();
 </script>
 </body>

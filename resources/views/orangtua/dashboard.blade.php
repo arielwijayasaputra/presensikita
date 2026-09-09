@@ -998,55 +998,213 @@
         .custom-table th { background-color: #f8fafc; color: #475569; }
 
         /* ── Dark Mode Overrides untuk Orang Tua Portal ── */
+
+        /* Body & layout */
+        [data-theme="dark"] body {
+            background-color: #0b0f19 !important;
+            color: #e2e8f0 !important;
+        }
+
+        /* Navbar */
         [data-theme="dark"] .top-navbar {
-            background: #121d33;
-            border-bottom-color: #243552;
+            background: #0f172a !important;
+            border-bottom-color: #1e3a5f !important;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.4) !important;
         }
-        [data-theme="dark"] .nav-brand-title { color: #f8fafc; }
-        [data-theme="dark"] .school-badge { background: #152238; border-color: #243552; color: #94a3b8; }
-        [data-theme="dark"] .school-badge strong { color: #f8fafc; }
+        [data-theme="dark"] .nav-brand-title { color: #f1f5f9 !important; }
+        [data-theme="dark"] .nav-brand-sub { color: #94a3b8 !important; }
+        [data-theme="dark"] .school-badge {
+            background: #152238 !important;
+            border-color: #243552 !important;
+            color: #94a3b8 !important;
+        }
+        [data-theme="dark"] .school-badge strong { color: #f1f5f9 !important; }
+        [data-theme="dark"] .btn-logout {
+            background-color: rgba(239,68,68,0.15) !important;
+            border-color: rgba(239,68,68,0.3) !important;
+            color: #f87171 !important;
+        }
+        [data-theme="dark"] .btn-logout:hover {
+            background-color: rgba(239,68,68,0.25) !important;
+            color: #fca5a5 !important;
+        }
+
+        /* Hero card */
         [data-theme="dark"] .student-hero-card {
-            background: #152238;
-            border-color: #243552;
+            background: linear-gradient(135deg, #1a2d4a 0%, #0f1e35 100%) !important;
+            border-color: #243552 !important;
         }
-        [data-theme="dark"] .student-name { color: #f8fafc; }
-        [data-theme="dark"] .meta-pill { background: #0f1a2e; color: #94a3b8; border: 1px solid #243552; }
-        [data-theme="dark"] .card-main-box,
-        [data-theme="dark"] .dispen-tracker-card {
-            background: #152238;
-            border-color: #243552;
+        [data-theme="dark"] .student-name { color: #f1f5f9 !important; }
+        [data-theme="dark"] .meta-pill {
+            background: rgba(255,255,255,0.07) !important;
+            color: #94a3b8 !important;
+            border: 1px solid #243552 !important;
         }
-        [data-theme="dark"] .card-box-header { border-bottom-color: #243552; }
-        [data-theme="dark"] .card-box-title { color: #f8fafc; }
+        [data-theme="dark"] .gauge-number { color: #f1f5f9 !important; }
+        [data-theme="dark"] .gauge-label { color: #94a3b8 !important; }
+
+        /* Section titles */
+        [data-theme="dark"] .section-title-group h3 { color: #f1f5f9 !important; }
+        [data-theme="dark"] .section-title-group p { color: #94a3b8 !important; }
+
+        /* Filter form */
+        [data-theme="dark"] .date-filter-form {
+            background: #111827 !important;
+            border-color: #243552 !important;
+        }
+        [data-theme="dark"] .date-filter-form label { color: #94a3b8 !important; }
+        [data-theme="dark"] .date-filter-input,
+        [data-theme="dark"] .date-filter-form input,
+        [data-theme="dark"] .date-filter-form select {
+            background: #1e2d45 !important;
+            border-color: #2d4a6a !important;
+            color: #f1f5f9 !important;
+        }
+        [data-theme="dark"] .filter-header-bar { color: #94a3b8 !important; }
+
+        /* Stat cards */
+        [data-theme="dark"] .stat-card {
+            background: #111827 !important;
+            border-color: #1e3a5f !important;
+        }
+        [data-theme="dark"] .stat-val { color: #f1f5f9 !important; }
+        [data-theme="dark"] .stat-lbl { color: #94a3b8 !important; }
+        [data-theme="dark"] .stat-icon-wrapper {
+            background: rgba(255,255,255,0.06) !important;
+        }
+
+        /* Main card box */
+        [data-theme="dark"] .card-main-box {
+            background: #111827 !important;
+            border-color: #1e3a5f !important;
+        }
+        [data-theme="dark"] .card-box-header {
+            background: #0f172a !important;
+            border-bottom-color: #1e3a5f !important;
+        }
+        [data-theme="dark"] .card-box-title { color: #f1f5f9 !important; }
+
+        /* Jam (schedule) rows */
         [data-theme="dark"] .jam-row-item {
-            background: #0f1a2e;
-            border-color: #243552;
+            border-bottom-color: #1e3a5f !important;
+            background: transparent !important;
         }
-        [data-theme="dark"] .subject-title { color: #f8fafc; }
+        [data-theme="dark"] .jam-time-col,
+        [data-theme="dark"] .jam-num-badge { color: #60a5fa !important; }
+        [data-theme="dark"] .subject-title { color: #f1f5f9 !important; }
+        [data-theme="dark"] .guru-name { color: #94a3b8 !important; }
+        [data-theme="dark"] .materi-text {
+            background: #0f172a !important;
+            border-color: #243552 !important;
+            color: #94a3b8 !important;
+        }
+        [data-theme="dark"] .ket-note { color: #64748b !important; }
+        [data-theme="dark"] .empty-jam-state { color: #64748b !important; }
+        [data-theme="dark"] .jam-list-container { background: transparent !important; }
+
+        /* Badge status */
+        [data-theme="dark"] .badge-hadir {
+            background: rgba(16,185,129,0.15) !important;
+            color: #34d399 !important;
+        }
+        [data-theme="dark"] .badge-alfa,
+        [data-theme="dark"] .badge-alpa {
+            background: rgba(239,68,68,0.15) !important;
+            color: #f87171 !important;
+        }
+        [data-theme="dark"] .badge-izin {
+            background: rgba(245,158,11,0.15) !important;
+            color: #fbbf24 !important;
+        }
+        [data-theme="dark"] .badge-sakit {
+            background: rgba(2,132,199,0.15) !important;
+            color: #38bdf8 !important;
+        }
+        [data-theme="dark"] .badge-info {
+            background: rgba(37,99,235,0.15) !important;
+            color: #60a5fa !important;
+        }
+
+        /* Dispensasi tracker card */
+        [data-theme="dark"] .dispen-tracker-card {
+            background: #111827 !important;
+            border-color: #1e3a5f !important;
+        }
+        [data-theme="dark"] .dispen-tracker-card.is-keluar {
+            background: linear-gradient(180deg, rgba(245,158,11,0.08) 0%, #111827 100%) !important;
+        }
+        [data-theme="dark"] .dispen-tracker-card.is-kembali {
+            background: linear-gradient(180deg, rgba(16,185,129,0.08) 0%, #111827 100%) !important;
+        }
+        [data-theme="dark"] .dispen-tracker-card.is-dalam {
+            background: linear-gradient(180deg, rgba(2,132,199,0.08) 0%, #111827 100%) !important;
+        }
+        [data-theme="dark"] .dispen-tracker-header {
+            border-bottom-color: #1e3a5f !important;
+        }
+        [data-theme="dark"] .dispen-title-box h3 { color: #f1f5f9 !important; }
+        [data-theme="dark"] .dispen-title-box p { color: #94a3b8 !important; }
+        [data-theme="dark"] .dispen-badge-main.keluar {
+            background: rgba(245,158,11,0.15) !important;
+            color: #fbbf24 !important;
+            border-color: rgba(245,158,11,0.25) !important;
+        }
+        [data-theme="dark"] .dispen-badge-main.kembali {
+            background: rgba(16,185,129,0.15) !important;
+            color: #34d399 !important;
+            border-color: rgba(16,185,129,0.25) !important;
+        }
+        [data-theme="dark"] .dispen-badge-main.dalam {
+            background: rgba(2,132,199,0.15) !important;
+            color: #38bdf8 !important;
+            border-color: rgba(2,132,199,0.25) !important;
+        }
+
+        /* Stepper */
+        [data-theme="dark"] .stepper-icon-box {
+            background: #1a2d4a !important;
+            border-color: #243552 !important;
+            color: #94a3b8 !important;
+        }
+        [data-theme="dark"] .stepper-step-title { color: #f1f5f9 !important; }
+        [data-theme="dark"] .stepper-step-desc { color: #94a3b8 !important; }
+        [data-theme="dark"] .stepper-connector { background: #243552 !important; }
+        [data-theme="dark"] .stepper-connector.active { background: #10b981 !important; }
+        [data-theme="dark"] .stepper-connector.active-warning {
+            background: linear-gradient(90deg, #10b981 0%, #f59e0b 100%) !important;
+        }
+
+        /* Dispensasi details grid */
+        [data-theme="dark"] .dispen-details-grid {
+            border-top-color: #1e3a5f !important;
+        }
+        [data-theme="dark"] .dispen-detail-box {
+            background: #0f172a !important;
+            border-color: #243552 !important;
+        }
+        [data-theme="dark"] .dispen-detail-label { color: #94a3b8 !important; }
+        [data-theme="dark"] .dispen-detail-val { color: #f1f5f9 !important; }
+        [data-theme="dark"] .badge-dispen {
+            background: rgba(126,34,206,0.2) !important;
+            color: #c4b5fd !important;
+        }
+
+        /* Rekap table */
         [data-theme="dark"] .custom-table th {
-            background: #101a2c;
-            color: #94a3b8;
-            border-bottom-color: #243552;
+            background: #0f172a !important;
+            color: #94a3b8 !important;
+            border-bottom-color: #243552 !important;
         }
         [data-theme="dark"] .custom-table td {
-            border-bottom-color: #1c2b44;
-            color: #f8fafc;
+            border-bottom-color: #1e3a5f !important;
+            color: #e2e8f0 !important;
         }
-        [data-theme="dark"] .date-filter-form {
-            background: #0f1a2e;
-            border-color: #243552;
+        [data-theme="dark"] .custom-table tr:hover td {
+            background: rgba(255,255,255,0.03) !important;
         }
-        [data-theme="dark"] .date-filter-form input {
-            background: transparent;
-            color: #f8fafc;
+        [data-theme="dark"] .progress-bar-bg {
+            background: #1e2d45 !important;
         }
-        [data-theme="dark"] .stat-card {
-            background: #152238;
-            border-color: #243552;
-        }
-        [data-theme="dark"] .stat-val { color: #f8fafc; }
-        [data-theme="dark"] .stepper-step { background: transparent; }
-        [data-theme="dark"] .stepper-title { color: #f8fafc; }
     </style>
 </head>
 <body>

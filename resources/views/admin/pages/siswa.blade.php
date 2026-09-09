@@ -217,18 +217,13 @@
                                 style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:#fff1f2;border:1px solid #fecdd3;color:#e11d48;border-radius:8px;cursor:pointer;transition:all 0.2s;"
                                 title="Hapus">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                @empty
-                <tr id="siswa-empty-state">
+                @endforeach
+                <tr id="siswa-empty-state" style="display:none">
                     <td colspan="7" style="text-align:center;padding:40px;color:#94a3b8">
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" style="margin:0 auto 10px;display:block"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                        Belum ada data siswa.
+                        Tidak ada data siswa yang cocok dengan pencarian/filter.
                     </td>
                 </tr>
-                @endforelse
             </tbody>
         </table>
 

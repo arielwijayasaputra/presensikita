@@ -213,17 +213,13 @@
                                 title="Hapus">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                             </button>
-                        </div>
-                    </td>
-                </tr>
-                @empty
-                <tr id="kelas-empty-state">
+                @endforeach
+                <tr id="kelas-empty-state" style="display:none">
                     <td colspan="8" style="text-align:center;padding:40px;color:#94a3b8">
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" style="margin:0 auto 10px;display:block"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                        Belum ada data kelas.
+                        Tidak ada data kelas yang cocok dengan pencarian/filter.
                     </td>
                 </tr>
-                @endforelse
             </tbody>
         </table>
 

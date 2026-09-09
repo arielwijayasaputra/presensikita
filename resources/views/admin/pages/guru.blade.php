@@ -115,7 +115,7 @@
                 <select class="filter-select" id="guru-filter-peran" onchange="filterGuruPage()" style="width:100%;padding-right:28px;appearance:none">
                     <option value="">Semua Peran</option>
                     @php
-                        $perans = $allGuru->pluck('Peran')->filter()->unique();
+                        $perans = $allGuru->map(fn($g) => $g->Peran ?: 'Guru')->unique()->sort()->values();
                     @endphp
                     @foreach($perans as $p)
                     <option value="{{ strtolower($p) }}">{{ $p }}</option>
@@ -155,14 +155,15 @@
                 </tr>
             </thead>
             <tbody id="guru-tbody-page">
-                @forelse($allGuru as $idx => $g)
+                @foreach($allGuru as $idx => $g)
                 @php
                     $isAktif = $g->is_aktif ?? true;
                     $jadwalCount = (int) ($g->jadwal_count ?? $g->jadwal()->count());
+                    $peranNama = $g->Peran ?: 'Guru';
                 @endphp
                 <tr class="guru-row-item"
                     data-search="{{ strtolower(($g->nip ?? '') . ' ' . $g->nama_guru . ' ' . ($g->username ?? '')) }}"
-                    data-peran="{{ strtolower($g->Peran ?? '') }}"
+                    data-peran="{{ strtolower($peranNama) }}"
                     data-status="{{ $isAktif ? 'aktif' : 'nonaktif' }}"
                     data-jadwal-count="{{ $jadwalCount }}">
                     <td style="color:#94a3b8;font-weight:600;font-size:13px">{{ $idx + 1 }}</td>
@@ -171,7 +172,7 @@
                         {{ $g->nama_guru }}
                     </td>
                     <td>
-                        <span class="badge badge-info">{{ $g->Peran ?? 'Guru' }}</span>
+                        <span class="badge badge-info">{{ $peranNama }}</span>
                     </td>
                     <td style="font-family:monospace;color:#2563eb;font-weight:600;font-size:13px">{{ $g->username }}</td>
                     <td style="text-align:center">
@@ -199,7 +200,7 @@
                                 data-id="{{ $g->id_guru }}"
                                 data-nama="{{ $g->nama_guru }}"
                                 data-nip="{{ $g->nip ?? '' }}"
-                                data-peran="{{ $g->Peran ?? 'Guru' }}"
+                                data-peran="{{ $peranNama }}"
                                 data-hp="{{ $g->no_hp ?? '' }}"
                                 data-username="{{ $g->username }}"
                                 data-is-admin="{{ (int)($g->is_admin ?? 0) }}"
@@ -221,14 +222,13 @@
                         </div>
                     </td>
                 </tr>
-                @empty
-                <tr id="guru-empty-state">
+                @endforeach
+                <tr id="guru-empty-state" style="display:none">
                     <td colspan="7" style="text-align:center;padding:40px;color:#94a3b8">
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" style="margin:0 auto 10px;display:block"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                        Belum ada data guru.
+                        Tidak ada data guru yang cocok dengan pencarian/filter.
                     </td>
                 </tr>
-                @endforelse
             </tbody>
         </table>
 
@@ -379,13 +379,13 @@ function uploadGuruFile(formData) {
 
     window.filterGuruPage = function(){
         const q      = (document.getElementById('guru-cari')?.value || '').toLowerCase().trim();
-        const peran  = (document.getElementById('guru-filter-peran')?.value || '').toLowerCase();
-        const status = (document.getElementById('guru-filter-status')?.value || '').toLowerCase();
+        const peran  = (document.getElementById('guru-filter-peran')?.value || '').toLowerCase().trim();
+        const status = (document.getElementById('guru-filter-status')?.value || '').toLowerCase().trim();
 
         guruFiltered = allRows().filter(row => {
-            const hay    = row.dataset.search || '';
-            const rPeran = (row.dataset.peran || '').toLowerCase();
-            const rSt    = (row.dataset.status || '').toLowerCase();
+            const hay    = (row.dataset.search || '').toLowerCase();
+            const rPeran = (row.dataset.peran || '').toLowerCase().trim();
+            const rSt    = (row.dataset.status || '').toLowerCase().trim();
             return (!q      || hay.includes(q))
                 && (!peran  || rPeran === peran)
                 && (!status || rSt === status);
@@ -398,11 +398,10 @@ function uploadGuruFile(formData) {
     };
 
     function updateGuruSummary(){
-        const rows = guruFiltered.length ? guruFiltered : allRows();
-        let totalGuru=0, aktif=0, nonaktif=0;
+        const rows = guruFiltered;
+        let totalGuru = rows.length, aktif = 0, nonaktif = 0;
         rows.forEach(r => {
-            totalGuru++;
-            if(r.dataset.status==='aktif') aktif++; else nonaktif++;
+            if ((r.dataset.status || '').toLowerCase() === 'aktif') aktif++; else nonaktif++;
         });
         const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
         set('gs-total-guru', totalGuru);
@@ -969,16 +968,6 @@ function konfirmasiKosongkanJadwal(id, nama, jadwalCount) {
                 customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title', confirmButton: 'custom-swal-confirm' },
                 buttonsStyling: false
             }));
-        }
-    });
-}
-
-                Swal.fire({
-                    icon: 'success', title: 'Berhasil!', text: data.message,
-                    timer: 1200, showConfirmButton: false
-                });
-            })
-            .catch(err => Swal.fire('Gagal', err.message || 'Terjadi kesalahan sistem.', 'error'));
         }
     });
 }

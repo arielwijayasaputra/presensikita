@@ -1224,7 +1224,7 @@
         <div class="nav-right">
             <div class="school-badge">
                 <strong>{{ $namaSekolah }}</strong>
-                <span>TA {{ $tahunAjaran->tahun_ajaran ?? '' }} ({{ $tahunAjaran->semester ?? '' }})</span>
+                <span>Tahun Ajaran {{ $tahunAjaran->tahun_ajaran ?? '' }} ({{ $tahunAjaran->semester ?? '' }})</span>
             </div>
 
             {{-- Tombol Dark / Light Mode --}}

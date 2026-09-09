@@ -350,23 +350,70 @@ html.theme-transitioning *::after {
 
 /* ── SWEETALERT2 DARK OVERRIDE ──────────────────────────────────────────── */
 [data-theme="dark"] .swal2-popup {
-    background: #182338 !important;
-    color: #f8fafc !important;
-    border: 1px solid #2e4063 !important;
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #334155 !important;
     box-shadow: 0 16px 40px rgba(0,0,0,0.7) !important;
 }
 [data-theme="dark"] .swal2-title {
-    color: #f8fafc !important;
+    color: #f1f5f9 !important;
+    font-weight: 700 !important;
 }
-[data-theme="dark"] .swal2-html-container {
+[data-theme="dark"] .swal2-html-container,
+[data-theme="dark"] .swal2-content {
     color: #cbd5e1 !important;
+}
+[data-theme="dark"] .swal2-icon.swal2-warning {
+    border-color: #f59e0b !important;
+    color: #f59e0b !important;
+}
+[data-theme="dark"] .swal2-icon.swal2-error {
+    border-color: #f87171 !important;
+    color: #f87171 !important;
+}
+[data-theme="dark"] .swal2-icon.swal2-success {
+    border-color: #34d399 !important;
+    color: #34d399 !important;
+}
+[data-theme="dark"] .swal2-icon.swal2-info {
+    border-color: #60a5fa !important;
+    color: #60a5fa !important;
+}
+[data-theme="dark"] .swal2-icon-content { color: inherit !important; }
+[data-theme="dark"] .swal2-icon.swal2-question {
+    border-color: #818cf8 !important;
+    color: #818cf8 !important;
+}
+/* Icon circle background (e.g. logout icon) */
+[data-theme="dark"] .swal2-icon-show {
+    background: transparent !important;
+}
+/* Cancel / Deny button */
+[data-theme="dark"] .swal2-cancel,
+[data-theme="dark"] .swal2-deny {
+    background-color: #334155 !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #475569 !important;
+}
+[data-theme="dark"] .swal2-cancel:hover,
+[data-theme="dark"] .swal2-deny:hover {
+    background-color: #475569 !important;
+}
+/* Confirm button stays its own color — just ensure text is readable */
+[data-theme="dark"] .swal2-confirm {
+    color: #ffffff !important;
+}
+/* Footer text if any */
+[data-theme="dark"] .swal2-footer {
+    border-top-color: #334155 !important;
+    color: #94a3b8 !important;
 }
 [data-theme="dark"] .swal2-input,
 [data-theme="dark"] .swal2-textarea,
 [data-theme="dark"] .swal2-select {
     background: #0f172a !important;
-    border-color: #2e4063 !important;
-    color: #f8fafc !important;
+    border-color: #334155 !important;
+    color: #f1f5f9 !important;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -660,4 +707,256 @@ html.theme-transitioning *::after {
     background: #182338 !important;
     border: 1px solid var(--border) !important;
     color: #cbd5e1 !important;
+}
+
+/* ── GURU PIKET — Alert banner dark override ── */
+[data-theme="dark"] .alert-piket {
+    background: linear-gradient(135deg, rgba(251,146,60,0.12), rgba(234,88,12,0.07)) !important;
+    border-color: rgba(251,146,60,0.35) !important;
+}
+[data-theme="dark"] .alert-piket .alert-text p {
+    color: #fb923c !important;
+    font-weight: 700;
+}
+[data-theme="dark"] .alert-piket .alert-text span {
+    color: #cbd5e1 !important;
+}
+
+/* ── ABSENSI HARIAN ADMIN — table header & badge dark override ── */
+[data-theme="dark"] .absensi-table-header {
+    background: #0f172a !important;
+    border-bottom-color: var(--border) !important;
+}
+[data-theme="dark"] .absensi-table-header .rekap-label {
+    color: #94a3b8 !important;
+}
+[data-theme="dark"] .badge-wewenang {
+    background: rgba(37,99,235,0.15) !important;
+    color: #93c5fd !important;
+    border-color: rgba(37,99,235,0.3) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   COMPREHENSIVE TEXT-CONTRAST FIXES — ensures no text blends with dark bg
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Rekap items (Hadir/Sakit/Izin/Alpa chips) */
+[data-theme="dark"] .rekap-item.green {
+    background: rgba(22,163,74,0.15) !important;
+    color: #4ade80 !important;
+}
+[data-theme="dark"] .rekap-item.yellow {
+    background: rgba(217,119,6,0.15) !important;
+    color: #fbbf24 !important;
+}
+[data-theme="dark"] .rekap-item.blue {
+    background: rgba(37,99,235,0.15) !important;
+    color: #60a5fa !important;
+}
+[data-theme="dark"] .rekap-item.red {
+    background: rgba(220,38,38,0.15) !important;
+    color: #f87171 !important;
+}
+[data-theme="dark"] .rekap-item strong { color: inherit !important; }
+
+/* Table headers with hardcoded light background */
+[data-theme="dark"] .table-header {
+    background: #0f172a !important;
+    border-bottom-color: var(--border) !important;
+}
+[data-theme="dark"] .rekap-label { color: #94a3b8 !important; }
+
+/* Laporan pagination buttons */
+[data-theme="dark"] .laporan-page-btn {
+    background: #1a2740 !important;
+    border-color: var(--border) !important;
+    color: #cbd5e1 !important;
+}
+[data-theme="dark"] .laporan-page-btn:hover:not(:disabled) {
+    background: #243554 !important;
+    color: #f1f5f9 !important;
+}
+[data-theme="dark"] .laporan-page-btn.active {
+    background: #2563eb !important;
+    border-color: #2563eb !important;
+    color: #fff !important;
+}
+[data-theme="dark"] .laporan-page-info { color: #94a3b8 !important; }
+
+/* Laporan table subheader */
+[data-theme="dark"] .laporan-subhead th {
+    background: #111a2d !important;
+    color: #94a3b8 !important;
+    border-bottom-color: var(--border) !important;
+}
+
+/* Laporan ring chart */
+[data-theme="dark"] .laporan-ring-bg { stroke: #243554 !important; }
+[data-theme="dark"] .laporan-ring-text strong { color: #f1f5f9 !important; }
+[data-theme="dark"] .laporan-ring-text span { color: #94a3b8 !important; }
+
+/* btn-secondary (white bg on dark) */
+[data-theme="dark"] .btn-secondary {
+    background: #1a2740 !important;
+    color: #f1f5f9 !important;
+    border-color: var(--border) !important;
+}
+[data-theme="dark"] .btn-secondary:hover {
+    background: #243554 !important;
+}
+
+/* Page title/subtitle with hardcoded inline colors */
+[data-theme="dark"] .page-title { color: #f1f5f9 !important; }
+[data-theme="dark"] .page-subtitle { color: #94a3b8 !important; }
+
+/* Filter hint bar */
+[data-theme="dark"] .filter-hint { color: #94a3b8 !important; }
+[data-theme="dark"] .filter-hint-info {
+    background: rgba(37,99,235,0.08) !important;
+    border-color: rgba(37,99,235,0.2) !important;
+    color: #93c5fd !important;
+}
+
+/* Data-table text reinforcement */
+[data-theme="dark"] .data-table td { color: #f1f5f9 !important; }
+[data-theme="dark"] .data-table th { color: #94a3b8 !important; }
+
+/* Stat icon pastel backgrounds */
+[data-theme="dark"] div[style*="background:#fff7ed"],
+[data-theme="dark"] div[style*="background: #fff7ed"] {
+    background: rgba(234,88,12,0.15) !important;
+}
+[data-theme="dark"] div[style*="background:#eff6ff"],
+[data-theme="dark"] div[style*="background: #eff6ff"] {
+    background: rgba(37,99,235,0.12) !important;
+    color: #93c5fd !important;
+    border-color: rgba(37,99,235,0.25) !important;
+}
+[data-theme="dark"] div[style*="background:#f0fdf4"],
+[data-theme="dark"] div[style*="background: #f0fdf4"] {
+    background: rgba(22,163,74,0.12) !important;
+}
+[data-theme="dark"] div[style*="background:#fef2f2"],
+[data-theme="dark"] div[style*="background: #fef2f2"] {
+    background: rgba(220,38,38,0.12) !important;
+}
+[data-theme="dark"] div[style*="background:#f8fafc"],
+[data-theme="dark"] div[style*="background: #f8fafc"] {
+    background: #111827 !important;
+}
+
+/* Hardcoded dark text on inline styles */
+[data-theme="dark"] [style*="color:#1e293b"],
+[data-theme="dark"] [style*="color: #1e293b"],
+[data-theme="dark"] [style*="color:#0f172a"],
+[data-theme="dark"] [style*="color: #0f172a"],
+[data-theme="dark"] [style*="color:#334155"],
+[data-theme="dark"] [style*="color: #334155"] {
+    color: #f1f5f9 !important;
+}
+[data-theme="dark"] [style*="color:#64748b"],
+[data-theme="dark"] [style*="color: #64748b"],
+[data-theme="dark"] [style*="color:#475569"],
+[data-theme="dark"] [style*="color: #475569"],
+[data-theme="dark"] [style*="color:#94a3b8"],
+[data-theme="dark"] [style*="color: #94a3b8"] {
+    color: #94a3b8 !important;
+}
+
+/* Additional background-to-dark overrides (covers td/th/span/div/li) */
+[data-theme="dark"] [style*="background:#f8fafc"],
+[data-theme="dark"] [style*="background: #f8fafc"],
+[data-theme="dark"] [style*="background:#f1f5f9"],
+[data-theme="dark"] [style*="background: #f1f5f9"] {
+    background: #1e293b !important;
+    color: var(--text-primary) !important;
+}
+[data-theme="dark"] [style*="background:#ffffff"],
+[data-theme="dark"] [style*="background: #ffffff"],
+[data-theme="dark"] [style*="background:#fff;"],
+[data-theme="dark"] [style*="background: #fff;"],
+[data-theme="dark"] [style*="background:#fff \""],
+[data-theme="dark"] [style*="background: white"] {
+    background: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Hardcoded light bg on inputs (readonly / disabled look) */
+[data-theme="dark"] input[style*="background:#f8fafc"],
+[data-theme="dark"] input[style*="background: #f8fafc"] {
+    background: #1e293b !important;
+    color: #94a3b8 !important;
+    border-color: var(--border) !important;
+}
+
+/* ── GURU PIKET — Day-card & divider dark overrides ── */
+
+/* Kartu hari (background:#fafbfc + border:#e2e8f0) */
+[data-theme="dark"] div[style*="background:#fafbfc"],
+[data-theme="dark"] div[style*="background: #fafbfc"] {
+    background: #111827 !important;
+    border-color: var(--border) !important;
+}
+
+/* Border-bottom dalam header kartu (border-bottom:1px solid #f1f5f9) */
+[data-theme="dark"] div[style*="border-bottom:1px solid #f1f5f9"],
+[data-theme="dark"] div[style*="border-bottom: 1px solid #f1f5f9"] {
+    border-bottom-color: var(--border) !important;
+}
+
+/* Divider antar minggu (border-top:2px solid #e2e8f0) */
+[data-theme="dark"] div[style*="border-top:2px solid #e2e8f0"],
+[data-theme="dark"] div[style*="border-top: 2px solid #e2e8f0"] {
+    border-top-color: var(--border) !important;
+}
+
+/* Border pada inline bordered divs (#e2e8f0) */
+[data-theme="dark"] div[style*="border:1px solid #e2e8f0"],
+[data-theme="dark"] div[style*="border: 1px solid #e2e8f0"] {
+    border-color: var(--border) !important;
+}
+
+/* QR code box (background:#fff in modal) */
+[data-theme="dark"] div[style*="background:#fff;border:1px dashed"],
+[data-theme="dark"] div[style*="background:#fff; border"] {
+    background: #111827 !important;
+    border-color: var(--border) !important;
+}
+
+/* Settings box (background:#f8fafc;border:1px solid #e2e8f0) in modal */
+[data-theme="dark"] div[style*="background:#f8fafc;border:1px solid #e2e8f0"],
+[data-theme="dark"] div[style*="background: #f8fafc;border:1px solid #e2e8f0"],
+[data-theme="dark"] div[style*="background:#f8fafc;border: 1px solid #e2e8f0"] {
+    background: #111827 !important;
+    border-color: var(--border) !important;
+}
+
+/* Stroke icons that are hardcoded #64748b */
+[data-theme="dark"] svg[stroke="#64748b"] {
+    stroke: #94a3b8 !important;
+}
+
+/* Border-top/bottom inside modal */
+[data-theme="dark"] div[style*="border-top:1px solid #f1f5f9"],
+[data-theme="dark"] div[style*="border-top: 1px solid #f1f5f9"],
+[data-theme="dark"] div[style*="border-bottom:1px solid #f1f5f9"],
+[data-theme="dark"] div[style*="border-bottom: 1px solid #f1f5f9"] {
+    border-color: var(--border) !important;
+}
+
+/* ── JAM PELAJARAN — Swal popup hari checkbox labels ── */
+[data-theme="dark"] label[style*="border:1px solid #e2e8f0"],
+[data-theme="dark"] label[style*="border: 1px solid #e2e8f0"] {
+    border-color: var(--border) !important;
+    color: #cbd5e1 !important;
+}
+
+/* Tr rows with #fff7ed background (Istirahat rows) */
+[data-theme="dark"] tr[style*="background:#fff7ed"],
+[data-theme="dark"] tr[style*="background: #fff7ed"] {
+    background: rgba(234,88,12,0.1) !important;
+}
+[data-theme="dark"] tr[style*="background:#fff7ed"] td,
+[data-theme="dark"] tr[style*="background: #fff7ed"] td {
+    color: #fb923c !important;
 }

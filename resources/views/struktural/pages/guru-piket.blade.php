@@ -6,7 +6,7 @@
         </div>
     </div>
 
-    <div class="alert-card" style="background:linear-gradient(135deg,#fff7ed,#fffbeb);border-color:#fdba74;margin-bottom:22px">
+    <div class="alert-card alert-piket" style="background:linear-gradient(135deg,#fff7ed,#fffbeb);border-color:#fdba74;margin-bottom:22px">
         <div class="alert-icon" style="background:#f97316">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><polyline points="12 6 12 12 16 14"/></svg>
         </div>

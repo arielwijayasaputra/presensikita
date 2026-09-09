@@ -9,11 +9,14 @@ use App\Models\JurnalSiswaTidakHadir;
 use App\Models\Pengaturan;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
+use App\Services\AbsensiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AbsensiController extends Controller
 {
+    public function __construct(protected AbsensiService $absensiService) {}
+
     public function index(Request $request)
     {
         $idSiswa = session('auth_siswa_id');
@@ -25,11 +28,42 @@ class AbsensiController extends Controller
             return redirect()->route('login')->withErrors(['nisn' => 'Siswa tidak ditemukan.']);
         }
 
+        $tanggal = $request->get('tanggal', date('Y-m-d'));
+        $data = $this->getPortalData($siswa, $tanggal);
+
+        return view('orangtua.dashboard', $data);
+    }
+
+    public function realtime(Request $request)
+    {
+        $idSiswa = session('auth_siswa_id');
+        $siswa = Siswa::with('kelas')->find($idSiswa);
+
+        if (! $siswa) {
+            return response()->json(['status' => 'error', 'message' => 'Siswa tidak ditemukan.'], 404);
+        }
+
+        $tanggal = $request->get('tanggal', date('Y-m-d'));
+        $data = $this->getPortalData($siswa, $tanggal);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'tanggal' => $data['tanggal'],
+                'hari' => $data['hariIndo'],
+                'waktuServer' => $data['waktuServer'],
+                'statHarian' => $data['statHarian'],
+                'pctHadirBulan' => $data['pctHadirBulan'],
+                'presensiPerJam' => $data['presensiPerJam'],
+                'rekapPerMapel' => $data['rekapPerMapel'],
+            ],
+        ]);
+    }
+
+    private function getPortalData(Siswa $siswa, string $tanggal): array
+    {
         $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
         $namaSekolah = Pengaturan::get('nama_sekolah', 'SMKN 1 Boyolangu');
-
-        // Tanggal filter harian (default: hari ini)
-        $tanggal = $request->get('tanggal', date('Y-m-d'));
 
         // Status dispen anak hari ini: keluar sekolah ATAU masih di dalam sekolah (jenis D).
         // Tidak mengikuti filter tanggal presensi agar wali selalu melihat kondisi terkini.
@@ -64,7 +98,13 @@ class AbsensiController extends Controller
         $dayNum = date('N', strtotime($tanggal));
         $hariIndo = $dayMap[$dayNum] ?? 'Senin';
 
-        // 1. Ambil Jadwal Mengajar Kelas Siswa pada Hari Tersebut
+        // 1. Sinkronkan presensi per jam untuk kelas anak pada tanggal ini secara otomatis.
+        // Jam yang sudah selesai akan di-save permanen dengan absensi terakhir pada jam tersebut.
+        if ($siswa->id_kelas && $tanggal <= now()->toDateString()) {
+            $this->absensiService->syncPresensiPerJam((int) $siswa->id_kelas, $tanggal);
+        }
+
+        // 2. Ambil Jadwal Mengajar Kelas Siswa pada Hari Tersebut
         $jadwalList = DB::table('jadwal_mengajar')
             ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
             ->join('mapel', 'jadwal_mengajar.id_mapel', '=', 'mapel.id_mapel')
@@ -87,39 +127,58 @@ class AbsensiController extends Controller
             ->orderBy('jam_pelajaran.jam_ke')
             ->get();
 
-        // 2. Ambil Jurnal & Presensi Siswa per Jam Pelajaran pada Tanggal Tersebut
+        $isPastDate = ($tanggal < now()->toDateString());
+        $isToday = ($tanggal === now()->toDateString());
+        $nowTime = now()->format('H:i:s');
+
+        // 3. Ambil Jurnal & Presensi Siswa per Jam Pelajaran pada Tanggal Tersebut
         $presensiPerJam = [];
-        $statHarian = ['Hadir' => 0, 'Sakit' => 0, 'Izin' => 0, 'Dispen' => 0, 'Alpa' => 0, 'Belum' => 0];
+        $statHarian = ['Hadir' => 0, 'Sakit' => 0, 'Izin' => 0, 'Dispen' => 0, 'Alpa' => 0];
+
+        // Running status absensi terakhir pada hari ini (default: semua siswa Hadir)
+        $runningTidakHadir = [];
 
         foreach ($jadwalList as $j) {
+            $isSelesai = $isPastDate || ($isToday && $nowTime >= $j->jam_selesai);
+            $isSedangBerlangsung = $isToday && ($nowTime >= $j->jam_mulai && $nowTime < $j->jam_selesai);
+            $isUpcoming = $isToday && ($nowTime < $j->jam_mulai);
+
             $jurnal = JurnalKelas::where('id_jadwal', $j->id_jadwal)
                 ->whereDate('tanggal', $tanggal)
                 ->first();
 
-            $status = 'Belum';
-            $statusLabel = 'Belum Ada Presensi';
+            $status = 'Hadir';
+            $statusLabel = 'Hadir';
             $materi = '-';
             $keterangan = '-';
-            $badgeClass = 'bg-gray-100 text-gray-600';
+            $badgeClass = 'badge-success';
 
             if ($jurnal) {
+                // Jam ini memiliki data jurnal tersimpan
                 $materi = $jurnal->materi ?? 'Pembelajaran Harian';
 
-                $tidakHadir = JurnalSiswaTidakHadir::where('id_jurnal', $jurnal->id_jurnal)
-                    ->where('id_siswa', $siswa->id_siswa)
-                    ->first();
+                // Update $runningTidakHadir dari jurnal ini
+                $thRows = JurnalSiswaTidakHadir::where('id_jurnal', $jurnal->id_jurnal)->get();
+                $runningTidakHadir = [];
+                foreach ($thRows as $row) {
+                    $runningTidakHadir[$row->id_siswa] = [
+                        'status' => $row->status,
+                        'keterangan' => $row->keterangan ?? '',
+                    ];
+                }
 
-                if ($tidakHadir) {
-                    $ketLower = strtolower($tidakHadir->keterangan ?? '');
-                    if ($tidakHadir->status === 'S') {
+                $th = $runningTidakHadir[$siswa->id_siswa] ?? null;
+                if ($th) {
+                    $ketLower = strtolower($th['keterangan'] ?? '');
+                    if ($th['status'] === 'S') {
                         $status = 'Sakit';
                         $statusLabel = 'Sakit';
                         $badgeClass = 'badge-warning';
-                    } elseif ($tidakHadir->status === 'D' || str_starts_with($ketLower, 'd:') || str_contains($ketLower, 'dispensasi')) {
+                    } elseif ($th['status'] === 'D' || str_starts_with($ketLower, 'd:') || str_contains($ketLower, 'dispensasi')) {
                         $status = 'Dispen';
                         $statusLabel = 'Dispensasi';
                         $badgeClass = 'badge-dispen';
-                    } elseif ($tidakHadir->status === 'I') {
+                    } elseif ($th['status'] === 'I') {
                         $status = 'Izin';
                         $statusLabel = 'Izin';
                         $badgeClass = 'badge-info';
@@ -128,7 +187,36 @@ class AbsensiController extends Controller
                         $statusLabel = 'Alpa';
                         $badgeClass = 'badge-danger';
                     }
-                    $keterangan = $tidakHadir->keterangan ?? '-';
+                    $keterangan = $th['keterangan'] ?: '-';
+                } else {
+                    $status = 'Hadir';
+                    $statusLabel = 'Hadir';
+                    $badgeClass = 'badge-success';
+                }
+            } else {
+                // Jam ini belum memiliki jurnal sendiri (jam sedang berjalan atau jam berikutnya).
+                // Status mengikuti status absensi yang disimpan terakhir ("sedangkan yang absen lainnya tetap sesuai dengan absen yang disimpan terakhir")
+                $th = $runningTidakHadir[$siswa->id_siswa] ?? null;
+                if ($th) {
+                    $ketLower = strtolower($th['keterangan'] ?? '');
+                    if ($th['status'] === 'S') {
+                        $status = 'Sakit';
+                        $statusLabel = 'Sakit';
+                        $badgeClass = 'badge-warning';
+                    } elseif ($th['status'] === 'D' || str_starts_with($ketLower, 'd:') || str_contains($ketLower, 'dispensasi')) {
+                        $status = 'Dispen';
+                        $statusLabel = 'Dispensasi';
+                        $badgeClass = 'badge-dispen';
+                    } elseif ($th['status'] === 'I') {
+                        $status = 'Izin';
+                        $statusLabel = 'Izin';
+                        $badgeClass = 'badge-info';
+                    } else {
+                        $status = 'Alpa';
+                        $statusLabel = 'Alpa';
+                        $badgeClass = 'badge-danger';
+                    }
+                    $keterangan = $th['keterangan'] ?: '-';
                 } else {
                     $status = 'Hadir';
                     $statusLabel = 'Hadir';
@@ -136,10 +224,20 @@ class AbsensiController extends Controller
                 }
             }
 
+            $sessionState = 'finished';
+            $sessionLabel = 'Selesai';
+            if ($isSedangBerlangsung) {
+                $sessionState = 'ongoing';
+                $sessionLabel = 'Sedang Berlangsung';
+            } elseif ($isUpcoming) {
+                $sessionState = 'upcoming';
+                $sessionLabel = 'Akan Datang';
+            }
+
             if (isset($statHarian[$status])) {
                 $statHarian[$status]++;
             } else {
-                $statHarian['Belum']++;
+                $statHarian['Hadir']++;
             }
 
             $presensiPerJam[] = [
@@ -154,10 +252,14 @@ class AbsensiController extends Controller
                 'badge_class' => $badgeClass,
                 'materi' => $materi,
                 'keterangan' => $keterangan,
+                'session_state' => $sessionState,
+                'session_label' => $sessionLabel,
+                'is_ongoing' => $isSedangBerlangsung,
+                'is_finished' => $isSelesai,
             ];
         }
 
-        // 3. Rekap Kehadiran Bulanan Siswa & Per Mapel
+        // 4. Rekap Kehadiran Bulanan Siswa & Per Mapel
         $bulanFilter = date('m', strtotime($tanggal));
         $tahunFilter = date('Y', strtotime($tanggal));
 
@@ -230,23 +332,24 @@ class AbsensiController extends Controller
             ];
         }
 
-        return view('orangtua.dashboard', compact(
-            'siswa',
-            'tahunAjaran',
-            'namaSekolah',
-            'tanggal',
-            'hariIndo',
-            'presensiPerJam',
-            'statHarian',
-            'totalJamBulan',
-            'hadirBulan',
-            'sakitBulan',
-            'izinBulan',
-            'alpaBulan',
-            'pctHadirBulan',
-            'rekapPerMapel',
-            'dispenHariIni',
-            'riwayatDispen'
-        ));
+        return [
+            'siswa' => $siswa,
+            'tahunAjaran' => $tahunAjaran,
+            'namaSekolah' => $namaSekolah,
+            'tanggal' => $tanggal,
+            'hariIndo' => $hariIndo,
+            'presensiPerJam' => $presensiPerJam,
+            'statHarian' => $statHarian,
+            'totalJamBulan' => $totalJamBulan,
+            'hadirBulan' => $hadirBulan,
+            'sakitBulan' => $sakitBulan,
+            'izinBulan' => $izinBulan,
+            'alpaBulan' => $alpaBulan,
+            'pctHadirBulan' => $pctHadirBulan,
+            'rekapPerMapel' => $rekapPerMapel,
+            'dispenHariIni' => $dispenHariIni,
+            'riwayatDispen' => $riwayatDispen,
+            'waktuServer' => now()->format('H:i:s'),
+        ];
     }
 }

@@ -997,6 +997,22 @@
         .badge-info { background-color: #dbeafe; color: #1d4ed8; }
         .custom-table th { background-color: #f8fafc; color: #475569; }
 
+        @keyframes pulseLive {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.25); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .jam-ongoing-active {
+            background: #f0fdf4 !important;
+            border-left: 4px solid #16a34a !important;
+            padding-left: 12px !important;
+            border-radius: 8px;
+        }
+        [data-theme="dark"] .jam-ongoing-active {
+            background: #064e3b !important;
+            border-left-color: #34d399 !important;
+        }
+
         /* ── Dark Mode Overrides untuk Orang Tua Portal ── */
         [data-theme="dark"] .top-navbar {
             background: #121d33;
@@ -1362,7 +1378,7 @@
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                 </div>
                 <div>
-                    <div class="stat-val">{{ $statHarian['Hadir'] }} Jam</div>
+                    <div class="stat-val" id="stat-count-hadir">{{ $statHarian['Hadir'] }} Jam</div>
                     <div class="stat-lbl">Hadir</div>
                 </div>
             </div>
@@ -1372,7 +1388,7 @@
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
                 </div>
                 <div>
-                    <div class="stat-val">{{ $statHarian['Dispen'] ?? 0 }} Jam</div>
+                    <div class="stat-val" id="stat-count-dispen">{{ $statHarian['Dispen'] ?? 0 }} Jam</div>
                     <div class="stat-lbl">Dispensasi</div>
                 </div>
             </div>
@@ -1382,7 +1398,7 @@
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                 </div>
                 <div>
-                    <div class="stat-val">{{ $statHarian['Sakit'] }} Jam</div>
+                    <div class="stat-val" id="stat-count-sakit">{{ $statHarian['Sakit'] }} Jam</div>
                     <div class="stat-lbl">Sakit</div>
                 </div>
             </div>
@@ -1392,7 +1408,7 @@
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 </div>
                 <div>
-                    <div class="stat-val">{{ $statHarian['Izin'] }} Jam</div>
+                    <div class="stat-val" id="stat-count-izin">{{ $statHarian['Izin'] }} Jam</div>
                     <div class="stat-lbl">Izin</div>
                 </div>
             </div>
@@ -1402,7 +1418,7 @@
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                 </div>
                 <div>
-                    <div class="stat-val">{{ $statHarian['Alpa'] }} Jam</div>
+                    <div class="stat-val" id="stat-count-alpa">{{ $statHarian['Alpa'] }} Jam</div>
                     <div class="stat-lbl">Alpa</div>
                 </div>
             </div>
@@ -1410,19 +1426,39 @@
 
         <!-- TIMELINE PER JAM & MAPEL -->
         <div class="card-main-box">
-            <div class="card-box-header">
+            <div class="card-box-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
                 <div class="card-box-title">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    Jadwal & Presensi Jam Pelajaran Hari {{ $hariIndo }}
+                    Jadwal &amp; Presensi Jam Pelajaran Hari {{ $hariIndo }}
+                </div>
+                <div style="display:flex;align-items:center;gap:8px">
+                    <span id="realtime-indicator" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#16a34a;background:#dcfce7;padding:4px 10px;border-radius:20px;border:1px solid #bbf7d0">
+                        <span style="width:7px;height:7px;border-radius:50%;background:#16a34a;animation:pulseLive 1.5s infinite"></span>
+                        Realtime Live
+                    </span>
+                    <button type="button" onclick="fetchRealtimePresensi()" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:8px;border:1px solid #cbd5e1;background:#fff;cursor:pointer;color:#475569" title="Perbarui Data Sekarang">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                        Sinkron
+                    </button>
                 </div>
             </div>
 
             <div class="jam-list-container">
                 @forelse($presensiPerJam as $p)
-                <div class="jam-row-item">
+                <div class="jam-row-item {{ !empty($p['is_ongoing']) ? 'jam-ongoing-active' : '' }}" data-jam-ke="{{ $p['jam_ke'] }}">
                     <div class="jam-badge-time">
                         <span class="jam-number">Jam Ke-{{ $p['jam_ke'] >= 100 ? $p['jam_ke'] - 100 : $p['jam_ke'] }}</span>
                         <span class="jam-time-span">{{ $p['jam_mulai'] }} - {{ $p['jam_selesai'] }} WIB</span>
+                        @if(!empty($p['is_ongoing']))
+                            <span class="badge-jam-live" style="margin-top:5px;display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;color:#16a34a;background:#dcfce7;padding:2px 8px;border-radius:12px;width:fit-content;border:1px solid #bbf7d0">
+                                <span style="width:6px;height:6px;border-radius:50%;background:#16a34a;animation:pulseLive 1.2s infinite"></span>
+                                Sedang Berlangsung
+                            </span>
+                        @elseif(!empty($p['is_finished']))
+                            <span style="margin-top:5px;font-size:10.5px;color:#64748b;font-weight:600">Selesai</span>
+                        @else
+                            <span style="margin-top:5px;font-size:10.5px;color:#94a3b8;font-weight:600">Akan Datang</span>
+                        @endif
                     </div>
 
                     <div class="jam-subject-info">
@@ -1684,6 +1720,106 @@
             }
         });
     }
+
+    function fetchRealtimePresensi() {
+        const tanggalInput = document.getElementById('tanggal');
+        const tanggal = tanggalInput ? tanggalInput.value : '{{ $tanggal }}';
+
+        fetch('{{ route("orangtua.realtime") }}?tanggal=' + encodeURIComponent(tanggal), {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status !== 'success' || !data.data) return;
+            const d = data.data;
+
+            // Update Gauge Kehadiran Bulanan
+            const gaugeEl = document.querySelector('.gauge-number');
+            if (gaugeEl && typeof d.pctHadirBulan !== 'undefined') {
+                gaugeEl.textContent = d.pctHadirBulan + '%';
+            }
+
+            // Update Mini Stats Cards
+            if (d.statHarian) {
+                const mapStat = {
+                    'Hadir': '#stat-count-hadir',
+                    'Dispen': '#stat-count-dispen',
+                    'Sakit': '#stat-count-sakit',
+                    'Izin': '#stat-count-izin',
+                    'Alpa': '#stat-count-alpa'
+                };
+                for (const [k, sel] of Object.entries(mapStat)) {
+                    const el = document.querySelector(sel);
+                    if (el && typeof d.statHarian[k] !== 'undefined') {
+                        el.textContent = d.statHarian[k] + ' Jam';
+                    }
+                }
+            }
+
+            // Update List Jam Pelajaran
+            if (Array.isArray(d.presensiPerJam)) {
+                d.presensiPerJam.forEach(p => {
+                    const row = document.querySelector(`.jam-row-item[data-jam-ke="${p.jam_ke}"]`);
+                    if (!row) return;
+
+                    // Update Status Col
+                    const statusCol = row.querySelector('.jam-status-col');
+                    if (statusCol) {
+                        let iconSvg = '';
+                        if (p.status === 'Hadir') {
+                            iconSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
+                        }
+                        statusCol.innerHTML = `
+                            <span class="badge-status ${p.badge_class}">
+                                ${iconSvg}
+                                ${p.status_label}
+                            </span>
+                            ${p.keterangan !== '-' ? `<span class="ket-note">Ket: ${p.keterangan}</span>` : ''}
+                        `;
+                    }
+
+                    // Update Session Badge / State
+                    const timeCol = row.querySelector('.jam-badge-time');
+                    if (timeCol) {
+                        let sessionHtml = '';
+                        if (p.is_ongoing) {
+                            sessionHtml = `
+                                <span class="badge-jam-live" style="margin-top:5px;display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;color:#16a34a;background:#dcfce7;padding:2px 8px;border-radius:12px;width:fit-content;border:1px solid #bbf7d0">
+                                    <span style="width:6px;height:6px;border-radius:50%;background:#16a34a;animation:pulseLive 1.2s infinite"></span>
+                                    Sedang Berlangsung
+                                </span>
+                            `;
+                            row.classList.add('jam-ongoing-active');
+                        } else {
+                            row.classList.remove('jam-ongoing-active');
+                            if (p.is_finished) {
+                                sessionHtml = '<span style="margin-top:5px;font-size:10.5px;color:#64748b;font-weight:600">Selesai</span>';
+                            } else {
+                                sessionHtml = '<span style="margin-top:5px;font-size:10.5px;color:#94a3b8;font-weight:600">Akan Datang</span>';
+                            }
+                        }
+
+                        const oldBadge = timeCol.querySelector('.badge-jam-live') || timeCol.querySelector('span:nth-child(3)');
+                        if (oldBadge) {
+                            oldBadge.outerHTML = sessionHtml;
+                        }
+                    }
+                });
+            }
+        })
+        .catch(err => console.debug('Polling realtime error:', err));
+    }
+
+    // Auto-polling realtime setiap 10 detik
+    setInterval(fetchRealtimePresensi, 10000);
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+            fetchRealtimePresensi();
+        }
+    });
     </script>
 
 </body>

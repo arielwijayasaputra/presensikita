@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Hari;
+use App\Models\JurnalKelas;
 use App\Models\JurnalSiswaTidakHadir;
 use App\Models\Kelas;
 use App\Models\Siswa;
@@ -386,5 +387,116 @@ class AbsensiService
             'pct_label' => $pctHadir >= 90 ? 'Sangat Baik' : ($pctHadir >= 80 ? 'Baik' : ($pctHadir >= 70 ? 'Cukup' : ($totalEvents > 0 ? 'Kurang' : '-'))),
             'siswa' => $siswaRekap,
         ];
+    }
+
+    /**
+     * Sinkronisasi otomatis presensi per jam untuk kelas dan tanggal tertentu.
+     * Aturan:
+     * - Default kehadiran adalah Hadir (H).
+     * - Setiap jam yang sudah berjalan/selesai, jika belum memiliki jurnal sendiri,
+     *   akan otomatis menyimpan presensi sesuai dengan status absensi terakhir pada saat itu.
+     * - Jurnal jam sebelumnya tidak akan tertimpa saat ada perubahan absensi di jam berikutnya.
+     */
+    public function syncPresensiPerJam(int $kelasId, string $tanggal): void
+    {
+        if ($tanggal > now()->toDateString()) {
+            return;
+        }
+
+        $dayNum = date('N', strtotime($tanggal));
+        $dayMap = [
+            1 => 'Senin',
+            2 => 'Selasa',
+            3 => 'Rabu',
+            4 => 'Kamis',
+            5 => 'Jumat',
+            6 => 'Sabtu',
+            7 => 'Minggu',
+        ];
+        $hariIndo = $dayMap[$dayNum] ?? 'Senin';
+
+        $jadwalList = DB::table('jadwal_mengajar')
+            ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
+            ->whereNull('jadwal_mengajar.deleted_at')
+            ->whereNull('jam_pelajaran.deleted_at')
+            ->where('jadwal_mengajar.id_kelas', $kelasId)
+            ->where('jadwal_mengajar.hari', $hariIndo)
+            ->select(
+                'jadwal_mengajar.id_jadwal',
+                'jadwal_mengajar.id_guru',
+                'jam_pelajaran.jam_ke',
+                'jam_pelajaran.jam_mulai',
+                'jam_pelajaran.jam_selesai'
+            )
+            ->orderBy('jam_pelajaran.jam_ke')
+            ->get();
+
+        if ($jadwalList->isEmpty()) {
+            return;
+        }
+
+        $allSiswa = Siswa::where('id_kelas', $kelasId)->where('is_aktif', 1)->get();
+        $totalSiswa = $allSiswa->count();
+        if ($totalSiswa === 0) {
+            return;
+        }
+
+        $isPastDate = ($tanggal < now()->toDateString());
+        $isToday = ($tanggal === now()->toDateString());
+        $nowTime = now()->format('H:i:s');
+
+        // Status berjalan ketidakhadiran siswa (default: kosong -> semua Hadir)
+        $currentTidakHadir = [];
+
+        foreach ($jadwalList as $j) {
+            $isSelesai = $isPastDate || ($isToday && $nowTime >= $j->jam_selesai);
+
+            $jurnal = JurnalKelas::withTrashed()
+                ->where('id_jadwal', $j->id_jadwal)
+                ->whereDate('tanggal', $tanggal)
+                ->first();
+
+            if ($jurnal) {
+                if ($jurnal->trashed()) {
+                    $jurnal->restore();
+                }
+
+                $thRows = JurnalSiswaTidakHadir::where('id_jurnal', $jurnal->id_jurnal)->get();
+                $currentTidakHadir = [];
+                foreach ($thRows as $row) {
+                    $currentTidakHadir[$row->id_siswa] = [
+                        'id_siswa' => $row->id_siswa,
+                        'status' => $row->status,
+                        'keterangan' => $row->keterangan ?? '',
+                    ];
+                }
+            } else {
+                // Jam ini belum memiliki jurnal sendiri.
+                // Jika jam pelajaran sudah selesai, simpan otomatis (ngesv) absen terakhir di jam itu
+                if ($isSelesai) {
+                    $jumlahHadir = max(0, $totalSiswa - count($currentTidakHadir));
+                    $waktuInput = $isToday ? now() : Carbon::parse($tanggal . ' ' . $j->jam_selesai);
+
+                    $newJurnal = JurnalKelas::create([
+                        'id_jadwal' => $j->id_jadwal,
+                        'id_guru' => $j->id_guru,
+                        'tanggal' => $tanggal,
+                        'status_kehadiran_guru' => 'Hadir',
+                        'materi' => 'Pembelajaran Harian',
+                        'jumlah_hadir' => $jumlahHadir,
+                        'waktu_input' => $waktuInput,
+                    ]);
+
+                    foreach ($currentTidakHadir as $th) {
+                        JurnalSiswaTidakHadir::create([
+                            'id_jurnal' => $newJurnal->id_jurnal,
+                            'id_siswa' => $th['id_siswa'],
+                            'status' => $th['status'],
+                            'keterangan' => $th['keterangan'],
+                        ]);
+                    }
+                }
+            }
+        }
     }
 }

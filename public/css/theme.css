@@ -33,23 +33,30 @@
 }
 
 [data-theme="dark"] {
-    --body-bg: #0b1324;
-    --card-bg: #152238;
-    --border: #243552;
-    --border-subtle: #1c2b44;
+    --body-bg: #0b0f19;
+    --card-bg: #151f32;
+    --card-bg-elevated: #1c2842;
+    --border: #263654;
+    --border-subtle: #1a263d;
     --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --green: #4ade80;
+    --yellow: #fbbf24;
+    --blue: #60a5fa;
+    --red: #f87171;
     --green-light: rgba(34, 197, 94, 0.18);
     --yellow-light: rgba(245, 158, 11, 0.18);
     --blue-light: rgba(59, 130, 246, 0.18);
     --red-light: rgba(239, 68, 68, 0.18);
-    --header-bg: #121d33;
-    --sidebar-bg: linear-gradient(160deg, #091122 0%, #0d172e 50%, #091122 100%);
-    --shadow: 0 1px 4px rgba(0,0,0,0.45);
-    --shadow-md: 0 4px 14px rgba(0,0,0,0.6);
-    --input-bg: #0f1a2e;
-    --input-border: #2a3c5a;
+    --purple-light: rgba(168, 85, 247, 0.18);
+    --orange-light: rgba(249, 115, 22, 0.18);
+    --header-bg: #121a2d;
+    --sidebar-bg: linear-gradient(160deg, #090e17 0%, #0f1c36 50%, #090e17 100%);
+    --shadow: 0 1px 4px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.25);
+    --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.5);
+    --input-bg: #0f172a;
+    --input-border: #2d3f62;
 }
 
 body {
@@ -343,20 +350,671 @@ html.theme-transitioning *::after {
 
 /* ── SWEETALERT2 DARK OVERRIDE ──────────────────────────────────────────── */
 [data-theme="dark"] .swal2-popup {
-    background: #152238 !important;
-    color: #f8fafc !important;
-    border: 1px solid #243552 !important;
-    box-shadow: 0 16px 40px rgba(0,0,0,0.6) !important;
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.7) !important;
 }
 [data-theme="dark"] .swal2-title {
-    color: #f8fafc !important;
+    color: #f1f5f9 !important;
+    font-weight: 700 !important;
 }
-[data-theme="dark"] .swal2-html-container {
+[data-theme="dark"] .swal2-html-container,
+[data-theme="dark"] .swal2-content {
+    color: #cbd5e1 !important;
+}
+[data-theme="dark"] .swal2-icon.swal2-warning {
+    border-color: #f59e0b !important;
+    color: #f59e0b !important;
+}
+[data-theme="dark"] .swal2-icon.swal2-error {
+    border-color: #f87171 !important;
+    color: #f87171 !important;
+}
+[data-theme="dark"] .swal2-icon.swal2-success {
+    border-color: #34d399 !important;
+    color: #34d399 !important;
+}
+[data-theme="dark"] .swal2-icon.swal2-info {
+    border-color: #60a5fa !important;
+    color: #60a5fa !important;
+}
+[data-theme="dark"] .swal2-icon-content { color: inherit !important; }
+[data-theme="dark"] .swal2-icon.swal2-question {
+    border-color: #818cf8 !important;
+    color: #818cf8 !important;
+}
+/* Icon circle background (e.g. logout icon) */
+[data-theme="dark"] .swal2-icon-show {
+    background: transparent !important;
+}
+/* Cancel / Deny button */
+[data-theme="dark"] .swal2-cancel,
+[data-theme="dark"] .swal2-deny {
+    background-color: #334155 !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #475569 !important;
+}
+[data-theme="dark"] .swal2-cancel:hover,
+[data-theme="dark"] .swal2-deny:hover {
+    background-color: #475569 !important;
+}
+/* Confirm button stays its own color — just ensure text is readable */
+[data-theme="dark"] .swal2-confirm {
+    color: #ffffff !important;
+}
+/* Footer text if any */
+[data-theme="dark"] .swal2-footer {
+    border-top-color: #334155 !important;
     color: #94a3b8 !important;
 }
 [data-theme="dark"] .swal2-input,
-[data-theme="dark"] .swal2-textarea {
-    background: #0f1a2e !important;
-    border-color: #2a3c5a !important;
+[data-theme="dark"] .swal2-textarea,
+[data-theme="dark"] .swal2-select {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+    color: #f1f5f9 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   GLOBAL HIGH-CONTRAST DARK MODE COMPONENT SUPPORT (ALL ROLES & PAGES)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Headings and primary text */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6,
+[data-theme="dark"] .page-title,
+[data-theme="dark"] .greeting-text h2,
+[data-theme="dark"] .card-title,
+[data-theme="dark"] .school-name,
+[data-theme="dark"] .stat-value,
+[data-theme="dark"] .user-name {
     color: #f8fafc !important;
+}
+
+[data-theme="dark"] .page-subtitle,
+[data-theme="dark"] .greeting-text p,
+[data-theme="dark"] .school-year,
+[data-theme="dark"] .stat-label,
+[data-theme="dark"] .stat-sub,
+[data-theme="dark"] .stat-pct,
+[data-theme="dark"] .legend-item,
+[data-theme="dark"] .class-label,
+[data-theme="dark"] .form-label,
+[data-theme="dark"] .filter-group label {
+    color: #cbd5e1 !important;
+}
+
+/* Comprehensive Cards Overrides (Overrides inline style="background:#fff" etc.) */
+[data-theme="dark"] .card,
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .table-card,
+[data-theme="dark"] .jurnal-card,
+[data-theme="dark"] .laporan-stat,
+[data-theme="dark"] .guru-summary-card,
+[data-theme="dark"] .siswa-summary-card,
+[data-theme="dark"] .kelas-summary-card,
+[data-theme="dark"] .jurusan-summary-card,
+[data-theme="dark"] .mapel-summary-card,
+[data-theme="dark"] .riwayat-summary-card,
+[data-theme="dark"] .jam-summary-card,
+[data-theme="dark"] .student-hero-card,
+[data-theme="dark"] .dispen-tracker-card,
+[data-theme="dark"] .card-main-box {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+    color: var(--text-primary) !important;
+    box-shadow: var(--shadow) !important;
+}
+
+/* Overriding inline white containers */
+[data-theme="dark"] div[style*="background:#fff"],
+[data-theme="dark"] div[style*="background: #fff"],
+[data-theme="dark"] div[style*="background: white"],
+[data-theme="dark"] div[style*="background:#ffffff"],
+[data-theme="dark"] div[style*="background: #ffffff"] {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Soft-tinted icon badges and boxes in dark mode */
+[data-theme="dark"] div[style*="background:#fff7ed"],
+[data-theme="dark"] div[style*="background: #fff7ed"],
+[data-theme="dark"] .stat-icon.orange,
+[data-theme="dark"] .activity-icon.orange {
+    background: rgba(249, 115, 22, 0.18) !important;
+    color: #fb923c !important;
+    border: 1px solid rgba(249, 115, 22, 0.35) !important;
+}
+
+[data-theme="dark"] div[style*="background:#fff1f2"],
+[data-theme="dark"] div[style*="background: #fff1f2"],
+[data-theme="dark"] .stat-icon.red,
+[data-theme="dark"] .activity-icon.red {
+    background: rgba(239, 68, 68, 0.18) !important;
+    color: #f87171 !important;
+    border: 1px solid rgba(239, 68, 68, 0.35) !important;
+}
+
+[data-theme="dark"] div[style*="background:#fffbeb"],
+[data-theme="dark"] div[style*="background: #fffbeb"],
+[data-theme="dark"] .stat-icon.yellow,
+[data-theme="dark"] .activity-icon.yellow {
+    background: rgba(245, 158, 11, 0.18) !important;
+    color: #fbbf24 !important;
+    border: 1px solid rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="dark"] div[style*="background:#eff6ff"],
+[data-theme="dark"] div[style*="background: #eff6ff"],
+[data-theme="dark"] .stat-icon.blue,
+[data-theme="dark"] .activity-icon.blue {
+    background: rgba(59, 130, 246, 0.18) !important;
+    color: #60a5fa !important;
+    border: 1px solid rgba(59, 130, 246, 0.35) !important;
+}
+
+[data-theme="dark"] div[style*="background:#f0fdf4"],
+[data-theme="dark"] div[style*="background: #f0fdf4"],
+[data-theme="dark"] .stat-icon.green,
+[data-theme="dark"] .activity-icon.green {
+    background: rgba(34, 197, 94, 0.18) !important;
+    color: #4ade80 !important;
+    border: 1px solid rgba(34, 197, 94, 0.35) !important;
+}
+
+[data-theme="dark"] div[style*="background:#ede9fe"],
+[data-theme="dark"] div[style*="background: #ede9fe"],
+[data-theme="dark"] .stat-icon.purple,
+[data-theme="dark"] .activity-icon.purple {
+    background: rgba(168, 85, 247, 0.18) !important;
+    color: #c084fc !important;
+    border: 1px solid rgba(168, 85, 247, 0.35) !important;
+}
+
+[data-theme="dark"] div[style*="background:#e0f2fe"],
+[data-theme="dark"] div[style*="background: #e0f2fe"],
+[data-theme="dark"] .stat-icon.cyan,
+[data-theme="dark"] .activity-icon.cyan {
+    background: rgba(14, 165, 233, 0.18) !important;
+    color: #38bdf8 !important;
+    border: 1px solid rgba(14, 165, 233, 0.35) !important;
+}
+
+/* Tables & Data Grids */
+[data-theme="dark"] table,
+[data-theme="dark"] .data-table,
+[data-theme="dark"] .custom-table {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] table thead tr,
+[data-theme="dark"] .data-table th,
+[data-theme="dark"] .custom-table th,
+[data-theme="dark"] .table-card table thead th {
+    background: #111a2d !important;
+    color: #cbd5e1 !important;
+    border-bottom: 2px solid var(--border) !important;
+}
+
+[data-theme="dark"] table tbody td,
+[data-theme="dark"] .data-table td,
+[data-theme="dark"] .custom-table td,
+[data-theme="dark"] .table-card table tbody td {
+    border-bottom: 1px solid var(--border-subtle) !important;
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] table tbody tr:hover,
+[data-theme="dark"] .data-table tbody tr:hover,
+[data-theme="dark"] .custom-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.04) !important;
+}
+
+[data-theme="dark"] .table-footer {
+    background: #111a2d !important;
+    border-top: 1px solid var(--border) !important;
+    color: #cbd5e1 !important;
+}
+
+/* Filter Bars, Search Rows, and Form Inputs */
+[data-theme="dark"] .filter-bar,
+[data-theme="dark"] .tandai-row,
+[data-theme="dark"] form[style*="background:#fff"],
+[data-theme="dark"] form[style*="background: #fff"] {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+    box-shadow: var(--shadow) !important;
+}
+
+[data-theme="dark"] .filter-input,
+[data-theme="dark"] .filter-select,
+[data-theme="dark"] .search-input,
+[data-theme="dark"] .form-input,
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .form-textarea,
+[data-theme="dark"] input[type="text"],
+[data-theme="dark"] input[type="date"],
+[data-theme="dark"] input[type="search"],
+[data-theme="dark"] input[type="number"],
+[data-theme="dark"] input[type="password"],
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+    background-color: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .filter-input:focus,
+[data-theme="dark"] .filter-select:focus,
+[data-theme="dark"] .search-input:focus,
+[data-theme="dark"] .form-input:focus,
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus,
+[data-theme="dark"] .form-textarea:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+    color: #64748b !important;
+}
+
+/* Buttons in Filter Bars */
+[data-theme="dark"] .btn-tandai.green {
+    background: rgba(34, 197, 94, 0.2) !important;
+    border-color: rgba(34, 197, 94, 0.4) !important;
+    color: #4ade80 !important;
+}
+[data-theme="dark"] .btn-tandai.yellow {
+    background: rgba(245, 158, 11, 0.2) !important;
+    border-color: rgba(245, 158, 11, 0.4) !important;
+    color: #fbbf24 !important;
+}
+[data-theme="dark"] .btn-tandai.blue {
+    background: rgba(59, 130, 246, 0.2) !important;
+    border-color: rgba(59, 130, 246, 0.4) !important;
+    color: #60a5fa !important;
+}
+[data-theme="dark"] .btn-tandai.red {
+    background: rgba(239, 68, 68, 0.2) !important;
+    border-color: rgba(239, 68, 68, 0.4) !important;
+    color: #f87171 !important;
+}
+
+/* Rekap items */
+[data-theme="dark"] .rekap-item.green {
+    background: rgba(34, 197, 94, 0.2) !important;
+    color: #4ade80 !important;
+}
+[data-theme="dark"] .rekap-item.yellow {
+    background: rgba(245, 158, 11, 0.2) !important;
+    color: #fbbf24 !important;
+}
+[data-theme="dark"] .rekap-item.blue {
+    background: rgba(59, 130, 246, 0.2) !important;
+    color: #60a5fa !important;
+}
+[data-theme="dark"] .rekap-item.red {
+    background: rgba(239, 68, 68, 0.2) !important;
+    color: #f87171 !important;
+}
+
+/* Dropdowns & Modals */
+[data-theme="dark"] #dispen-siswa-dropdown,
+[data-theme="dark"] #absensi-siswa-dropdown,
+[data-theme="dark"] #izin-guru-dropdown,
+[data-theme="dark"] .gp-sd-panel,
+[data-theme="dark"] .modal-content,
+[data-theme="dark"] .custom-modal-box {
+    background: #182338 !important;
+    border: 1px solid #2e4063 !important;
+    color: #f8fafc !important;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="dark"] .modal-header,
+[data-theme="dark"] .card-box-header {
+    border-bottom: 1px solid var(--border) !important;
+}
+
+[data-theme="dark"] .modal-footer {
+    border-top: 1px solid var(--border) !important;
+}
+
+/* Progress bars and rings */
+[data-theme="dark"] .pct-bar,
+[data-theme="dark"] .class-bar-bg {
+    background: #1a273f !important;
+}
+[data-theme="dark"] .laporan-ring-bg {
+    stroke: #263654 !important;
+}
+
+/* Top Navbar (Portal Orang Tua) */
+[data-theme="dark"] .top-navbar {
+    background: #121a2d !important;
+    border-bottom: 1px solid var(--border) !important;
+}
+[data-theme="dark"] .school-badge {
+    background: #182338 !important;
+    border: 1px solid var(--border) !important;
+    color: #cbd5e1 !important;
+}
+
+/* ── GURU PIKET — Alert banner dark override ── */
+[data-theme="dark"] .alert-piket {
+    background: linear-gradient(135deg, rgba(251,146,60,0.12), rgba(234,88,12,0.07)) !important;
+    border-color: rgba(251,146,60,0.35) !important;
+}
+[data-theme="dark"] .alert-piket .alert-text p {
+    color: #fb923c !important;
+    font-weight: 700;
+}
+[data-theme="dark"] .alert-piket .alert-text span {
+    color: #cbd5e1 !important;
+}
+
+/* ── ABSENSI HARIAN ADMIN — table header & badge dark override ── */
+[data-theme="dark"] .absensi-table-header {
+    background: #0f172a !important;
+    border-bottom-color: var(--border) !important;
+}
+[data-theme="dark"] .absensi-table-header .rekap-label {
+    color: #94a3b8 !important;
+}
+[data-theme="dark"] .badge-wewenang {
+    background: rgba(37,99,235,0.15) !important;
+    color: #93c5fd !important;
+    border-color: rgba(37,99,235,0.3) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   COMPREHENSIVE TEXT-CONTRAST FIXES — ensures no text blends with dark bg
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Rekap items (Hadir/Sakit/Izin/Alpa chips) */
+[data-theme="dark"] .rekap-item.green {
+    background: rgba(22,163,74,0.15) !important;
+    color: #4ade80 !important;
+}
+[data-theme="dark"] .rekap-item.yellow {
+    background: rgba(217,119,6,0.15) !important;
+    color: #fbbf24 !important;
+}
+[data-theme="dark"] .rekap-item.blue {
+    background: rgba(37,99,235,0.15) !important;
+    color: #60a5fa !important;
+}
+[data-theme="dark"] .rekap-item.red {
+    background: rgba(220,38,38,0.15) !important;
+    color: #f87171 !important;
+}
+[data-theme="dark"] .rekap-item strong { color: inherit !important; }
+
+/* Table headers with hardcoded light background */
+[data-theme="dark"] .table-header {
+    background: #0f172a !important;
+    border-bottom-color: var(--border) !important;
+}
+[data-theme="dark"] .rekap-label { color: #94a3b8 !important; }
+
+/* Laporan pagination buttons */
+[data-theme="dark"] .laporan-page-btn {
+    background: #1a2740 !important;
+    border-color: var(--border) !important;
+    color: #cbd5e1 !important;
+}
+[data-theme="dark"] .laporan-page-btn:hover:not(:disabled) {
+    background: #243554 !important;
+    color: #f1f5f9 !important;
+}
+[data-theme="dark"] .laporan-page-btn.active {
+    background: #2563eb !important;
+    border-color: #2563eb !important;
+    color: #fff !important;
+}
+[data-theme="dark"] .laporan-page-info { color: #94a3b8 !important; }
+
+/* Laporan table subheader */
+[data-theme="dark"] .laporan-subhead th {
+    background: #111a2d !important;
+    color: #94a3b8 !important;
+    border-bottom-color: var(--border) !important;
+}
+
+/* Laporan ring chart */
+[data-theme="dark"] .laporan-ring-bg { stroke: #243554 !important; }
+[data-theme="dark"] .laporan-ring-text strong { color: #f1f5f9 !important; }
+[data-theme="dark"] .laporan-ring-text span { color: #94a3b8 !important; }
+
+/* btn-secondary (white bg on dark) */
+[data-theme="dark"] .btn-secondary {
+    background: #1a2740 !important;
+    color: #f1f5f9 !important;
+    border-color: var(--border) !important;
+}
+[data-theme="dark"] .btn-secondary:hover {
+    background: #243554 !important;
+}
+
+/* Page title/subtitle with hardcoded inline colors */
+[data-theme="dark"] .page-title { color: #f1f5f9 !important; }
+[data-theme="dark"] .page-subtitle { color: #94a3b8 !important; }
+
+/* Filter hint bar */
+[data-theme="dark"] .filter-hint { color: #94a3b8 !important; }
+[data-theme="dark"] .filter-hint-info {
+    background: rgba(37,99,235,0.08) !important;
+    border-color: rgba(37,99,235,0.2) !important;
+    color: #93c5fd !important;
+}
+
+/* Data-table text reinforcement */
+[data-theme="dark"] .data-table td { color: #f1f5f9 !important; }
+[data-theme="dark"] .data-table th { color: #94a3b8 !important; }
+
+/* Stat icon pastel backgrounds */
+[data-theme="dark"] div[style*="background:#fff7ed"],
+[data-theme="dark"] div[style*="background: #fff7ed"] {
+    background: rgba(234,88,12,0.15) !important;
+}
+[data-theme="dark"] div[style*="background:#eff6ff"],
+[data-theme="dark"] div[style*="background: #eff6ff"] {
+    background: rgba(37,99,235,0.12) !important;
+    color: #93c5fd !important;
+    border-color: rgba(37,99,235,0.25) !important;
+}
+[data-theme="dark"] div[style*="background:#f0fdf4"],
+[data-theme="dark"] div[style*="background: #f0fdf4"] {
+    background: rgba(22,163,74,0.12) !important;
+}
+[data-theme="dark"] div[style*="background:#fef2f2"],
+[data-theme="dark"] div[style*="background: #fef2f2"] {
+    background: rgba(220,38,38,0.12) !important;
+}
+[data-theme="dark"] div[style*="background:#f8fafc"],
+[data-theme="dark"] div[style*="background: #f8fafc"] {
+    background: #111827 !important;
+}
+
+/* Hardcoded dark text on inline styles */
+[data-theme="dark"] [style*="color:#1e293b"],
+[data-theme="dark"] [style*="color: #1e293b"],
+[data-theme="dark"] [style*="color:#0f172a"],
+[data-theme="dark"] [style*="color: #0f172a"],
+[data-theme="dark"] [style*="color:#334155"],
+[data-theme="dark"] [style*="color: #334155"] {
+    color: #f1f5f9 !important;
+}
+[data-theme="dark"] [style*="color:#64748b"],
+[data-theme="dark"] [style*="color: #64748b"],
+[data-theme="dark"] [style*="color:#475569"],
+[data-theme="dark"] [style*="color: #475569"],
+[data-theme="dark"] [style*="color:#94a3b8"],
+[data-theme="dark"] [style*="color: #94a3b8"] {
+    color: #94a3b8 !important;
+}
+
+/* Additional background-to-dark overrides (covers td/th/span/div/li) */
+[data-theme="dark"] [style*="background:#f8fafc"],
+[data-theme="dark"] [style*="background: #f8fafc"],
+[data-theme="dark"] [style*="background:#f1f5f9"],
+[data-theme="dark"] [style*="background: #f1f5f9"] {
+    background: #1e293b !important;
+    color: var(--text-primary) !important;
+}
+[data-theme="dark"] [style*="background:#ffffff"],
+[data-theme="dark"] [style*="background: #ffffff"],
+[data-theme="dark"] [style*="background:#fff;"],
+[data-theme="dark"] [style*="background: #fff;"],
+[data-theme="dark"] [style*="background:#fff \""],
+[data-theme="dark"] [style*="background: white"] {
+    background: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Hardcoded light bg on inputs (readonly / disabled look) */
+[data-theme="dark"] input[style*="background:#f8fafc"],
+[data-theme="dark"] input[style*="background: #f8fafc"] {
+    background: #1e293b !important;
+    color: #94a3b8 !important;
+    border-color: var(--border) !important;
+}
+
+/* ── GURU PIKET — Day-card & divider dark overrides ── */
+
+/* Kartu hari (background:#fafbfc + border:#e2e8f0) */
+[data-theme="dark"] div[style*="background:#fafbfc"],
+[data-theme="dark"] div[style*="background: #fafbfc"] {
+    background: #111827 !important;
+    border-color: var(--border) !important;
+}
+
+/* Border-bottom dalam header kartu (border-bottom:1px solid #f1f5f9) */
+[data-theme="dark"] div[style*="border-bottom:1px solid #f1f5f9"],
+[data-theme="dark"] div[style*="border-bottom: 1px solid #f1f5f9"] {
+    border-bottom-color: var(--border) !important;
+}
+
+/* Divider antar minggu (border-top:2px solid #e2e8f0) */
+[data-theme="dark"] div[style*="border-top:2px solid #e2e8f0"],
+[data-theme="dark"] div[style*="border-top: 2px solid #e2e8f0"] {
+    border-top-color: var(--border) !important;
+}
+
+/* Border pada inline bordered divs (#e2e8f0) */
+[data-theme="dark"] div[style*="border:1px solid #e2e8f0"],
+[data-theme="dark"] div[style*="border: 1px solid #e2e8f0"] {
+    border-color: var(--border) !important;
+}
+
+/* QR code box (background:#fff in modal) */
+[data-theme="dark"] div[style*="background:#fff;border:1px dashed"],
+[data-theme="dark"] div[style*="background:#fff; border"] {
+    background: #111827 !important;
+    border-color: var(--border) !important;
+}
+
+/* Settings box (background:#f8fafc;border:1px solid #e2e8f0) in modal */
+[data-theme="dark"] div[style*="background:#f8fafc;border:1px solid #e2e8f0"],
+[data-theme="dark"] div[style*="background: #f8fafc;border:1px solid #e2e8f0"],
+[data-theme="dark"] div[style*="background:#f8fafc;border: 1px solid #e2e8f0"] {
+    background: #111827 !important;
+    border-color: var(--border) !important;
+}
+
+/* Stroke icons that are hardcoded #64748b */
+[data-theme="dark"] svg[stroke="#64748b"] {
+    stroke: #94a3b8 !important;
+}
+
+/* Border-top/bottom inside modal */
+[data-theme="dark"] div[style*="border-top:1px solid #f1f5f9"],
+[data-theme="dark"] div[style*="border-top: 1px solid #f1f5f9"],
+[data-theme="dark"] div[style*="border-bottom:1px solid #f1f5f9"],
+[data-theme="dark"] div[style*="border-bottom: 1px solid #f1f5f9"] {
+    border-color: var(--border) !important;
+}
+
+/* ── JAM PELAJARAN — Swal popup hari checkbox labels ── */
+[data-theme="dark"] label[style*="border:1px solid #e2e8f0"],
+[data-theme="dark"] label[style*="border: 1px solid #e2e8f0"] {
+    border-color: var(--border) !important;
+    color: #cbd5e1 !important;
+}
+
+/* Tr rows with #fff7ed background (Istirahat rows) */
+[data-theme="dark"] tr[style*="background:#fff7ed"],
+[data-theme="dark"] tr[style*="background: #fff7ed"] {
+    background: rgba(234,88,12,0.1) !important;
+}
+[data-theme="dark"] tr[style*="background:#fff7ed"] td,
+[data-theme="dark"] tr[style*="background: #fff7ed"] td {
+    color: #fb923c !important;
+}
+
+/* ── JADWAL MENGAJAR & ACTIVE SESSIONS (DARK MODE) ── */
+[data-theme="dark"] tr[style*="background:#f0fdf4"],
+[data-theme="dark"] tr[style*="background: #f0fdf4"],
+[data-theme="dark"] .jadwal-row-item.is-sedang {
+    background: rgba(34, 197, 94, 0.12) !important;
+}
+[data-theme="dark"] .jadwal-row-item.is-sedang td {
+    color: #f1f5f9 !important;
+}
+[data-theme="dark"] .jadwal-row-item.is-sedang strong,
+[data-theme="dark"] strong[style*="color:#1e3a8a"],
+[data-theme="dark"] strong[style*="color: #1e3a8a"] {
+    color: #93c5fd !important;
+}
+[data-theme="dark"] [style*="color:#1e3a8a"],
+[data-theme="dark"] [style*="color: #1e3a8a"] {
+    color: #93c5fd !important;
+}
+
+/* General badges & pills with light blue / green / gray bg */
+[data-theme="dark"] span[style*="background:#eff6ff"],
+[data-theme="dark"] span[style*="background: #eff6ff"],
+[data-theme="dark"] a[style*="background:#eff6ff"],
+[data-theme="dark"] a[style*="background: #eff6ff"] {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border-color: rgba(37, 99, 235, 0.3) !important;
+    color: #93c5fd !important;
+}
+
+[data-theme="dark"] span[style*="background:#f0fdf4"],
+[data-theme="dark"] span[style*="background: #f0fdf4"],
+[data-theme="dark"] a[style*="background:#f0fdf4"],
+[data-theme="dark"] a[style*="background: #f0fdf4"],
+[data-theme="dark"] button[style*="background:#f0fdf4"],
+[data-theme="dark"] button[style*="background: #f0fdf4"] {
+    background: rgba(34, 197, 94, 0.15) !important;
+    border-color: rgba(34, 197, 94, 0.3) !important;
+    color: #4ade80 !important;
+}
+
+[data-theme="dark"] span[style*="background:#f1f5f9"],
+[data-theme="dark"] span[style*="background: #f1f5f9"],
+[data-theme="dark"] .badge[style*="background:#f1f5f9"],
+[data-theme="dark"] .badge[style*="background: #f1f5f9"] {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: var(--border) !important;
+    color: #cbd5e1 !important;
+}
+
+/* Disabled buttons in tables */
+[data-theme="dark"] .btn-disabled-jurnal,
+[data-theme="dark"] button:disabled[style*="background:#e2e8f0"],
+[data-theme="dark"] button[style*="background:#e2e8f0"][disabled] {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #64748b !important;
 }

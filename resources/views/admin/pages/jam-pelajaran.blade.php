@@ -19,29 +19,34 @@
                 <table class="data-table" style="min-width:520px">
                     <thead><tr><th>Jam Ke-</th><th>Mulai</th><th>Selesai</th><th>Aksi</th></tr></thead>
                     <tbody>
+                        @php $shownBreak = []; @endphp
                         @forelse($allJamPelajaran as $jamItem)
-                            @if((int) $jamItem->jam_ke === 5)
+                            @if((int) $jamItem->jam_ke === 5 && !in_array('ist1_weekday', $shownBreak))
+                                @php $shownBreak[] = 'ist1_weekday'; @endphp
                                 <tr class="jam-row jam-break-row" data-day="all-weekday" style="background:#fff7ed">
                                     <td><strong>Istirahat 1</strong></td>
                                     <td>{{ $istirahat1Mulai ?? '09:40' }}</td>
                                     <td>{{ $istirahat1Selesai ?? '10:00' }}</td>
                                     <td><button type="button" class="jam-edit-btn" aria-label="Ubah waktu Istirahat 1" title="Ubah waktu" onclick="ubahWaktuJam('istirahat', 'weekday', 1, 'Istirahat 1', '{{ $istirahat1Mulai ?? '09:40' }}', '{{ $istirahat1Selesai ?? '10:00' }}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button></td>
                                 </tr>
-                            @elseif((int) $jamItem->jam_ke === 8)
+                            @elseif((int) $jamItem->jam_ke === 8 && !in_array('ist2_weekday', $shownBreak))
+                                @php $shownBreak[] = 'ist2_weekday'; @endphp
                                 <tr class="jam-row jam-break-row" data-day="all-weekday" style="background:#fff7ed">
                                     <td><strong>Istirahat 2</strong></td>
                                     <td>{{ $istirahat2Mulai ?? '12:00' }}</td>
                                     <td>{{ $istirahat2Selesai ?? '13:00' }}</td>
                                     <td><button type="button" class="jam-edit-btn" aria-label="Ubah waktu Istirahat 2" title="Ubah waktu" onclick="ubahWaktuJam('istirahat', 'weekday', 2, 'Istirahat 2', '{{ $istirahat2Mulai ?? '12:00' }}', '{{ $istirahat2Selesai ?? '13:00' }}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button></td>
                                 </tr>
-                            @elseif((int) $jamItem->jam_ke === 106)
+                            @elseif((int) $jamItem->jam_ke === 106 && !in_array('ist1_jumat', $shownBreak))
+                                @php $shownBreak[] = 'ist1_jumat'; @endphp
                                 <tr class="jam-row jam-break-row" data-day="Jumat" style="background:#fff7ed">
                                     <td><strong>Istirahat 1</strong></td>
                                     <td>{{ $istirahatJumat1Mulai ?? '09:00' }}</td>
                                     <td>{{ $istirahatJumat1Selesai ?? '09:50' }}</td>
                                     <td><button type="button" class="jam-edit-btn" aria-label="Ubah waktu Istirahat 1 Jumat" title="Ubah waktu" onclick="ubahWaktuJam('istirahat', 'friday', 1, 'Istirahat 1 Jumat', '{{ $istirahatJumat1Mulai ?? '09:00' }}', '{{ $istirahatJumat1Selesai ?? '09:50' }}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button></td>
                                 </tr>
-                            @elseif((int) $jamItem->jam_ke === 109)
+                            @elseif((int) $jamItem->jam_ke === 109 && !in_array('ist2_jumat', $shownBreak))
+                                @php $shownBreak[] = 'ist2_jumat'; @endphp
                                 <tr class="jam-row jam-break-row" data-day="Jumat" style="background:#fff7ed">
                                     <td><strong>Istirahat 2</strong></td>
                                     <td>{{ $istirahatJumat2Mulai ?? '11:20' }}</td>
@@ -58,6 +63,7 @@
                         @empty
                             <tr><td colspan="4" style="text-align:center;color:#64748b;padding:24px">Belum ada data jam pelajaran.</td></tr>
                         @endforelse
+
                     </tbody>
                 </table>
             </div>
@@ -75,6 +81,31 @@
 .jam-popup-field input:focus { outline:2px solid #bfdbfe; border-color:#2563eb; }
 .jam-popup-confirm { border:0; border-radius:8px; background:#2563eb; color:#fff; padding:10px 16px; font-weight:700; cursor:pointer; }
 .jam-popup-cancel { border:1px solid #cbd5e1; border-radius:8px; background:#fff; color:#475569; padding:10px 16px; font-weight:700; cursor:pointer; }
+
+/* Dark mode overrides */
+[data-theme="dark"] .jam-break-row { background: rgba(234,88,12,0.1) !important; }
+[data-theme="dark"] .jam-break-row td { color: #fb923c !important; }
+[data-theme="dark"] .jam-break-row td strong { color: #fb923c !important; }
+[data-theme="dark"] .jam-edit-btn {
+    background: rgba(37,99,235,0.15) !important;
+    border-color: rgba(37,99,235,0.3) !important;
+    color: #60a5fa !important;
+}
+[data-theme="dark"] .jam-edit-btn:hover {
+    background: rgba(37,99,235,0.25) !important;
+    color: #93c5fd !important;
+}
+[data-theme="dark"] .jam-popup-cancel {
+    background: #1a2740 !important;
+    border-color: #334155 !important;
+    color: #cbd5e1 !important;
+}
+[data-theme="dark"] .jam-popup-field label { color: #94a3b8 !important; }
+[data-theme="dark"] .jam-popup-field input {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f1f5f9 !important;
+}
 </style>
 
 <script>

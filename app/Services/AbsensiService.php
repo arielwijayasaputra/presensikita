@@ -7,6 +7,7 @@ use App\Models\JurnalKelas;
 use App\Models\JurnalSiswaTidakHadir;
 use App\Models\Kelas;
 use App\Models\Siswa;
+use App\Models\TahunAjaran;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -415,12 +416,17 @@ class AbsensiService
         ];
         $hariIndo = $dayMap[$dayNum] ?? 'Senin';
 
+        $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
+
         $jadwalList = DB::table('jadwal_mengajar')
             ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
+            ->join('mapel', 'jadwal_mengajar.id_mapel', '=', 'mapel.id_mapel')
             ->whereNull('jadwal_mengajar.deleted_at')
             ->whereNull('jam_pelajaran.deleted_at')
+            ->whereNull('mapel.deleted_at')
             ->where('jadwal_mengajar.id_kelas', $kelasId)
             ->where('jadwal_mengajar.hari', $hariIndo)
+            ->when($tahunAjaran, fn ($query) => $query->where('jadwal_mengajar.id_tahun_ajaran', $tahunAjaran->id_tahun_ajaran))
             ->select(
                 'jadwal_mengajar.id_jadwal',
                 'jadwal_mengajar.id_guru',

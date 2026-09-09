@@ -108,13 +108,18 @@ class AbsensiController extends Controller
         $jadwalList = DB::table('jadwal_mengajar')
             ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
             ->join('mapel', 'jadwal_mengajar.id_mapel', '=', 'mapel.id_mapel')
-            ->join('guru', 'jadwal_mengajar.id_guru', '=', 'guru.id_guru')
+            // Jadwal tetap perlu terlihat oleh orang tua walau guru belum ditugaskan.
+            // Kegiatan seperti upacara memang tidak memiliki guru (id_guru bernilai null).
+            ->leftJoin('guru', function ($join) {
+                $join->on('jadwal_mengajar.id_guru', '=', 'guru.id_guru')
+                    ->whereNull('guru.deleted_at');
+            })
             ->whereNull('jadwal_mengajar.deleted_at')
             ->whereNull('jam_pelajaran.deleted_at')
             ->whereNull('mapel.deleted_at')
-            ->whereNull('guru.deleted_at')
             ->where('jadwal_mengajar.id_kelas', $siswa->id_kelas)
             ->where('jadwal_mengajar.hari', $hariIndo)
+            ->when($tahunAjaran, fn ($query) => $query->where('jadwal_mengajar.id_tahun_ajaran', $tahunAjaran->id_tahun_ajaran))
             ->select(
                 'jadwal_mengajar.id_jadwal',
                 'jam_pelajaran.jam_ke',
@@ -122,7 +127,7 @@ class AbsensiController extends Controller
                 'jam_pelajaran.jam_selesai',
                 'mapel.kode_mapel',
                 'mapel.nama_mapel',
-                'guru.nama_guru'
+                DB::raw("COALESCE(guru.nama_guru, 'Belum ditugaskan') as nama_guru" )
             )
             ->orderBy('jam_pelajaran.jam_ke')
             ->get();

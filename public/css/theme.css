@@ -960,3 +960,61 @@ html.theme-transitioning *::after {
 [data-theme="dark"] tr[style*="background: #fff7ed"] td {
     color: #fb923c !important;
 }
+
+/* ── JADWAL MENGAJAR & ACTIVE SESSIONS (DARK MODE) ── */
+[data-theme="dark"] tr[style*="background:#f0fdf4"],
+[data-theme="dark"] tr[style*="background: #f0fdf4"],
+[data-theme="dark"] .jadwal-row-item.is-sedang {
+    background: rgba(34, 197, 94, 0.12) !important;
+}
+[data-theme="dark"] .jadwal-row-item.is-sedang td {
+    color: #f1f5f9 !important;
+}
+[data-theme="dark"] .jadwal-row-item.is-sedang strong,
+[data-theme="dark"] strong[style*="color:#1e3a8a"],
+[data-theme="dark"] strong[style*="color: #1e3a8a"] {
+    color: #93c5fd !important;
+}
+[data-theme="dark"] [style*="color:#1e3a8a"],
+[data-theme="dark"] [style*="color: #1e3a8a"] {
+    color: #93c5fd !important;
+}
+
+/* General badges & pills with light blue / green / gray bg */
+[data-theme="dark"] span[style*="background:#eff6ff"],
+[data-theme="dark"] span[style*="background: #eff6ff"],
+[data-theme="dark"] a[style*="background:#eff6ff"],
+[data-theme="dark"] a[style*="background: #eff6ff"] {
+    background: rgba(37, 99, 235, 0.15) !important;
+    border-color: rgba(37, 99, 235, 0.3) !important;
+    color: #93c5fd !important;
+}
+
+[data-theme="dark"] span[style*="background:#f0fdf4"],
+[data-theme="dark"] span[style*="background: #f0fdf4"],
+[data-theme="dark"] a[style*="background:#f0fdf4"],
+[data-theme="dark"] a[style*="background: #f0fdf4"],
+[data-theme="dark"] button[style*="background:#f0fdf4"],
+[data-theme="dark"] button[style*="background: #f0fdf4"] {
+    background: rgba(34, 197, 94, 0.15) !important;
+    border-color: rgba(34, 197, 94, 0.3) !important;
+    color: #4ade80 !important;
+}
+
+[data-theme="dark"] span[style*="background:#f1f5f9"],
+[data-theme="dark"] span[style*="background: #f1f5f9"],
+[data-theme="dark"] .badge[style*="background:#f1f5f9"],
+[data-theme="dark"] .badge[style*="background: #f1f5f9"] {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: var(--border) !important;
+    color: #cbd5e1 !important;
+}
+
+/* Disabled buttons in tables */
+[data-theme="dark"] .btn-disabled-jurnal,
+[data-theme="dark"] button:disabled[style*="background:#e2e8f0"],
+[data-theme="dark"] button[style*="background:#e2e8f0"][disabled] {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #64748b !important;
+}

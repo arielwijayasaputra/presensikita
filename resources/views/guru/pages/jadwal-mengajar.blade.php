@@ -109,7 +109,7 @@
                         $isBelum = ($nowStr < $jadwal->jam_mulai);
                         $isSelesai = ($nowStr > $jadwal->jam_selesai);
                     @endphp
-                    <tr class="jadwal-row-item" data-mulai="{{ $jadwal->jam_mulai }}" data-selesai="{{ $jadwal->jam_selesai }}" data-kelas="{{ $jadwal->id_kelas }}" style="{{ $isSedang ? 'background:#f0fdf4;' : '' }}">
+                    <tr class="jadwal-row-item {{ $isSedang ? 'is-sedang' : '' }}" data-mulai="{{ $jadwal->jam_mulai }}" data-selesai="{{ $jadwal->jam_selesai }}" data-kelas="{{ $jadwal->id_kelas }}" style="{{ $isSedang ? 'background:#f0fdf4;' : '' }}">
                         <td style="text-align:center">
                             <span class="badge {{ $isSedang ? 'badge-success' : 'badge-info' }}" style="font-weight:800;font-size:12.5px;padding:4px 10px">
                                 Ke-{{ $jamTampil }}

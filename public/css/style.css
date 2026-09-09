@@ -1129,32 +1129,32 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 [data-theme="dark"] .header {
-    background: #121d33;
-    border-bottom-color: #243552;
+    background: var(--header-bg);
+    border-bottom-color: var(--border);
 }
 [data-theme="dark"] .header-date {
-    background: #152238;
-    border-color: #243552;
-    color: #94a3b8;
+    background: var(--card-bg);
+    border-color: var(--border);
+    color: var(--text-secondary);
 }
 [data-theme="dark"] .notif-btn {
-    color: #94a3b8;
+    color: var(--text-secondary);
 }
 [data-theme="dark"] .notif-btn:hover {
-    background: #152238;
+    background: var(--card-bg);
 }
 [data-theme="dark"] .notif-badge {
-    border-color: #121d33;
+    border-color: var(--header-bg);
 }
 [data-theme="dark"] .user-profile:hover {
-    background: #152238;
+    background: var(--card-bg);
 }
 [data-theme="dark"] .header-user-avatar {
-    border-color: #243552;
+    border-color: var(--border);
 }
 [data-theme="dark"] .alert-card {
     background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.08));
-    border-color: rgba(245, 158, 11, 0.3);
+    border-color: rgba(245, 158, 11, 0.35);
 }
 [data-theme="dark"] .alert-text p {
     color: #fbbf24;
@@ -1168,46 +1168,46 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     color: #f8fafc;
 }
 [data-theme="dark"] .data-table th {
-    background: #101a2c !important;
-    color: #94a3b8;
-    border-bottom: 1px solid #243552;
+    background: #111a2d !important;
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border);
 }
 [data-theme="dark"] .data-table td {
-    border-bottom: 1px solid #1c2b44;
+    border-bottom: 1px solid var(--border-subtle);
     color: #f8fafc;
 }
 [data-theme="dark"] .data-table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.04);
 }
 [data-theme="dark"] .table-card {
-    background: #152238;
-    border: 1px solid #243552;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
 }
 [data-theme="dark"] .table-card table thead th {
-    background: #101a2c;
-    color: #94a3b8;
-    border-bottom: 1px solid #243552;
+    background: #111a2d;
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border);
 }
 [data-theme="dark"] .table-card table tbody td {
-    border-bottom: 1px solid #1c2b44;
+    border-bottom: 1px solid var(--border-subtle);
     color: #f8fafc;
 }
 [data-theme="dark"] .table-footer {
-    background: #101a2c;
-    border-top: 1px solid #243552;
+    background: #111a2d;
+    border-top: 1px solid var(--border);
 }
 
 /* Filter & Inputs */
 [data-theme="dark"] .filter-bar {
-    background: #152238;
-    border-color: #243552;
+    background: var(--card-bg);
+    border-color: var(--border);
 }
 [data-theme="dark"] .filter-input,
 [data-theme="dark"] .filter-select,
 [data-theme="dark"] .search-input,
 [data-theme="dark"] .form-input {
-    background: #0f1a2e !important;
-    border-color: #2a3c5a !important;
+    background: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
     color: #f8fafc !important;
 }
 [data-theme="dark"] .filter-input:focus,
@@ -1215,42 +1215,42 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
 [data-theme="dark"] .search-input:focus,
 [data-theme="dark"] .form-input:focus {
     border-color: #3b82f6 !important;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
 }
 
 /* Modals & Popups */
 [data-theme="dark"] .modal-content,
 [data-theme="dark"] .custom-modal-box {
-    background: #152238 !important;
-    border: 1px solid #243552 !important;
+    background: #182338 !important;
+    border: 1px solid #2e4063 !important;
     color: #f8fafc !important;
 }
 [data-theme="dark"] .modal-header {
-    border-bottom: 1px solid #243552 !important;
+    border-bottom: 1px solid var(--border) !important;
 }
 [data-theme="dark"] .modal-footer {
-    border-top: 1px solid #243552 !important;
+    border-top: 1px solid var(--border) !important;
 }
 
 /* Searchable Dropdowns (Guru Piket & SDM) */
 [data-theme="dark"] .gp-sd-panel {
-    background: #152238;
-    border-color: #243552;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    background: #182338;
+    border-color: #2e4063;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
 }
 [data-theme="dark"] .gp-sd-search {
-    background: #0f1a2e;
-    border-color: #243552;
+    background: var(--input-bg);
+    border-color: var(--input-border);
     color: #f8fafc;
 }
 [data-theme="dark"] .gp-sd-option {
-    background: #152238;
-    color: #cbd5e1;
-    border-color: #1c2b44;
+    background: #182338;
+    color: var(--text-secondary);
+    border-color: var(--border-subtle);
 }
 [data-theme="dark"] .gp-sd-option:hover,
 [data-theme="dark"] .gp-sd-option.active {
-    background: #1c2b44;
+    background: #243554;
     color: #fff;
 }
 [data-theme="dark"] .gp-sd-option.selected {
@@ -1260,18 +1260,18 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
 
 /* Guru Jurnal & Absensi elements */
 [data-theme="dark"] .jurnal-card {
-    background: #152238;
-    border-color: #243552;
+    background: var(--card-bg);
+    border-color: var(--border);
 }
 [data-theme="dark"] .absensi-toolbar {
-    border-bottom-color: #243552 !important;
+    border-bottom-color: var(--border) !important;
 }
 [data-theme="dark"] .rekap-summary-bar {
-    background: #101a2c;
-    border-top-color: #243552 !important;
+    background: #111a2d;
+    border-top-color: var(--border) !important;
 }
 [data-theme="dark"] hr {
-    border-top-color: #243552 !important;
+    border-top-color: var(--border) !important;
 }
 
 /* Pagination buttons (Mapel, Siswa, Kelas, Alumni) */
@@ -1280,16 +1280,16 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
 [data-theme="dark"] .kelas-page-btn,
 [data-theme="dark"] .guru-page-btn,
 [data-theme="dark"] .alumni-page-btn {
-    background: #0f1a2e;
-    border-color: #2a3c5a;
-    color: #94a3b8;
+    background: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--text-secondary);
 }
 [data-theme="dark"] .mapel-page-btn:hover:not(:disabled),
 [data-theme="dark"] .siswa-page-btn:hover:not(:disabled),
 [data-theme="dark"] .kelas-page-btn:hover:not(:disabled),
 [data-theme="dark"] .guru-page-btn:hover:not(:disabled),
 [data-theme="dark"] .alumni-page-btn:hover:not(:disabled) {
-    background: #1c2b44;
+    background: #243554;
     color: #fff;
 }
 [data-theme="dark"] .mapel-page-btn.active,
@@ -1303,24 +1303,24 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
 }
 
 [data-theme="dark"] .absensi-card .absensi-status-btn {
-    background: #0f1a2e;
-    border-color: #2a3c5a;
-    color: #94a3b8;
+    background: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--text-secondary);
 }
 [data-theme="dark"] .absensi-card .absensi-status-btn.selected {
-    background: #1c2b44;
+    background: #243554;
     color: #fff;
 }
 [data-theme="dark"] .absensi-card .absensi-ket-input {
-    background: #0f1a2e !important;
-    border-color: #2a3c5a !important;
+    background: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
     color: #f8fafc !important;
 }
 
 /* Notice banners */
 [data-theme="dark"] .admin-mobile-notice div {
     background: rgba(245, 158, 11, 0.15) !important;
-    border-bottom-color: rgba(245, 158, 11, 0.3) !important;
+    border-bottom-color: rgba(245, 158, 11, 0.35) !important;
     color: #fbbf24 !important;
 }
 

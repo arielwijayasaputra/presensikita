@@ -1841,7 +1841,15 @@
             const mins = String(now.getMinutes()).padStart(2, '0');
             const secs = String(now.getSeconds()).padStart(2, '0');
             const clockText = `${hrs}:${mins}:${secs} WIB`;
-            
+
+            const dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            const dayName = dayNames[now.getDay()];
+            const date = now.getDate();
+            const monthName = monthNames[now.getMonth()];
+            const year = now.getFullYear();
+            const dateText = `${dayName}, ${date} ${monthName} ${year}`;
+
             const el = document.getElementById('live-school-clock');
             if (el) {
                 el.textContent = `SMKN 1 Boyolangu • ${clockText}`;
@@ -1849,7 +1857,7 @@
 
             const badgeDesc = document.getElementById('live-realtime-badge-desc');
             if (badgeDesc) {
-                badgeDesc.textContent = `${clockText} • Tepat Waktu ✨`;
+                badgeDesc.textContent = `${dateText} • Tepat Waktu ✨`;
             }
         }
         updateSchoolClock();

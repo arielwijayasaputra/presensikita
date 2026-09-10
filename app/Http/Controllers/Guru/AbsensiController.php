@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Guru;
 
 use App\Http\Controllers\Controller;
+use App\Models\DispenSiswa;
 use App\Models\Guru;
 use App\Models\Hari;
 use App\Models\IzinGuru;
@@ -357,21 +358,42 @@ class AbsensiController extends Controller
                 ->keyBy('id_siswa');
         }
 
-        $siswa = Siswa::where('id_kelas', $kelasId)
+        $siswaList = Siswa::where('id_kelas', $kelasId)
             ->where('is_aktif', 1)
             ->orderBy('nama_siswa')
-            ->get()
-            ->map(function ($s) use ($tidakHadirMap) {
-                $th = $tidakHadirMap->get($s->id_siswa);
+            ->get();
 
-                return [
-                    'id_siswa' => $s->id_siswa,
-                    'nisn' => $s->nisn,
-                    'nama_siswa' => $s->nama_siswa,
-                    'status' => $th ? $th->status : 'H',
-                    'keterangan' => $th ? ($th->keterangan ?? '') : '',
-                ];
-            });
+        $dispenMap = DispenSiswa::whereIn('id_siswa', $siswaList->pluck('id_siswa'))
+            ->whereDate('tanggal_dispen', $tanggal)
+            ->get()
+            ->keyBy('id_siswa');
+
+        $nowTime = now()->format('H:i:s');
+        $siswa = $siswaList->map(function ($s) use ($tidakHadirMap, $dispenMap, $nowTime) {
+            $th = $tidakHadirMap->get($s->id_siswa);
+            $dp = $dispenMap->get($s->id_siswa);
+
+            $status = $th ? $th->status : 'H';
+            $keterangan = $th ? ($th->keterangan ?? '') : '';
+
+            // Jika belum ada record tidak hadir dari jurnal jam ini tapi siswa ada dispen hari ini
+            if (! $th && $dp) {
+                $wMulai = $dp->waktu_keluar ? $dp->waktu_keluar->format('H:i:s') : ($dp->created_at ? $dp->created_at->format('H:i:s') : '00:00:00');
+                $wSelesai = $dp->waktu_masuk ? $dp->waktu_masuk->format('H:i:s') : '23:59:59';
+                if ($nowTime >= $wMulai && $nowTime < $wSelesai) {
+                    $status = $dp->jenis_absen ?? 'D';
+                    $keterangan = strtoupper($status) . ($dp->alasan ? ': ' . $dp->alasan : '');
+                }
+            }
+
+            return [
+                'id_siswa' => $s->id_siswa,
+                'nisn' => $s->nisn,
+                'nama_siswa' => $s->nama_siswa,
+                'status' => $status,
+                'keterangan' => $keterangan,
+            ];
+        });
 
         return response()->json([
             'status' => 'success',

@@ -48,47 +48,91 @@ class DispenSiswaController extends Controller
 
         try {
             $dispen = DB::transaction(function () use ($data, $siswa, $guruPiket, $fotoSurat) {
-                $jurnal = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
-                    ->where('jadwal_mengajar.id_kelas', $siswa->id_kelas)
-                    ->whereDate('jurnal_kelas.tanggal', $data['tanggal_dispen'])
-                    ->select('jurnal_kelas.*')
-                    ->orderByDesc('jurnal_kelas.waktu_input')
-                    ->first();
+                $nowTime   = now()->format('H:i:s');
+                $dayMap    = [1=>'Senin',2=>'Selasa',3=>'Rabu',4=>'Kamis',5=>'Jumat',6=>'Sabtu',7=>'Minggu'];
+                $hariIndo  = $dayMap[date('N', strtotime($data['tanggal_dispen']))] ?? 'Senin';
+                $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
 
-                if (! $jurnal) {
-                    $idJadwal = DB::table('jadwal_mengajar')->where('id_kelas', $siswa->id_kelas)->value('id_jadwal');
-                    if (! $idJadwal) {
-                        $hari = Hari::getNamaHariFromAbbr(date('D', strtotime($data['tanggal_dispen'])));
-                        $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
-                        abort_if(! $hari || ! $tahunAjaran, 422, 'Jadwal kelas belum tersedia untuk tanggal tersebut.');
-                        $idJadwal = DB::table('jadwal_mengajar')->insertGetId([
-                            'id_guru' => $guruPiket->id_guru,
-                            'id_mapel' => (int) (DB::table('mapel')->min('id_mapel') ?? 1),
-                            'id_kelas' => $siswa->id_kelas,
-                            'id_jam' => (int) (DB::table('jam_pelajaran')->min('id_jam') ?? 1),
-                            'hari' => $hari,
-                            'id_tahun_ajaran' => $tahunAjaran->id_tahun_ajaran,
+                // Cari semua jadwal kelas hari ini yang aktif atau akan datang sejak dispen dibuat
+                $jadwalsHariIni = DB::table('jadwal_mengajar')
+                    ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
+                    ->whereNull('jadwal_mengajar.deleted_at')
+                    ->whereNull('jam_pelajaran.deleted_at')
+                    ->where('jadwal_mengajar.id_kelas', $siswa->id_kelas)
+                    ->where('jadwal_mengajar.hari', $hariIndo)
+                    ->when($tahunAjaran, fn ($q) => $q->where('jadwal_mengajar.id_tahun_ajaran', $tahunAjaran->id_tahun_ajaran))
+                    ->whereTime('jam_pelajaran.jam_selesai', '>', $nowTime)
+                    ->select('jadwal_mengajar.id_jadwal', 'jadwal_mengajar.id_guru', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
+                    ->orderBy('jam_pelajaran.jam_ke')
+                    ->get();
+
+                $jadwalAktif = $jadwalsHariIni->first(fn ($item) => $nowTime >= $item->jam_mulai && $nowTime < $item->jam_selesai) ?? $jadwalsHariIni->first();
+
+                // Dapatkan atau buat jurnal untuk jadwal aktif saat ini
+                if ($jadwalAktif) {
+                    $jurnal = JurnalKelas::where('id_jadwal', $jadwalAktif->id_jadwal)
+                        ->whereDate('tanggal', $data['tanggal_dispen'])
+                        ->first();
+
+                    if (! $jurnal) {
+                        $jurnal = JurnalKelas::create([
+                            'id_jadwal' => $jadwalAktif->id_jadwal,
+                            'id_guru'   => $jadwalAktif->id_guru ?? $guruPiket->id_guru,
+                            'tanggal'   => $data['tanggal_dispen'],
+                            'status_kehadiran_guru' => 'Hadir',
+                            'materi'    => 'Absensi Guru Piket',
+                            'jumlah_hadir' => Siswa::where('id_kelas', $siswa->id_kelas)->where('is_aktif', 1)->count(),
+                            'waktu_input' => now(),
                         ]);
                     }
+                } else {
+                    $jurnal = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
+                        ->where('jadwal_mengajar.id_kelas', $siswa->id_kelas)
+                        ->whereDate('jurnal_kelas.tanggal', $data['tanggal_dispen'])
+                        ->select('jurnal_kelas.*')
+                        ->orderByDesc('jurnal_kelas.waktu_input')
+                        ->first();
+                }
+
+                if (! $jurnal) {
+                    $idJadwal = DB::table('jadwal_mengajar')
+                        ->whereNull('deleted_at')
+                        ->where('id_kelas', $siswa->id_kelas)
+                        ->where('hari', $hariIndo)
+                        ->when($tahunAjaran, fn ($q) => $q->where('id_tahun_ajaran', $tahunAjaran->id_tahun_ajaran))
+                        ->value('id_jadwal');
+
+                    if (! $idJadwal) {
+                        abort(422, 'Jadwal kelas belum tersedia untuk tanggal tersebut.');
+                    }
+
                     $jurnal = JurnalKelas::create([
                         'id_jadwal' => $idJadwal,
-                        'id_guru' => $guruPiket->id_guru,
-                        'tanggal' => $data['tanggal_dispen'],
+                        'id_guru'   => $guruPiket->id_guru,
+                        'tanggal'   => $data['tanggal_dispen'],
                         'status_kehadiran_guru' => 'Hadir',
-                        'materi' => 'Absensi Guru Piket',
+                        'materi'    => 'Absensi Guru Piket',
                         'jumlah_hadir' => Siswa::where('id_kelas', $siswa->id_kelas)->where('is_aktif', 1)->count(),
                         'waktu_input' => now(),
                     ]);
                 }
 
-                $existing = JurnalSiswaTidakHadir::where('id_jurnal', $jurnal->id_jurnal)->where('id_siswa', $siswa->id_siswa)->first();
-                if (! $existing) {
-                    $jurnal->decrement('jumlah_hadir');
+                // Update absensi di semua jurnal yang ada hari ini mulai dari jam dispen
+                $existingJurnals = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
+                    ->where('jadwal_mengajar.id_kelas', $siswa->id_kelas)
+                    ->whereDate('jurnal_kelas.tanggal', $data['tanggal_dispen'])
+                    ->pluck('jurnal_kelas.id_jurnal');
+
+                foreach ($existingJurnals as $jId) {
+                    $existingTh = JurnalSiswaTidakHadir::where('id_jurnal', $jId)->where('id_siswa', $siswa->id_siswa)->first();
+                    if (! $existingTh) {
+                        JurnalKelas::where('id_jurnal', $jId)->decrement('jumlah_hadir');
+                    }
+                    JurnalSiswaTidakHadir::updateOrCreate(
+                        ['id_jurnal' => $jId, 'id_siswa' => $siswa->id_siswa],
+                        ['status' => $data['jenis_absen'], 'keterangan' => strtoupper($data['jenis_absen']).($data['alasan'] ? ': '.$data['alasan'] : '')]
+                    );
                 }
-                JurnalSiswaTidakHadir::updateOrCreate(
-                    ['id_jurnal' => $jurnal->id_jurnal, 'id_siswa' => $siswa->id_siswa],
-                    ['status' => $data['jenis_absen'], 'keterangan' => strtoupper($data['jenis_absen']).($data['alasan'] ? ': '.$data['alasan'] : '')]
-                );
 
                 return DispenSiswa::create(array_merge($data, [
                     'id_guru_piket' => $guruPiket->id_guru,

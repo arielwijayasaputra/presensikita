@@ -238,9 +238,9 @@ function muatAbsensiTersimpan(){
                 if (ket) ket.value = '';
             });
 
-            if (data.jurnal) {
+            if (data.siswa && data.siswa.length > 0) {
                 const map = {};
-                (data.siswa || []).forEach(s => { map[s.id_siswa] = s; });
+                data.siswa.forEach(s => { map[s.id_siswa] = s; });
                 currentSiswaList.forEach(s => {
                     const rec = map[s.id_siswa];
                     if (rec && rec.status && rec.status !== 'H') {
@@ -254,6 +254,13 @@ function muatAbsensiTersimpan(){
                         if (ketCard) ketCard.value = rec.keterangan;
                     }
                 });
+            }
+
+            if (data.jurnal && data.jurnal.materi) {
+                const materiInput = qs('#input-materi', root);
+                if (materiInput && !materiInput.value) {
+                    materiInput.value = data.jurnal.materi;
+                }
             }
 
             updateRekap();

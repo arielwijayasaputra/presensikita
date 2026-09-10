@@ -136,6 +136,11 @@ class AbsensiController extends Controller
         $isToday = ($tanggal === now()->toDateString());
         $nowTime = now()->format('H:i:s');
 
+        // Ambil semua data dispen siswa pada tanggal tersebut
+        $dispenHariIniList = DispenSiswa::where('id_siswa', $siswa->id_siswa)
+            ->whereDate('tanggal_dispen', $tanggal)
+            ->get();
+
         // 3. Ambil Jurnal & Presensi Siswa per Jam Pelajaran pada Tanggal Tersebut
         $presensiPerJam = [];
         $statHarian = ['Hadir' => 0, 'Sakit' => 0, 'Izin' => 0, 'Dispen' => 0, 'Alpa' => 0, 'Menunggu' => 0];
@@ -158,7 +163,40 @@ class AbsensiController extends Controller
             $keterangan = '-';
             $badgeClass = 'badge-success';
 
-            if ($jurnal) {
+            // Cek apakah jam pelajaran ini bertepatan dengan dispen siswa
+            $dispenJamIni = $dispenHariIniList->first(function ($d) use ($j) {
+                $wMulai = $d->waktu_keluar 
+                    ? $d->waktu_keluar->format('H:i:s') 
+                    : ($d->created_at ? $d->created_at->format('H:i:s') : '00:00:00');
+                $wSelesai = $d->waktu_masuk 
+                    ? $d->waktu_masuk->format('H:i:s') 
+                    : '23:59:59';
+                return ($j->jam_selesai > $wMulai && $j->jam_mulai < $wSelesai);
+            });
+
+            if ($dispenJamIni) {
+                // Jam ini bertepatan saat siswa mengambil dispen
+                $alasanText = $dispenJamIni->alasan ? ': ' . $dispenJamIni->alasan : '';
+                if ($dispenJamIni->jenis_absen === 'D') {
+                    $status = 'Dispen';
+                    $statusLabel = 'Dispensasi';
+                    $badgeClass = 'badge-dispen';
+                    $keterangan = 'Dispen' . $alasanText;
+                } elseif ($dispenJamIni->jenis_absen === 'S') {
+                    $status = 'Sakit';
+                    $statusLabel = 'Sakit';
+                    $badgeClass = 'badge-warning';
+                    $keterangan = 'Sakit' . $alasanText;
+                } elseif ($dispenJamIni->jenis_absen === 'I') {
+                    $status = 'Izin';
+                    $statusLabel = 'Izin';
+                    $badgeClass = 'badge-info';
+                    $keterangan = 'Izin' . $alasanText;
+                }
+                if ($jurnal) {
+                    $materi = $jurnal->materi ?? 'Pembelajaran Harian';
+                }
+            } elseif ($jurnal) {
                 // Jam ini memiliki data jurnal tersimpan (guru sudah mengabsen)
                 $materi = $jurnal->materi ?? 'Pembelajaran Harian';
 

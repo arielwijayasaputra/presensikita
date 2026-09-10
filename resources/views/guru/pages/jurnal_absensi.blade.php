@@ -81,6 +81,7 @@
                 <div class="rekap-chip hadir">Hadir: <span id="rekap-hadir">0</span></div>
                 <div class="rekap-chip sakit">Sakit: <span id="rekap-sakit">0</span></div>
                 <div class="rekap-chip izin">Izin: <span id="rekap-izin">0</span></div>
+                <div class="rekap-chip dispen" style="background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;font-weight:700;padding:4px 10px;border-radius:20px;font-size:12px;display:inline-flex;align-items:center;gap:4px">Dispen: <span id="rekap-dispen">0</span></div>
                 <div class="rekap-chip alpa">Alpa: <span id="rekap-alpa">0</span></div>
             </div>
             <button id="btn-submit-jurnal" class="btn-submit-jurnal" onclick="submitAbsensi()" {{ $jadwalMengajarHariIni->isEmpty() ? 'disabled' : '' }}>Simpan Jurnal &amp; Absensi</button>

@@ -67,12 +67,21 @@
         </div>
 
         <div class="card" style="padding:20px; border-left:4px solid #f59e0b">
-            <div style="font-size:12px; font-weight:700; color:#b45309; text-transform:uppercase; letter-spacing:0.5px">Izin / Dispen Bulan Ini</div>
-            @php
-                $totalIzinSakit = ($waliRekapData['sakit'] ?? 0) + ($waliRekapData['izin'] ?? 0);
-            @endphp
-            <div style="font-size:28px; font-weight:800; color:#78350f; margin-top:6px">{{ $totalIzinSakit }}</div>
-            <div style="font-size:12px; color:#f59e0b; margin-top:2px">Kasus Sakit / Izin</div>
+            <div style="font-size:12px; font-weight:700; color:#b45309; text-transform:uppercase; letter-spacing:0.5px">Sakit Bulan Ini</div>
+            <div style="font-size:28px; font-weight:800; color:#78350f; margin-top:6px">{{ $waliRekapData['sakit'] ?? 0 }}</div>
+            <div style="font-size:12px; color:#f59e0b; margin-top:2px">Kasus Sakit</div>
+        </div>
+
+        <div class="card" style="padding:20px; border-left:4px solid #3b82f6">
+            <div style="font-size:12px; font-weight:700; color:#1d4ed8; text-transform:uppercase; letter-spacing:0.5px">Izin Bulan Ini</div>
+            <div style="font-size:28px; font-weight:800; color:#1e3a8a; margin-top:6px">{{ $waliRekapData['izin'] ?? 0 }}</div>
+            <div style="font-size:12px; color:#3b82f6; margin-top:2px">Kasus Izin</div>
+        </div>
+
+        <div class="card" style="padding:20px; border-left:4px solid #7c3aed">
+            <div style="font-size:12px; font-weight:700; color:#6d28d9; text-transform:uppercase; letter-spacing:0.5px">Dispensasi Bulan Ini</div>
+            <div style="font-size:28px; font-weight:800; color:#4c1d95; margin-top:6px">{{ $waliRekapData['dispen'] ?? 0 }}</div>
+            <div style="font-size:12px; color:#7c3aed; margin-top:2px">Kasus Dispensasi</div>
         </div>
 
         <div class="card" style="padding:20px; border-left:4px solid #ef4444">
@@ -146,6 +155,7 @@
                         <th style="text-align:center">Hadir (H)</th>
                         <th style="text-align:center">Sakit (S)</th>
                         <th style="text-align:center">Izin (I)</th>
+                        <th style="text-align:center">Dispen (D)</th>
                         <th style="text-align:center">Alpa (A)</th>
                         <th style="width:180px; text-align:center">Persentase Kehadiran</th>
                         <th style="text-align:center">Keterangan</th>
@@ -160,6 +170,7 @@
                             <td style="text-align:center"><span class="badge badge-success" style="font-size:12px">{{ $r['hadir'] }}</span></td>
                             <td style="text-align:center"><span class="badge badge-warning" style="font-size:12px">{{ $r['sakit'] }}</span></td>
                             <td style="text-align:center"><span class="badge badge-info" style="font-size:12px">{{ $r['izin'] }}</span></td>
+                            <td style="text-align:center"><span class="badge" style="font-size:12px; background:#ede9fe; color:#7c3aed">{{ $r['dispen'] ?? 0 }}</span></td>
                             <td style="text-align:center">
                                 @if($r['alpa'] > 0)
                                     <span class="badge badge-danger" style="font-size:12px">{{ $r['alpa'] }}</span>
@@ -181,7 +192,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="9" style="text-align:center; color:#64748b; padding:22px">
+                            <td colspan="10" style="text-align:center; color:#64748b; padding:22px">
                                 Belum ada data rekapitulasi untuk periode ini.
                             </td>
                         </tr>

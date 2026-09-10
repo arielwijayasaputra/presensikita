@@ -398,7 +398,7 @@ class AbsensiController extends Controller
         try {
             $jumlahHadir = 0;
             $tidakHadirList = [];
-            $validStatuses = ['H', 'S', 'I', 'A'];
+            $validStatuses = ['H', 'S', 'I', 'D', 'A'];
             $validSiswaIds = Siswa::where('id_kelas', $request->id_kelas)->where('is_aktif', 1)->pluck('id_siswa')->map(fn ($id) => (string) $id)->toArray();
 
             foreach ($request->absensi as $idSiswa => $item) {

@@ -757,6 +757,10 @@ html.theme-transitioning *::after {
     background: rgba(220,38,38,0.15) !important;
     color: #f87171 !important;
 }
+[data-theme="dark"] .rekap-item.purple {
+    background: rgba(124,58,237,0.15) !important;
+    color: #a78bfa !important;
+}
 [data-theme="dark"] .rekap-item strong { color: inherit !important; }
 
 /* Table headers with hardcoded light background */

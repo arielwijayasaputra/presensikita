@@ -290,6 +290,7 @@ function renderTable(data){
             <td class="td-status"><div class="radio-wrapper"><input type="radio" name="st-${id}" value="H" checked ${radioAttr} style="accent-color:#22c55e;${isAdmin ? 'pointer-events:none;cursor:default;' : ''}"></div></td>
             <td class="td-status"><div class="radio-wrapper"><input type="radio" name="st-${id}" value="S" ${radioAttr} style="accent-color:#f59e0b;${isAdmin ? 'pointer-events:none;cursor:default;' : ''}"></div></td>
             <td class="td-status"><div class="radio-wrapper"><input type="radio" name="st-${id}" value="I" ${radioAttr} style="accent-color:#3b82f6;${isAdmin ? 'pointer-events:none;cursor:default;' : ''}"></div></td>
+            <td class="td-status"><div class="radio-wrapper"><input type="radio" name="st-${id}" value="D" ${radioAttr} style="accent-color:#7c3aed;${isAdmin ? 'pointer-events:none;cursor:default;' : ''}"></div></td>
             <td class="td-status"><div class="radio-wrapper"><input type="radio" name="st-${id}" value="A" ${radioAttr} style="accent-color:#ef4444;${isAdmin ? 'pointer-events:none;cursor:default;' : ''}"></div></td>
             <td><input type="text" id="ket-${id}" ${ketAttr}${isAdmin ? '' : ` oninput="mirrorKetGuru(this, '${id}')"`}></td>
         `;
@@ -310,7 +311,7 @@ function renderTable(data){
                         <div class="absensi-card-nisn">NISN: ${nisn}</div>
                     </div>
                 </div>
-                <div class="absensi-status-row">${stBtn('H','Hadir')}${stBtn('S','Sakit')}${stBtn('I','Izin')}${stBtn('A','Alpa')}</div>
+                <div class="absensi-status-row">${stBtn('H','Hadir')}${stBtn('S','Sakit')}${stBtn('I','Izin')}${stBtn('D','Dispen')}${stBtn('A','Alpa')}</div>
                 <input type="text" class="absensi-ket-input" data-ket-sid="${id}" placeholder="Keterangan (opsional)..." oninput="mirrorKetGuru(this, '${id}')">
             `;
             tbody.appendChild(card);
@@ -352,15 +353,16 @@ function pickAbsensiStatus(btn){
 
 function updateRekap(){
     const root = absensiRoot();
-    let h=0,s=0,i=0,a=0;
-    currentSiswaList.forEach(d=>{
-        const c=root ? qs(`input[name="st-${d.id_siswa}"]:checked`, root) : document.querySelector(`input[name="st-${d.id_siswa}"]:checked`);
-        if(c){if(c.value==='H')h++;else if(c.value==='S')s++;else if(c.value==='I')i++;else if(c.value==='A')a++;}
+    let h=0,s=0,i=0,d=0,a=0;
+    currentSiswaList.forEach(item=>{
+        const c=root ? qs(`input[name="st-${item.id_siswa}"]:checked`, root) : document.querySelector(`input[name="st-${item.id_siswa}"]:checked`);
+        if(c){if(c.value==='H')h++;else if(c.value==='S')s++;else if(c.value==='I')i++;else if(c.value==='D')d++;else if(c.value==='A')a++;}
     });
     const set=(id,val)=>{const el= root ? qs('#'+id, root) : document.getElementById(id); if(el) el.textContent=val;};
     set('rekap-hadir',h);
     set('rekap-sakit',s);
     set('rekap-izin',i);
+    set('rekap-dispen',d);
     set('rekap-alpa',a);
 }
 
@@ -1250,17 +1252,18 @@ function renderLaporanCharts(rekap) {
     const hadir = Number(rekap.hadir || 0);
     const sakit = Number(rekap.sakit || 0);
     const izin = Number(rekap.izin || 0);
+    const dispen = Number(rekap.dispen || 0);
     const alpa = Number(rekap.alpa || 0);
-    const donutValues = [hadir, sakit, izin, alpa];
+    const donutValues = [hadir, sakit, izin, dispen, alpa];
     const donutSum = donutValues.reduce((a, b) => a + b, 0);
 
     laporanCharts.donut = new Chart(donutEl, {
         type: 'doughnut',
         data: {
-            labels: ['Hadir', 'Sakit', 'Izin', 'Alpa'],
+            labels: ['Hadir', 'Sakit', 'Izin', 'Dispensasi', 'Alpa'],
             datasets: [{
-                data: donutSum > 0 ? donutValues : [0, 0, 0, 0],
-                backgroundColor: ['#22c55e', '#f59e0b', '#3b82f6', '#ef4444'],
+                data: donutSum > 0 ? donutValues : [0, 0, 0, 0, 0],
+                backgroundColor: ['#22c55e', '#f59e0b', '#3b82f6', '#7c3aed', '#ef4444'],
                 borderWidth: 0,
                 hoverOffset: 4
             }]
@@ -1299,7 +1302,7 @@ function renderLaporanCharts(rekap) {
         }
     });
 
-    const hari = rekap.rekap_hari || { labels: ['Sen','Sel','Rab','Kam','Jum','Sab'], hadir: [0,0,0,0,0,0], sakit: [0,0,0,0,0,0], izin: [0,0,0,0,0,0], alpa: [0,0,0,0,0,0] };
+    const hari = rekap.rekap_hari || { labels: ['Sen','Sel','Rab','Kam','Jum','Sab'], hadir: [0,0,0,0,0,0], sakit: [0,0,0,0,0,0], izin: [0,0,0,0,0,0], dispen: [0,0,0,0,0,0], alpa: [0,0,0,0,0,0] };
     laporanCharts.bar = new Chart(barEl, {
         type: 'bar',
         data: {
@@ -1308,6 +1311,7 @@ function renderLaporanCharts(rekap) {
                 { label: 'Hadir', data: hari.hadir, backgroundColor: '#22c55e', stack: 'absensi', borderRadius: 3 },
                 { label: 'Sakit', data: hari.sakit, backgroundColor: '#f59e0b', stack: 'absensi', borderRadius: 3 },
                 { label: 'Izin', data: hari.izin, backgroundColor: '#3b82f6', stack: 'absensi', borderRadius: 3 },
+                { label: 'Dispensasi', data: hari.dispen, backgroundColor: '#7c3aed', stack: 'absensi', borderRadius: 3 },
                 { label: 'Alpa', data: hari.alpa, backgroundColor: '#ef4444', stack: 'absensi', borderRadius: 3 },
             ]
         },

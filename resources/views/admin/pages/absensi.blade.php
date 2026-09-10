@@ -36,6 +36,7 @@
             <div class="rekap-item green"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/></svg>Hadir <strong id="rekap-hadir">0</strong></div>
             <div class="rekap-item yellow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Sakit <strong id="rekap-sakit">0</strong></div>
             <div class="rekap-item blue"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>Izin <strong id="rekap-izin">0</strong></div>
+            <div class="rekap-item dispen"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Dispen <strong id="rekap-dispen">0</strong></div>
             <div class="rekap-item red"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Alpa <strong id="rekap-alpa">0</strong></div>
             <div class="badge-wewenang" style="margin-left: auto; display: inline-flex; align-items: center; gap: 6px; background: #eff6ff; color: #1d4ed8; padding: 7px 14px; border-radius: 99px; border: 1px solid #bfdbfe; font-size: 12px; font-weight: 600;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -51,6 +52,7 @@
                     <th style="text-align:center;width:80px"><div class="status-header"><span class="status-dot-c green"></span>Hadir</div></th>
                     <th style="text-align:center;width:80px"><div class="status-header"><span class="status-dot-c yellow"></span>Sakit</div></th>
                     <th style="text-align:center;width:80px"><div class="status-header"><span class="status-dot-c blue"></span>Izin</div></th>
+                    <th style="text-align:center;width:80px"><div class="status-header"><span class="status-dot-c" style="background:#06b6d4"></span>Dispen</div></th>
                     <th style="text-align:center;width:80px"><div class="status-header"><span class="status-dot-c red"></span>Alpa</div></th>
                     <th>Keterangan</th>
                 </tr>

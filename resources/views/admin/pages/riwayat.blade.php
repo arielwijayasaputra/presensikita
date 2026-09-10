@@ -9,8 +9,9 @@
     $totalHadirSum = $riwayatList->sum('jumlah_hadir');
     $totalSakitSum = $riwayatList->sum('jumlah_sakit');
     $totalIzinSum  = $riwayatList->sum('jumlah_izin');
+    $totalDispenSum = $riwayatList->sum('jumlah_dispen');
     $totalAlpaSum  = $riwayatList->sum('jumlah_alpa');
-    $grandTotal    = $totalHadirSum + $totalSakitSum + $totalIzinSum + $totalAlpaSum;
+    $grandTotal    = $totalHadirSum + $totalSakitSum + $totalIzinSum + $totalDispenSum + $totalAlpaSum;
     $overallPct    = $grandTotal > 0 ? round(($totalHadirSum / $grandTotal) * 100) : 100;
 @endphp
 
@@ -53,6 +54,17 @@
                 <div>
                     <div style="font-size:11px;color:#0284c7;font-weight:600">Izin</div>
                     <div id="r-sum-izin" style="font-size:22px;font-weight:800;color:#1e293b;line-height:1.1">{{ $totalIzinSum }}</div>
+                </div>
+            </div>
+
+            {{-- Dispensasi --}}
+            <div class="riwayat-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)">
+                <div style="width:46px;height:46px;background:#f5f3ff;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </div>
+                <div>
+                    <div style="font-size:11px;color:#7c3aed;font-weight:600">Dispensasi</div>
+                    <div id="r-sum-dispen" style="font-size:22px;font-weight:800;color:#1e293b;line-height:1.1">{{ $totalDispenSum }}</div>
                 </div>
             </div>
 
@@ -145,7 +157,7 @@
                     <th rowspan="2" style="width:48px;vertical-align:middle">No.</th>
                     <th rowspan="2" style="vertical-align:middle;width:120px">Tanggal</th>
                     <th rowspan="2" style="vertical-align:middle;width:100px">Hari</th>
-                    <th colspan="4" style="text-align:center;border-bottom:1px solid #e2e8f0;padding:8px">Jumlah Siswa</th>
+                    <th colspan="5" style="text-align:center;border-bottom:1px solid #e2e8f0;padding:8px">Jumlah Siswa</th>
                     <th rowspan="2" style="text-align:center;vertical-align:middle;width:160px">Persentase Kehadiran</th>
                     <th rowspan="2" style="text-align:center;vertical-align:middle;width:130px">Aksi</th>
                 </tr>
@@ -153,6 +165,7 @@
                     <th style="text-align:center;color:#16a34a;width:60px">H</th>
                     <th style="text-align:center;color:#d97706;width:60px">S</th>
                     <th style="text-align:center;color:#2563eb;width:60px">I</th>
+                    <th style="text-align:center;color:#7c3aed;width:60px">D</th>
                     <th style="text-align:center;color:#dc2626;width:60px">A</th>
                 </tr>
             </thead>
@@ -183,6 +196,7 @@
                     <td style="text-align:center;color:#16a34a;font-weight:600;font-size:13.5px">{{ $r->jumlah_hadir }}</td>
                     <td style="text-align:center;color:#d97706;font-weight:600;font-size:13.5px">{{ $r->jumlah_sakit }}</td>
                     <td style="text-align:center;color:#2563eb;font-weight:600;font-size:13.5px">{{ $r->jumlah_izin }}</td>
+                    <td style="text-align:center;color:#7c3aed;font-weight:600;font-size:13.5px">{{ $r->jumlah_dispen ?? 0 }}</td>
                     <td style="text-align:center;color:#dc2626;font-weight:600;font-size:13.5px">{{ $r->jumlah_alpa }}</td>
                     <td style="text-align:center">
                         <span style="padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;display:inline-block;{{ $badgeStyle }}">

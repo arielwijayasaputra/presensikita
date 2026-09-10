@@ -68,6 +68,12 @@
             <div style="font-size:11.5px; color:#06b6d4; margin-top:2px">Kasus Izin</div>
         </div>
 
+        <div class="card" style="padding:18px; border-left:4px solid #7c3aed">
+            <div style="font-size:11.5px; font-weight:700; color:#6d28d9; text-transform:uppercase; letter-spacing:0.5px">Total Dispen</div>
+            <div style="font-size:26px; font-weight:800; color:#4c1d95; margin-top:4px">{{ $waliRekapAbsensiRange['dispen'] ?? 0 }}</div>
+            <div style="font-size:11.5px; color:#7c3aed; margin-top:2px">Kasus Dispensasi</div>
+        </div>
+
         <div class="card" style="padding:18px; border-left:4px solid #ef4444">
             <div style="font-size:11.5px; font-weight:700; color:#b91c1c; text-transform:uppercase; letter-spacing:0.5px">Total Alpa</div>
             <div style="font-size:26px; font-weight:800; color:#991b1b; margin-top:4px">{{ $waliRekapAbsensiRange['alpa'] ?? 0 }}</div>
@@ -104,6 +110,7 @@
                         <th style="text-align:center">Hadir (H)</th>
                         <th style="text-align:center">Sakit (S)</th>
                         <th style="text-align:center">Izin (I)</th>
+                        <th style="text-align:center">Dispen (D)</th>
                         <th style="text-align:center">Alpa (A)</th>
                         <th style="width:180px; text-align:center">Persentase Kehadiran</th>
                         <th style="text-align:center">Keterangan</th>
@@ -120,6 +127,7 @@
                             <td style="text-align:center"><span class="badge badge-success" style="font-size:12px">{{ $r['hadir'] }}</span></td>
                             <td style="text-align:center"><span class="badge badge-warning" style="font-size:12px">{{ $r['sakit'] }}</span></td>
                             <td style="text-align:center"><span class="badge badge-info" style="font-size:12px">{{ $r['izin'] }}</span></td>
+                            <td style="text-align:center"><span class="badge" style="font-size:12px; background:#ede9fe; color:#7c3aed">{{ $r['dispen'] ?? 0 }}</span></td>
                             <td style="text-align:center">
                                 @if($r['alpa'] > 0)
                                     <span class="badge badge-danger" style="font-size:12px">{{ $r['alpa'] }}</span>
@@ -163,7 +171,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="11" style="text-align:center; color:#64748b; padding:24px">
+                            <td colspan="12" style="text-align:center; color:#64748b; padding:24px">
                                 Belum ada data presensi pada rentang tanggal terpilih.
                             </td>
                         </tr>

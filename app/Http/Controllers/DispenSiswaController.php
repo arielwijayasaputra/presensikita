@@ -87,7 +87,7 @@ class DispenSiswaController extends Controller
                 }
                 JurnalSiswaTidakHadir::updateOrCreate(
                     ['id_jurnal' => $jurnal->id_jurnal, 'id_siswa' => $siswa->id_siswa],
-                    ['status' => $data['jenis_absen'] === 'S' ? 'S' : 'I', 'keterangan' => strtoupper($data['jenis_absen']).($data['alasan'] ? ': '.$data['alasan'] : '')]
+                    ['status' => $data['jenis_absen'], 'keterangan' => strtoupper($data['jenis_absen']).($data['alasan'] ? ': '.$data['alasan'] : '')]
                 );
 
                 return DispenSiswa::create(array_merge($data, [

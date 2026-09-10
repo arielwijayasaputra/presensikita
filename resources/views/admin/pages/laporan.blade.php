@@ -187,6 +187,7 @@
                     <div class="legend-item" style="font-size:12px;color:#64748b;display:flex;align-items:center;gap:6px"><div class="legend-dot" style="width:8px;height:8px;border-radius:50%;background:#22c55e"></div>Hadir <strong id="laporan-leg-hadir" style="color:#1e293b;margin-left:auto">{{ $lr['pct_hadir'] }}%</strong></div>
                     <div class="legend-item" style="font-size:12px;color:#64748b;display:flex;align-items:center;gap:6px"><div class="legend-dot" style="width:8px;height:8px;border-radius:50%;background:#f59e0b"></div>Sakit <strong id="laporan-leg-sakit" style="color:#1e293b;margin-left:auto">{{ $lr['pct_sakit'] }}%</strong></div>
                     <div class="legend-item" style="font-size:12px;color:#64748b;display:flex;align-items:center;gap:6px"><div class="legend-dot" style="width:8px;height:8px;border-radius:50%;background:#3b82f6"></div>Izin <strong id="laporan-leg-izin" style="color:#1e293b;margin-left:auto">{{ $lr['pct_izin'] }}%</strong></div>
+                    <div class="legend-item" style="font-size:12px;color:#64748b;display:flex;align-items:center;gap:6px"><div class="legend-dot" style="width:8px;height:8px;border-radius:50%;background:#7c3aed"></div>Dispensasi <strong id="laporan-leg-dispen" style="color:#1e293b;margin-left:auto">{{ $lr['pct_dispen'] ?? 0 }}%</strong></div>
                     <div class="legend-item" style="font-size:12px;color:#64748b;display:flex;align-items:center;gap:6px"><div class="legend-dot" style="width:8px;height:8px;border-radius:50%;background:#ef4444"></div>Alpa <strong id="laporan-leg-alpa" style="color:#1e293b;margin-left:auto">{{ $lr['pct_alpa'] }}%</strong></div>
                 </div>
             </div>
@@ -219,7 +220,7 @@
                 <tr>
                     <th rowspan="2" style="width:48px;vertical-align:middle">No.</th>
                     <th rowspan="2" style="vertical-align:middle">Nama Siswa</th>
-                    <th colspan="4" style="text-align:center;border-bottom:1px solid #e2e8f0;padding:8px">Total</th>
+                    <th colspan="5" style="text-align:center;border-bottom:1px solid #e2e8f0;padding:8px">Total</th>
                     <th rowspan="2" style="text-align:center;vertical-align:middle;width:160px">Persentase Kehadiran</th>
                     <th rowspan="2" style="vertical-align:middle;width:120px">Keterangan</th>
                 </tr>
@@ -227,6 +228,7 @@
                     <th style="text-align:center;color:#16a34a;width:70px">Hadir</th>
                     <th style="text-align:center;color:#d97706;width:70px">Sakit</th>
                     <th style="text-align:center;color:#2563eb;width:70px">Izin</th>
+                    <th style="text-align:center;color:#7c3aed;width:70px">Dispen</th>
                     <th style="text-align:center;color:#dc2626;width:70px">Alpa</th>
                 </tr>
             </thead>
@@ -248,6 +250,7 @@
                         <td style="text-align:center;color:#16a34a;font-weight:600">{{ $s['hadir'] }}</td>
                         <td style="text-align:center;color:#d97706;font-weight:600">{{ $s['sakit'] }}</td>
                         <td style="text-align:center;color:#2563eb;font-weight:600">{{ $s['izin'] }}</td>
+                        <td style="text-align:center;color:#7c3aed;font-weight:600">{{ $s['dispen'] ?? 0 }}</td>
                         <td style="text-align:center;color:#dc2626;font-weight:600">{{ $s['alpa'] }}</td>
                         <td style="text-align:center">
                             <span style="padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;display:inline-block;{{ $badgeStyle }}">
@@ -258,7 +261,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" style="text-align:center;padding:40px;color:#94a3b8">Belum ada data siswa untuk ditampilkan.</td>
+                        <td colspan="9" style="text-align:center;padding:40px;color:#94a3b8">Belum ada data siswa untuk ditampilkan.</td>
                     </tr>
                 @endforelse
             </tbody>

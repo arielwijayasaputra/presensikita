@@ -53,10 +53,16 @@
             <div style="font-size:11.5px; color:#f59e0b; margin-top:2px">Siswa Sakit</div>
         </div>
 
-        <div class="card" style="padding:18px; border-left:4px solid #06b6d4">
-            <div style="font-size:11.5px; font-weight:700; color:#0891b2; text-transform:uppercase; letter-spacing:0.5px">Izin / Dispen</div>
-            <div style="font-size:26px; font-weight:800; color:#164e63; margin-top:4px">{{ ($waliStatsHariIni['izin'] ?? 0) + ($waliStatsHariIni['dispensasi'] ?? 0) }}</div>
-            <div style="font-size:11.5px; color:#06b6d4; margin-top:2px">Izin &amp; Surat Dispen</div>
+        <div class="card" style="padding:18px; border-left:4px solid #3b82f6">
+            <div style="font-size:11.5px; font-weight:700; color:#1d4ed8; text-transform:uppercase; letter-spacing:0.5px">Izin Hari Ini</div>
+            <div style="font-size:26px; font-weight:800; color:#1e3a8a; margin-top:4px">{{ $waliStatsHariIni['izin'] ?? 0 }}</div>
+            <div style="font-size:11.5px; color:#3b82f6; margin-top:2px">Siswa Izin</div>
+        </div>
+
+        <div class="card" style="padding:18px; border-left:4px solid #7c3aed">
+            <div style="font-size:11.5px; font-weight:700; color:#6d28d9; text-transform:uppercase; letter-spacing:0.5px">Dispensasi Hari Ini</div>
+            <div style="font-size:26px; font-weight:800; color:#4c1d95; margin-top:4px">{{ $waliStatsHariIni['dispen'] ?? 0 }}</div>
+            <div style="font-size:11.5px; color:#7c3aed; margin-top:2px">Siswa Dispen</div>
         </div>
 
         <div class="card" style="padding:18px; border-left:4px solid #ef4444">
@@ -112,7 +118,7 @@
                                 <td><strong style="color:#0f172a">{{ $s['nama_siswa'] }}</strong></td>
                                 <td style="text-align:center">{{ $s['jenis_kelamin'] }}</td>
                                 <td style="text-align:center">
-                                    <div style="display:flex; justify-content:center; gap:8px">
+                                    <div style="display:flex; justify-content:center; gap:6px; flex-wrap:wrap">
                                         <label style="cursor:pointer; display:inline-flex; align-items:center; gap:3px; font-size:12px; font-weight:600; color:#15803d">
                                             <input type="radio" name="absensi[{{ $s['id_siswa'] }}][status]" value="H" {{ $s['status'] === 'H' ? 'checked' : '' }} style="accent-color:#22c55e"> H
                                         </label>
@@ -122,14 +128,12 @@
                                         <label style="cursor:pointer; display:inline-flex; align-items:center; gap:3px; font-size:12px; font-weight:600; color:#1d4ed8">
                                             <input type="radio" name="absensi[{{ $s['id_siswa'] }}][status]" value="I" {{ $s['status'] === 'I' ? 'checked' : '' }} style="accent-color:#3b82f6"> I
                                         </label>
+                                        <label style="cursor:pointer; display:inline-flex; align-items:center; gap:3px; font-size:12px; font-weight:600; color:#0e7490">
+                                            <input type="radio" name="absensi[{{ $s['id_siswa'] }}][status]" value="D" {{ $s['status'] === 'D' ? 'checked' : '' }} style="accent-color:#06b6d4"> D
+                                        </label>
                                         <label style="cursor:pointer; display:inline-flex; align-items:center; gap:3px; font-size:12px; font-weight:600; color:#b91c1c">
                                             <input type="radio" name="absensi[{{ $s['id_siswa'] }}][status]" value="A" {{ $s['status'] === 'A' ? 'checked' : '' }} style="accent-color:#ef4444"> A
                                         </label>
-                                        @if($s['status'] === 'D')
-                                            <label style="display:inline-flex; align-items:center; gap:3px; font-size:12px; font-weight:600; color:#0e7490">
-                                                <input type="radio" name="absensi[{{ $s['id_siswa'] }}][status]" value="D" checked style="accent-color:#06b6d4"> D
-                                            </label>
-                                        @endif
                                     </div>
                                 </td>
                                 <td>

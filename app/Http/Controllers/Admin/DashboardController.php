@@ -57,10 +57,12 @@ class DashboardController extends Controller
         $totalHadir = $globalRekap['hadir'];
         $totalSakit = $globalRekap['sakit'];
         $totalIzin = $globalRekap['izin'];
+        $totalDispen = $globalRekap['dispen'] ?? $globalRekap['pct_dispen'] ?? 0;
         $totalAlpa = $globalRekap['alpa'];
         $pctHadir = $globalRekap['pct_hadir'];
         $pctSakit = $globalRekap['pct_sakit'];
         $pctIzin = $globalRekap['pct_izin'];
+        $pctDispen = $globalRekap['pct_dispen'] ?? 0;
         $pctAlpa = $globalRekap['pct_alpa'];
 
         $dashboardTren = $this->absensiService->buildTrenKehadiran(7);
@@ -111,14 +113,16 @@ class DashboardController extends Controller
                 ->selectRaw("
                     SUM(CASE WHEN status = 'S' THEN 1 ELSE 0 END) as total_sakit,
                     SUM(CASE WHEN status = 'I' THEN 1 ELSE 0 END) as total_izin,
+                    SUM(CASE WHEN status = 'D' THEN 1 ELSE 0 END) as total_dispen,
                     SUM(CASE WHEN status = 'A' THEN 1 ELSE 0 END) as total_alpa
                 ")
                 ->first();
 
             $r->jumlah_sakit = (int) ($thCounts->total_sakit ?? 0);
             $r->jumlah_izin = (int) ($thCounts->total_izin ?? 0);
+            $r->jumlah_dispen = (int) ($thCounts->total_dispen ?? 0);
             $r->jumlah_alpa = (int) ($thCounts->total_alpa ?? 0);
-            $r->total_siswa = $r->jumlah_hadir + $r->jumlah_sakit + $r->jumlah_izin + $r->jumlah_alpa;
+            $r->total_siswa = $r->jumlah_hadir + $r->jumlah_sakit + $r->jumlah_izin + $r->jumlah_dispen + $r->jumlah_alpa;
             $r->persentase = $r->total_siswa > 0 ? round(($r->jumlah_hadir / $r->total_siswa) * 100) : 100;
         }
 
@@ -313,10 +317,12 @@ class DashboardController extends Controller
             'totalHadir',
             'totalSakit',
             'totalIzin',
+            'totalDispen',
             'totalAlpa',
             'pctHadir',
             'pctSakit',
             'pctIzin',
+            'pctDispen',
             'pctAlpa',
             'dashboardTren',
             'kelasPersentase',

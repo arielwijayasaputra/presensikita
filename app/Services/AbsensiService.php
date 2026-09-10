@@ -58,7 +58,7 @@ class AbsensiService
 
         $hadir = (int) $jurnals->sum('jumlah_hadir');
 
-        $statusCounts = ['S' => 0, 'I' => 0, 'A' => 0];
+        $statusCounts = ['S' => 0, 'I' => 0, 'D' => 0, 'A' => 0];
         $perSiswaStatus = [];
 
         if ($jurnalCount > 0) {
@@ -70,7 +70,7 @@ class AbsensiService
                 }
                 if ($withSiswa) {
                     if (! isset($perSiswaStatus[$row->id_siswa])) {
-                        $perSiswaStatus[$row->id_siswa] = ['S' => 0, 'I' => 0, 'A' => 0];
+                        $perSiswaStatus[$row->id_siswa] = ['S' => 0, 'I' => 0, 'D' => 0, 'A' => 0];
                     }
                     if (isset($perSiswaStatus[$row->id_siswa][$st])) {
                         $perSiswaStatus[$row->id_siswa][$st]++;
@@ -81,22 +81,25 @@ class AbsensiService
 
         $sakit = $statusCounts['S'];
         $izin = $statusCounts['I'];
+        $dispen = $statusCounts['D'];
         $alpa = $statusCounts['A'];
-        $totalEvents = $hadir + $sakit + $izin + $alpa;
+        $totalEvents = $hadir + $sakit + $izin + $dispen + $alpa;
 
         $pctHadir = $totalEvents > 0 ? (int) round(($hadir / $totalEvents) * 100) : 0;
         $pctSakit = $totalEvents > 0 ? (int) round(($sakit / $totalEvents) * 100) : 0;
         $pctIzin = $totalEvents > 0 ? (int) round(($izin / $totalEvents) * 100) : 0;
-        $pctAlpa = $totalEvents > 0 ? max(0, 100 - $pctHadir - $pctSakit - $pctIzin) : 0;
+        $pctDispen = $totalEvents > 0 ? (int) round(($dispen / $totalEvents) * 100) : 0;
+        $pctAlpa = $totalEvents > 0 ? max(0, 100 - $pctHadir - $pctSakit - $pctIzin - $pctDispen) : 0;
 
         $siswaRekap = [];
         if ($withSiswa) {
             foreach ($siswaList as $s) {
-                $st = $perSiswaStatus[$s->id_siswa] ?? ['S' => 0, 'I' => 0, 'A' => 0];
+                $st = $perSiswaStatus[$s->id_siswa] ?? ['S' => 0, 'I' => 0, 'D' => 0, 'A' => 0];
                 $sSakit = $st['S'];
                 $sIzin = $st['I'];
+                $sDispen = $st['D'];
                 $sAlpa = $st['A'];
-                $sHadir = max(0, $jurnalCount - $sSakit - $sIzin - $sAlpa);
+                $sHadir = max(0, $jurnalCount - $sSakit - $sIzin - $sDispen - $sAlpa);
                 $pct = $jurnalCount > 0 ? (int) round(($sHadir / $jurnalCount) * 100) : 0;
                 $ket = $jurnalCount === 0
                     ? '-'
@@ -111,6 +114,7 @@ class AbsensiService
                     'hadir' => $sHadir,
                     'sakit' => $sSakit,
                     'izin' => $sIzin,
+                    'dispen' => $sDispen,
                     'alpa' => $sAlpa,
                     'persentase' => $pct,
                     'keterangan' => $ket,
@@ -124,10 +128,12 @@ class AbsensiService
             'hadir' => $hadir,
             'sakit' => $sakit,
             'izin' => $izin,
+            'dispen' => $dispen,
             'alpa' => $alpa,
             'pct_hadir' => $pctHadir,
             'pct_sakit' => $pctSakit,
             'pct_izin' => $pctIzin,
+            'pct_dispen' => $pctDispen,
             'pct_alpa' => $pctAlpa,
             'pct_label' => $pctHadir >= 90 ? 'Sangat Baik' : ($pctHadir >= 80 ? 'Baik' : ($pctHadir >= 70 ? 'Cukup' : ($totalEvents > 0 ? 'Kurang' : '-'))),
             'siswa' => $siswaRekap,
@@ -142,6 +148,7 @@ class AbsensiService
         $hadir = [];
         $sakit = [];
         $izin = [];
+        $dispen = [];
         $alpa = [];
         $pct = [];
 
@@ -165,17 +172,19 @@ class AbsensiService
             $h = (int) DB::table('jurnal_kelas')->whereIn('id_jurnal', $jurnalIds)->sum('jumlah_hadir');
             $s = $jurnalIds->isEmpty() ? 0 : JurnalSiswaTidakHadir::whereIn('id_jurnal', $jurnalIds)->where('status', 'S')->count();
             $iz = $jurnalIds->isEmpty() ? 0 : JurnalSiswaTidakHadir::whereIn('id_jurnal', $jurnalIds)->where('status', 'I')->count();
+            $d = $jurnalIds->isEmpty() ? 0 : JurnalSiswaTidakHadir::whereIn('id_jurnal', $jurnalIds)->where('status', 'D')->count();
             $a = $jurnalIds->isEmpty() ? 0 : JurnalSiswaTidakHadir::whereIn('id_jurnal', $jurnalIds)->where('status', 'A')->count();
-            $tot = $h + $s + $iz + $a;
+            $tot = $h + $s + $iz + $d + $a;
 
             $hadir[] = $h;
             $sakit[] = $s;
             $izin[] = $iz;
+            $dispen[] = $d;
             $alpa[] = $a;
             $pct[] = $tot > 0 ? (int) round(($h / $tot) * 100) : 0;
         }
 
-        return compact('labels', 'hadir', 'sakit', 'izin', 'alpa', 'pct');
+        return compact('labels', 'hadir', 'sakit', 'izin', 'dispen', 'alpa', 'pct');
     }
 
     public function buildRekapPerHari(?int $kelasId = null, ?int $bulan = null, ?int $tahun = null): array
@@ -187,7 +196,7 @@ class AbsensiService
         }
         $result = [];
         foreach ($map as $dow => $label) {
-            $result[$label] = ['hadir' => 0, 'sakit' => 0, 'izin' => 0, 'alpa' => 0];
+            $result[$label] = ['hadir' => 0, 'sakit' => 0, 'izin' => 0, 'dispen' => 0, 'alpa' => 0];
         }
 
         $q = DB::table('jurnal_kelas')
@@ -240,6 +249,7 @@ class AbsensiService
                 ->pluck('total', 'status');
             $result[$label]['sakit'] += (int) ($counts['S'] ?? 0);
             $result[$label]['izin'] += (int) ($counts['I'] ?? 0);
+            $result[$label]['dispen'] += (int) ($counts['D'] ?? 0);
             $result[$label]['alpa'] += (int) ($counts['A'] ?? 0);
         }
 
@@ -248,6 +258,7 @@ class AbsensiService
             'hadir' => array_map(fn ($l) => $result[$l]['hadir'], array_values($map)),
             'sakit' => array_map(fn ($l) => $result[$l]['sakit'], array_values($map)),
             'izin' => array_map(fn ($l) => $result[$l]['izin'], array_values($map)),
+            'dispen' => array_map(fn ($l) => $result[$l]['dispen'], array_values($map)),
             'alpa' => array_map(fn ($l) => $result[$l]['alpa'], array_values($map)),
         ];
     }
@@ -314,7 +325,7 @@ class AbsensiService
 
         $hadir = (int) $jurnals->sum('jumlah_hadir');
 
-        $statusCounts = ['S' => 0, 'I' => 0, 'A' => 0];
+        $statusCounts = ['S' => 0, 'I' => 0, 'D' => 0, 'A' => 0];
         $perSiswaStatus = [];
 
         if ($jurnalCount > 0) {
@@ -326,7 +337,7 @@ class AbsensiService
                 }
                 if ($withSiswa) {
                     if (! isset($perSiswaStatus[$row->id_siswa])) {
-                        $perSiswaStatus[$row->id_siswa] = ['S' => 0, 'I' => 0, 'A' => 0];
+                        $perSiswaStatus[$row->id_siswa] = ['S' => 0, 'I' => 0, 'D' => 0, 'A' => 0];
                     }
                     if (isset($perSiswaStatus[$row->id_siswa][$st])) {
                         $perSiswaStatus[$row->id_siswa][$st]++;
@@ -337,22 +348,25 @@ class AbsensiService
 
         $sakit = $statusCounts['S'];
         $izin = $statusCounts['I'];
+        $dispen = $statusCounts['D'];
         $alpa = $statusCounts['A'];
-        $totalEvents = $hadir + $sakit + $izin + $alpa;
+        $totalEvents = $hadir + $sakit + $izin + $dispen + $alpa;
 
         $pctHadir = $totalEvents > 0 ? (int) round(($hadir / $totalEvents) * 100) : 0;
         $pctSakit = $totalEvents > 0 ? (int) round(($sakit / $totalEvents) * 100) : 0;
         $pctIzin = $totalEvents > 0 ? (int) round(($izin / $totalEvents) * 100) : 0;
-        $pctAlpa = $totalEvents > 0 ? max(0, 100 - $pctHadir - $pctSakit - $pctIzin) : 0;
+        $pctDispen = $totalEvents > 0 ? (int) round(($dispen / $totalEvents) * 100) : 0;
+        $pctAlpa = $totalEvents > 0 ? max(0, 100 - $pctHadir - $pctSakit - $pctIzin - $pctDispen) : 0;
 
         $siswaRekap = [];
         if ($withSiswa) {
             foreach ($siswaList as $s) {
-                $st = $perSiswaStatus[$s->id_siswa] ?? ['S' => 0, 'I' => 0, 'A' => 0];
+                $st = $perSiswaStatus[$s->id_siswa] ?? ['S' => 0, 'I' => 0, 'D' => 0, 'A' => 0];
                 $sSakit = $st['S'];
                 $sIzin = $st['I'];
+                $sDispen = $st['D'];
                 $sAlpa = $st['A'];
-                $sHadir = max(0, $jurnalCount - $sSakit - $sIzin - $sAlpa);
+                $sHadir = max(0, $jurnalCount - $sSakit - $sIzin - $sDispen - $sAlpa);
                 $pct = $jurnalCount > 0 ? (int) round(($sHadir / $jurnalCount) * 100) : 0;
                 $ket = $jurnalCount === 0
                     ? '-'
@@ -367,6 +381,7 @@ class AbsensiService
                     'hadir' => $sHadir,
                     'sakit' => $sSakit,
                     'izin' => $sIzin,
+                    'dispen' => $sDispen,
                     'alpa' => $sAlpa,
                     'persentase' => $pct,
                     'keterangan' => $ket,
@@ -380,10 +395,12 @@ class AbsensiService
             'hadir' => $hadir,
             'sakit' => $sakit,
             'izin' => $izin,
+            'dispen' => $dispen,
             'alpa' => $alpa,
             'pct_hadir' => $pctHadir,
             'pct_sakit' => $pctSakit,
             'pct_izin' => $pctIzin,
+            'pct_dispen' => $pctDispen,
             'pct_alpa' => $pctAlpa,
             'pct_label' => $pctHadir >= 90 ? 'Sangat Baik' : ($pctHadir >= 80 ? 'Baik' : ($pctHadir >= 70 ? 'Cukup' : ($totalEvents > 0 ? 'Kurang' : '-'))),
             'siswa' => $siswaRekap,

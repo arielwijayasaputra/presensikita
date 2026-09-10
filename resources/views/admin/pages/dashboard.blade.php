@@ -41,6 +41,17 @@
             </div>
         </div>
         <div class="stat-card">
+            <div class="stat-icon dispen"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+            <div>
+                <div class="stat-label">Dispensasi</div>
+                <div class="stat-value">{{ number_format($totalDispen) }}</div>
+                <div class="stat-pct">
+                    <div class="pct-bar"><div class="pct-fill dispen" style="width:{{ $pctDispen }}%"></div></div>
+                    {{ $pctDispen }}% dari seluruh absensi
+                </div>
+            </div>
+        </div>
+        <div class="stat-card">
             <div class="stat-icon red"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>
             <div>
                 <div class="stat-label">Alpa</div>

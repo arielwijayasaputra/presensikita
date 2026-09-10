@@ -64,6 +64,7 @@
                         <th class="td-status" style="width:60px;"><div class="status-header"><span class="status-dot-c green"></span>H</div></th>
                         <th class="td-status" style="width:60px;"><div class="status-header"><span class="status-dot-c yellow"></span>S</div></th>
                         <th class="td-status" style="width:60px;"><div class="status-header"><span class="status-dot-c blue"></span>I</div></th>
+                        <th class="td-status" style="width:60px;"><div class="status-header"><span class="status-dot-c" style="background:#06b6d4"></span>D</div></th>
                         <th class="td-status" style="width:60px;"><div class="status-header"><span class="status-dot-c red"></span>A</div></th>
                         <th>Keterangan</th>
                     </tr>

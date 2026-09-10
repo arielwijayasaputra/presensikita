@@ -474,10 +474,12 @@
             gap: 6px;
         }
 
-        .badge-success { background-color: #dcfce7; color: #15803d; }
-        .badge-warning { background-color: #fef3c7; color: #b45309; }
-        .badge-info    { background-color: #e0f2fe; color: #0369a1; }
-        .badge-danger  { background-color: #fee2e2; color: #b91c1c; }
+        .badge-success   { background-color: #dcfce7; color: #15803d; }
+        .badge-warning   { background-color: #fef3c7; color: #b45309; }
+        .badge-info      { background-color: #e0f2fe; color: #0369a1; }
+        .badge-danger    { background-color: #fee2e2; color: #b91c1c; }
+        .badge-secondary { background-color: #f1f5f9; color: #64748b; }
+        .badge-dispen    { background-color: #ede9fe; color: #7c3aed; }
 
         .ket-note {
             font-size: 11.5px;

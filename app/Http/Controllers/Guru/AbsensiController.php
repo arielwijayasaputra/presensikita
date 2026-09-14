@@ -459,7 +459,7 @@ class AbsensiController extends Controller
                 ->where('jadwal_mengajar.id_guru', $idGuru)
                 ->where('jadwal_mengajar.id_kelas', $kelasId)
                 ->where('jadwal_mengajar.hari', $hariIni)
-                ->select('jadwal_mengajar.id_jadwal', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
+                ->select('jadwal_mengajar.id_jadwal', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
                 ->orderBy('jam_pelajaran.jam_ke')
                 ->get();
 
@@ -470,9 +470,44 @@ class AbsensiController extends Controller
             }
 
             $currentTime = now()->format('H:i:s');
-            $jadwalTarget = $jadwalGuruHariIni->first(function ($j) use ($currentTime) {
+            $activeJadwal = $jadwalGuruHariIni->first(function ($j) use ($currentTime) {
                 return $currentTime >= $j->jam_mulai && $currentTime <= $j->jam_selesai;
-            }) ?? $jadwalGuruHariIni->first();
+            });
+
+            // Kelompokkan jadwal menjadi blok-blok jam yang berurutan (kontigu)
+            $blocks = [];
+            $currentBlock = [];
+            $prevJamKe = null;
+
+            foreach ($jadwalGuruHariIni as $j) {
+                if ($prevJamKe === null || $j->jam_ke === $prevJamKe + 1) {
+                    $currentBlock[] = $j;
+                } else {
+                    if (! empty($currentBlock)) {
+                        $blocks[] = $currentBlock;
+                    }
+                    $currentBlock = [$j];
+                }
+                $prevJamKe = $j->jam_ke;
+            }
+            if (! empty($currentBlock)) {
+                $blocks[] = $currentBlock;
+            }
+
+            // Tentukan target block: jika ada jadwal aktif saat ini, ambil blok yang memuat jadwal aktif tersebut.
+            $targetBlock = null;
+            if ($activeJadwal) {
+                foreach ($blocks as $block) {
+                    if (collect($block)->contains('id_jadwal', $activeJadwal->id_jadwal)) {
+                        $targetBlock = $block;
+                        break;
+                    }
+                }
+            }
+
+            if (! $targetBlock) {
+                $targetBlock = $blocks[0] ?? $jadwalGuruHariIni->all();
+            }
 
             $guruSedangIzin = IzinGuru::where('id_guru', $idGuru)
                 ->whereDate('tanggal_izin', $tanggal)
@@ -481,49 +516,49 @@ class AbsensiController extends Controller
                 ->exists();
             $statusKehadiranGuru = $guruSedangIzin ? 'Tidak Hadir' : 'Hadir';
 
-            // Cari jurnal yang sudah ada KHUSUS untuk jadwal mengajar aktif ini pada tanggal hari ini
-            $existing = JurnalKelas::withTrashed()
-                ->where('id_jadwal', $jadwalTarget->id_jadwal)
-                ->whereDate('tanggal', $tanggal)
-                ->first();
+            // Simpan / perbarui jurnal untuk seluruh jam dalam sesi mengajar guru tersebut
+            foreach ($targetBlock as $jadwalTarget) {
+                $existing = JurnalKelas::withTrashed()
+                    ->where('id_jadwal', $jadwalTarget->id_jadwal)
+                    ->whereDate('tanggal', $tanggal)
+                    ->first();
 
-            if ($existing) {
-                if ($existing->trashed()) {
-                    $existing->restore();
+                if ($existing) {
+                    if ($existing->trashed()) {
+                        $existing->restore();
+                    }
+                    $jurnal = $existing;
+                    $jurnal->update([
+                        'id_guru' => $idGuru,
+                        'status_kehadiran_guru' => $statusKehadiranGuru,
+                        'materi' => $request->materi ?? $jurnal->materi,
+                        'jumlah_hadir' => $jumlahHadir,
+                        'waktu_input' => now(),
+                    ]);
+
+                    JurnalSiswaTidakHadir::withTrashed()->where('id_jurnal', $jurnal->id_jurnal)->forceDelete();
+                } else {
+                    $jurnal = JurnalKelas::create([
+                        'id_jadwal' => $jadwalTarget->id_jadwal,
+                        'id_guru' => $idGuru,
+                        'tanggal' => $tanggal,
+                        'status_kehadiran_guru' => $statusKehadiranGuru,
+                        'materi' => $request->materi ?? 'Pembelajaran Harian',
+                        'jumlah_hadir' => $jumlahHadir,
+                        'waktu_input' => now(),
+                    ]);
+
+                    JurnalSiswaTidakHadir::withTrashed()->where('id_jurnal', $jurnal->id_jurnal)->forceDelete();
                 }
-                // Perbarui jurnal yang sudah ada pada jam ini
-                $jurnal = $existing;
-                $jurnal->update([
-                    'id_guru' => $idGuru,
-                    'status_kehadiran_guru' => $statusKehadiranGuru,
-                    'materi' => $request->materi ?? $jurnal->materi,
-                    'jumlah_hadir' => $jumlahHadir,
-                    'waktu_input' => now(),
-                ]);
 
-                // Hapus tuntas (force delete) data ketidakhadiran sebelumnya agar tidak terjadi bentrok unique constraint
-                JurnalSiswaTidakHadir::withTrashed()->where('id_jurnal', $jurnal->id_jurnal)->forceDelete();
-            } else {
-                $jurnal = JurnalKelas::create([
-                    'id_jadwal' => $jadwalTarget->id_jadwal,
-                    'id_guru' => $idGuru,
-                    'tanggal' => $tanggal,
-                    'status_kehadiran_guru' => $statusKehadiranGuru,
-                    'materi' => $request->materi ?? 'Pembelajaran Harian',
-                    'jumlah_hadir' => $jumlahHadir,
-                    'waktu_input' => now(),
-                ]);
-
-                JurnalSiswaTidakHadir::withTrashed()->where('id_jurnal', $jurnal->id_jurnal)->forceDelete();
-            }
-
-            foreach ($tidakHadirList as $th) {
-                JurnalSiswaTidakHadir::create([
-                    'id_jurnal' => $jurnal->id_jurnal,
-                    'id_siswa' => $th['id_siswa'],
-                    'status' => $th['status'],
-                    'keterangan' => $th['keterangan'],
-                ]);
+                foreach ($tidakHadirList as $th) {
+                    JurnalSiswaTidakHadir::create([
+                        'id_jurnal' => $jurnal->id_jurnal,
+                        'id_siswa' => $th['id_siswa'],
+                        'status' => $th['status'],
+                        'keterangan' => $th['keterangan'],
+                    ]);
+                }
             }
 
             DB::commit();

@@ -191,4 +191,152 @@ class AbsensiPerJamTest extends TestCase
         $this->assertEquals('Hadir', $rtJam1['status']);
         $this->assertEquals('Alpa', $rtJam3['status']);
     }
+
+    public function test_simpan_absensi_guru_mencakup_seluruh_jam_mengajar_dan_berhenti_di_guru_lain()
+    {
+        $today = Carbon::now()->toDateString();
+        $hariMap = Hari::getActiveDays()->pluck('nama_hari', 'nama_inggris')->toArray();
+        $hariIni = $hariMap[now()->format('l')] ?? now()->format('l');
+
+        $uniq = uniqid();
+        $guru1 = Guru::create([
+            'nama_guru' => 'Guru Satu ' . $uniq,
+            'username' => 'guru1_' . $uniq,
+            'password_hash' => bcrypt('password'),
+            'nip' => '8888' . rand(1000, 9999),
+            'is_aktif' => 1,
+        ]);
+
+        $guru2 = Guru::create([
+            'nama_guru' => 'Guru Dua ' . $uniq,
+            'username' => 'guru2_' . $uniq,
+            'password_hash' => bcrypt('password'),
+            'nip' => '7777' . rand(1000, 9999),
+            'is_aktif' => 1,
+        ]);
+
+        $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::create(['tahun_ajaran' => '2026/2027', 'semester' => 'Ganjil', 'is_aktif' => 1]);
+
+        $kelas = Kelas::create([
+            'nama_kelas' => 'Kelas Multi ' . uniqid(),
+            'tingkat_kelas' => 'XI',
+            'jurusan' => 'RPL',
+            'id_tahun_ajaran' => $tahunAjaran->id_tahun_ajaran,
+        ]);
+
+        $siswa1 = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa 1 ' . $uniq, 'nisn' => '888888' . rand(1000, 9999), 'is_aktif' => 1]);
+        $siswa2 = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa 2 ' . $uniq, 'nisn' => '777777' . rand(1000, 9999), 'is_aktif' => 1]);
+
+        $mapel = DB::table('mapel')->whereNull('deleted_at')->first();
+        $mapelId = $mapel ? $mapel->id_mapel : DB::table('mapel')->insertGetId(['kode_mapel' => 'T2', 'nama_mapel' => 'Mapel 2']);
+
+        $jam1 = DB::table('jam_pelajaran')->where('hari', $hariIni)->where('jam_ke', 1)->whereNull('deleted_at')->first();
+        $jam2 = DB::table('jam_pelajaran')->where('hari', $hariIni)->where('jam_ke', 2)->whereNull('deleted_at')->first();
+        $jam3 = DB::table('jam_pelajaran')->where('hari', $hariIni)->where('jam_ke', 3)->whereNull('deleted_at')->first();
+
+        if (!$jam1 || !$jam2 || !$jam3) {
+            $this->markTestSkipped('Data jam_pelajaran untuk hari ' . $hariIni . ' tidak lengkap.');
+        }
+
+        // Guru 1 mengajar Jam 1 & Jam 2 (blok berurutan)
+        $jadwal1Id = DB::table('jadwal_mengajar')->insertGetId([
+            'id_guru' => $guru1->id_guru,
+            'id_mapel' => $mapelId,
+            'id_kelas' => $kelas->id_kelas,
+            'id_jam' => $jam1->id_jam,
+            'hari' => $hariIni,
+            'id_tahun_ajaran' => $tahunAjaran->id_tahun_ajaran,
+        ]);
+        $jadwal2Id = DB::table('jadwal_mengajar')->insertGetId([
+            'id_guru' => $guru1->id_guru,
+            'id_mapel' => $mapelId,
+            'id_kelas' => $kelas->id_kelas,
+            'id_jam' => $jam2->id_jam,
+            'hari' => $hariIni,
+            'id_tahun_ajaran' => $tahunAjaran->id_tahun_ajaran,
+        ]);
+
+        // Guru 2 mengajar Jam 3
+        $jadwal3Id = DB::table('jadwal_mengajar')->insertGetId([
+            'id_guru' => $guru2->id_guru,
+            'id_mapel' => $mapelId,
+            'id_kelas' => $kelas->id_kelas,
+            'id_jam' => $jam3->id_jam,
+            'hari' => $hariIni,
+            'id_tahun_ajaran' => $tahunAjaran->id_tahun_ajaran,
+        ]);
+
+        // 1. Guru 1 menyimpan absensi: Siswa 1 Hadir, Siswa 2 Sakit
+        $responseG1 = $this->withSession([
+            'auth_guru_id' => $guru1->id_guru,
+            'auth_role' => 'guru',
+        ])->postJson(route('absensi.simpan'), [
+            'id_kelas' => $kelas->id_kelas,
+            'tanggal' => $today,
+            'materi' => 'Materi Sesi Guru 1',
+            'absensi' => [
+                $siswa1->id_siswa => ['status' => 'H', 'keterangan' => ''],
+                $siswa2->id_siswa => ['status' => 'S', 'keterangan' => 'Sakit Kepala'],
+            ],
+        ]);
+
+        $responseG1->assertStatus(200);
+
+        // Verifikasi Jam 1 dan Jam 2 terisi otomatis untuk Guru 1
+        $jurnalJam1 = JurnalKelas::where('id_jadwal', $jadwal1Id)->whereDate('tanggal', $today)->first();
+        $jurnalJam2 = JurnalKelas::where('id_jadwal', $jadwal2Id)->whereDate('tanggal', $today)->first();
+        $this->assertNotNull($jurnalJam1, 'Jurnal Jam 1 harus otomatis terisi oleh Guru 1.');
+        $this->assertNotNull($jurnalJam2, 'Jurnal Jam 2 harus otomatis terisi oleh Guru 1.');
+
+        $thJam1Siswa2 = JurnalSiswaTidakHadir::where('id_jurnal', $jurnalJam1->id_jurnal)->where('id_siswa', $siswa2->id_siswa)->first();
+        $thJam2Siswa2 = JurnalSiswaTidakHadir::where('id_jurnal', $jurnalJam2->id_jurnal)->where('id_siswa', $siswa2->id_siswa)->first();
+        $this->assertNotNull($thJam1Siswa2);
+        $this->assertEquals('S', $thJam1Siswa2->status);
+        $this->assertNotNull($thJam2Siswa2);
+        $this->assertEquals('S', $thJam2Siswa2->status);
+
+        // Verifikasi Jam 3 (Guru 2) BELUM memiliki jurnal (absen berhenti di jam Guru 2)
+        $jurnalJam3 = JurnalKelas::where('id_jadwal', $jadwal3Id)->whereDate('tanggal', $today)->first();
+        $this->assertNull($jurnalJam3, 'Jurnal Jam 3 milik Guru 2 tidak boleh terisi otomatis sebelum Guru 2 mengabsen.');
+
+        // 2. Verifikasi tampilan di Portal Orang Tua untuk Siswa 1
+        $responseOrtu = $this->withSession([
+            'auth_siswa_id' => $siswa1->id_siswa,
+            'auth_nisn' => $siswa1->nisn,
+            'auth_nama_siswa' => $siswa1->nama_siswa,
+            'auth_role' => 'orangtua',
+        ])->get(route('orangtua.index', ['tanggal' => $today]));
+
+        $responseOrtu->assertStatus(200);
+        $presensiPerJam = $responseOrtu->viewData('presensiPerJam');
+
+        $pJam1 = collect($presensiPerJam)->firstWhere('jam_ke', 1);
+        $pJam2 = collect($presensiPerJam)->firstWhere('jam_ke', 2);
+        $pJam3 = collect($presensiPerJam)->firstWhere('jam_ke', 3);
+
+        $this->assertEquals('Hadir', $pJam1['status'], 'Jam 1 harus Hadir.');
+        $this->assertEquals('Hadir', $pJam2['status'], 'Jam 2 harus Hadir.');
+        $this->assertTrue(in_array($pJam3['status'], ['Belum Diabsen', 'Menunggu']), 'Jam 3 milik Guru 2 yang belum diabsen harus Belum Diabsen/Menunggu.');
+
+        // 3. Guru 2 kemudian mengabsen di Jam 3: Siswa 1 Hadir, Siswa 2 Hadir
+        $responseG2 = $this->withSession([
+            'auth_guru_id' => $guru2->id_guru,
+            'auth_role' => 'guru',
+        ])->postJson(route('absensi.simpan'), [
+            'id_kelas' => $kelas->id_kelas,
+            'tanggal' => $today,
+            'materi' => 'Materi Sesi Guru 2',
+            'absensi' => [
+                $siswa1->id_siswa => ['status' => 'H', 'keterangan' => ''],
+                $siswa2->id_siswa => ['status' => 'H', 'keterangan' => ''],
+            ],
+        ]);
+        $responseG2->assertStatus(200);
+
+        // Verifikasi Jam 3 sekarang memiliki jurnal dan Siswa 2 Hadir
+        $jurnalJam3After = JurnalKelas::where('id_jadwal', $jadwal3Id)->whereDate('tanggal', $today)->first();
+        $this->assertNotNull($jurnalJam3After, 'Jurnal Jam 3 harus ada setelah Guru 2 mengabsen.');
+        $thJam3Siswa2 = JurnalSiswaTidakHadir::where('id_jurnal', $jurnalJam3After->id_jurnal)->where('id_siswa', $siswa2->id_siswa)->first();
+        $this->assertNull($thJam3Siswa2, 'Siswa 2 sekarang berstatus Hadir di Jam 3.');
+    }
 }

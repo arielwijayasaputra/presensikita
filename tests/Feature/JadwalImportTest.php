@@ -251,16 +251,20 @@ class JadwalImportTest extends TestCase
         $jadwal = JadwalMengajar::whereNull('deleted_at')->first();
         $this->assertNotNull($jadwal, 'Data jadwal aktif harus ada di database.');
 
-        $response = $this->withSession([
-            'auth_admin_id' => $admin->id_admin,
-            'auth_is_admin' => 1,
-            'auth_role' => 'admin',
-        ])->delete(route('jadwal.hapus-semua'));
+        try {
+            $response = $this->withSession([
+                'auth_admin_id' => $admin->id_admin,
+                'auth_is_admin' => 1,
+                'auth_role' => 'admin',
+            ])->delete(route('jadwal.hapus-semua'));
 
-        $response->assertStatus(200);
-        $response->assertJson(['status' => 'success']);
-        $this->assertSoftDeleted('jadwal_mengajar', ['id_jadwal' => $jadwal->id_jadwal]);
-        $this->assertDatabaseHas('jadwal_mengajar', ['id_jadwal' => $jadwal->id_jadwal]);
+            $response->assertStatus(200);
+            $response->assertJson(['status' => 'success']);
+            $this->assertSoftDeleted('jadwal_mengajar', ['id_jadwal' => $jadwal->id_jadwal]);
+            $this->assertDatabaseHas('jadwal_mengajar', ['id_jadwal' => $jadwal->id_jadwal]);
+        } finally {
+            JadwalMengajar::onlyTrashed()->restore();
+        }
     }
 
     public function test_import_jadwal_matches_guru_by_id_guru()

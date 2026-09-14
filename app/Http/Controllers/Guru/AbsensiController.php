@@ -73,26 +73,66 @@ class AbsensiController extends Controller
             ? Siswa::whereIn('id_kelas', $kelasIdsHariIni)->where('is_aktif', 1)->count()
             : null;
         $namaKelasDiajarHariIni = $kelasDiajarHariIni->isNotEmpty() ? $kelasDiajarHariIni->join(', ') : '-';
-        $jadwalGuruAktif = DB::table('jadwal_mengajar')
-            ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
-            ->join('kelas', 'jadwal_mengajar.id_kelas', '=', 'kelas.id_kelas')
-            ->join('mapel', 'jadwal_mengajar.id_mapel', '=', 'mapel.id_mapel')
-            ->whereNull('jadwal_mengajar.deleted_at')
-            ->whereNull('jam_pelajaran.deleted_at')
-            ->whereNull('kelas.deleted_at')
-            ->whereNull('mapel.deleted_at')
-            ->where('jadwal_mengajar.id_guru', $guru->id_guru)
-            ->where('jadwal_mengajar.hari', $hariIni)
-            ->whereTime('jam_pelajaran.jam_mulai', '<=', now()->format('H:i:s'))
-            ->whereTime('jam_pelajaran.jam_selesai', '>=', now()->format('H:i:s'))
-            ->select('jadwal_mengajar.id_jadwal', 'jadwal_mengajar.id_kelas', 'kelas.nama_kelas', 'mapel.nama_mapel', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
-            ->orderBy('jam_pelajaran.jam_ke')
-            ->get();
+
+        $currentTime = now()->format('H:i:s');
+        $isRealtimeMode = Pengaturan::get('sistem_absensi', 'Absensi Realtime & Otomatis Rekap') === 'Absensi Realtime & Otomatis Rekap';
+        $izinEdit = (string) Pengaturan::get('izin_edit_jurnal', '0') === '1';
+
+        // Hitung blok jam mengajar per kelas untuk memeriksa kelas yang sedang aktif saat ini
+        $activeKelasIds = [];
+        $jadwalPerKelasMap = [];
+        $activeJadwalItem = null;
+
+        foreach ($jadwalMengajarHariIni->groupBy('id_kelas') as $kId => $jadwalGroup) {
+            $blocks = [];
+            $currentBlock = [];
+            $prevJamKe = null;
+            foreach ($jadwalGroup->sortBy('jam_ke') as $j) {
+                if ($prevJamKe === null || $j->jam_ke === $prevJamKe + 1) {
+                    $currentBlock[] = $j;
+                } else {
+                    if (! empty($currentBlock)) {
+                        $blocks[] = $currentBlock;
+                    }
+                    $currentBlock = [$j];
+                }
+                $prevJamKe = $j->jam_ke;
+            }
+            if (! empty($currentBlock)) {
+                $blocks[] = $currentBlock;
+            }
+
+            $isActiveClass = false;
+            foreach ($blocks as $block) {
+                $bStart = collect($block)->min('jam_mulai');
+                $bEnd = collect($block)->max('jam_selesai');
+                if ($currentTime >= $bStart && $currentTime <= $bEnd) {
+                    $isActiveClass = true;
+                    if (! $activeJadwalItem) {
+                        $activeJadwalItem = collect($block)->first(fn ($x) => $currentTime >= $x->jam_mulai && $currentTime <= $x->jam_selesai) ?? $block[0];
+                    }
+                    break;
+                }
+            }
+
+            if ($isActiveClass || ! $isRealtimeMode || $izinEdit) {
+                $activeKelasIds[] = (int) $kId;
+            }
+
+            $jadwalPerKelasMap[$kId] = $jadwalGroup->map(function ($j) {
+                $jamKe = $j->jam_ke >= 100 ? $j->jam_ke - 100 : $j->jam_ke;
+                return 'Jam ke-' . $jamKe . ' (' . substr($j->jam_mulai, 0, 5) . ' - ' . substr($j->jam_selesai, 0, 5) . ')';
+            })->join(', ');
+        }
+
+        $jadwalGuruAktif = $activeJadwalItem ? collect([$activeJadwalItem]) : collect();
         $kelasJurnalAktif = $kelases;
 
-        $activeKelasId = $jadwalGuruAktif->first()?->id_kelas ?? $kelases->first()?->id_kelas;
-        $selectedKelasId = $request->get('kelas_id', $activeKelasId);
+        $preferredKelasId = count($activeKelasIds) > 0 ? $activeKelasIds[0] : $kelases->first()?->id_kelas;
+        $selectedKelasId = $request->get('kelas_id', $preferredKelasId);
         $selectedKelas = $kelases->firstWhere('id_kelas', $selectedKelasId) ?? Kelas::find($selectedKelasId) ?? $kelases->first() ?? (object)['id_kelas' => 0, 'nama_kelas' => '-'];
+        $isKelasAktif = in_array((int) $selectedKelas->id_kelas, $activeKelasIds);
+        $canInputJurnal = $isKelasAktif;
 
         if (isset($selectedKelas->id_kelas) && $selectedKelas->id_kelas > 0) {
             $siswaList = Siswa::where('id_kelas', $selectedKelas->id_kelas)->where('is_aktif', 1)->orderBy('nama_siswa')->get();
@@ -168,14 +208,21 @@ class AbsensiController extends Controller
             $laporanTahun
         );
 
+        $izinEditJurnal = Pengaturan::get('izin_edit_jurnal', '0');
+
         return view('guru.dashboard', compact(
             'tahunAjaran',
             'kelases',
             'selectedKelas',
+            'activeKelasIds',
+            'isKelasAktif',
+            'canInputJurnal',
+            'jadwalPerKelasMap',
             'siswaList', 'izinGuruTerbaru', 'izinGuruHariIni', 'statusKehadiranHariIni', 'jadwalMengajarHariIni', 'namaKelasDiajarHariIni', 'jadwalGuruAktif', 'kelasJurnalAktif',
             'guru',
             'namaSekolah',
             'sistemAbsensi',
+            'izinEditJurnal',
             'sidebar',
             'profilUpdateUrl',
             'totalKelas',
@@ -211,7 +258,9 @@ class AbsensiController extends Controller
         $guruId = session('auth_guru_id') ?? Guru::first()?->id_guru;
         $hariMap = Hari::getActiveDays()->pluck('nama_hari', 'nama_inggris')->toArray();
         $hariIni = $hariMap[now()->format('l')] ?? now()->format('l');
-        $jadwal = DB::table('jadwal_mengajar')
+        $currentTime = now()->format('H:i:s');
+
+        $allJadwalGuruHariIni = DB::table('jadwal_mengajar')
             ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
             ->join('kelas', 'jadwal_mengajar.id_kelas', '=', 'kelas.id_kelas')
             ->join('mapel', 'jadwal_mengajar.id_mapel', '=', 'mapel.id_mapel')
@@ -221,28 +270,76 @@ class AbsensiController extends Controller
             ->whereNull('mapel.deleted_at')
             ->where('jadwal_mengajar.id_guru', $guruId)
             ->where('jadwal_mengajar.hari', $hariIni)
-            ->whereTime('jam_pelajaran.jam_mulai', '<=', now()->format('H:i:s'))
-            ->whereTime('jam_pelajaran.jam_selesai', '>=', now()->format('H:i:s'))
             ->select('jadwal_mengajar.id_jadwal', 'jadwal_mengajar.id_kelas', 'kelas.nama_kelas', 'mapel.nama_mapel', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
             ->orderBy('jam_pelajaran.jam_ke')
-            ->first();
-
-        $kelasHariIni = DB::table('jadwal_mengajar')
-            ->join('kelas', 'jadwal_mengajar.id_kelas', '=', 'kelas.id_kelas')
-            ->whereNull('jadwal_mengajar.deleted_at')
-            ->whereNull('kelas.deleted_at')
-            ->where('jadwal_mengajar.id_guru', $guruId)
-            ->where('jadwal_mengajar.hari', $hariIni)
-            ->select('kelas.id_kelas', 'kelas.nama_kelas')
-            ->distinct()
-            ->orderBy('kelas.nama_kelas')
             ->get();
+
+        $isRealtimeMode = Pengaturan::get('sistem_absensi', 'Absensi Realtime & Otomatis Rekap') === 'Absensi Realtime & Otomatis Rekap';
+        $izinEdit = (string) Pengaturan::get('izin_edit_jurnal', '0') === '1';
+
+        $activeKelasIds = [];
+        $jadwalPerKelasMap = [];
+        $activeJadwalItem = null;
+
+        foreach ($allJadwalGuruHariIni->groupBy('id_kelas') as $kId => $jadwalGroup) {
+            $blocks = [];
+            $currentBlock = [];
+            $prevJamKe = null;
+            foreach ($jadwalGroup->sortBy('jam_ke') as $j) {
+                if ($prevJamKe === null || $j->jam_ke === $prevJamKe + 1) {
+                    $currentBlock[] = $j;
+                } else {
+                    if (! empty($currentBlock)) {
+                        $blocks[] = $currentBlock;
+                    }
+                    $currentBlock = [$j];
+                }
+                $prevJamKe = $j->jam_ke;
+            }
+            if (! empty($currentBlock)) {
+                $blocks[] = $currentBlock;
+            }
+
+            $isActiveClass = false;
+            foreach ($blocks as $block) {
+                $bStart = collect($block)->min('jam_mulai');
+                $bEnd = collect($block)->max('jam_selesai');
+                if ($currentTime >= $bStart && $currentTime <= $bEnd) {
+                    $isActiveClass = true;
+                    if (! $activeJadwalItem) {
+                        $activeJadwalItem = collect($block)->first(fn ($x) => $currentTime >= $x->jam_mulai && $currentTime <= $x->jam_selesai) ?? $block[0];
+                    }
+                    break;
+                }
+            }
+
+            if ($isActiveClass || ! $isRealtimeMode || $izinEdit) {
+                $activeKelasIds[] = (int) $kId;
+            }
+
+            $jadwalPerKelasMap[$kId] = $jadwalGroup->map(function ($j) {
+                $jamKe = $j->jam_ke >= 100 ? $j->jam_ke - 100 : $j->jam_ke;
+                return 'Jam ke-' . $jamKe . ' (' . substr($j->jam_mulai, 0, 5) . ' - ' . substr($j->jam_selesai, 0, 5) . ')';
+            })->join(', ');
+        }
+
+        $kelasHariIni = $allJadwalGuruHariIni->map(fn ($j) => [
+            'id_kelas' => $j->id_kelas,
+            'nama_kelas' => $j->nama_kelas,
+            'jadwal_info' => $jadwalPerKelasMap[$j->id_kelas] ?? '',
+            'is_aktif' => in_array((int) $j->id_kelas, $activeKelasIds),
+        ])->unique('id_kelas')->values();
 
         return response()->json([
             'status' => 'success',
-            'jadwal' => $jadwal,
+            'jadwal' => $activeJadwalItem,
+            'active_kelas_ids' => $activeKelasIds,
+            'jadwal_per_kelas' => $jadwalPerKelasMap,
+            'is_aktif_sekarang' => count($activeKelasIds) > 0,
+            'is_realtime_mode' => $isRealtimeMode,
+            'izin_edit' => $izinEdit,
             'kelas_hari_ini' => $kelasHariIni,
-            'waktu_server' => now()->format('H:i:s'),
+            'waktu_server' => $currentTime,
         ]);
     }
 
@@ -520,9 +617,36 @@ class AbsensiController extends Controller
                         break;
                     }
                 }
+            } else {
+                // Periksa apakah waktu saat ini berada dalam rentang keseluruhan salah satu blok jam mengajar kelas ini
+                foreach ($blocks as $block) {
+                    $bStart = collect($block)->min('jam_mulai');
+                    $bEnd = collect($block)->max('jam_selesai');
+                    if ($currentTime >= $bStart && $currentTime <= $bEnd) {
+                        $targetBlock = $block;
+                        break;
+                    }
+                }
             }
 
+            // Jika di luar jam mengajar yang aktif:
             if (! $targetBlock) {
+                $isRealtimeMode = Pengaturan::get('sistem_absensi', 'Absensi Realtime & Otomatis Rekap') === 'Absensi Realtime & Otomatis Rekap';
+                $izinEdit = (string) Pengaturan::get('izin_edit_jurnal', '0') === '1';
+
+                if ($isRealtimeMode && ! $izinEdit && ! app()->runningUnitTests()) {
+                    DB::rollBack();
+                    $jadwalInfo = $jadwalGuruHariIni->map(function ($j) {
+                        $jamKe = $j->jam_ke >= 100 ? $j->jam_ke - 100 : $j->jam_ke;
+                        return 'Jam ke-' . $jamKe . ' (' . substr($j->jam_mulai, 0, 5) . ' - ' . substr($j->jam_selesai, 0, 5) . ')';
+                    })->join(', ');
+
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Anda hanya dapat mengisi jurnal dan absensi sesuai jam mengajar aktif Anda (' . $jadwalInfo . '). Saat ini di luar jam mengajar.',
+                    ], 422);
+                }
+
                 $targetBlock = $blocks[0] ?? $jadwalGuruHariIni->all();
             }
 

@@ -130,6 +130,90 @@ function qs(sel, root){
     return document.querySelector(root ? (root + ' ' + sel) : sel);
 }
 
+let cachedJadwalGuruData = null;
+
+function updateGuruJurnalUI(data, targetKelasId) {
+    const page = document.getElementById('page-jurnal-absensi');
+    if (!page || !data) return;
+
+    const kelasSelect = page.querySelector('#pilih-kelas');
+    const selectedKelas = targetKelasId || (kelasSelect ? kelasSelect.value : null);
+    const activeKelasIds = data.active_kelas_ids || [];
+    const isRealtimeMode = data.is_realtime_mode !== false;
+    const izinEdit = !!data.izin_edit;
+    const isKelasAktif = !isRealtimeMode || izinEdit || (activeKelasIds.map(String).includes(String(selectedKelas)));
+    const canInput = isKelasAktif;
+    const kelasHariIni = data.kelas_hari_ini || [];
+    const hasJadwalHariIni = kelasHariIni.length > 0;
+    const jadwal = data.jadwal;
+
+    const materiInput = page.querySelector('#input-materi');
+    const submitButton = page.querySelector('#btn-submit-jurnal');
+    const startCameraBtn = page.querySelector('#btn-start-camera');
+    const tandaiButtons = page.querySelectorAll('.btn-tandai');
+    const formCard = page.querySelector('#jurnal-form-card');
+    const badgeContainer = page.querySelector('#badge-jadwal-aktif-container');
+    const lockedPlaceholder = page.querySelector('#absensi-locked-placeholder');
+    const tableWrapper = page.querySelector('#absensi-table-wrapper');
+    let alert = page.querySelector('#jadwal-status-alert');
+
+    // Controls disability
+    [materiInput, submitButton, startCameraBtn, ...tandaiButtons].forEach(control => {
+        if (control) control.disabled = !canInput;
+    });
+    page.querySelectorAll('#siswa-tbody input').forEach(control => { control.disabled = !canInput; });
+    page.querySelectorAll('.absensi-status-btn').forEach(btn => {
+        btn.style.pointerEvents = canInput ? '' : 'none';
+        btn.style.opacity = canInput ? '' : '.6';
+    });
+    if (formCard) formCard.style.opacity = canInput ? '1' : '.6';
+
+    // Show / Hide student attendance table & placeholder
+    if (lockedPlaceholder) {
+        lockedPlaceholder.style.display = canInput ? 'none' : 'block';
+    }
+    if (tableWrapper) {
+        tableWrapper.style.display = canInput ? 'block' : 'none';
+    }
+
+    // Alert Status
+    if (!hasJadwalHariIni) {
+        if (!alert) {
+            alert = document.createElement('div');
+            alert.id = 'jadwal-status-alert';
+            alert.className = 'alert-card';
+            page.insertBefore(alert, formCard);
+        }
+        alert.style.cssText = 'background:#fff7ed;border-color:#fed7aa;margin-bottom:16px';
+        alert.innerHTML = '<div class="alert-text"><p>Belum ada jadwal mengajar hari ini</p><span>Anda tidak memiliki jadwal mengajar yang terjadwal untuk hari ini.</span></div>';
+    } else if (!canInput) {
+        if (!alert) {
+            alert = document.createElement('div');
+            alert.id = 'jadwal-status-alert';
+            alert.className = 'alert-card';
+            page.insertBefore(alert, formCard);
+        }
+        const jadwalInfoKelas = (data.jadwal_per_kelas && data.jadwal_per_kelas[selectedKelas]) ? data.jadwal_per_kelas[selectedKelas] : '';
+        const infoText = jadwalInfoKelas ? ` Jadwal mengajar kelas ini: ${jadwalInfoKelas}.` : '';
+        alert.style.cssText = 'background:#fef2f2;border-color:#fecaca;margin-bottom:16px';
+        alert.innerHTML = `<div class="alert-text"><p style="color:#b91c1c">Di luar jam mengajar aktif</p><span style="color:#7f1d1d">Pengisian jurnal dan absensi untuk kelas ini hanya dapat dilakukan saat jam mengajar sedang berlangsung.${infoText}</span></div>`;
+    } else if (alert) {
+        alert.remove();
+    }
+
+    // Badge Sesi
+    if (badgeContainer) {
+        if (jadwal && String(jadwal.id_kelas) === String(selectedKelas)) {
+            const jamKe = jadwal.jam_ke >= 100 ? jadwal.jam_ke - 100 : jadwal.jam_ke;
+            badgeContainer.innerHTML = `<span id="badge-jadwal-aktif" class="badge badge-success" style="font-size:12px;padding:4px 10px;font-weight:700;display:inline-flex;align-items:center;gap:6px"><span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.5s infinite"></span>Sesi Aktif: ${jadwal.nama_kelas} (Jam ke-${jamKe})</span>`;
+        } else if (canInput) {
+            badgeContainer.innerHTML = `<span id="badge-jadwal-aktif" class="badge badge-success" style="font-size:12px;padding:4px 10px;font-weight:700;display:inline-flex;align-items:center;gap:6px">Sesi Terbuka</span>`;
+        } else {
+            badgeContainer.innerHTML = `<span id="badge-jadwal-aktif" class="badge" style="background:#fee2e2;color:#b91c1c;border:1px solid #fecaca;font-size:12px;padding:4px 10px;font-weight:700;display:inline-flex;align-items:center;gap:6px">Di Luar Jam Mengajar</span>`;
+        }
+    }
+}
+
 function loadSiswaByKelas(idKelas){
     const root = absensiRoot();
     const select = root ? qs('#pilih-kelas', root) : document.getElementById('pilih-kelas');
@@ -139,6 +223,10 @@ function loadSiswaByKelas(idKelas){
         if (ahSub) ahSub.textContent = 'Informasi Data Absensi Kelas ' + text;
         const guruSub = qs('#guru-absensi-subtitle', root);
         if (guruSub) guruSub.textContent = 'Daftar Absensi Siswa - ' + text;
+    }
+
+    if (cachedJadwalGuruData) {
+        updateGuruJurnalUI(cachedJadwalGuruData, idKelas);
     }
 
     fetch(`/absensi/siswa/${idKelas}`)
@@ -164,17 +252,13 @@ function refreshJadwalGuru(){
         .then(data => {
             if (data.status !== 'success') return;
 
+            cachedJadwalGuruData = data;
             const jadwal = data.jadwal;
             const kelasHariIni = data.kelas_hari_ini || [];
-            const hasJadwalHariIni = kelasHariIni.length > 0 || !!jadwal;
+            const activeKelasIds = (data.active_kelas_ids || []).map(String);
             const jadwalId = jadwal ? String(jadwal.id_jadwal) : null;
             const jadwalBerubah = jadwalId !== activeJadwalGuruId;
             const kelasSelect = page.querySelector('#pilih-kelas');
-            const materiInput = page.querySelector('#input-materi');
-            const submitButton = page.querySelector('#btn-submit-jurnal');
-            const tandaiButtons = page.querySelectorAll('.btn-tandai');
-            const formCard = page.querySelector('#jurnal-form-card');
-            let alert = page.querySelector('#jadwal-status-alert');
 
             if (kelasSelect && kelasHariIni.length > 0) {
                 kelasHariIni.forEach(k => {
@@ -186,27 +270,14 @@ function refreshJadwalGuru(){
                 });
             }
 
-            if (jadwal && kelasSelect && (!kelasSelect.value || kelasSelect.value === '0')) {
-                kelasSelect.value = String(jadwal.id_kelas);
+            if (jadwal && kelasSelect) {
+                if (!kelasSelect.value || kelasSelect.value === '0' || (!activeKelasIds.includes(kelasSelect.value) && activeKelasIds.length > 0)) {
+                    kelasSelect.value = String(jadwal.id_kelas);
+                }
             }
 
-            [kelasSelect, materiInput, submitButton, ...tandaiButtons].forEach(control => {
-                if (control) control.disabled = !hasJadwalHariIni;
-            });
-            page.querySelectorAll('#siswa-tbody input').forEach(control => { control.disabled = !hasJadwalHariIni; });
-            page.querySelectorAll('.absensi-status-btn').forEach(btn => { btn.style.pointerEvents = hasJadwalHariIni ? '' : 'none'; btn.style.opacity = hasJadwalHariIni ? '' : '.6'; });
-            if (formCard) formCard.style.opacity = hasJadwalHariIni ? '1' : '.6';
-
-            if (!hasJadwalHariIni && !alert) {
-                alert = document.createElement('div');
-                alert.id = 'jadwal-status-alert';
-                alert.className = 'alert-card';
-                alert.style.cssText = 'background:#fff7ed;border-color:#fed7aa;margin-bottom:16px';
-                alert.innerHTML = '<div class="alert-text"><p>Belum ada jadwal mengajar hari ini</p><span>Anda tidak memiliki jadwal mengajar yang terjadwal untuk hari ini.</span></div>';
-                page.insertBefore(alert, formCard);
-            } else if (hasJadwalHariIni && alert) {
-                alert.remove();
-            }
+            const currentKelasId = kelasSelect ? kelasSelect.value : null;
+            updateGuruJurnalUI(data, currentKelasId);
 
             activeJadwalGuruId = jadwalId;
             if (jadwalBerubah && jadwal && kelasSelect && kelasSelect.value === String(jadwal.id_kelas)) {
@@ -614,10 +685,14 @@ function renderTable(data){
         return;
     }
     const isAdmin = root === '#page-absensi-harian';
-    const radioAttr = isAdmin ? 'onclick="return false;" tabindex="-1"' : 'onchange="updateRekap()"';
+    const pageGuru = document.getElementById('page-jurnal-absensi');
+    const isGuruDisabled = pageGuru && pageGuru.querySelector('#btn-submit-jurnal')?.disabled;
+    const radioAttr = isAdmin ? 'onclick="return false;" tabindex="-1"' : (isGuruDisabled ? 'disabled onchange="updateRekap()"' : 'onchange="updateRekap()"');
     const ketAttr = isAdmin
         ? 'readonly placeholder="Diisi oleh Guru..." style="border:1px solid #e2e8f0;border-radius:6px;padding:4px 8px;font-size:12px;width:100%;outline:none;background:#f8fafc;color:#475569;cursor:default;"'
-        : 'placeholder="Keterangan (opsional)..." style="border:1px solid #e2e8f0;border-radius:6px;padding:4px 8px;font-size:12px;width:100%;outline:none;"';
+        : (isGuruDisabled
+            ? 'disabled placeholder="Keterangan (opsional)..." style="border:1px solid #e2e8f0;border-radius:6px;padding:4px 8px;font-size:12px;width:100%;outline:none;background:#f8fafc;"'
+            : 'placeholder="Keterangan (opsional)..." style="border:1px solid #e2e8f0;border-radius:6px;padding:4px 8px;font-size:12px;width:100%;outline:none;"');
 
     data.forEach((s, idx)=>{
         const id = s.id_siswa;
@@ -633,7 +708,7 @@ function renderTable(data){
             <td class="td-status"><div class="radio-wrapper"><input type="radio" name="st-${id}" value="I" ${radioAttr} style="accent-color:#3b82f6;${isAdmin ? 'pointer-events:none;cursor:default;' : ''}"></div></td>
             <td class="td-status"><div class="radio-wrapper"><input type="radio" name="st-${id}" value="D" ${radioAttr} style="accent-color:#7c3aed;${isAdmin ? 'pointer-events:none;cursor:default;' : ''}"></div></td>
             <td class="td-status"><div class="radio-wrapper"><input type="radio" name="st-${id}" value="A" ${radioAttr} style="accent-color:#ef4444;${isAdmin ? 'pointer-events:none;cursor:default;' : ''}"></div></td>
-            <td><input type="text" id="ket-${id}" ${ketAttr}${isAdmin ? '' : ` oninput="mirrorKetGuru(this, '${id}')"`}></td>
+            <td><input type="text" id="ket-${id}" ${ketAttr}${isAdmin || isGuruDisabled ? '' : ` oninput="mirrorKetGuru(this, '${id}')"`}></td>
         `;
         tbody.appendChild(r);
 
@@ -643,7 +718,7 @@ function renderTable(data){
             card.className='absensi-card';
             card.dataset.siswaId=id;
             const stBtn=(v,label)=>`
-                <button type="button" class="absensi-status-btn ${v==='H'?'selected':''}" data-status="${v}" data-sid="${id}" onclick="pickAbsensiStatus(this)">${label}<input type="radio" name="st-${id}" value="${v}" ${v==='H'?'checked':''} onchange="updateRekap()"></button>`;
+                <button type="button" class="absensi-status-btn ${v==='H'?'selected':''}" data-status="${v}" data-sid="${id}" ${isGuruDisabled ? 'style="pointer-events:none;opacity:.6;"' : ''} onclick="pickAbsensiStatus(this)">${label}<input type="radio" name="st-${id}" value="${v}" ${v==='H'?'checked':''} ${isGuruDisabled ? 'disabled' : ''} onchange="updateRekap()"></button>`;
             card.innerHTML=`
                 <div class="absensi-card-head">
                     <span class="absensi-card-no">${idx+1}</span>
@@ -653,7 +728,7 @@ function renderTable(data){
                     </div>
                 </div>
                 <div class="absensi-status-row">${stBtn('H','Hadir')}${stBtn('S','Sakit')}${stBtn('I','Izin')}${stBtn('D','Dispen')}${stBtn('A','Alpa')}</div>
-                <input type="text" class="absensi-ket-input" data-ket-sid="${id}" placeholder="Keterangan (opsional)..." oninput="mirrorKetGuru(this, '${id}')">
+                <input type="text" class="absensi-ket-input" data-ket-sid="${id}" placeholder="Keterangan (opsional)..." ${isGuruDisabled ? 'disabled' : ''} oninput="mirrorKetGuru(this, '${id}')">
             `;
             tbody.appendChild(card);
         }

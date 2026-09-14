@@ -1,3 +1,6 @@
+@php
+    $canInputJurnal = $isKelasAktif ?? ($jadwalGuruAktif->isNotEmpty() || ($sistemAbsensi !== 'Absensi Realtime & Otomatis Rekap') || ($izinEditJurnal === '1'));
+@endphp
 <div class="page-content page-anim" id="page-jurnal-absensi" style="display:none">
     <div class="page-header" style="margin-bottom:20px">
         <div>
@@ -8,22 +11,30 @@
 
     @if($jadwalMengajarHariIni->isEmpty())
         <div id="jadwal-status-alert" class="alert-card" style="background:#fff7ed;border-color:#fed7aa;margin-bottom:16px"><div class="alert-text"><p>Belum ada jadwal mengajar hari ini</p><span>Anda tidak memiliki jadwal mengajar yang terjadwal untuk hari ini.</span></div></div>
+    @elseif(!$canInputJurnal)
+        <div id="jadwal-status-alert" class="alert-card" style="background:#fef2f2;border-color:#fecaca;margin-bottom:16px"><div class="alert-text"><p style="color:#b91c1c">Di luar jam mengajar aktif</p><span style="color:#7f1d1d">Pengisian jurnal dan absensi hanya dapat dilakukan saat jam mengajar Anda sedang berlangsung sesuai jadwal yang telah ditentukan.</span></div></div>
     @endif
 
-    <div id="jurnal-form-card" class="card" style="padding:24px;{{ $jadwalMengajarHariIni->isEmpty() ? 'opacity:.6' : '' }}">
+    <div id="jurnal-form-card" class="card" style="padding:24px;{{ !$canInputJurnal ? 'opacity:.6' : '' }}">
         <div class="card-heading" style="font-size:15px;font-weight:700;color:#1e293b;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
             <span>Form Jurnal Mengajar</span>
-            @if($jadwalGuruAktif->isNotEmpty())
-                <span class="badge badge-success" style="font-size:12px;padding:4px 10px;font-weight:700;display:inline-flex;align-items:center;gap:6px">
-                    <span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.5s infinite"></span>
-                    Sesi Aktif: {{ $jadwalGuruAktif->first()->nama_kelas }} (Jam ke-{{ $jadwalGuruAktif->first()->jam_ke >= 100 ? $jadwalGuruAktif->first()->jam_ke - 100 : $jadwalGuruAktif->first()->jam_ke }})
-                </span>
-            @endif
+            <div id="badge-jadwal-aktif-container">
+                @if($jadwalGuruAktif->isNotEmpty() && $canInputJurnal)
+                    <span id="badge-jadwal-aktif" class="badge badge-success" style="font-size:12px;padding:4px 10px;font-weight:700;display:inline-flex;align-items:center;gap:6px">
+                        <span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.5s infinite"></span>
+                        Sesi Aktif: {{ $jadwalGuruAktif->first()->nama_kelas }} (Jam ke-{{ $jadwalGuruAktif->first()->jam_ke >= 100 ? $jadwalGuruAktif->first()->jam_ke - 100 : $jadwalGuruAktif->first()->jam_ke }})
+                    </span>
+                @elseif(!$canInputJurnal)
+                    <span id="badge-jadwal-aktif" class="badge" style="background:#fee2e2;color:#b91c1c;border:1px solid #fecaca;font-size:12px;padding:4px 10px;font-weight:700;display:inline-flex;align-items:center;gap:6px">
+                        Di Luar Jam Mengajar
+                    </span>
+                @endif
+            </div>
         </div>
         <div class="jurnal-form-grid">
             <div class="form-field">
                 <label for="pilih-kelas">Pilih Kelas</label>
-                <select id="pilih-kelas" class="form-select" onchange="loadSiswaByKelas(this.value)" {{ $jadwalMengajarHariIni->isEmpty() ? 'disabled' : '' }}>
+                <select id="pilih-kelas" class="form-select" onchange="loadSiswaByKelas(this.value)" {{ !$canInputJurnal ? 'disabled' : '' }}>
                     @foreach($kelases as $k)
                     <option value="{{ $k->id_kelas }}" {{ (isset($selectedKelas->id_kelas) && $selectedKelas->id_kelas == $k->id_kelas) ? 'selected' : '' }}>
                         {{ $k->nama_kelas }}
@@ -37,7 +48,7 @@
             </div>
             <div class="form-field">
                 <label for="input-materi">Materi Pembelajaran</label>
-                <input type="text" id="input-materi" class="form-input" placeholder="Tuliskan materi pembelajaran hari ini..." {{ $jadwalMengajarHariIni->isEmpty() ? 'disabled' : '' }}>
+                <input type="text" id="input-materi" class="form-input" placeholder="Tuliskan materi pembelajaran hari ini..." {{ !$canInputJurnal ? 'disabled' : '' }}>
             </div>
         </div>
 
@@ -97,7 +108,7 @@
 
                     <!-- Action Buttons -->
                     <div style="display:flex;flex-wrap:wrap;gap:8px">
-                        <button type="button" id="btn-start-camera" class="btn-primary" onclick="startSelfieCamera()" style="padding:8px 16px;font-size:12.5px;font-weight:700;border-radius:8px;display:inline-flex;align-items:center;gap:6px" {{ $jadwalMengajarHariIni->isEmpty() ? 'disabled' : '' }}>
+                        <button type="button" id="btn-start-camera" class="btn-primary" onclick="startSelfieCamera()" style="padding:8px 16px;font-size:12.5px;font-weight:700;border-radius:8px;display:inline-flex;align-items:center;gap:6px" {{ !$canInputJurnal ? 'disabled' : '' }}>
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
                             Buka Kamera Selfie
                         </button>
@@ -117,7 +128,19 @@
         </div>
     </div>
 
-    <div class="table-card" style="margin-top:16px">
+    {{-- ── Placeholder saat belum jam mengajar ── --}}
+    <div id="absensi-locked-placeholder" style="text-align:center;padding:48px 20px;background:#ffffff;border-radius:12px;border:1px dashed #cbd5e1;margin-top:16px;box-shadow:0 1px 3px rgba(0,0,0,0.05);{{ $canInputJurnal ? 'display:none;' : '' }}">
+        <div style="width:56px;height:56px;border-radius:50%;background:#fef2f2;color:#ef4444;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h4 style="font-size:16px;font-weight:700;color:#1e293b;margin-bottom:6px">Daftar Absensi Siswa Belum Dibuka</h4>
+        <p style="font-size:13px;color:#64748b;max-width:480px;margin:0 auto;line-height:1.5">
+            Daftar kehadiran siswa untuk kelas ini akan otomatis terbuka saat Anda memasuki jam mengajar yang telah dijadwalkan.
+        </p>
+    </div>
+
+    {{-- ── Kontainer Tabel Absensi Siswa (Hanya tampil saat jam mengajar aktif) ── --}}
+    <div id="absensi-table-wrapper" class="table-card" style="margin-top:16px;{{ !$canInputJurnal ? 'display:none;' : '' }}">
         <div class="absensi-toolbar" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #e2e8f0">
             <div>
                 <h3 style="font-size:16px;font-weight:700;color:#1e293b;margin:0" id="guru-absensi-subtitle">Daftar Absensi Siswa - {{ $selectedKelas->nama_kelas }}</h3>
@@ -125,7 +148,7 @@
             </div>
             <div class="tandai-row">
                 <input type="text" class="form-input search-input" placeholder="Cari nama siswa..." onkeyup="filterSiswa(this.value)" style="width:220px">
-                <button class="btn-tandai green" onclick="tandaiSemua('H')" {{ $jadwalMengajarHariIni->isEmpty() ? 'disabled' : '' }}>Tandai Semua Hadir</button>
+                <button class="btn-tandai green" onclick="tandaiSemua('H')" {{ !$canInputJurnal ? 'disabled' : '' }}>Tandai Semua Hadir</button>
             </div>
         </div>
 
@@ -159,7 +182,7 @@
                 <div class="rekap-chip dispen" style="background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;font-weight:700;padding:4px 10px;border-radius:20px;font-size:12px;display:inline-flex;align-items:center;gap:4px">Dispen: <span id="rekap-dispen">0</span></div>
                 <div class="rekap-chip alpa">Alpa: <span id="rekap-alpa">0</span></div>
             </div>
-            <button id="btn-submit-jurnal" class="btn-submit-jurnal" onclick="submitAbsensi()" {{ $jadwalMengajarHariIni->isEmpty() ? 'disabled' : '' }}>Simpan Jurnal &amp; Absensi</button>
+            <button id="btn-submit-jurnal" class="btn-submit-jurnal" onclick="submitAbsensi()" {{ !$canInputJurnal ? 'disabled' : '' }}>Simpan Jurnal &amp; Absensi</button>
         </div>
     </div>
 </div>

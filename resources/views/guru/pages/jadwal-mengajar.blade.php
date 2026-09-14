@@ -108,8 +108,9 @@
                         $isSedang = ($nowStr >= $jadwal->jam_mulai && $nowStr <= $jadwal->jam_selesai);
                         $isBelum = ($nowStr < $jadwal->jam_mulai);
                         $isSelesai = ($nowStr > $jadwal->jam_selesai);
+                        $hasJurnal = ! empty($jadwal->has_jurnal);
                     @endphp
-                    <tr class="jadwal-row-item {{ $isSedang ? 'is-sedang' : '' }}" data-mulai="{{ $jadwal->jam_mulai }}" data-selesai="{{ $jadwal->jam_selesai }}" data-kelas="{{ $jadwal->id_kelas }}" style="{{ $isSedang ? 'background:#f0fdf4;' : '' }}">
+                    <tr class="jadwal-row-item {{ $isSedang ? 'is-sedang' : '' }}" data-mulai="{{ $jadwal->jam_mulai }}" data-selesai="{{ $jadwal->jam_selesai }}" data-kelas="{{ $jadwal->id_kelas }}" data-has-jurnal="{{ $hasJurnal ? '1' : '0' }}" style="{{ $isSedang ? 'background:#f0fdf4;' : '' }}">
                         <td style="text-align:center">
                             <span class="badge {{ $isSedang ? 'badge-success' : 'badge-info' }}" style="font-weight:800;font-size:12.5px;padding:4px 10px">
                                 Ke-{{ $jamTampil }}
@@ -129,35 +130,61 @@
                         </td>
                         <td style="text-align:center" class="status-cell">
                             @if($isSedang)
-                                <span class="badge badge-success" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;font-weight:700">
-                                    <span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.5s infinite"></span>
-                                    Sedang Berlangsung
-                                </span>
+                                @if($hasJurnal)
+                                    <span class="badge badge-success" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;font-weight:700;background:#dcfce7;color:#15803d;border:1px solid #bbf7d0">
+                                        <span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.5s infinite"></span>
+                                        Sudah Diisi
+                                    </span>
+                                @else
+                                    <span class="badge badge-success" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;font-weight:700">
+                                        <span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.5s infinite"></span>
+                                        Sedang Berlangsung
+                                    </span>
+                                @endif
                             @elseif($isBelum)
                                 <span class="badge badge-info" style="padding:5px 10px;font-weight:600;background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0">
                                     Belum Dimulai
                                 </span>
                             @else
-                                <span class="badge" style="background:#f1f5f9;color:#64748b;padding:5px 10px;font-weight:600">
-                                    Selesai
-                                </span>
+                                @if($hasJurnal)
+                                    <span class="badge" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;font-weight:600;background:#f8fafc;color:#15803d;border:1px solid #e2e8f0">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                        Sudah Diisi
+                                    </span>
+                                @else
+                                    <span class="badge" style="background:#fef2f2;color:#b91c1c;padding:5px 10px;font-weight:600;border:1px solid #fecaca">
+                                        Tidak Diisi
+                                    </span>
+                                @endif
                             @endif
                         </td>
                         <td style="text-align:center" class="action-cell">
-                            @if($isBelum)
-                                <button type="button" class="btn-disabled-jurnal" disabled style="padding:7px 14px;font-size:12px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:5px;background:#e2e8f0;color:#94a3b8;border:1px solid #cbd5e1;cursor:not-allowed;box-shadow:none" title="Belum waktunya, jam pelajaran belum dimulai">
+                            @if($isSedang)
+                                @if($hasJurnal)
+                                    <button type="button" class="btn-warning btn-isi-jurnal" onclick="bukaJurnalKelas('{{ $jadwal->id_kelas }}')" style="padding:7px 14px;font-size:12px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:5px;background:#f59e0b;color:#fff;border:none;outline:none;cursor:pointer;box-shadow:0 2px 6px rgba(245,158,11,0.25)" title="Edit jurnal yang sedang aktif">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                        Edit Jurnal
+                                    </button>
+                                @else
+                                    <button type="button" class="btn-primary btn-isi-jurnal" onclick="bukaJurnalKelas('{{ $jadwal->id_kelas }}')" style="padding:7px 14px;font-size:12px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:5px;background:#16a34a;color:#fff;border:none;outline:none;cursor:pointer;box-shadow:0 2px 6px rgba(22,163,74,0.25)" title="Isi jurnal sekarang">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                        Isi Jurnal
+                                    </button>
+                                @endif
+                            @elseif($isBelum)
+                                <button type="button" class="btn-disabled-jurnal" disabled style="padding:7px 14px;font-size:12px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:5px;background:#f1f5f9;color:#94a3b8;border:1px solid #e2e8f0;cursor:not-allowed;box-shadow:none" title="Belum waktunya, jam pelajaran belum dimulai">
                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                                    Isi Jurnal
-                                </button>
-                            @elseif($isSedang)
-                                <button type="button" class="btn-primary btn-isi-jurnal" onclick="bukaJurnalKelas('{{ $jadwal->id_kelas }}')" style="padding:7px 14px;font-size:12px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:5px;background:#16a34a;box-shadow:0 2px 6px rgba(22,163,74,0.25)" title="Isi jurnal sekarang">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                                    Isi Jurnal
+                                    Belum Dimulai
                                 </button>
                             @else
-                                <button type="button" class="btn-secondary btn-isi-jurnal" onclick="bukaJurnalKelas('{{ $jadwal->id_kelas }}')" style="padding:7px 14px;font-size:12px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:5px" title="Isi / lihat jurnal kelas ini">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                                    Isi Jurnal
+                                <button type="button" class="btn-disabled-jurnal" disabled style="padding:7px 14px;font-size:12px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:5px;background:#f1f5f9;color:#94a3b8;border:1px solid #e2e8f0;cursor:not-allowed;box-shadow:none" title="Jam pelajaran telah selesai">
+                                    @if($hasJurnal)
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                        Selesai
+                                    @else
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                        Terlewat
+                                    @endif
                                 </button>
                             @endif
                         </td>

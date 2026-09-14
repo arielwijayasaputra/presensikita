@@ -50,6 +50,19 @@ class AbsensiController extends Controller
             ->select('jadwal_mengajar.id_jadwal', 'jadwal_mengajar.id_kelas', 'kelas.nama_kelas', 'mapel.nama_mapel', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
             ->orderBy('jam_pelajaran.jam_ke')
             ->get();
+
+        $jurnalHariIniMap = JurnalKelas::whereIn('id_jadwal', $jadwalMengajarHariIni->pluck('id_jadwal'))
+            ->whereDate('tanggal', now()->toDateString())
+            ->get()
+            ->keyBy('id_jadwal');
+
+        $jadwalMengajarHariIni = $jadwalMengajarHariIni->map(function ($jadwal) use ($jurnalHariIniMap) {
+            $jadwal->has_jurnal = isset($jurnalHariIniMap[$jadwal->id_jadwal]);
+            $jadwal->jurnal = $jurnalHariIniMap[$jadwal->id_jadwal] ?? null;
+
+            return $jadwal;
+        });
+
         $kelasDiajarHariIni = $jadwalMengajarHariIni->pluck('nama_kelas')->unique()->values();
         $kelasIdsHariIni = $jadwalMengajarHariIni->pluck('id_kelas')->unique();
         $kelases = Kelas::whereIn('id_kelas', $kelasIdsHariIni)->orderBy('nama_kelas')->get();

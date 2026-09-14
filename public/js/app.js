@@ -263,6 +263,33 @@ function muatAbsensiTersimpan(){
                 }
             }
 
+            const submitBtn = root ? qs('#btn-submit-jurnal', root) : document.getElementById('btn-submit-jurnal');
+            const formHeader = root ? qs('#jurnal-form-card .card-heading', root) : document.querySelector('#jurnal-form-card .card-heading');
+            let modeBadge = root ? qs('#jurnal-mode-badge', root) : document.getElementById('jurnal-mode-badge');
+
+            if (data.jurnal) {
+                if (submitBtn) {
+                    submitBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:5px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit Jurnal &amp; Absensi`;
+                    submitBtn.style.background = 'linear-gradient(135deg, #d97706, #f59e0b)';
+                }
+                if (formHeader && !modeBadge) {
+                    modeBadge = document.createElement('span');
+                    modeBadge.id = 'jurnal-mode-badge';
+                    modeBadge.className = 'badge';
+                    modeBadge.style.cssText = 'background:#fef3c7;color:#b45309;font-size:11.5px;padding:3px 8px;font-weight:700;border:1px solid #fde68a;margin-left:8px';
+                    modeBadge.textContent = 'Mode Edit (Jurnal Sudah Diisi)';
+                    formHeader.appendChild(modeBadge);
+                }
+            } else {
+                if (submitBtn) {
+                    submitBtn.textContent = 'Simpan Jurnal & Absensi';
+                    submitBtn.style.background = '';
+                }
+                if (modeBadge) {
+                    modeBadge.remove();
+                }
+            }
+
             updateRekap();
             syncAbsensiCards();
         })
@@ -439,10 +466,16 @@ function submitAbsensi(){
     .then(res => res.json())
     .then(data => {
         if(data.status === 'success') {
+            document.querySelectorAll(`.jadwal-row-item[data-kelas="${kelasId}"]`).forEach(row => {
+                row.dataset.hasJurnal = '1';
+            });
+            updateJadwalGuruRows();
+            muatAbsensiTersimpan();
+
             Swal.fire({
                 icon: 'success',
-                title: 'Berhasil!',
-                text: 'Absensi berhasil disimpan! (Hadir: ' + data.rekap.hadir + ', Sakit: ' + data.rekap.sakit + ', Izin: ' + data.rekap.izin + ', Alpa: ' + data.rekap.alpa + ')',
+                title: 'Jurnal & Absensi Tersimpan!',
+                text: 'Absensi berhasil disimpan untuk seluruh jam mengajar Anda! (Hadir: ' + data.rekap.hadir + ', Sakit: ' + data.rekap.sakit + ', Izin: ' + data.rekap.izin + ', Alpa: ' + data.rekap.alpa + ')',
                 confirmButtonColor: '#1a3268'
             });
         } else {
@@ -1594,6 +1627,7 @@ function updateJadwalGuruRows() {
         const mulai = toSeconds(row.dataset.mulai);
         const selesai = toSeconds(row.dataset.selesai);
         const kelasId = row.dataset.kelas;
+        const hasJurnal = row.dataset.hasJurnal === '1';
         const isSedang = totalSeconds >= mulai && totalSeconds < selesai;
         const isBelum = totalSeconds < mulai;
         const isSelesai = totalSeconds >= selesai;
@@ -1605,21 +1639,33 @@ function updateJadwalGuruRows() {
 
         if (statusCell) {
             if (isSedang) {
-                statusCell.innerHTML = `<span class="badge badge-success" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;font-weight:700"><span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.5s infinite"></span>Sedang Berlangsung</span>`;
+                if (hasJurnal) {
+                    statusCell.innerHTML = `<span class="badge badge-success" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;font-weight:700;background:#dcfce7;color:#15803d;border:1px solid #bbf7d0"><span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.5s infinite"></span>Sudah Diisi</span>`;
+                } else {
+                    statusCell.innerHTML = `<span class="badge badge-success" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;font-weight:700"><span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.5s infinite"></span>Sedang Berlangsung</span>`;
+                }
             } else if (isBelum) {
                 statusCell.innerHTML = `<span class="badge badge-info" style="padding:5px 10px;font-weight:600;background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0">Belum Dimulai</span>`;
             } else {
-                statusCell.innerHTML = `<span class="badge" style="background:#f1f5f9;color:#64748b;padding:5px 10px;font-weight:600">Selesai</span>`;
+                if (hasJurnal) {
+                    statusCell.innerHTML = `<span class="badge" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;font-weight:600;background:#f8fafc;color:#15803d;border:1px solid #e2e8f0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Sudah Diisi</span>`;
+                } else {
+                    statusCell.innerHTML = `<span class="badge" style="background:#fef2f2;color:#b91c1c;padding:5px 10px;font-weight:600;border:1px solid #fecaca">Tidak Diisi</span>`;
+                }
             }
         }
 
         if (actionCell) {
-            if (isBelum) {
-                actionCell.innerHTML = `<button type="button" class="btn-disabled-jurnal" disabled style="padding:7px 14px;font-size:12px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:5px;background:#e2e8f0;color:#94a3b8;border:1px solid #cbd5e1;cursor:not-allowed;box-shadow:none" title="Belum waktunya, jam pelajaran belum dimulai"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Isi Jurnal</button>`;
-            } else if (isSedang) {
-                actionCell.innerHTML = `<button type="button" class="btn-primary btn-isi-jurnal" onclick="bukaJurnalKelas('${kelasId}')" style="padding:7px 14px;font-size:12px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:5px;background:#16a34a;box-shadow:0 2px 6px rgba(22,163,74,0.25)" title="Isi jurnal sekarang"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> Isi Jurnal</button>`;
+            if (isSedang) {
+                if (hasJurnal) {
+                    actionCell.innerHTML = `<button type="button" class="btn-warning btn-isi-jurnal" onclick="bukaJurnalKelas('${kelasId}')" style="padding:7px 14px;font-size:12px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:5px;background:#f59e0b;color:#fff;border:none;outline:none;cursor:pointer;box-shadow:0 2px 6px rgba(245,158,11,0.25)" title="Edit jurnal yang sedang aktif"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit Jurnal</button>`;
+                } else {
+                    actionCell.innerHTML = `<button type="button" class="btn-primary btn-isi-jurnal" onclick="bukaJurnalKelas('${kelasId}')" style="padding:7px 14px;font-size:12px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:5px;background:#16a34a;color:#fff;border:none;outline:none;cursor:pointer;box-shadow:0 2px 6px rgba(22,163,74,0.25)" title="Isi jurnal sekarang"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> Isi Jurnal</button>`;
+                }
+            } else if (isBelum) {
+                actionCell.innerHTML = `<button type="button" class="btn-disabled-jurnal" disabled style="padding:7px 14px;font-size:12px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:5px;background:#f1f5f9;color:#94a3b8;border:1px solid #e2e8f0;cursor:not-allowed;box-shadow:none" title="Belum waktunya, jam pelajaran belum dimulai"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Belum Dimulai</button>`;
             } else {
-                actionCell.innerHTML = `<button type="button" class="btn-secondary btn-isi-jurnal" onclick="bukaJurnalKelas('${kelasId}')" style="padding:7px 14px;font-size:12px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:5px" title="Isi / lihat jurnal kelas ini"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Isi Jurnal</button>`;
+                actionCell.innerHTML = `<button type="button" class="btn-disabled-jurnal" disabled style="padding:7px 14px;font-size:12px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:5px;background:#f1f5f9;color:#94a3b8;border:1px solid #e2e8f0;cursor:not-allowed;box-shadow:none" title="Jam pelajaran telah selesai">${hasJurnal ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Selesai' : '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Terlewat'}</button>`;
             }
         }
     });

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Sep 09, 2026 at 02:30 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Host: localhost:3306
+-- Generation Time: Sep 14, 2026 at 01:11 PM
+-- Server version: 8.0.30
+-- PHP Version: 8.5.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,17 +28,17 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `akun_admin` (
-  `id_admin` int(10) UNSIGNED NOT NULL,
-  `nama` varchar(100) NOT NULL DEFAULT 'Administrator',
-  `username` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `password_hash` varchar(255) DEFAULT NULL,
-  `no_tlp` varchar(20) DEFAULT NULL,
-  `no_hp` varchar(20) DEFAULT NULL,
-  `foto_profil` varchar(255) DEFAULT NULL,
+  `id_admin` int UNSIGNED NOT NULL,
+  `nama` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Administrator',
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `no_tlp` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `no_hp` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `foto_profil` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `update_pw_at` timestamp NULL DEFAULT NULL,
   `update_usn_at` timestamp NULL DEFAULT NULL,
-  `is_aktif` tinyint(4) NOT NULL DEFAULT 1,
+  `is_aktif` tinyint NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -49,7 +49,7 @@ CREATE TABLE `akun_admin` (
 --
 
 INSERT INTO `akun_admin` (`id_admin`, `nama`, `username`, `password`, `password_hash`, `no_tlp`, `no_hp`, `foto_profil`, `update_pw_at`, `update_usn_at`, `is_aktif`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Administrator', 'admin', '$2y$04$Vg9RXXfa81bak8Cw.dik1.ZpK4sNG9gUh/jLEuOGdI7wM3YhYURmW', '$2y$04$Vg9RXXfa81bak8Cw.dik1.ZpK4sNG9gUh/jLEuOGdI7wM3YhYURmW', NULL, NULL, NULL, NULL, NULL, 1, '2026-09-01 04:35:19', '2026-09-07 05:41:15', NULL);
+(1, 'Administrator', 'admin', '$2y$04$.bk3X30abTeAnaswcqYySusdAjQKqiQJFGC6yqKCo5/qheYpTIuRy', '$2y$04$.bk3X30abTeAnaswcqYySusdAjQKqiQJFGC6yqKCo5/qheYpTIuRy', NULL, NULL, NULL, NULL, NULL, 1, '2026-09-01 04:35:19', '2026-09-14 13:01:05', NULL);
 
 -- --------------------------------------------------------
 
@@ -58,13 +58,13 @@ INSERT INTO `akun_admin` (`id_admin`, `nama`, `username`, `password`, `password_
 --
 
 CREATE TABLE `akun_satpam` (
-  `id_satpam` int(10) UNSIGNED NOT NULL,
-  `nama` varchar(100) NOT NULL DEFAULT 'Satpam',
-  `username` varchar(50) NOT NULL,
-  `password_hash` varchar(255) NOT NULL,
-  `no_hp` varchar(20) DEFAULT NULL,
-  `foto_profil` varchar(255) DEFAULT NULL,
-  `is_aktif` tinyint(4) NOT NULL DEFAULT 1,
+  `id_satpam` int UNSIGNED NOT NULL,
+  `nama` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Satpam',
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `no_hp` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `foto_profil` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_aktif` tinyint NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -75,7 +75,33 @@ CREATE TABLE `akun_satpam` (
 --
 
 INSERT INTO `akun_satpam` (`id_satpam`, `nama`, `username`, `password_hash`, `no_hp`, `foto_profil`, `is_aktif`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Satpam', 'satpam', '$2y$04$I35E2thjHFbSq2d786z.A.TJhygHW1qXoBfg/dnv/fuRgcHzfhSBS', NULL, NULL, 1, '2026-09-01 18:52:45', '2026-09-07 05:41:23', NULL);
+(1, 'Satpam', 'satpam', '$2y$04$P1OSlDx66pNiiAhXnZ0tQOnNt0olEzWQXA.ggbgiS9tnT6Y0.urvC', NULL, NULL, 1, '2026-09-01 18:52:45', '2026-09-14 13:01:13', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `akun_waka_sdm`
+--
+
+CREATE TABLE `akun_waka_sdm` (
+  `id_waka_sdm` int UNSIGNED NOT NULL,
+  `nama` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Waka SDM',
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `no_hp` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `foto_profil` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_aktif` tinyint NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `akun_waka_sdm`
+--
+
+INSERT INTO `akun_waka_sdm` (`id_waka_sdm`, `nama`, `username`, `password_hash`, `no_hp`, `foto_profil`, `is_aktif`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'Waka SDM', 'wakasdm', '$2y$12$n7.gaSApLqit4yU7C4vkFeYewu/7sUPnYDubKu/c1giT5PqooLi7m', NULL, NULL, 1, '2026-09-14 12:54:34', '2026-09-14 12:54:34', NULL);
 
 -- --------------------------------------------------------
 
@@ -84,14 +110,14 @@ INSERT INTO `akun_satpam` (`id_satpam`, `nama`, `username`, `password_hash`, `no
 --
 
 CREATE TABLE `alumni` (
-  `id_alumni` bigint(20) UNSIGNED NOT NULL,
-  `nisn` varchar(20) DEFAULT NULL,
-  `nama_siswa` varchar(100) NOT NULL,
-  `jenis_kelamin` enum('L','P') NOT NULL,
-  `nama_kelas` varchar(50) NOT NULL,
-  `tingkat_kelas` varchar(10) NOT NULL,
-  `jurusan` varchar(50) NOT NULL,
-  `tahun_lulus` varchar(50) NOT NULL,
+  `id_alumni` bigint UNSIGNED NOT NULL,
+  `nisn` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_siswa` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jenis_kelamin` enum('L','P') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_kelas` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tingkat_kelas` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jurusan` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tahun_lulus` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tanggal_lulus` date NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -105,18 +131,18 @@ CREATE TABLE `alumni` (
 --
 
 CREATE TABLE `dispen_siswa` (
-  `id_dispen_siswa` bigint(20) UNSIGNED NOT NULL,
-  `id_siswa` int(11) NOT NULL,
-  `id_guru_piket` int(11) NOT NULL,
+  `id_dispen_siswa` bigint UNSIGNED NOT NULL,
+  `id_siswa` int NOT NULL,
+  `id_guru_piket` int NOT NULL,
   `tanggal_dispen` date NOT NULL,
-  `alasan` text NOT NULL,
-  `jenis_absen` varchar(10) NOT NULL DEFAULT 'I',
-  `foto_surat` varchar(255) DEFAULT NULL,
-  `id_jurnal` int(11) DEFAULT NULL,
-  `status_waka` varchar(20) NOT NULL DEFAULT 'menunggu',
-  `status_guru_piket` varchar(20) NOT NULL DEFAULT 'menunggu',
-  `catatan_waka` text DEFAULT NULL,
-  `catatan_guru_piket` text DEFAULT NULL,
+  `alasan` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jenis_absen` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'I',
+  `foto_surat` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id_jurnal` int DEFAULT NULL,
+  `status_waka` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'menunggu',
+  `status_guru_piket` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'menunggu',
+  `catatan_waka` text COLLATE utf8mb4_unicode_ci,
+  `catatan_guru_piket` text COLLATE utf8mb4_unicode_ci,
   `disetujui_waka_pada` timestamp NULL DEFAULT NULL,
   `disetujui_guru_piket_pada` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -142,17 +168,18 @@ INSERT INTO `dispen_siswa` (`id_dispen_siswa`, `id_siswa`, `id_guru_piket`, `tan
 --
 
 CREATE TABLE `guru` (
-  `id_guru` int(11) NOT NULL,
-  `nip` varchar(30) DEFAULT NULL,
-  `nama_guru` varchar(100) NOT NULL,
-  `Peran` varchar(255) NOT NULL DEFAULT 'Guru',
-  `foto_profil` varchar(255) DEFAULT NULL,
-  `no_hp` varchar(20) DEFAULT NULL,
-  `username` varchar(50) NOT NULL,
-  `password_hash` varchar(255) NOT NULL,
-  `is_admin` tinyint(1) NOT NULL DEFAULT 0,
-  `is_aktif` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `id_guru` int NOT NULL,
+  `nip` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_guru` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Peran` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Guru',
+  `foto_profil` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id_mapel` int DEFAULT NULL,
+  `no_hp` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_admin` tinyint(1) NOT NULL DEFAULT '0',
+  `is_aktif` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -160,142 +187,151 @@ CREATE TABLE `guru` (
 -- Dumping data for table `guru`
 --
 
-INSERT INTO `guru` (`id_guru`, `nip`, `nama_guru`, `Peran`, `foto_profil`, `no_hp`, `username`, `password_hash`, `is_admin`, `is_aktif`, `created_at`, `deleted_at`) VALUES
-(1, '19810115 200312 1 003', 'Trisno Wibowo, S.Pd.,M.M', 'Kepsek', NULL, NULL, 'trisno', '$2y$12$hwCDmq5V1nW9PyYNjvivGe0GEdduZrv6Let88gdngs7w2887HD5Pa', 0, 1, '2026-09-01 17:56:50', NULL),
-(2, '19670604 198903 2 009', 'Martiin, S.Pd', 'Wali Kelas', NULL, NULL, 'martiin', '$2y$12$ATVHybSiw6SnJBRfJRm2xu9zcl4IKmWMPjtNaq5.WoGDwPch0uvKS', 0, 1, '2026-09-01 17:56:50', NULL),
-(3, '19661207 199412 1 003', 'Yani, S.Pd.', 'Guru', NULL, NULL, 'yani', '$2y$12$nSjC9N9BeCmF2stjp2EKlOqdit5c1UG0Ehnu5A3gskELUCyyTRQn.', 0, 1, '2026-09-01 17:56:51', NULL),
-(4, '19700825 199512 2 001', 'Siti Umiharsih, S.Pd', 'Wali Kelas', NULL, NULL, 'siti', '$2y$12$wGZSzqF8DeK1G5T1MwmoUeusy5bDNf8OPYssiwbp8Gny7O2ap3yEe', 0, 1, '2026-09-01 17:56:51', NULL),
-(5, '19700325 200312 2 007', 'Winarsih, S.Pd, M.Pd', 'Wali Kelas', NULL, NULL, 'winarsih', '$2y$12$xeThU9uwXHGA8e2S8CIP0O6e6pwgezpuV1KRupN.EuL.GPlNTEp96', 0, 1, '2026-09-01 17:56:52', NULL),
-(6, '19701017 199703 2 004', 'Dwi Rini Manfaati, S.Pd', 'Guru', NULL, NULL, 'dwi', '$2y$12$gohX.Iu70nJYH.DjGaZZu.IJ8T8i8081bD5XGYYBPRai/2XMkmqVu', 0, 1, '2026-09-01 17:56:52', NULL),
-(7, '19681128 200501 2 004', 'Dra. Anik Indriani', 'Wali Kelas', NULL, NULL, 'anik', '$2y$12$hKPGB/P0DcyY0T5UVFv95O0DBxD0P98xr5X/fWlGtorRU84O3Gjnm', 0, 1, '2026-09-01 17:56:52', NULL),
-(8, '19700304 200501 2 006', 'Sri Rahayu, S.Pd', 'Wali Kelas', NULL, NULL, 'sri', '$2y$12$C.pfsNnQrXawTqw93.BbDeCuuoY3T22bW19kMAvRgGvRcUur1X54m', 0, 1, '2026-09-01 17:56:53', NULL),
-(9, '19750304 200604 2 017', 'Arvia Rienetasary, S.Pd', 'Wali Kelas', NULL, NULL, 'arvia', '$2y$12$B2c7WL8/RtZ7ZVlcyG5AzeDOEZyqg4Ohrojtr3Rdrs10x2151ShN6', 0, 1, '2026-09-01 17:56:53', NULL),
-(10, '19730601 200604 2 024', 'Peni Wulandari, S.Pd', 'Wali Kelas', NULL, NULL, 'peni', '$2y$12$CnhnJg.eSuuDqe0Hpd.pGeZ8ApUc3qyGGNS3Zuts.ItPCLamVCdUy', 0, 1, '2026-09-01 17:56:54', NULL),
-(11, '19691006 200701 2 022', 'Rindang Rejeki, S.Pd', 'Wali Kelas', NULL, NULL, 'rindang', '$2y$12$7PLuu935Ezb9kKNOTg6x0OoezERaA/QFK9ZiUl1KhcZH8rK7/Cv/e', 0, 1, '2026-09-01 17:56:54', NULL),
-(12, '19710520 200604 2 018', 'Erna Rinawati, S.Pd', 'Wali Kelas', NULL, NULL, 'erna', '$2y$12$3QVZjZmgQl.zBdY7LdQS0eSwCcm9ymDqhYJ1lh00G9zm6aCT0Hyc.', 0, 1, '2026-09-01 17:56:55', NULL),
-(13, '19730108 200604 2 015', 'Sunarti, S.Pd', 'Wali Kelas', NULL, NULL, 'sunarti', '$2y$12$j6kuwbZNX.EAQRVv7N8MnucqjdjJD5mXzna6ttX93L7CSUvEnmxPW', 0, 1, '2026-09-01 17:56:55', NULL),
-(14, '19721030 200312 1 002', 'Setiyo Winarko, S.Pd', 'Waka SDM', NULL, NULL, 'setiyo', '$2y$12$uY5fO1eAVPMECAh8UAe5XONVSFnbh6wCgI2tbAXqZYrHBDPKEZofO', 0, 1, '2026-09-01 17:56:55', NULL),
-(15, '19780202 200604 2 027', 'Isti Mufadah, S.Pd', 'Guru', NULL, NULL, 'isti', '$2y$12$Gt.cBE9ppO8cw5RtAgJOgONw8OZ/peBjj5uawXN41nFPdNG1AFF36', 0, 1, '2026-09-01 17:56:56', NULL),
-(16, '19731001 200604 2 012', 'Indayah, S.Pd., M.Pd', 'Wali Kelas', NULL, NULL, 'indayah', '$2y$12$GMhUFhfM57cUumBEVlCDeu1qTYOeGj738/kxfc5/EhX3AGYegUGuu', 0, 1, '2026-09-01 17:56:56', NULL),
-(17, '19690425 200701 2 025', 'Umi Kulsum, S.Pd', 'Wali Kelas', NULL, NULL, 'umi', '$2y$12$YF20qFLsjEAvHfMbCfzB7eaVjxN5LqDd09ikDWhESgXb0I7VWrnFO', 0, 1, '2026-09-01 17:56:57', NULL),
-(18, '19691126 200701 2 007', 'Rulik Indrawati, S.Pd', 'Wali Kelas', NULL, NULL, 'rulik', '$2y$12$EJINELPmzCV8PI8PtMY/W.2p06lFntS.a8EM7Vi.Bx0Sg2kW9925K', 0, 1, '2026-09-01 17:56:57', NULL),
-(19, '19690814 200701 2 026', 'Lilik Suratmi, S.Pd', 'Guru', NULL, NULL, 'lilik', '$2y$12$NHir1EK8HRtl67y7nn3gKOiv0So7rxs12RtOBQmLT73/YhqYKYEya', 0, 1, '2026-09-01 17:56:58', NULL),
-(20, '19670421 200701 1 026', 'Basuki Sarjono, S.Pd', 'Wali Kelas', NULL, NULL, 'basuki', '$2y$12$CnKYhgnfMIETAdrULEy2/eJE9QLTzyjfl4DpNiUipnO2/jCDABmXC', 0, 1, '2026-09-01 17:56:58', NULL),
-(21, '19680825 200801 2 019', 'Titik Samsistini, S.Pd', 'Wali Kelas', NULL, NULL, 'titik', '$2y$12$ag6iJGPTeeV8Z3e5vOEty.YaGGByemOznp6WCQNOTmZ71I68c1aGK', 0, 1, '2026-09-01 17:56:58', NULL),
-(22, '19760210 200801 2 017', 'Endang Ary Handayani, S.T., M.Pd', 'Guru', NULL, NULL, 'endang', '$2y$12$lu8JEoI3cs2My2GxX/ODJeoynWxYTuG5O5oGaVsNxOKqlhYjhSr.O', 0, 1, '2026-09-01 17:56:59', NULL),
-(23, '19690616 200701 2 026', 'Purwati, S.Pd', 'Guru', NULL, NULL, 'purwati', '$2y$12$27S1abJLLDFUwIG1qGk7d.sCCulrSKHrTYOb6r0Cy.NnqDXi/qHTy', 0, 1, '2026-09-01 17:56:59', NULL),
-(24, '19750409 200701 2 010', 'Ninik Sriwidayati, S.Pd.,M.Pd', 'Wali Kelas', NULL, NULL, 'ninik', '$2y$12$FkSEMJQmxoz9BiO7yDTiB.5SLsKsGSoS8gH/RArNJ9oo3pwx7Ko/i', 0, 1, '2026-09-01 17:57:00', NULL),
-(25, '19770817 200701 2 012', 'Agustina Mardika Rini, S.Pd.,M.Pd', 'Guru', NULL, NULL, 'agustina', '$2y$12$A3JwMbPCw0N0rgts61u7ueaG/kpWNqVJ6IfHMYNg4J7GsWYU.OVaC', 0, 1, '2026-09-01 17:57:00', NULL),
-(26, '19690805 200801 2 025', 'Komariyah, S.Pd', 'Guru', NULL, NULL, 'komariyah', '$2y$12$L4XuTmHlNfv8bdqYEi6Pqec84ZarSNcL.rlagH7t/EMvT7s/94Puy', 0, 1, '2026-09-01 17:57:00', NULL),
-(27, '19710806 200801 2 012', 'Muashofah, M.Pd', 'Wali Kelas', NULL, NULL, 'muashofah', '$2y$12$1K6GbVBCN.zdypPUPSrf0OAq0t7Hr0jCFBlIW7TkbBwkQXRWQ9MKa', 0, 1, '2026-09-01 17:57:01', NULL),
-(28, '19690915 200801 2 028', 'Atih Wilupi, S.E,M.Pd', 'Wali Kelas', NULL, NULL, 'atih', '$2y$12$nOKcMJwOiHnhZYlJmdUOxebwRVguQCl668DQpGGoShRvfRqV4rbMq', 0, 1, '2026-09-01 17:57:01', NULL),
-(29, '19801224 200801 2 016', 'Winartin, S.Pd', 'Wali Kelas', NULL, NULL, 'winartin', '$2y$12$ETTGHNFGibKMFtp9isG25eS2i5KWdwpDZKW6dxabxMjf.N6wELOAu', 0, 1, '2026-09-01 17:57:01', NULL),
-(30, '19681014 200801 2 011', 'Siti Khoiriyah, S.Pd', 'Wali Kelas', NULL, NULL, 'siti2', '$2y$12$p2bksGNAGijRtqgo2DgfGeUYpb80j/g0FAyBxFbql4ZXBkyP.eDvm', 0, 1, '2026-09-01 17:57:02', NULL),
-(31, '19690917 200701 2 012', 'Sri Subekti, S.Pd', 'Guru', NULL, NULL, 'sri2', '$2y$12$q8DCNtBOoWFae.xwRc9qHu2KBLuBErllizsMVqBAiFaGG/yU/h4Jy', 0, 1, '2026-09-01 17:57:02', NULL),
-(32, '19700831 200801 2 017', 'Kasmi, S.Pd., M.Pd', 'Wali Kelas', NULL, NULL, 'kasmi', '$2y$12$pWJMtDd3ofNZjddC3oDwfuqVbQQiums3mkPU1eOSeT//zlvefyLHO', 0, 1, '2026-09-01 17:57:03', NULL),
-(33, '19700824 200801 1 008', 'Ilham Sungeidi, S.Pd', 'Guru', NULL, NULL, 'ilham', '$2y$12$X/Wa77JFlUEkrYC/i.eawO9rh7JOPqRUiezIHpzEI2A8aoiTu2FDm', 0, 1, '2026-09-01 17:57:03', NULL),
-(34, '19800329 200901 2 006', 'Lutfia Marsalina, S.Pd.I, M.Pd.', 'Guru', NULL, NULL, 'lutfia', '$2y$12$SrZESy0tgEz55reZPYsHzuCVr/GWv6AIF9T5T.6SkjiK3P6BdhOwG', 0, 1, '2026-09-01 17:57:04', NULL),
-(35, '19850910 200903 2 009', 'Indriati, S.Pd', 'Wali Kelas', NULL, NULL, 'indriati', '$2y$12$Fc64J8Iq3sBYvlyEM1IjCO8k3t1J09mUSjdwcydxiFGcqQdrKDkwm', 0, 1, '2026-09-01 17:57:04', NULL),
-(36, '19761118 200701 1 004', 'Agus Fahruddy, S.Pd., M.Pd', 'Guru', NULL, NULL, 'agus', '$2y$12$sFvj6E1tH4bnjoI3RNS.nOY9cRIUsEOtWIJ.oiHOm1U457kJRsD8C', 0, 1, '2026-09-01 17:57:04', NULL),
-(37, '19790202 200701 2 025', 'Titin Sukmasari, S.Pd., M.Pd', 'Guru', NULL, NULL, 'titin', '$2y$12$ZfULUputfVvzFWxYxQ4KzOGRp6sxFcLklYHd70S05yaHwe9t.8HXi', 0, 1, '2026-09-01 17:57:05', NULL),
-(38, '19800410 200901 2 007', 'Dian Mawarti, S.Pd', 'Guru', NULL, NULL, 'dian', '$2y$12$z3V9u5JPT1Ro1tdRG8gXme2ElIA0sccVFMxbmmgJfH27pnYTFgwlK', 0, 1, '2026-09-01 17:57:05', NULL),
-(39, '19820303 200901 2 009', 'Niken Hari Pratiwi, S.Psi.,M.Pd', 'Waka', NULL, NULL, 'niken', '$2y$12$nkBP9IqlUNiVm/RHMlKEZOtkcmZU4eiQsISGXeyBlIVg316Hdo44C', 0, 1, '2026-09-01 17:57:06', NULL),
-(40, '19740914 200901 2 001', 'Siti Munawaroh, S.Kom.,M.Pd', 'Guru', NULL, NULL, 'siti3', '$2y$12$4Q2v/YwFCNMI3Wob3SdPm.i7xqZRAEY6dns2OlmfB11q5jh3x4xHC', 0, 1, '2026-09-01 17:57:06', NULL),
-(41, '19821103 201001 2 025', 'Dwi Nova Setyandari, S.Pd', 'Wali Kelas', NULL, NULL, 'dwi2', '$2y$12$ttlTlWsqi7wZMeCKRvohceu7AB2LfH7zrxaRt1mCi/ztl3kma1H3q', 0, 1, '2026-09-01 17:57:06', NULL),
-(42, '19801026 201001 2 016', 'Diana Hartanti, S.T., M.Pd', 'Wali Kelas', NULL, NULL, 'diana', '$2y$12$qrdkyALwm14lxawSshdmIeVeT/UZZlP1NsH0HMnfxa.7.yNgu9ipe', 0, 1, '2026-09-01 17:57:07', NULL),
-(43, '19730719 201001 2 002', 'Andri Retno Yuli Astuti, S.Pd', 'Wali Kelas', NULL, NULL, 'andri', '$2y$12$PF0z9PKD6jswMp/5VKAYjunHBY.UNjVXeSRb.ffs1ZROvjgJU0QNC', 0, 1, '2026-09-01 17:57:07', NULL),
-(44, '19770426 201001 2 008', 'Siswanti Purwaningsih, S.T., M.Pd', 'Wali Kelas', NULL, NULL, 'siswanti', '$2y$12$6Q2oP9K5jpQ4qkmk2zHxzecY/vGSGP.CTkstpNVW46jN2zSwos1qG', 0, 1, '2026-09-01 17:57:08', NULL),
-(45, '19760826 201001 2 010', 'Ayu Puspitorini, ST', 'Guru', NULL, NULL, 'ayu', '$2y$12$Vs7HrTzUrsJJ/LakVLqUSei3ZfASNMBgQ207tmZTspyKf4Gk7Q8l2', 0, 1, '2026-09-01 17:57:08', NULL),
-(46, '19800723 201001 2 016', 'Elysa Yuli Nur\'aini, S.Si', 'Wali Kelas', NULL, NULL, 'elysa', '$2y$12$4lb9zn2nwWKEfPRSUeQRcuaSksfXN/W2KVAlksV6RclrrlqJzyw1u', 0, 1, '2026-09-01 17:57:08', NULL),
-(47, '19710826 200604 1 011', 'Agus Muharyanto, M.Pd', 'Guru', NULL, NULL, 'agus2', '$2y$12$a1X7.164poEAOxg1QfIaI.ZkqEQSFVDhoIrRZlwTIUPI/C.yNm8P6', 0, 1, '2026-09-01 17:57:09', NULL),
-(48, '19781001 200604 2 021', 'Septiani, S.Pd.,M.Pd', 'Wali Kelas', NULL, NULL, 'septiani', '$2y$12$OG1MFXmpQm5EyvpvFJu0qeo.GvLvqXr60Y7v0oFnIjA/0NPD3IVqW', 0, 1, '2026-09-01 17:57:09', NULL),
-(49, '19870316 200901 2 002', 'Retno Widyastuti, S.Pd., M.Pd', 'Guru', NULL, NULL, 'retno', '$2y$12$LSobV0F4CX1Dd8AswZYq/OBLVPijqfx8xSrmbvU6I0DPpmOSvR/aG', 0, 1, '2026-09-01 17:57:10', NULL),
-(50, '19840222 200902 2 007', 'Ratih Dian Irawati, S.E', 'Wali Kelas', NULL, NULL, 'ratih', '$2y$12$S.W4FuFWlZokcbtRyfJLKuKHKqGkqjXF1EFauO5U0gevdC.bdsX56', 0, 1, '2026-09-01 17:57:10', NULL),
-(51, '19830101 201001 1 042', 'Andri Krisdianto, S.E.,M.Pd', 'Guru', NULL, NULL, 'andri2', '$2y$12$5bFYLhV8eTHGQFLZt0Xgze3OoyBGYeaKy6lpisf5VzHQMpjePsSRy', 0, 1, '2026-09-01 17:57:11', NULL),
-(52, '19850418 201001 2 031', 'Ruly Dwi Setyaningrum, S.Kom', 'Guru', NULL, NULL, 'ruly', '$2y$12$7iHY4.mqUfJmOZ0bf5PFKu9DJbc2H4bwabHCfXAHEuOucBKlLAn0y', 0, 1, '2026-09-01 17:57:11', NULL),
-(53, '19770306 201101 1 003', 'Ary Sunaryo, S.T.,M.Pd', 'Guru', NULL, NULL, 'ary', '$2y$12$L3x3hxirUZ0Dqkalo9SUo.kTbVZT7xy/Pd3n1jig9AGXL/bJ2PARG', 0, 1, '2026-09-01 17:57:11', NULL),
-(54, '19820204 201101 2 006', 'Listyana Hartati, S.Kom.,M.Pd', 'Wali Kelas', NULL, NULL, 'listyana', '$2y$12$Rf9PyUvW1nnhISHRGnvz9ep5GP77LUMQjiWVfXRvStsM3EUMtaC3W', 0, 1, '2026-09-01 17:57:12', NULL),
-(55, '19870217 201101 2 012', 'Dhuana Putri Puspitasary, S.Pd', 'Wali Kelas', NULL, NULL, 'dhuana', '$2y$12$Ip3PC1XReS1LYMVyQDJkMuFdTdOoVQK8m5x3yPM7k3EVY6rjEai3.', 0, 1, '2026-09-01 17:57:12', NULL),
-(56, '19860127 201101 1 013', 'Angga Widhy Wirawan, S.Pd.,M.Pd', 'Guru', NULL, NULL, 'angga', '$2y$12$IezoyUO3C5F7Go3lAgX41Odgx/a2Mv5XWckauPYTZuRY07oaxYeqe', 0, 1, '2026-09-01 17:57:13', NULL),
-(57, '19830113 200901 1 003', 'Mas\'an Widodo, S.Pd. M.T', 'Guru', NULL, NULL, 'masan', '$2y$12$sKgbvIp6xeXmA7bmfQA0muyMM5lEOIJRhuQN2k1gyZ0m69uWRzeZO', 0, 1, '2026-09-01 17:57:13', NULL),
-(58, '19850203 201101 1 012', 'Endik Kuswantoro, S.Kom.,M.T', 'Wali Kelas', NULL, NULL, 'endik', '$2y$12$Hb/6VNEao.kUTFbBaRXUl.JpFJL0HXEn5V8DFWqO07gTPhdVs.oHy', 0, 1, '2026-09-01 17:57:13', NULL),
-(59, '19711129 201101 1 002', 'Anang Prasetyo, S.Pd', 'Guru', NULL, NULL, 'anang', '$2y$12$7EuNbBMHbhDnUTber05/n.QmONw8q5zN6XxclFlk9y2gRW4btRGzy', 0, 1, '2026-09-01 17:57:14', NULL),
-(60, '19780830 200701 1 017', 'Arif Setyobudi, S.Pd', 'Wali Kelas', NULL, NULL, 'arif', '$2y$12$eBMn/7NYJnuXFDlWOfegNuNnZK8IVh/xdrpwlI9UW2JRCma/1WMce', 0, 1, '2026-09-01 17:57:14', NULL),
-(61, '19760719 200901 1 003', 'Benny Mamora, S.Kom', 'Wali Kelas', NULL, NULL, 'benny', '$2y$12$tmxe2cfSTWf5JbsslVt3UOayQhAzdSHlo0iOBFMB3O3jCTEcT5Dki', 0, 1, '2026-09-01 17:57:15', NULL),
-(62, '19850316 201101 1 012', 'Danang Anjar Hymawanto, S.Pd', 'Guru', NULL, NULL, 'danang', '$2y$12$5f5HZNskDMcSj59jiPkWAOMenA2xLvyrCOABWE3L6nyuU/Nq5Mkf2', 0, 1, '2026-09-01 17:57:15', NULL),
-(63, '19820822 201407 2 002', 'Hardini Indahing Budi, S.E., M.Pd.', 'Waka', NULL, NULL, 'hardini', '$2y$12$vdOWAry5kfNK68sDEdgZEu8SkoI75w0ielqlcrwSyiF12pwPiW43y', 0, 1, '2026-09-01 17:57:15', NULL),
-(64, '19900907 201903 1 004', 'Erwan Septyono, S.Pd', 'Guru', NULL, NULL, 'erwan', '$2y$12$ZsXbgC62MmzFMKPseZzOPex9wwfQqhjjZt6OccdrxD.BiOYcIvmQG', 0, 1, '2026-09-01 17:57:16', NULL),
-(65, '19910708 201903 2 017', 'Istiana Suhartati, S.T', 'Guru', NULL, NULL, 'istiana', '$2y$12$dEYP8P4VEiCrb6WPQtRMp..dvNSDq4bCo.E6vN/dV46Aynrz7ACaS', 0, 1, '2026-09-01 17:57:16', NULL),
-(66, '19960728 202012 2 013', 'Risqi Nur Imama, S.Tr.Par', 'Wali Kelas', NULL, NULL, 'risqi', '$2y$12$TrHEbn5hFDjPCFuFQaYJ9.AZeU8/4ONj1teQ8F1uX9nAmeG/dNI76', 0, 1, '2026-09-01 17:57:17', NULL),
-(67, '19900418 202012 1 017', 'Badrus Sulaiman, S.Pd.', 'Wali Kelas', NULL, NULL, 'badrus', '$2y$12$NCKUjUVm.B0ctB6eq6Ajl.PbycxngvSUwYJw9NRu0713kHxiCARqa', 0, 1, '2026-09-01 17:57:17', NULL),
-(68, '19780822 202221 2 006', 'Nurul Azizah, S.Pd', 'Wali Kelas', NULL, NULL, 'nurul', '$2y$12$Q4wfEUHjmCrK83OKFyanS.76uBphffX0.ukiMxNB0TMnpSPfhVyuK', 0, 1, '2026-09-01 17:57:18', NULL),
-(69, '19771112 202221 1 007', 'Hendro Suwignyo, ST', 'Waka', NULL, NULL, 'hendro', '$2y$12$aZkfI5F7Sohn57QGrR1afOUwG4pgrGIQgtLlmt/zKzke2uN4ZE.tK', 0, 1, '2026-09-01 17:57:18', NULL),
-(70, '19740805 202221 2 008', 'Dyah Esti Rahayu, S.Pd', 'Guru', NULL, NULL, 'dyah', '$2y$12$/mhInXt5qWEh1oxr1UEJZuTtC0/al6i8mzgyQ31lM/9ZG87FreKRq', 0, 1, '2026-09-01 17:57:18', NULL),
-(71, '19810124 202221 1 012', 'Baskoro, S.Si', 'Guru', NULL, NULL, 'baskoro', '$2y$12$mj0yv1XzSNa8YZ79qdhIDeGRX2lsXF4aShqf.LREdnXBfGzubaYtC', 0, 1, '2026-09-01 17:57:19', NULL),
-(72, '19830306 202221 2 048', 'Luluk Munfarida,S.Pd', 'Wali Kelas', NULL, NULL, 'luluk', '$2y$12$f4EVPYCtlnFptAKI4ghjseFWgJmrLnY4d4lJK5icxD0XSevG/besy', 0, 1, '2026-09-01 17:57:19', NULL),
-(73, '19830707 202221 2 027', 'Khuriyatul Kamila, S.Si', 'Wali Kelas', NULL, NULL, 'khuriyatul', '$2y$12$tWMrIvXnrDsoJFhLk5HG9.Qofc45BiAmoBMJ4vwx/9zWZDt/yyXs6', 0, 1, '2026-09-01 17:57:20', NULL),
-(74, '19880521 202221 2 020', 'Veronica Damay Rulitasari, S.Pd', 'Wali Kelas', NULL, NULL, 'veronica', '$2y$12$ZhSDzZofjPHCzfmthx.Ct.eJ8URF2/.K1et/2rJEKaoo3gw0RClgi', 0, 1, '2026-09-01 17:57:20', NULL),
-(75, '19870303 202221 2 026', 'Nur Nastutisari, S.ST.Par.', 'Guru', NULL, NULL, 'nur', '$2y$12$EEomGw4t5tPQwh6WmB8SOusCAKrpOPfnSeyFiYZjDD7EyWlTVApgi', 0, 1, '2026-09-01 17:57:20', NULL),
-(76, '19820318 202221 1 012', 'Alfinu Farikh Abdillah, S.Pd.I', 'Guru', NULL, NULL, 'alfinu', '$2y$12$2pInS0uSpOsiUU5kcPepvuv5AvBRJKEHAkjTGuNOl6phQCLBAmRcC', 0, 1, '2026-09-01 17:57:21', NULL),
-(77, '19910914 202221 2 015', 'Khoyrotun Hisani, S.Sn', 'Wali Kelas', NULL, NULL, 'khoyrotun', '$2y$12$TkA4HjBfibfhFQJGX7xnHeJsEJkG/vKGaXvjrUdViK1b4kxcKsLry', 0, 1, '2026-09-01 17:57:21', NULL),
-(78, '19911103 202221 1 007', 'Joko Priyanto, S.Kom', 'Guru', NULL, NULL, 'joko', '$2y$12$hMk4Xv42fyOUH.VRtqz.IO9dirS0LNb5DThvklPXlZiUAdzQ2D6UC', 0, 1, '2026-09-01 17:57:22', NULL),
-(79, '19920504 202221 2 022', 'Elyana Frisca Monica, S.Pd', 'Guru', NULL, NULL, 'elyana', '$2y$12$Gm9yMf5PalplD.rsyDkKC.RW.SI.X7esjLSnsEdccgbu4ytlpAIhe', 0, 1, '2026-09-01 17:57:22', NULL),
-(80, '19951027 202221 2 012', 'Rika Okta Maulida, S.Ds.', 'Wali Kelas', NULL, NULL, 'rika', '$2y$12$iOipirw9q5kLqcKIbgcRXuF5l1oh9cuOoQZ74sHniXSZKHTpnVrsm', 0, 1, '2026-09-01 17:57:22', NULL),
-(81, '19670512 202221 2 003', 'Dra. Hanik Pangestuti', 'Guru', NULL, NULL, 'hanik', '$2y$12$cwYGUycWXaL..ajM/hkVYeiTXH1uassHl3tsrQ1eH5FSs1abU586O', 0, 1, '2026-09-01 17:57:23', NULL),
-(82, '19850112 202221 1 020', 'Sa\'ad Wazis Hiedayat, S.Pd', 'Guru', NULL, NULL, 'saad', '$2y$12$ZMyp/KVUV/BgtX9DX4NjE.swWXeiDhY1GU5Y9NEE3TeYqHigCQ9l.', 0, 1, '2026-09-01 17:57:23', NULL),
-(83, '19850121 202221 2 037', 'Shinta Indyar Shanty Susanto, S.Kom', 'Guru', NULL, NULL, 'shinta', '$2y$12$ccBXZ86QwPsrJv.IS0Yqmu6lsZZ8xNxw3R4qO2o/ntDIuMplPsfCC', 0, 1, '2026-09-01 17:57:24', NULL),
-(84, '19871014 202221 1 014', 'Widodo, S.Pd', 'Guru', NULL, NULL, 'widodo', '$2y$12$YnFd6PGivhu.Ull6s63EmuZsfaLUOMgBcwBuFYidRd1bVi0.K2agu', 0, 1, '2026-09-01 17:57:24', NULL),
-(85, '19940101 202221 2 024', 'Nur Eko Wahyuningsih, S.Pd', 'Wali Kelas', NULL, NULL, 'nur2', '$2y$12$b2J99jPsftLc3rdrNQcPJuZWXjFOueCAvIvpOWgjtM.qv7dzo8suK', 0, 1, '2026-09-01 17:57:24', NULL),
-(86, '19970318 202221 2 010', 'Kurnila Putri Islamawati, S.Pd', 'Guru', NULL, NULL, 'kurnila', '$2y$12$rCyC197BwVrHOhkPxfh5Bu/tRWDr45eO3PhmT.uCqO8Lhu9lVwZWS', 0, 1, '2026-09-01 17:57:25', NULL),
-(87, '19710728 202321 2 004', 'Sulistyowati, SS', 'Wali Kelas', NULL, NULL, 'sulistyowati', '$2y$12$H/pmFBNM9a3FJCvFaLojuejOX8WqIwGV6cq5CGTSrpfHkVzzgSilq', 0, 1, '2026-09-01 17:57:25', NULL),
-(88, '19750616 202321 2 007', 'Wiwik Yuniarsih, S.Pd', 'Wali Kelas', NULL, NULL, 'wiwik', '$2y$12$YMFytgcUNwSkZ89iAiqugOkWkJR92cROKlF4b6TxHQtSq5a/7T0ka', 0, 1, '2026-09-01 17:57:26', NULL),
-(89, '19780810 202321 1 005', 'Fajar Luthfianto, S.Pd', 'Waka', NULL, NULL, 'fajar', '$2y$12$fufmGMBSNKXsFTXfFTiRGu4rodUFKrKEyCvWsgbxPhXqgSfTNUM/K', 0, 1, '2026-09-01 17:57:26', NULL),
-(90, '19820529 202321 2 015', 'Fajar Wahyu Pratiwi, S.S', 'Wali Kelas', NULL, NULL, 'fajar2', '$2y$12$BA5zoRhlXZjC07paiO46aOURtuJ0q6VQdCyy6TJj76a9fw6zOS7mW', 0, 1, '2026-09-01 17:57:27', NULL),
-(91, '19820718 202321 1 006', 'Agung Yulianto, S.Pd', 'Guru', NULL, NULL, 'agung', '$2y$12$M9AirXn5DwJszZZV7hYOvOBFCsSPomYpVw1kCDJt3PkokQSfDTlmi', 0, 1, '2026-09-01 17:57:27', NULL),
-(92, '19830331 202321 2 015', 'Sri Kusumastuti, S.Pd', 'Wali Kelas', NULL, NULL, 'sri3', '$2y$12$KpsZHjKox1H1JrDAhYqqaeZuOM3JafoVjJhhyxo3h8CPzD0CLNKpG', 0, 1, '2026-09-01 17:57:28', NULL),
-(93, '19840730 202321 2 018', 'Yuli Ratnasari, S.Pd', 'Wali Kelas', NULL, NULL, 'yuli', '$2y$12$u5nDeX7AqP53EhxpGPClc.03VoMu8fMXLKDswEDwUGow0Bczc03mC', 0, 1, '2026-09-01 17:57:28', NULL),
-(94, '19850627 202321 2 020', 'Fitria Renytasari, S.Pd', 'Wali Kelas', NULL, NULL, 'fitria', '$2y$12$kOPvBp8pm2fqylb0Hz2yF.V5SKtpfk6UeViNuwKGUGcr/42dfdeDe', 0, 1, '2026-09-01 17:57:29', NULL),
-(95, '19710523 202421 2 002', 'Tutut Sriatin, S.Pd', 'Wali Kelas', NULL, NULL, 'tutut', '$2y$12$DQlQLBF8DVL5zKV3De.izeZq/xXq.xm/zHFQ4TX8Oe0SjrpsV231i', 0, 1, '2026-09-01 17:57:29', NULL),
-(96, '19751113 202421 1 001', 'Dwi Kuswanto, S.Pd', 'Guru', NULL, NULL, 'dwi3', '$2y$12$kshEandOAjFFQnVtc47cp.werPzq1p0pr0jSAwIX9JrNJvm5Wm7o6', 0, 1, '2026-09-01 17:57:29', NULL),
-(97, '19751211 202421 2 008', 'Erna Qoriah, S.E.', 'Wali Kelas', NULL, NULL, 'erna2', '$2y$12$KWlHcjmaCyXt8qpIMNkSqO/yyhVNVBIsipCue8jkhk3ZupVOwZyPS', 0, 1, '2026-09-01 17:57:30', NULL),
-(98, '19780701 202421 2 002', 'Pipit Ambarwati, S.Pd', 'Wali Kelas', NULL, NULL, 'pipit', '$2y$12$OEKSuqlWvXVElsOGcvvQpuRMvDN9n82fmtWYTMmgcz9t5Na19xPRS', 0, 1, '2026-09-01 17:57:30', NULL),
-(99, '19800312 202421 2 013', 'Fitri Amaliyah, S.Pd', 'Wali Kelas', NULL, NULL, 'fitri', '$2y$12$MvyCocL69k7uMlYjtI48NuyqgLXzUSPq1N1MSlzC9F0J7EziIQGPm', 0, 1, '2026-09-01 17:57:30', NULL),
-(100, '19880113 202421 2 002', 'Niken Dewi Hastika, S.Pd', 'Wali Kelas', NULL, NULL, 'niken2', '$2y$12$ypS7hj7w2GhVovvpMJf4de/i0cYOZh8GkRbeJ1nC3FK8EMygYpqOS', 0, 1, '2026-09-01 17:57:31', NULL),
-(101, '19880503 202421 2 030', 'Ista Nofasari, S.Pd', 'Wali Kelas', NULL, NULL, 'ista', '$2y$12$pBSwjQ8bgefmEtISQgmyl./oDaXhutMC.6Kb2MOIPBbA/9jPEoCii', 0, 1, '2026-09-01 17:57:31', NULL),
-(102, '19880521 202421 2 009', 'Anisa Kusumawati, S.Pd', 'Wali Kelas', NULL, NULL, 'anisa', '$2y$12$A3GADdgKUk.jnqXklYPfk.6Kui/zyX1AhdQRGPBXdAg69qxoHKQAm', 0, 1, '2026-09-01 17:57:32', NULL),
-(103, '19920423 202421 2 010', 'Mega Mahardika, S.Pd', 'Wali Kelas', NULL, NULL, 'mega', '$2y$12$mF2leyczk9iOW9BeRgVF7ukRFt0ieb5Dm8rpn3CiCDg.bkoe0C6i.', 0, 1, '2026-09-01 17:57:32', NULL),
-(104, '19940415 202421 2 053', 'Rifkotin Na\'imah, S.Pd', 'Wali Kelas', NULL, NULL, 'rifkotin', '$2y$12$nIRGbNJ12kNxZyNskkjfG.6s17A5wFWHrTvBWy6k9q/py9ukL63G6', 0, 1, '2026-09-01 17:57:33', NULL),
-(105, '19901031 202521 2 015', 'Sinta Lestari, S.Pd.I', 'Wali Kelas', NULL, NULL, 'sinta', '$2y$12$j5iYhSRavwHCqfVL1KsiBeKjvYkOqd5lCegDI.AuBr3rDdhhlIzoa', 0, 1, '2026-09-01 17:57:33', NULL),
-(106, '19900806 202521 2 028', 'Astra Bella Flamboyan, S.Psi', 'Wali Kelas', NULL, NULL, 'astra', '$2y$12$7Dw2PXpqVniZs61NNNDXkeClflXoHJIxBHUdZJGzW/QHiSG8F1LrK', 0, 1, '2026-09-01 17:57:33', NULL),
-(107, '19970204 202521 2 014', 'Fitria Diah Ayu Hartati, S.Pd', 'Wali Kelas', NULL, NULL, 'fitria2', '$2y$12$ye09yd9GSczizO0ITVQr5.JR6uOUw0WGllugcTAIPvxsHeg5NTPW.', 0, 1, '2026-09-01 17:57:34', NULL),
-(108, '19661108 202521 2 001', 'Dra. Susakti Yuharini', 'Guru', NULL, NULL, 'susakti', '$2y$12$11X16y89IgxS1q7mu9NiYOwsw2V/LDxsOyzfnu3pFbBgzkB.V4X6i', 0, 1, '2026-09-01 17:57:34', NULL),
-(109, '19700717 202521 1 036', 'Agus Pramono, S.Sn', 'Guru', NULL, NULL, 'agus3', '$2y$12$nvG.gPCnsuO6hiTnKtArluKCIUn0y6WibRVRr4OFPA0kROE3/SlzS', 0, 1, '2026-09-01 17:57:34', NULL),
-(110, '19871004 202521 2 098', 'Ajeng Okvitasari, S.Pd', 'Wali Kelas', NULL, NULL, 'ajeng', '$2y$12$rt/p/xYeCN5sMD47FPyxP.gwUY5YmNb9XQqQcw/QD4PchuSOB8e1q', 0, 1, '2026-09-01 17:57:35', NULL),
-(111, '19860414 202521 2 103', 'Nishfu Laili, S.Pd', 'Wali Kelas', NULL, NULL, 'nishfu', '$2y$12$0wx2OvQ.0VVdRgAknxbZ8ONaE/9zhWkvYmMs/kHiAZp/eP4sgHGKC', 0, 1, '2026-09-01 17:57:35', NULL),
-(112, '19830102 202521 1 100', 'Andika Christian Sasmita, S.ST', 'Guru', NULL, NULL, 'andika', '$2y$12$G.smymkxwIfdZeMIVS.1wOwvvymOClSPkSP7VpWMYZ8wEUiiTHb5a', 0, 1, '2026-09-01 17:57:35', NULL),
-(113, '19821215 202521 2 065', 'Muto\'atul Khosi\'ah, S.Pd', 'Wali Kelas', NULL, NULL, 'mutoatul', '$2y$12$AvLJtTID4pMuj/CtE3qjh.kyj.ANqdJ5YufmiG/szi8pUr0zm0p46', 0, 1, '2026-09-01 17:57:36', NULL),
-(114, '19871213 202521 1 096', 'Bella Prakoso, S.Pd', 'Guru', NULL, NULL, 'bella', '$2y$12$/jhkTzsJQnBESIK8kzXIIOPdlfs8oR8RLgeve.E.O3r3tlA5XIFmG', 0, 1, '2026-09-01 17:57:36', NULL),
-(115, '19920205 202521 2 129', 'Yustin Febrini, S.Pd', 'Wali Kelas', NULL, NULL, 'yustin', '$2y$12$Ih7fSB3f270i47CfaewW8.63MFVfYurJiTLCP74ci9KnkgUvIIew6', 0, 1, '2026-09-01 17:57:36', NULL),
-(116, '19850926 202521 2 055', 'Siti Maisaroh, S.Pd', 'Wali Kelas', NULL, NULL, 'siti4', '$2y$12$poNcHA1oJIe46Sugt.L6luzY8db/aXbQQA.XYAQQlRErQj9lbHdUO', 0, 1, '2026-09-01 17:57:37', NULL),
-(117, '19890418 202521 2 117', 'Laili Ermawati, S.Pd', 'Guru', NULL, NULL, 'laili', '$2y$12$dCc87tprMCi/P4cCLCkCxuM3/9jOPPc7z0xfBYjz4sGpg6u3M.uAu', 0, 1, '2026-09-01 17:57:37', NULL),
-(118, '19971223 202521 1 078', 'Muhammad Fajar Assidiqi, S.Pd', 'Wali Kelas', NULL, NULL, 'muhammad', '$2y$12$ayysn78iKg02SV55zCD0l.OaCObyQBLmZMgdchX/de5ubjcHOhrvG', 0, 1, '2026-09-01 17:57:37', NULL),
-(119, '19820609 202521 2 057', 'Yuni Jiastuti, S.Pd', 'Wali Kelas', NULL, NULL, 'yuni', '$2y$12$LhhWl4AyWO/Uq2uWhXtthu4xCSSkGfiu9y6ojkVgZ3qDHnoCxFM0a', 0, 1, '2026-09-01 17:57:38', NULL),
-(120, '19781006 202521 1 046', 'Tuhu Eries Kudori, S.Sn', 'Wali Kelas', NULL, NULL, 'tuhu', '$2y$12$J5f6.Wos3EJTF3ihU1m/ge0RO0wg3LQydXIo5I5hQJhX1lFJEDq7C', 0, 1, '2026-09-01 17:57:38', NULL),
-(121, '19961117 202521 1 096', 'Eko Saputro, S.Pd', 'Guru', NULL, NULL, 'eko', '$2y$12$13URXQqMeVRxLzHTeD9exus6gBJlLtls7WA0/MJVltV1wxMUHDEB2', 0, 1, '2026-09-01 17:57:38', NULL),
-(122, '19871116 202521 1 085', 'Zainul Arifin,S.Pd', 'Guru', NULL, NULL, 'zainul', '$2y$12$BPvXmfBJ2kGb3i0kKLrgreBeMUTRXzrRcMsCGF90KZDpVneVjuK.G', 0, 1, '2026-09-01 17:57:39', NULL),
-(123, NULL, 'Endang Safitri, S.Pd', 'Guru', NULL, NULL, 'endang2', '$2y$12$1TROEoTnQnZzMqfkT4a6mOA1OGWvut/Hl3ZSddEgglBrr.SZ1/Jpu', 0, 1, '2026-09-01 17:57:39', NULL),
-(124, NULL, 'Mufatiroh, S.Ag', 'Wali Kelas', NULL, NULL, 'mufatiroh', '$2y$12$oiIoccsZiz5B8vMMTnUPVOeBO5UCZSU1J8gWbopxKIeamdOIm8ARS', 0, 1, '2026-09-01 17:57:39', NULL),
-(125, NULL, 'Abdul Rohman, S.Pd', 'Wali Kelas', NULL, NULL, 'abdul', '$2y$12$C9eRz.szFIuSSKB0SCJxCe4uX/KLT3m8FCFQzGuBBjU7L/0q0a.wq', 0, 1, '2026-09-01 17:57:40', NULL),
-(126, NULL, 'Rizki Putri Wulandari, S.Pd', 'Guru', NULL, NULL, 'rizki', '$2y$12$B3NSGjVrEsqDCrCDAhifBug5.MphnJR9srQkyjLs.2IV.at2MOvbW', 0, 1, '2026-09-01 17:57:40', NULL),
-(127, NULL, 'Pdt. Juklianus Steven Immanuel Bahihi, S.Pdk., M.Pd', 'Guru', NULL, NULL, 'juklianus', '$2y$12$z/4TXu/QQPe0knAkUCqw6uTWsWW4H/cNqskCZtujcPez84DJJolpq', 0, 1, '2026-09-01 17:57:40', NULL),
-(128, NULL, 'Sukamto, S.Ag', 'Guru', NULL, NULL, 'sukamto', '$2y$12$/.yJl.SHGaQTjZT4xn2VZeiQFMD.DulHpf5FY8poeot6ZQeD83gKW', 0, 1, '2026-09-01 17:57:41', NULL),
-(131, NULL, 'Muto\'atul Khosi\'ah Import Test, S.Pd', 'Guru', NULL, NULL, 'mutoatul_import_test', '$2y$04$08s/yN3VDrBTPt3dJ62JBekqafURwDykTnljmTMelhbATZXjCcIiq', 0, 1, '2026-09-03 01:32:08', NULL),
-(132, NULL, 'Guru ID Import Test, S.Pd', 'Guru', NULL, NULL, 'idguru_import_test', '$2y$04$eHKIO/kqwHb11kLTMboQleHTs.Yyq31W6PTmZ7Jo7BrLcJWRF2dnG', 0, 1, '2026-09-07 12:08:48', NULL),
-(133, '198803122010011001', 'Guru NIP Import Test, S.Pd', 'Guru', NULL, NULL, 'nip_import_test', '$2y$04$lAo0qry6oXzbvWjAqh.7f.WBXzI6MJh68x.e7W3LXelYmKoHp3hbq', 0, 1, '2026-09-07 12:08:48', NULL),
-(134, NULL, 'Guru Upacara Test, S.Pd', 'Guru', NULL, NULL, 'guru_upacara_test', '$2y$04$MuvSInFbcnCS4T6gHrguv.QF2RC3zk6xuxVyQ5RcgN3D/DVcUkfgK', 0, 1, '2026-09-07 12:08:48', NULL),
-(135, NULL, 'Guru Store Test, S.Pd', 'Guru', NULL, NULL, 'guru_store_test', '$2y$04$.B4FdYkKR.RcleXXOUkR2.UZElwnOux7TfkBTv4YtsqNOhLcsaJg2', 0, 1, '2026-09-07 12:08:48', NULL),
-(136, NULL, 'Guru Update Test, S.Pd', 'Guru', NULL, NULL, 'guru_update_test', '$2y$04$nLbPK/bOcm.h46Q6S.xz0u55dGcXW4p7lSanuk1wWhW6GHS6WwdLy', 0, 1, '2026-09-07 12:08:49', NULL),
-(137, NULL, 'Guru Tugaskan Test, S.Pd', 'Guru', NULL, NULL, 'guru_tugaskan_test', '$2y$04$rEJDkKxJd..yg2YXddOGMOXBJjh.1vw4vkrNQ52RESy4L9YWZ5r4e', 0, 1, '2026-09-07 12:08:49', NULL);
+INSERT INTO `guru` (`id_guru`, `nip`, `nama_guru`, `Peran`, `foto_profil`, `id_mapel`, `no_hp`, `username`, `password_hash`, `is_admin`, `is_aktif`, `created_at`, `deleted_at`) VALUES
+(1, '19810115 200312 1 003', 'Trisno Wibowo, S.Pd.,M.M', 'Kepsek', NULL, NULL, NULL, 'trisno', '$2y$12$hwCDmq5V1nW9PyYNjvivGe0GEdduZrv6Let88gdngs7w2887HD5Pa', 0, 1, '2026-09-01 17:56:50', NULL),
+(2, '19670604 198903 2 009', 'Martiin, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'martiin', '$2y$12$ATVHybSiw6SnJBRfJRm2xu9zcl4IKmWMPjtNaq5.WoGDwPch0uvKS', 0, 1, '2026-09-01 17:56:50', NULL),
+(3, '19661207 199412 1 003', 'Yani, S.Pd.', 'Guru', NULL, NULL, NULL, 'yani', '$2y$12$nSjC9N9BeCmF2stjp2EKlOqdit5c1UG0Ehnu5A3gskELUCyyTRQn.', 0, 1, '2026-09-01 17:56:51', NULL),
+(4, '19700825 199512 2 001', 'Siti Umiharsih, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'siti', '$2y$12$wGZSzqF8DeK1G5T1MwmoUeusy5bDNf8OPYssiwbp8Gny7O2ap3yEe', 0, 1, '2026-09-01 17:56:51', NULL),
+(5, '19700325 200312 2 007', 'Winarsih, S.Pd, M.Pd', 'Wali Kelas', NULL, NULL, NULL, 'winarsih', '$2y$12$xeThU9uwXHGA8e2S8CIP0O6e6pwgezpuV1KRupN.EuL.GPlNTEp96', 0, 1, '2026-09-01 17:56:52', NULL),
+(6, '19701017 199703 2 004', 'Dwi Rini Manfaati, S.Pd', 'Guru', NULL, NULL, NULL, 'dwi', '$2y$12$gohX.Iu70nJYH.DjGaZZu.IJ8T8i8081bD5XGYYBPRai/2XMkmqVu', 0, 1, '2026-09-01 17:56:52', NULL),
+(7, '19681128 200501 2 004', 'Dra. Anik Indriani', 'Wali Kelas', NULL, NULL, NULL, 'anik', '$2y$12$hKPGB/P0DcyY0T5UVFv95O0DBxD0P98xr5X/fWlGtorRU84O3Gjnm', 0, 1, '2026-09-01 17:56:52', NULL),
+(8, '19700304 200501 2 006', 'Sri Rahayu, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'sri', '$2y$12$C.pfsNnQrXawTqw93.BbDeCuuoY3T22bW19kMAvRgGvRcUur1X54m', 0, 1, '2026-09-01 17:56:53', NULL),
+(9, '19750304 200604 2 017', 'Arvia Rienetasary, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'arvia', '$2y$12$B2c7WL8/RtZ7ZVlcyG5AzeDOEZyqg4Ohrojtr3Rdrs10x2151ShN6', 0, 1, '2026-09-01 17:56:53', NULL),
+(10, '19730601 200604 2 024', 'Peni Wulandari, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'peni', '$2y$12$CnhnJg.eSuuDqe0Hpd.pGeZ8ApUc3qyGGNS3Zuts.ItPCLamVCdUy', 0, 1, '2026-09-01 17:56:54', NULL),
+(11, '19691006 200701 2 022', 'Rindang Rejeki, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'rindang', '$2y$12$7PLuu935Ezb9kKNOTg6x0OoezERaA/QFK9ZiUl1KhcZH8rK7/Cv/e', 0, 1, '2026-09-01 17:56:54', NULL),
+(12, '19710520 200604 2 018', 'Erna Rinawati, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'erna', '$2y$12$3QVZjZmgQl.zBdY7LdQS0eSwCcm9ymDqhYJ1lh00G9zm6aCT0Hyc.', 0, 1, '2026-09-01 17:56:55', NULL),
+(13, '19730108 200604 2 015', 'Sunarti, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'sunarti', '$2y$12$j6kuwbZNX.EAQRVv7N8MnucqjdjJD5mXzna6ttX93L7CSUvEnmxPW', 0, 1, '2026-09-01 17:56:55', NULL),
+(14, '19721030 200312 1 002', 'Setiyo Winarko, S.Pd', 'Waka SDM', NULL, NULL, NULL, 'setiyo', '$2y$12$uY5fO1eAVPMECAh8UAe5XONVSFnbh6wCgI2tbAXqZYrHBDPKEZofO', 0, 1, '2026-09-01 17:56:55', NULL),
+(15, '19780202 200604 2 027', 'Isti Mufadah, S.Pd', 'Guru', NULL, NULL, NULL, 'isti', '$2y$12$Gt.cBE9ppO8cw5RtAgJOgONw8OZ/peBjj5uawXN41nFPdNG1AFF36', 0, 1, '2026-09-01 17:56:56', NULL),
+(16, '19731001 200604 2 012', 'Indayah, S.Pd., M.Pd', 'Wali Kelas', NULL, NULL, NULL, 'indayah', '$2y$12$GMhUFhfM57cUumBEVlCDeu1qTYOeGj738/kxfc5/EhX3AGYegUGuu', 0, 1, '2026-09-01 17:56:56', NULL),
+(17, '19690425 200701 2 025', 'Umi Kulsum, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'umi', '$2y$12$YF20qFLsjEAvHfMbCfzB7eaVjxN5LqDd09ikDWhESgXb0I7VWrnFO', 0, 1, '2026-09-01 17:56:57', NULL),
+(18, '19691126 200701 2 007', 'Rulik Indrawati, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'rulik', '$2y$12$EJINELPmzCV8PI8PtMY/W.2p06lFntS.a8EM7Vi.Bx0Sg2kW9925K', 0, 1, '2026-09-01 17:56:57', NULL),
+(19, '19690814 200701 2 026', 'Lilik Suratmi, S.Pd', 'Guru', NULL, NULL, NULL, 'lilik', '$2y$12$NHir1EK8HRtl67y7nn3gKOiv0So7rxs12RtOBQmLT73/YhqYKYEya', 0, 1, '2026-09-01 17:56:58', NULL),
+(20, '19670421 200701 1 026', 'Basuki Sarjono, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'basuki', '$2y$12$CnKYhgnfMIETAdrULEy2/eJE9QLTzyjfl4DpNiUipnO2/jCDABmXC', 0, 1, '2026-09-01 17:56:58', NULL),
+(21, '19680825 200801 2 019', 'Titik Samsistini, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'titik', '$2y$12$ag6iJGPTeeV8Z3e5vOEty.YaGGByemOznp6WCQNOTmZ71I68c1aGK', 0, 1, '2026-09-01 17:56:58', NULL),
+(22, '19760210 200801 2 017', 'Endang Ary Handayani, S.T., M.Pd', 'Guru', NULL, NULL, NULL, 'endang', '$2y$12$lu8JEoI3cs2My2GxX/ODJeoynWxYTuG5O5oGaVsNxOKqlhYjhSr.O', 0, 1, '2026-09-01 17:56:59', NULL),
+(23, '19690616 200701 2 026', 'Purwati, S.Pd', 'Guru', NULL, NULL, NULL, 'purwati', '$2y$12$27S1abJLLDFUwIG1qGk7d.sCCulrSKHrTYOb6r0Cy.NnqDXi/qHTy', 0, 1, '2026-09-01 17:56:59', NULL),
+(24, '19750409 200701 2 010', 'Ninik Sriwidayati, S.Pd.,M.Pd', 'Wali Kelas', NULL, NULL, NULL, 'ninik', '$2y$12$FkSEMJQmxoz9BiO7yDTiB.5SLsKsGSoS8gH/RArNJ9oo3pwx7Ko/i', 0, 1, '2026-09-01 17:57:00', NULL),
+(25, '19770817 200701 2 012', 'Agustina Mardika Rini, S.Pd.,M.Pd', 'Guru', NULL, NULL, NULL, 'agustina', '$2y$12$A3JwMbPCw0N0rgts61u7ueaG/kpWNqVJ6IfHMYNg4J7GsWYU.OVaC', 0, 1, '2026-09-01 17:57:00', NULL),
+(26, '19690805 200801 2 025', 'Komariyah, S.Pd', 'Guru', NULL, NULL, NULL, 'komariyah', '$2y$12$L4XuTmHlNfv8bdqYEi6Pqec84ZarSNcL.rlagH7t/EMvT7s/94Puy', 0, 1, '2026-09-01 17:57:00', NULL),
+(27, '19710806 200801 2 012', 'Muashofah, M.Pd', 'Wali Kelas', NULL, NULL, NULL, 'muashofah', '$2y$12$1K6GbVBCN.zdypPUPSrf0OAq0t7Hr0jCFBlIW7TkbBwkQXRWQ9MKa', 0, 1, '2026-09-01 17:57:01', NULL),
+(28, '19690915 200801 2 028', 'Atih Wilupi, S.E,M.Pd', 'Wali Kelas', NULL, NULL, NULL, 'atih', '$2y$12$nOKcMJwOiHnhZYlJmdUOxebwRVguQCl668DQpGGoShRvfRqV4rbMq', 0, 1, '2026-09-01 17:57:01', NULL),
+(29, '19801224 200801 2 016', 'Winartin, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'winartin', '$2y$12$ETTGHNFGibKMFtp9isG25eS2i5KWdwpDZKW6dxabxMjf.N6wELOAu', 0, 1, '2026-09-01 17:57:01', NULL),
+(30, '19681014 200801 2 011', 'Siti Khoiriyah, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'siti2', '$2y$12$p2bksGNAGijRtqgo2DgfGeUYpb80j/g0FAyBxFbql4ZXBkyP.eDvm', 0, 1, '2026-09-01 17:57:02', NULL),
+(31, '19690917 200701 2 012', 'Sri Subekti, S.Pd', 'Guru', NULL, NULL, NULL, 'sri2', '$2y$12$q8DCNtBOoWFae.xwRc9qHu2KBLuBErllizsMVqBAiFaGG/yU/h4Jy', 0, 1, '2026-09-01 17:57:02', NULL),
+(32, '19700831 200801 2 017', 'Kasmi, S.Pd., M.Pd', 'Wali Kelas', NULL, NULL, NULL, 'kasmi', '$2y$12$pWJMtDd3ofNZjddC3oDwfuqVbQQiums3mkPU1eOSeT//zlvefyLHO', 0, 1, '2026-09-01 17:57:03', NULL),
+(33, '19700824 200801 1 008', 'Ilham Sungeidi, S.Pd', 'Guru', NULL, NULL, NULL, 'ilham', '$2y$12$X/Wa77JFlUEkrYC/i.eawO9rh7JOPqRUiezIHpzEI2A8aoiTu2FDm', 0, 1, '2026-09-01 17:57:03', NULL),
+(34, '19800329 200901 2 006', 'Lutfia Marsalina, S.Pd.I, M.Pd.', 'Guru', NULL, NULL, NULL, 'lutfia', '$2y$12$SrZESy0tgEz55reZPYsHzuCVr/GWv6AIF9T5T.6SkjiK3P6BdhOwG', 0, 1, '2026-09-01 17:57:04', NULL),
+(35, '19850910 200903 2 009', 'Indriati, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'indriati', '$2y$12$Fc64J8Iq3sBYvlyEM1IjCO8k3t1J09mUSjdwcydxiFGcqQdrKDkwm', 0, 1, '2026-09-01 17:57:04', NULL),
+(36, '19761118 200701 1 004', 'Agus Fahruddy, S.Pd., M.Pd', 'Guru', NULL, NULL, NULL, 'agus', '$2y$12$sFvj6E1tH4bnjoI3RNS.nOY9cRIUsEOtWIJ.oiHOm1U457kJRsD8C', 0, 1, '2026-09-01 17:57:04', NULL),
+(37, '19790202 200701 2 025', 'Titin Sukmasari, S.Pd., M.Pd', 'Guru', NULL, NULL, NULL, 'titin', '$2y$12$ZfULUputfVvzFWxYxQ4KzOGRp6sxFcLklYHd70S05yaHwe9t.8HXi', 0, 1, '2026-09-01 17:57:05', NULL),
+(38, '19800410 200901 2 007', 'Dian Mawarti, S.Pd', 'Guru', NULL, NULL, NULL, 'dian', '$2y$12$z3V9u5JPT1Ro1tdRG8gXme2ElIA0sccVFMxbmmgJfH27pnYTFgwlK', 0, 1, '2026-09-01 17:57:05', NULL),
+(39, '19820303 200901 2 009', 'Niken Hari Pratiwi, S.Psi.,M.Pd', 'Waka', NULL, NULL, NULL, 'niken', '$2y$12$nkBP9IqlUNiVm/RHMlKEZOtkcmZU4eiQsISGXeyBlIVg316Hdo44C', 0, 1, '2026-09-01 17:57:06', NULL),
+(40, '19740914 200901 2 001', 'Siti Munawaroh, S.Kom.,M.Pd', 'Guru', NULL, NULL, NULL, 'siti3', '$2y$12$4Q2v/YwFCNMI3Wob3SdPm.i7xqZRAEY6dns2OlmfB11q5jh3x4xHC', 0, 1, '2026-09-01 17:57:06', NULL),
+(41, '19821103 201001 2 025', 'Dwi Nova Setyandari, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'dwi2', '$2y$12$ttlTlWsqi7wZMeCKRvohceu7AB2LfH7zrxaRt1mCi/ztl3kma1H3q', 0, 1, '2026-09-01 17:57:06', NULL),
+(42, '19801026 201001 2 016', 'Diana Hartanti, S.T., M.Pd', 'Wali Kelas', NULL, NULL, NULL, 'diana', '$2y$12$qrdkyALwm14lxawSshdmIeVeT/UZZlP1NsH0HMnfxa.7.yNgu9ipe', 0, 1, '2026-09-01 17:57:07', NULL),
+(43, '19730719 201001 2 002', 'Andri Retno Yuli Astuti, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'andri', '$2y$12$PF0z9PKD6jswMp/5VKAYjunHBY.UNjVXeSRb.ffs1ZROvjgJU0QNC', 0, 1, '2026-09-01 17:57:07', NULL),
+(44, '19770426 201001 2 008', 'Siswanti Purwaningsih, S.T., M.Pd', 'Wali Kelas', NULL, NULL, NULL, 'siswanti', '$2y$12$6Q2oP9K5jpQ4qkmk2zHxzecY/vGSGP.CTkstpNVW46jN2zSwos1qG', 0, 1, '2026-09-01 17:57:08', NULL),
+(45, '19760826 201001 2 010', 'Ayu Puspitorini, ST', 'Guru', NULL, NULL, NULL, 'ayu', '$2y$12$Vs7HrTzUrsJJ/LakVLqUSei3ZfASNMBgQ207tmZTspyKf4Gk7Q8l2', 0, 1, '2026-09-01 17:57:08', NULL),
+(46, '19800723 201001 2 016', 'Elysa Yuli Nur\'aini, S.Si', 'Wali Kelas', NULL, NULL, NULL, 'elysa', '$2y$12$4lb9zn2nwWKEfPRSUeQRcuaSksfXN/W2KVAlksV6RclrrlqJzyw1u', 0, 1, '2026-09-01 17:57:08', NULL),
+(47, '19710826 200604 1 011', 'Agus Muharyanto, M.Pd', 'Guru', NULL, NULL, NULL, 'agus2', '$2y$12$a1X7.164poEAOxg1QfIaI.ZkqEQSFVDhoIrRZlwTIUPI/C.yNm8P6', 0, 1, '2026-09-01 17:57:09', NULL),
+(48, '19781001 200604 2 021', 'Septiani, S.Pd.,M.Pd', 'Wali Kelas', NULL, NULL, NULL, 'septiani', '$2y$12$OG1MFXmpQm5EyvpvFJu0qeo.GvLvqXr60Y7v0oFnIjA/0NPD3IVqW', 0, 1, '2026-09-01 17:57:09', NULL),
+(49, '19870316 200901 2 002', 'Retno Widyastuti, S.Pd., M.Pd', 'Guru', NULL, NULL, NULL, 'retno', '$2y$12$LSobV0F4CX1Dd8AswZYq/OBLVPijqfx8xSrmbvU6I0DPpmOSvR/aG', 0, 1, '2026-09-01 17:57:10', NULL),
+(50, '19840222 200902 2 007', 'Ratih Dian Irawati, S.E', 'Wali Kelas', NULL, NULL, NULL, 'ratih', '$2y$12$S.W4FuFWlZokcbtRyfJLKuKHKqGkqjXF1EFauO5U0gevdC.bdsX56', 0, 1, '2026-09-01 17:57:10', NULL),
+(51, '19830101 201001 1 042', 'Andri Krisdianto, S.E.,M.Pd', 'Guru', NULL, NULL, NULL, 'andri2', '$2y$12$5bFYLhV8eTHGQFLZt0Xgze3OoyBGYeaKy6lpisf5VzHQMpjePsSRy', 0, 1, '2026-09-01 17:57:11', NULL),
+(52, '19850418 201001 2 031', 'Ruly Dwi Setyaningrum, S.Kom', 'Guru', NULL, NULL, NULL, 'ruly', '$2y$12$7iHY4.mqUfJmOZ0bf5PFKu9DJbc2H4bwabHCfXAHEuOucBKlLAn0y', 0, 1, '2026-09-01 17:57:11', NULL),
+(53, '19770306 201101 1 003', 'Ary Sunaryo, S.T.,M.Pd', 'Guru', NULL, NULL, NULL, 'ary', '$2y$12$L3x3hxirUZ0Dqkalo9SUo.kTbVZT7xy/Pd3n1jig9AGXL/bJ2PARG', 0, 1, '2026-09-01 17:57:11', NULL),
+(54, '19820204 201101 2 006', 'Listyana Hartati, S.Kom.,M.Pd', 'Wali Kelas', NULL, NULL, NULL, 'listyana', '$2y$12$Rf9PyUvW1nnhISHRGnvz9ep5GP77LUMQjiWVfXRvStsM3EUMtaC3W', 0, 1, '2026-09-01 17:57:12', NULL),
+(55, '19870217 201101 2 012', 'Dhuana Putri Puspitasary, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'dhuana', '$2y$12$Ip3PC1XReS1LYMVyQDJkMuFdTdOoVQK8m5x3yPM7k3EVY6rjEai3.', 0, 1, '2026-09-01 17:57:12', NULL),
+(56, '19860127 201101 1 013', 'Angga Widhy Wirawan, S.Pd.,M.Pd', 'Guru', NULL, NULL, NULL, 'angga', '$2y$12$IezoyUO3C5F7Go3lAgX41Odgx/a2Mv5XWckauPYTZuRY07oaxYeqe', 0, 1, '2026-09-01 17:57:13', NULL),
+(57, '19830113 200901 1 003', 'Mas\'an Widodo, S.Pd. M.T', 'Guru', NULL, NULL, NULL, 'masan', '$2y$12$sKgbvIp6xeXmA7bmfQA0muyMM5lEOIJRhuQN2k1gyZ0m69uWRzeZO', 0, 1, '2026-09-01 17:57:13', NULL),
+(58, '19850203 201101 1 012', 'Endik Kuswantoro, S.Kom.,M.T', 'Wali Kelas', NULL, NULL, NULL, 'endik', '$2y$12$Hb/6VNEao.kUTFbBaRXUl.JpFJL0HXEn5V8DFWqO07gTPhdVs.oHy', 0, 1, '2026-09-01 17:57:13', NULL),
+(59, '19711129 201101 1 002', 'Anang Prasetyo, S.Pd', 'Guru', NULL, NULL, NULL, 'anang', '$2y$12$7EuNbBMHbhDnUTber05/n.QmONw8q5zN6XxclFlk9y2gRW4btRGzy', 0, 1, '2026-09-01 17:57:14', NULL),
+(60, '19780830 200701 1 017', 'Arif Setyobudi, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'arif', '$2y$12$eBMn/7NYJnuXFDlWOfegNuNnZK8IVh/xdrpwlI9UW2JRCma/1WMce', 0, 1, '2026-09-01 17:57:14', NULL),
+(61, '19760719 200901 1 003', 'Benny Mamora, S.Kom', 'Wali Kelas', NULL, NULL, NULL, 'benny', '$2y$12$tmxe2cfSTWf5JbsslVt3UOayQhAzdSHlo0iOBFMB3O3jCTEcT5Dki', 0, 1, '2026-09-01 17:57:15', NULL),
+(62, '19850316 201101 1 012', 'Danang Anjar Hymawanto, S.Pd', 'Guru', NULL, NULL, NULL, 'danang', '$2y$12$5f5HZNskDMcSj59jiPkWAOMenA2xLvyrCOABWE3L6nyuU/Nq5Mkf2', 0, 1, '2026-09-01 17:57:15', NULL),
+(63, '19820822 201407 2 002', 'Hardini Indahing Budi, S.E., M.Pd.', 'Waka', NULL, NULL, NULL, 'hardini', '$2y$12$vdOWAry5kfNK68sDEdgZEu8SkoI75w0ielqlcrwSyiF12pwPiW43y', 0, 1, '2026-09-01 17:57:15', NULL),
+(64, '19900907 201903 1 004', 'Erwan Septyono, S.Pd', 'Guru', NULL, NULL, NULL, 'erwan', '$2y$12$ZsXbgC62MmzFMKPseZzOPex9wwfQqhjjZt6OccdrxD.BiOYcIvmQG', 0, 1, '2026-09-01 17:57:16', NULL),
+(65, '19910708 201903 2 017', 'Istiana Suhartati, S.T', 'Guru', NULL, NULL, NULL, 'istiana', '$2y$12$dEYP8P4VEiCrb6WPQtRMp..dvNSDq4bCo.E6vN/dV46Aynrz7ACaS', 0, 1, '2026-09-01 17:57:16', NULL),
+(66, '19960728 202012 2 013', 'Risqi Nur Imama, S.Tr.Par', 'Wali Kelas', NULL, NULL, NULL, 'risqi', '$2y$12$TrHEbn5hFDjPCFuFQaYJ9.AZeU8/4ONj1teQ8F1uX9nAmeG/dNI76', 0, 1, '2026-09-01 17:57:17', NULL),
+(67, '19900418 202012 1 017', 'Badrus Sulaiman, S.Pd.', 'Wali Kelas', NULL, NULL, NULL, 'badrus', '$2y$12$NCKUjUVm.B0ctB6eq6Ajl.PbycxngvSUwYJw9NRu0713kHxiCARqa', 0, 1, '2026-09-01 17:57:17', NULL),
+(68, '19780822 202221 2 006', 'Nurul Azizah, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'nurul', '$2y$12$Q4wfEUHjmCrK83OKFyanS.76uBphffX0.ukiMxNB0TMnpSPfhVyuK', 0, 1, '2026-09-01 17:57:18', NULL),
+(69, '19771112 202221 1 007', 'Hendro Suwignyo, ST', 'Waka', NULL, NULL, NULL, 'hendro', '$2y$12$aZkfI5F7Sohn57QGrR1afOUwG4pgrGIQgtLlmt/zKzke2uN4ZE.tK', 0, 1, '2026-09-01 17:57:18', NULL),
+(70, '19740805 202221 2 008', 'Dyah Esti Rahayu, S.Pd', 'Guru', NULL, NULL, NULL, 'dyah', '$2y$12$/mhInXt5qWEh1oxr1UEJZuTtC0/al6i8mzgyQ31lM/9ZG87FreKRq', 0, 1, '2026-09-01 17:57:18', NULL),
+(71, '19810124 202221 1 012', 'Baskoro, S.Si', 'Guru', NULL, NULL, NULL, 'baskoro', '$2y$12$mj0yv1XzSNa8YZ79qdhIDeGRX2lsXF4aShqf.LREdnXBfGzubaYtC', 0, 1, '2026-09-01 17:57:19', NULL),
+(72, '19830306 202221 2 048', 'Luluk Munfarida,S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'luluk', '$2y$12$f4EVPYCtlnFptAKI4ghjseFWgJmrLnY4d4lJK5icxD0XSevG/besy', 0, 1, '2026-09-01 17:57:19', NULL),
+(73, '19830707 202221 2 027', 'Khuriyatul Kamila, S.Si', 'Wali Kelas', NULL, NULL, NULL, 'khuriyatul', '$2y$12$tWMrIvXnrDsoJFhLk5HG9.Qofc45BiAmoBMJ4vwx/9zWZDt/yyXs6', 0, 1, '2026-09-01 17:57:20', NULL),
+(74, '19880521 202221 2 020', 'Veronica Damay Rulitasari, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'veronica', '$2y$12$ZhSDzZofjPHCzfmthx.Ct.eJ8URF2/.K1et/2rJEKaoo3gw0RClgi', 0, 1, '2026-09-01 17:57:20', NULL),
+(75, '19870303 202221 2 026', 'Nur Nastutisari, S.ST.Par.', 'Guru', NULL, NULL, NULL, 'nur', '$2y$12$EEomGw4t5tPQwh6WmB8SOusCAKrpOPfnSeyFiYZjDD7EyWlTVApgi', 0, 1, '2026-09-01 17:57:20', NULL),
+(76, '19820318 202221 1 012', 'Alfinu Farikh Abdillah, S.Pd.I', 'Guru', NULL, NULL, NULL, 'alfinu', '$2y$12$2pInS0uSpOsiUU5kcPepvuv5AvBRJKEHAkjTGuNOl6phQCLBAmRcC', 0, 1, '2026-09-01 17:57:21', NULL),
+(77, '19910914 202221 2 015', 'Khoyrotun Hisani, S.Sn', 'Wali Kelas', NULL, NULL, NULL, 'khoyrotun', '$2y$12$TkA4HjBfibfhFQJGX7xnHeJsEJkG/vKGaXvjrUdViK1b4kxcKsLry', 0, 1, '2026-09-01 17:57:21', NULL),
+(78, '19911103 202221 1 007', 'Joko Priyanto, S.Kom', 'Guru', NULL, NULL, NULL, 'joko', '$2y$12$hMk4Xv42fyOUH.VRtqz.IO9dirS0LNb5DThvklPXlZiUAdzQ2D6UC', 0, 1, '2026-09-01 17:57:22', NULL),
+(79, '19920504 202221 2 022', 'Elyana Frisca Monica, S.Pd', 'Guru', NULL, NULL, NULL, 'elyana', '$2y$12$Gm9yMf5PalplD.rsyDkKC.RW.SI.X7esjLSnsEdccgbu4ytlpAIhe', 0, 1, '2026-09-01 17:57:22', NULL),
+(80, '19951027 202221 2 012', 'Rika Okta Maulida, S.Ds.', 'Wali Kelas', NULL, NULL, NULL, 'rika', '$2y$12$iOipirw9q5kLqcKIbgcRXuF5l1oh9cuOoQZ74sHniXSZKHTpnVrsm', 0, 1, '2026-09-01 17:57:22', NULL),
+(81, '19670512 202221 2 003', 'Dra. Hanik Pangestuti', 'Guru', NULL, NULL, NULL, 'hanik', '$2y$12$cwYGUycWXaL..ajM/hkVYeiTXH1uassHl3tsrQ1eH5FSs1abU586O', 0, 1, '2026-09-01 17:57:23', NULL),
+(82, '19850112 202221 1 020', 'Sa\'ad Wazis Hiedayat, S.Pd', 'Guru', NULL, NULL, NULL, 'saad', '$2y$12$ZMyp/KVUV/BgtX9DX4NjE.swWXeiDhY1GU5Y9NEE3TeYqHigCQ9l.', 0, 1, '2026-09-01 17:57:23', NULL),
+(83, '19850121 202221 2 037', 'Shinta Indyar Shanty Susanto, S.Kom', 'Guru', NULL, NULL, NULL, 'shinta', '$2y$12$ccBXZ86QwPsrJv.IS0Yqmu6lsZZ8xNxw3R4qO2o/ntDIuMplPsfCC', 0, 1, '2026-09-01 17:57:24', NULL),
+(84, '19871014 202221 1 014', 'Widodo, S.Pd', 'Guru', NULL, NULL, NULL, 'widodo', '$2y$12$YnFd6PGivhu.Ull6s63EmuZsfaLUOMgBcwBuFYidRd1bVi0.K2agu', 0, 1, '2026-09-01 17:57:24', NULL),
+(85, '19940101 202221 2 024', 'Nur Eko Wahyuningsih, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'nur2', '$2y$12$b2J99jPsftLc3rdrNQcPJuZWXjFOueCAvIvpOWgjtM.qv7dzo8suK', 0, 1, '2026-09-01 17:57:24', NULL),
+(86, '19970318 202221 2 010', 'Kurnila Putri Islamawati, S.Pd', 'Guru', NULL, NULL, NULL, 'kurnila', '$2y$12$rCyC197BwVrHOhkPxfh5Bu/tRWDr45eO3PhmT.uCqO8Lhu9lVwZWS', 0, 1, '2026-09-01 17:57:25', NULL),
+(87, '19710728 202321 2 004', 'Sulistyowati, SS', 'Wali Kelas', NULL, NULL, NULL, 'sulistyowati', '$2y$12$H/pmFBNM9a3FJCvFaLojuejOX8WqIwGV6cq5CGTSrpfHkVzzgSilq', 0, 1, '2026-09-01 17:57:25', NULL),
+(88, '19750616 202321 2 007', 'Wiwik Yuniarsih, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'wiwik', '$2y$12$YMFytgcUNwSkZ89iAiqugOkWkJR92cROKlF4b6TxHQtSq5a/7T0ka', 0, 1, '2026-09-01 17:57:26', NULL),
+(89, '19780810 202321 1 005', 'Fajar Luthfianto, S.Pd', 'Waka', NULL, NULL, NULL, 'fajar', '$2y$12$fufmGMBSNKXsFTXfFTiRGu4rodUFKrKEyCvWsgbxPhXqgSfTNUM/K', 0, 1, '2026-09-01 17:57:26', NULL),
+(90, '19820529 202321 2 015', 'Fajar Wahyu Pratiwi, S.S', 'Wali Kelas', NULL, NULL, NULL, 'fajar2', '$2y$12$BA5zoRhlXZjC07paiO46aOURtuJ0q6VQdCyy6TJj76a9fw6zOS7mW', 0, 1, '2026-09-01 17:57:27', NULL),
+(91, '19820718 202321 1 006', 'Agung Yulianto, S.Pd', 'Guru', NULL, NULL, NULL, 'agung', '$2y$12$M9AirXn5DwJszZZV7hYOvOBFCsSPomYpVw1kCDJt3PkokQSfDTlmi', 0, 1, '2026-09-01 17:57:27', NULL),
+(92, '19830331 202321 2 015', 'Sri Kusumastuti, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'sri3', '$2y$12$KpsZHjKox1H1JrDAhYqqaeZuOM3JafoVjJhhyxo3h8CPzD0CLNKpG', 0, 1, '2026-09-01 17:57:28', NULL),
+(93, '19840730 202321 2 018', 'Yuli Ratnasari, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'yuli', '$2y$12$u5nDeX7AqP53EhxpGPClc.03VoMu8fMXLKDswEDwUGow0Bczc03mC', 0, 1, '2026-09-01 17:57:28', NULL),
+(94, '19850627 202321 2 020', 'Fitria Renytasari, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'fitria', '$2y$12$kOPvBp8pm2fqylb0Hz2yF.V5SKtpfk6UeViNuwKGUGcr/42dfdeDe', 0, 1, '2026-09-01 17:57:29', NULL),
+(95, '19710523 202421 2 002', 'Tutut Sriatin, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'tutut', '$2y$12$DQlQLBF8DVL5zKV3De.izeZq/xXq.xm/zHFQ4TX8Oe0SjrpsV231i', 0, 1, '2026-09-01 17:57:29', NULL),
+(96, '19751113 202421 1 001', 'Dwi Kuswanto, S.Pd', 'Guru', NULL, NULL, NULL, 'dwi3', '$2y$12$kshEandOAjFFQnVtc47cp.werPzq1p0pr0jSAwIX9JrNJvm5Wm7o6', 0, 1, '2026-09-01 17:57:29', NULL),
+(97, '19751211 202421 2 008', 'Erna Qoriah, S.E.', 'Wali Kelas', NULL, NULL, NULL, 'erna2', '$2y$12$KWlHcjmaCyXt8qpIMNkSqO/yyhVNVBIsipCue8jkhk3ZupVOwZyPS', 0, 1, '2026-09-01 17:57:30', NULL),
+(98, '19780701 202421 2 002', 'Pipit Ambarwati, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'pipit', '$2y$12$OEKSuqlWvXVElsOGcvvQpuRMvDN9n82fmtWYTMmgcz9t5Na19xPRS', 0, 1, '2026-09-01 17:57:30', NULL),
+(99, '19800312 202421 2 013', 'Fitri Amaliyah, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'fitri', '$2y$12$MvyCocL69k7uMlYjtI48NuyqgLXzUSPq1N1MSlzC9F0J7EziIQGPm', 0, 1, '2026-09-01 17:57:30', NULL),
+(100, '19880113 202421 2 002', 'Niken Dewi Hastika, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'niken2', '$2y$12$ypS7hj7w2GhVovvpMJf4de/i0cYOZh8GkRbeJ1nC3FK8EMygYpqOS', 0, 1, '2026-09-01 17:57:31', NULL),
+(101, '19880503 202421 2 030', 'Ista Nofasari, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'ista', '$2y$12$pBSwjQ8bgefmEtISQgmyl./oDaXhutMC.6Kb2MOIPBbA/9jPEoCii', 0, 1, '2026-09-01 17:57:31', NULL),
+(102, '19880521 202421 2 009', 'Anisa Kusumawati, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'anisa', '$2y$12$A3GADdgKUk.jnqXklYPfk.6Kui/zyX1AhdQRGPBXdAg69qxoHKQAm', 0, 1, '2026-09-01 17:57:32', NULL),
+(103, '19920423 202421 2 010', 'Mega Mahardika, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'mega', '$2y$12$mF2leyczk9iOW9BeRgVF7ukRFt0ieb5Dm8rpn3CiCDg.bkoe0C6i.', 0, 1, '2026-09-01 17:57:32', NULL),
+(104, '19940415 202421 2 053', 'Rifkotin Na\'imah, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'rifkotin', '$2y$12$nIRGbNJ12kNxZyNskkjfG.6s17A5wFWHrTvBWy6k9q/py9ukL63G6', 0, 1, '2026-09-01 17:57:33', NULL),
+(105, '19901031 202521 2 015', 'Sinta Lestari, S.Pd.I', 'Wali Kelas', NULL, NULL, NULL, 'sinta', '$2y$12$j5iYhSRavwHCqfVL1KsiBeKjvYkOqd5lCegDI.AuBr3rDdhhlIzoa', 0, 1, '2026-09-01 17:57:33', NULL),
+(106, '19900806 202521 2 028', 'Astra Bella Flamboyan, S.Psi', 'Wali Kelas', NULL, NULL, NULL, 'astra', '$2y$12$7Dw2PXpqVniZs61NNNDXkeClflXoHJIxBHUdZJGzW/QHiSG8F1LrK', 0, 1, '2026-09-01 17:57:33', NULL),
+(107, '19970204 202521 2 014', 'Fitria Diah Ayu Hartati, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'fitria2', '$2y$12$ye09yd9GSczizO0ITVQr5.JR6uOUw0WGllugcTAIPvxsHeg5NTPW.', 0, 1, '2026-09-01 17:57:34', NULL),
+(108, '19661108 202521 2 001', 'Dra. Susakti Yuharini', 'Guru', NULL, NULL, NULL, 'susakti', '$2y$12$11X16y89IgxS1q7mu9NiYOwsw2V/LDxsOyzfnu3pFbBgzkB.V4X6i', 0, 1, '2026-09-01 17:57:34', NULL),
+(109, '19700717 202521 1 036', 'Agus Pramono, S.Sn', 'Guru', NULL, NULL, NULL, 'agus3', '$2y$12$nvG.gPCnsuO6hiTnKtArluKCIUn0y6WibRVRr4OFPA0kROE3/SlzS', 0, 1, '2026-09-01 17:57:34', NULL),
+(110, '19871004 202521 2 098', 'Ajeng Okvitasari, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'ajeng', '$2y$12$rt/p/xYeCN5sMD47FPyxP.gwUY5YmNb9XQqQcw/QD4PchuSOB8e1q', 0, 1, '2026-09-01 17:57:35', NULL),
+(111, '19860414 202521 2 103', 'Nishfu Laili, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'nishfu', '$2y$12$0wx2OvQ.0VVdRgAknxbZ8ONaE/9zhWkvYmMs/kHiAZp/eP4sgHGKC', 0, 1, '2026-09-01 17:57:35', NULL),
+(112, '19830102 202521 1 100', 'Andika Christian Sasmita, S.ST', 'Guru', NULL, NULL, NULL, 'andika', '$2y$12$G.smymkxwIfdZeMIVS.1wOwvvymOClSPkSP7VpWMYZ8wEUiiTHb5a', 0, 1, '2026-09-01 17:57:35', NULL),
+(113, '19821215 202521 2 065', 'Muto\'atul Khosi\'ah, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'mutoatul', '$2y$12$AvLJtTID4pMuj/CtE3qjh.kyj.ANqdJ5YufmiG/szi8pUr0zm0p46', 0, 1, '2026-09-01 17:57:36', NULL),
+(114, '19871213 202521 1 096', 'Bella Prakoso, S.Pd', 'Guru', NULL, NULL, NULL, 'bella', '$2y$12$/jhkTzsJQnBESIK8kzXIIOPdlfs8oR8RLgeve.E.O3r3tlA5XIFmG', 0, 1, '2026-09-01 17:57:36', NULL),
+(115, '19920205 202521 2 129', 'Yustin Febrini, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'yustin', '$2y$12$Ih7fSB3f270i47CfaewW8.63MFVfYurJiTLCP74ci9KnkgUvIIew6', 0, 1, '2026-09-01 17:57:36', NULL),
+(116, '19850926 202521 2 055', 'Siti Maisaroh, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'siti4', '$2y$12$poNcHA1oJIe46Sugt.L6luzY8db/aXbQQA.XYAQQlRErQj9lbHdUO', 0, 1, '2026-09-01 17:57:37', NULL),
+(117, '19890418 202521 2 117', 'Laili Ermawati, S.Pd', 'Guru', NULL, NULL, NULL, 'laili', '$2y$12$dCc87tprMCi/P4cCLCkCxuM3/9jOPPc7z0xfBYjz4sGpg6u3M.uAu', 0, 1, '2026-09-01 17:57:37', NULL),
+(118, '19971223 202521 1 078', 'Muhammad Fajar Assidiqi, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'muhammad', '$2y$12$ayysn78iKg02SV55zCD0l.OaCObyQBLmZMgdchX/de5ubjcHOhrvG', 0, 1, '2026-09-01 17:57:37', NULL),
+(119, '19820609 202521 2 057', 'Yuni Jiastuti, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'yuni', '$2y$12$LhhWl4AyWO/Uq2uWhXtthu4xCSSkGfiu9y6ojkVgZ3qDHnoCxFM0a', 0, 1, '2026-09-01 17:57:38', NULL),
+(120, '19781006 202521 1 046', 'Tuhu Eries Kudori, S.Sn', 'Wali Kelas', NULL, NULL, NULL, 'tuhu', '$2y$12$J5f6.Wos3EJTF3ihU1m/ge0RO0wg3LQydXIo5I5hQJhX1lFJEDq7C', 0, 1, '2026-09-01 17:57:38', NULL),
+(121, '19961117 202521 1 096', 'Eko Saputro, S.Pd', 'Guru', NULL, NULL, NULL, 'eko', '$2y$12$13URXQqMeVRxLzHTeD9exus6gBJlLtls7WA0/MJVltV1wxMUHDEB2', 0, 1, '2026-09-01 17:57:38', NULL),
+(122, '19871116 202521 1 085', 'Zainul Arifin,S.Pd', 'Guru', NULL, NULL, NULL, 'zainul', '$2y$12$BPvXmfBJ2kGb3i0kKLrgreBeMUTRXzrRcMsCGF90KZDpVneVjuK.G', 0, 1, '2026-09-01 17:57:39', NULL),
+(123, NULL, 'Endang Safitri, S.Pd', 'Guru', NULL, NULL, NULL, 'endang2', '$2y$12$1TROEoTnQnZzMqfkT4a6mOA1OGWvut/Hl3ZSddEgglBrr.SZ1/Jpu', 0, 1, '2026-09-01 17:57:39', NULL),
+(124, NULL, 'Mufatiroh, S.Ag', 'Wali Kelas', NULL, NULL, NULL, 'mufatiroh', '$2y$12$oiIoccsZiz5B8vMMTnUPVOeBO5UCZSU1J8gWbopxKIeamdOIm8ARS', 0, 1, '2026-09-01 17:57:39', NULL),
+(125, NULL, 'Abdul Rohman, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'abdul', '$2y$12$C9eRz.szFIuSSKB0SCJxCe4uX/KLT3m8FCFQzGuBBjU7L/0q0a.wq', 0, 1, '2026-09-01 17:57:40', NULL),
+(126, NULL, 'Rizki Putri Wulandari, S.Pd', 'Guru', NULL, NULL, NULL, 'rizki', '$2y$12$B3NSGjVrEsqDCrCDAhifBug5.MphnJR9srQkyjLs.2IV.at2MOvbW', 0, 1, '2026-09-01 17:57:40', NULL),
+(127, NULL, 'Pdt. Juklianus Steven Immanuel Bahihi, S.Pdk., M.Pd', 'Guru', NULL, NULL, NULL, 'juklianus', '$2y$12$z/4TXu/QQPe0knAkUCqw6uTWsWW4H/cNqskCZtujcPez84DJJolpq', 0, 1, '2026-09-01 17:57:40', NULL),
+(128, NULL, 'Sukamto, S.Ag', 'Guru', NULL, NULL, NULL, 'sukamto', '$2y$12$/.yJl.SHGaQTjZT4xn2VZeiQFMD.DulHpf5FY8poeot6ZQeD83gKW', 0, 1, '2026-09-01 17:57:41', NULL),
+(131, NULL, 'Muto\'atul Khosi\'ah Import Test, S.Pd', 'Guru', NULL, NULL, NULL, 'mutoatul_import_test', '$2y$04$08s/yN3VDrBTPt3dJ62JBekqafURwDykTnljmTMelhbATZXjCcIiq', 0, 1, '2026-09-03 01:32:08', NULL),
+(132, NULL, 'Guru ID Import Test, S.Pd', 'Guru', NULL, NULL, NULL, 'idguru_import_test', '$2y$04$eHKIO/kqwHb11kLTMboQleHTs.Yyq31W6PTmZ7Jo7BrLcJWRF2dnG', 0, 1, '2026-09-07 12:08:48', NULL),
+(133, '198803122010011001', 'Guru NIP Import Test, S.Pd', 'Guru', NULL, NULL, NULL, 'nip_import_test', '$2y$04$lAo0qry6oXzbvWjAqh.7f.WBXzI6MJh68x.e7W3LXelYmKoHp3hbq', 0, 1, '2026-09-07 12:08:48', NULL),
+(134, NULL, 'Guru Upacara Test, S.Pd', 'Guru', NULL, NULL, NULL, 'guru_upacara_test', '$2y$04$MuvSInFbcnCS4T6gHrguv.QF2RC3zk6xuxVyQ5RcgN3D/DVcUkfgK', 0, 1, '2026-09-07 12:08:48', NULL),
+(135, NULL, 'Guru Store Test, S.Pd', 'Guru', NULL, NULL, NULL, 'guru_store_test', '$2y$04$.B4FdYkKR.RcleXXOUkR2.UZElwnOux7TfkBTv4YtsqNOhLcsaJg2', 0, 1, '2026-09-07 12:08:48', NULL),
+(136, NULL, 'Guru Update Test, S.Pd', 'Guru', NULL, NULL, NULL, 'guru_update_test', '$2y$04$nLbPK/bOcm.h46Q6S.xz0u55dGcXW4p7lSanuk1wWhW6GHS6WwdLy', 0, 1, '2026-09-07 12:08:49', NULL),
+(137, NULL, 'Guru Tugaskan Test, S.Pd', 'Guru', NULL, NULL, NULL, 'guru_tugaskan_test', '$2y$04$rEJDkKxJd..yg2YXddOGMOXBJjh.1vw4vkrNQ52RESy4L9YWZ5r4e', 0, 1, '2026-09-07 12:08:49', NULL),
+(138, '99997139', 'Guru Test 6aa7ee497d4aa', 'Guru', NULL, NULL, NULL, 'guru_6aa7ee497d4aa', '$2y$04$sxdeX1FgqeA7rAHX/1ydC.MJzdZWMBOqAiFa/ltos7wl2LyPxchQm', 0, 1, '2026-09-14 12:53:29', NULL),
+(139, '88881024', 'Guru Satu 6aa7ee4e0dc27', 'Guru', NULL, NULL, NULL, 'guru1_6aa7ee4e0dc27', '$2y$04$uPuc4PCaBHqfJ9MeOfpTdub9KY/FsB25x5KyJtjt4QE1.N7rEDEE2', 0, 1, '2026-09-14 12:53:34', NULL),
+(140, '77778315', 'Guru Dua 6aa7ee4e0dc27', 'Guru', NULL, NULL, NULL, 'guru2_6aa7ee4e0dc27', '$2y$04$X5t/iz3W52KRDMlfVbMVLel2kSelZ.h/jm1mBq7F1IOtqB2VT4CLm', 0, 1, '2026-09-14 12:53:34', NULL),
+(141, '99998603', 'Guru Test 6aa7ef4217eb1', 'Guru', NULL, NULL, NULL, 'guru_6aa7ef4217eb1', '$2y$04$pMWzjnRKxb8FpN38U8S4ceR2tzOpZc4A9vDhegLUgvzY298HoqJYi', 0, 1, '2026-09-14 12:57:38', NULL),
+(142, '88885407', 'Guru Satu 6aa7ef43e5a05', 'Guru', NULL, NULL, NULL, 'guru1_6aa7ef43e5a05', '$2y$04$XKgdExngNBhwhbXIlSsSgO0o5z2i6ICintaIOVxJ8DZcGZf1FFOau', 0, 1, '2026-09-14 12:57:39', NULL),
+(143, '77777239', 'Guru Dua 6aa7ef43e5a05', 'Guru', NULL, NULL, NULL, 'guru2_6aa7ef43e5a05', '$2y$04$2jf7I.HwwFAq9HHxnY4oPO2tdQJCKU7oGjVvsrMeKn.NQ01a3QWEK', 0, 1, '2026-09-14 12:57:39', NULL),
+(146, '99991897', 'Guru Test 6aa7f00edeeda', 'Guru', NULL, NULL, NULL, 'guru_6aa7f00edeeda', '$2y$04$.OgEq1fY.oUyJ2Z2k1PpMepbZ575J29iF93aLCV1qxDQwuOgPh3uW', 0, 1, '2026-09-14 13:01:02', NULL),
+(147, '88881906', 'Guru Satu 6aa7f00f9dd43', 'Guru', NULL, NULL, NULL, 'guru1_6aa7f00f9dd43', '$2y$04$mUL/iag/it.7UhKZl9sGV.voXkONdKneTN94rlw0Upf0R8mKccnWa', 0, 1, '2026-09-14 13:01:03', NULL),
+(148, '77772207', 'Guru Dua 6aa7f00f9dd43', 'Guru', NULL, NULL, NULL, 'guru2_6aa7f00f9dd43', '$2y$04$Ux12kkG1H02Qbir0smL75OTOdjKVOz5KjJIOsq96lKi2oPelaas0C', 0, 1, '2026-09-14 13:01:03', NULL);
 
 -- --------------------------------------------------------
 
@@ -304,8 +340,8 @@ INSERT INTO `guru` (`id_guru`, `nip`, `nama_guru`, `Peran`, `foto_profil`, `no_h
 --
 
 CREATE TABLE `guru_piket` (
-  `id_guru_piket` bigint(20) UNSIGNED NOT NULL,
-  `id_guru` int(11) NOT NULL,
+  `id_guru_piket` bigint UNSIGNED NOT NULL,
+  `id_guru` int NOT NULL,
   `tanggal` date NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -330,8 +366,9 @@ INSERT INTO `guru_piket` (`id_guru_piket`, `id_guru`, `tanggal`, `created_at`, `
 (79, 125, '2026-09-07', '2026-09-07 00:27:48', '2026-09-07 17:12:50', '2026-09-07 17:12:50'),
 (80, 91, '2026-09-07', '2026-09-07 00:27:48', '2026-09-07 17:12:50', '2026-09-07 17:12:50'),
 (83, 91, '2026-09-08', '2026-09-07 17:13:33', '2026-09-08 17:11:13', '2026-09-08 17:11:13'),
-(84, 25, '2026-09-09', '2026-09-07 17:13:33', '2026-09-07 17:13:33', NULL),
-(85, 47, '2026-09-09', '2026-09-07 17:13:33', '2026-09-07 17:13:33', NULL);
+(84, 25, '2026-09-09', '2026-09-07 17:13:33', '2026-09-10 01:09:42', '2026-09-10 01:09:42'),
+(85, 47, '2026-09-09', '2026-09-07 17:13:33', '2026-09-10 01:09:42', '2026-09-10 01:09:42'),
+(86, 91, '2026-09-14', '2026-09-14 12:58:57', '2026-09-14 12:58:57', NULL);
 
 -- --------------------------------------------------------
 
@@ -340,12 +377,12 @@ INSERT INTO `guru_piket` (`id_guru_piket`, `id_guru`, `tanggal`, `created_at`, `
 --
 
 CREATE TABLE `hari` (
-  `id_hari` int(11) NOT NULL,
-  `nama_hari` varchar(20) NOT NULL,
-  `nama_inggris` varchar(20) NOT NULL,
-  `singkatan` varchar(5) NOT NULL,
-  `urutan` int(11) NOT NULL,
-  `is_aktif` tinyint(1) NOT NULL DEFAULT 1
+  `id_hari` int NOT NULL,
+  `nama_hari` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_inggris` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `singkatan` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `urutan` int NOT NULL,
+  `is_aktif` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -368,16 +405,16 @@ INSERT INTO `hari` (`id_hari`, `nama_hari`, `nama_inggris`, `singkatan`, `urutan
 --
 
 CREATE TABLE `izin_guru` (
-  `id_izin_guru` bigint(20) UNSIGNED NOT NULL,
-  `id_guru` int(11) NOT NULL,
-  `id_guru_piket` int(11) NOT NULL,
+  `id_izin_guru` bigint UNSIGNED NOT NULL,
+  `id_guru` int NOT NULL,
+  `id_guru_piket` int NOT NULL,
   `tanggal_izin` date NOT NULL,
-  `alasan` text NOT NULL,
-  `foto_surat` varchar(255) DEFAULT NULL,
-  `status_kepsek` varchar(20) NOT NULL DEFAULT 'menunggu',
-  `status_waka` varchar(20) NOT NULL DEFAULT 'menunggu',
-  `catatan_kepsek` text DEFAULT NULL,
-  `catatan_waka` text DEFAULT NULL,
+  `alasan` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `foto_surat` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status_kepsek` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'menunggu',
+  `status_waka` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'menunggu',
+  `catatan_kepsek` text COLLATE utf8mb4_unicode_ci,
+  `catatan_waka` text COLLATE utf8mb4_unicode_ci,
   `disetujui_kepsek_pada` timestamp NULL DEFAULT NULL,
   `disetujui_waka_pada` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -398,7 +435,9 @@ INSERT INTO `izin_guru` (`id_izin_guru`, `id_guru`, `id_guru_piket`, `tanggal_iz
 (6, 10, 1, '2026-08-24', 'masih mabar epep', NULL, 'disetujui', 'menunggu', NULL, NULL, '2026-08-23 20:17:01', NULL, '2026-08-23 20:16:20', '2026-08-23 20:17:01', NULL),
 (7, 47, 125, '2026-09-07', 'sakit', NULL, 'menunggu', 'menunggu', NULL, NULL, NULL, NULL, '2026-09-07 06:14:40', '2026-09-07 06:14:40', NULL),
 (8, 25, 125, '2026-09-07', 'sekolah lagi', NULL, 'menunggu', 'menunggu', NULL, NULL, NULL, NULL, '2026-09-07 06:33:28', '2026-09-07 06:33:28', NULL),
-(9, 91, 125, '2026-09-07', 'kayaknya lagi main epep', NULL, 'menunggu', 'menunggu', NULL, NULL, NULL, NULL, '2026-09-07 06:51:56', '2026-09-07 06:51:56', NULL);
+(9, 91, 125, '2026-09-07', 'kayaknya lagi main epep', NULL, 'menunggu', 'menunggu', NULL, NULL, NULL, NULL, '2026-09-07 06:51:56', '2026-09-07 06:51:56', NULL),
+(10, 125, 91, '2026-09-14', 'sakitt', NULL, 'menunggu', 'menunggu', NULL, NULL, NULL, NULL, '2026-09-14 12:59:39', '2026-09-14 12:59:39', NULL),
+(11, 125, 91, '2026-09-14', 'sakitt', NULL, 'menunggu', 'menunggu', NULL, NULL, NULL, NULL, '2026-09-14 12:59:41', '2026-09-14 12:59:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -407,13 +446,13 @@ INSERT INTO `izin_guru` (`id_izin_guru`, `id_guru`, `id_guru_piket`, `tanggal_iz
 --
 
 CREATE TABLE `jadwal_mengajar` (
-  `id_jadwal` int(11) NOT NULL,
-  `id_guru` int(11) DEFAULT NULL,
-  `id_mapel` int(11) NOT NULL,
-  `id_kelas` int(11) NOT NULL,
-  `id_jam` int(11) NOT NULL,
-  `hari` enum('Senin','Selasa','Rabu','Kamis','Jumat') NOT NULL,
-  `id_tahun_ajaran` int(11) NOT NULL,
+  `id_jadwal` int NOT NULL,
+  `id_guru` int DEFAULT NULL,
+  `id_mapel` int NOT NULL,
+  `id_kelas` int NOT NULL,
+  `id_jam` int NOT NULL,
+  `hari` enum('Senin','Selasa','Rabu','Kamis','Jumat') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_tahun_ajaran` int NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -426,11 +465,11 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (502, 18, 7, 10, 15, 'Jumat', 1, NULL),
 (503, 18, 7, 10, 16, 'Jumat', 1, NULL),
 (504, 73, 11, 10, 17, 'Jumat', 1, NULL),
-(505, 60, 11, 10, 18, 'Jumat', 1, '2026-09-02 18:42:01'),
+(505, 60, 11, 10, 18, 'Jumat', 1, NULL),
 (506, 73, 11, 10, 19, 'Jumat', 1, NULL),
 (507, 46, 12, 10, 20, 'Jumat', 1, NULL),
 (508, 46, 12, 10, 21, 'Jumat', 1, NULL),
-(509, 44, 1, 10, 22, 'Jumat', 1, '2026-09-02 18:42:01'),
+(509, 44, 1, 10, 22, 'Jumat', 1, NULL),
 (510, 12, 1, 10, 23, 'Jumat', 1, NULL),
 (511, 58, 13, 11, 2, 'Senin', 1, NULL),
 (512, 58, 13, 11, 3, 'Senin', 1, NULL),
@@ -489,7 +528,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (565, 89, 8, 12, 5, 'Senin', 1, NULL),
 (566, 89, 8, 12, 6, 'Senin', 1, NULL),
 (567, 56, 9, 12, 7, 'Senin', 1, NULL),
-(568, 13, 9, 12, 8, 'Senin', 1, '2026-09-02 18:42:01'),
+(568, 13, 9, 12, 8, 'Senin', 1, NULL),
 (569, 23, 1, 12, 9, 'Senin', 1, NULL),
 (570, 23, 1, 12, 10, 'Senin', 1, NULL),
 (571, 96, 20, 12, 24, 'Selasa', 1, NULL),
@@ -509,7 +548,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (585, 31, 11, 12, 38, 'Rabu', 1, NULL),
 (586, 31, 11, 12, 39, 'Rabu', 1, NULL),
 (587, 31, 11, 12, 40, 'Rabu', 1, NULL),
-(588, 114, 14, 12, 41, 'Rabu', 1, '2026-09-02 18:42:01'),
+(588, 114, 14, 12, 41, 'Rabu', 1, NULL),
 (589, 86, 12, 12, 42, 'Rabu', 1, NULL),
 (590, 86, 12, 12, 43, 'Rabu', 1, NULL),
 (591, 95, 6, 12, 44, 'Kamis', 1, NULL),
@@ -524,7 +563,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (600, 96, 20, 12, 53, 'Kamis', 1, NULL),
 (601, 122, 10, 12, 12, 'Jumat', 1, NULL),
 (602, 122, 10, 12, 13, 'Jumat', 1, NULL),
-(603, 123, 10, 12, 14, 'Jumat', 1, '2026-09-02 18:42:01'),
+(603, 123, 10, 12, 14, 'Jumat', 1, NULL),
 (604, 96, 20, 12, 15, 'Jumat', 1, NULL),
 (605, 96, 20, 12, 16, 'Jumat', 1, NULL),
 (606, 96, 20, 12, 17, 'Jumat', 1, NULL),
@@ -587,7 +626,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (663, 10, 20, 13, 23, 'Jumat', 1, NULL),
 (664, 122, 10, 14, 2, 'Senin', 1, NULL),
 (665, 122, 10, 14, 3, 'Senin', 1, NULL),
-(666, 123, 10, 14, 4, 'Senin', 1, '2026-09-02 18:42:01'),
+(666, 123, 10, 14, 4, 'Senin', 1, NULL),
 (667, 26, 2, 14, 5, 'Senin', 1, NULL),
 (668, 26, 2, 14, 6, 'Senin', 1, NULL),
 (669, 19, 20, 14, 7, 'Senin', 1, NULL),
@@ -602,8 +641,8 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (678, 67, 13, 14, 29, 'Selasa', 1, NULL),
 (679, 19, 20, 14, 30, 'Selasa', 1, NULL),
 (680, 19, 20, 14, 31, 'Selasa', 1, NULL),
-(681, 64, 20, 14, 32, 'Selasa', 1, '2026-09-02 18:42:01'),
-(682, 64, 20, 14, 33, 'Selasa', 1, '2026-09-02 18:42:01'),
+(681, 64, 20, 14, 32, 'Selasa', 1, NULL),
+(682, 64, 20, 14, 33, 'Selasa', 1, NULL),
 (683, 60, 1, 14, 34, 'Rabu', 1, NULL),
 (684, 60, 1, 14, 35, 'Rabu', 1, NULL),
 (685, 20, 7, 14, 36, 'Rabu', 1, NULL),
@@ -792,7 +831,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (868, 29, 1, 18, 2, 'Senin', 1, NULL),
 (869, 29, 1, 18, 3, 'Senin', 1, NULL),
 (870, 84, 14, 18, 4, 'Senin', 1, NULL),
-(871, 123, 10, 18, 5, 'Senin', 1, '2026-09-02 18:42:01'),
+(871, 123, 10, 18, 5, 'Senin', 1, NULL),
 (872, 122, 10, 18, 6, 'Senin', 1, NULL),
 (873, 122, 10, 18, 7, 'Senin', 1, NULL),
 (874, 35, 11, 18, 8, 'Senin', 1, NULL),
@@ -846,7 +885,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (922, 52, 17, 19, 5, 'Senin', 1, NULL),
 (923, 17, 1, 19, 6, 'Senin', 1, NULL),
 (924, 17, 1, 19, 7, 'Senin', 1, NULL),
-(925, 48, 11, 19, 8, 'Senin', 1, '2026-09-02 18:42:01'),
+(925, 48, 11, 19, 8, 'Senin', 1, NULL),
 (926, 99, 11, 19, 9, 'Senin', 1, NULL),
 (927, 99, 11, 19, 10, 'Senin', 1, NULL),
 (928, 79, 12, 19, 24, 'Selasa', 1, NULL),
@@ -934,7 +973,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1010, 104, 16, 20, 13, 'Jumat', 1, NULL),
 (1011, 104, 16, 20, 14, 'Jumat', 1, NULL),
 (1012, 119, 14, 20, 15, 'Jumat', 1, NULL),
-(1013, 16, 7, 20, 16, 'Jumat', 1, '2026-09-02 18:42:01'),
+(1013, 16, 7, 20, 16, 'Jumat', 1, NULL),
 (1014, 9, 7, 20, 17, 'Jumat', 1, NULL),
 (1015, 34, 12, 20, 18, 'Jumat', 1, NULL),
 (1016, 34, 12, 20, 19, 'Jumat', 1, NULL),
@@ -990,8 +1029,8 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1066, 92, 16, 21, 18, 'Jumat', 1, NULL),
 (1067, 92, 16, 21, 19, 'Jumat', 1, NULL),
 (1068, 92, 16, 21, 20, 'Jumat', 1, NULL),
-(1069, 60, 11, 21, 21, 'Jumat', 1, '2026-09-02 18:42:01'),
-(1070, 60, 11, 21, 22, 'Jumat', 1, '2026-09-02 18:42:01'),
+(1069, 60, 11, 21, 21, 'Jumat', 1, NULL),
+(1070, 60, 11, 21, 22, 'Jumat', 1, NULL),
 (1071, 73, 11, 21, 23, 'Jumat', 1, NULL),
 (1072, 99, 11, 22, 2, 'Senin', 1, NULL),
 (1073, 99, 11, 22, 3, 'Senin', 1, NULL),
@@ -1039,8 +1078,8 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1115, 59, 9, 22, 16, 'Jumat', 1, NULL),
 (1116, 44, 18, 22, 17, 'Jumat', 1, NULL),
 (1117, 44, 18, 22, 18, 'Jumat', 1, NULL),
-(1118, 99, 18, 22, 19, 'Jumat', 1, '2026-09-02 18:42:01'),
-(1119, 99, 18, 22, 20, 'Jumat', 1, '2026-09-02 18:42:01'),
+(1118, 99, 18, 22, 19, 'Jumat', 1, NULL),
+(1119, 99, 18, 22, 20, 'Jumat', 1, NULL),
 (1120, 105, 5, 22, 21, 'Jumat', 1, NULL),
 (1121, 105, 5, 22, 22, 'Jumat', 1, NULL),
 (1122, 105, 5, 22, 23, 'Jumat', 1, NULL),
@@ -1048,7 +1087,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1124, 40, 18, 23, 3, 'Senin', 1, NULL),
 (1125, 40, 18, 23, 4, 'Senin', 1, NULL),
 (1126, 40, 18, 23, 5, 'Senin', 1, NULL),
-(1127, 98, 5, 23, 6, 'Senin', 1, '2026-09-02 18:42:01'),
+(1127, 98, 5, 23, 6, 'Senin', 1, NULL),
 (1128, 105, 5, 23, 7, 'Senin', 1, NULL),
 (1129, 105, 5, 23, 8, 'Senin', 1, NULL),
 (1130, 20, 7, 23, 9, 'Senin', 1, NULL),
@@ -1089,7 +1128,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1165, 44, 18, 23, 15, 'Jumat', 1, NULL),
 (1166, 115, 8, 23, 16, 'Jumat', 1, NULL),
 (1167, 115, 8, 23, 17, 'Jumat', 1, NULL),
-(1168, 73, 3, 23, 18, 'Jumat', 1, '2026-09-02 18:42:01'),
+(1168, 73, 3, 23, 18, 'Jumat', 1, NULL),
 (1169, 118, 3, 23, 19, 'Jumat', 1, NULL),
 (1170, 15, 2, 23, 20, 'Jumat', 1, NULL),
 (1171, 15, 2, 23, 21, 'Jumat', 1, NULL),
@@ -1143,7 +1182,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1219, 83, 13, 24, 18, 'Jumat', 1, NULL),
 (1220, 101, 11, 24, 19, 'Jumat', 1, NULL),
 (1221, 101, 11, 24, 20, 'Jumat', 1, NULL),
-(1222, 54, 11, 24, 21, 'Jumat', 1, '2026-09-02 18:42:01'),
+(1222, 54, 11, 24, 21, 'Jumat', 1, NULL),
 (1223, 41, 7, 24, 22, 'Jumat', 1, NULL),
 (1224, 41, 7, 24, 23, 'Jumat', 1, NULL),
 (1225, 32, 31, 25, 2, 'Senin', 1, NULL),
@@ -1186,7 +1225,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1262, 32, 15, 25, 52, 'Kamis', 1, NULL),
 (1263, 32, 15, 25, 53, 'Kamis', 1, NULL),
 (1264, 47, 2, 25, 12, 'Jumat', 1, NULL),
-(1265, 4, 2, 25, 13, 'Jumat', 1, '2026-09-02 18:42:01'),
+(1265, 4, 2, 25, 13, 'Jumat', 1, NULL),
 (1266, 70, 31, 25, 14, 'Jumat', 1, NULL),
 (1267, 70, 31, 25, 15, 'Jumat', 1, NULL),
 (1268, 70, 31, 25, 16, 'Jumat', 1, NULL),
@@ -1197,7 +1236,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1273, 70, 31, 26, 2, 'Senin', 1, NULL),
 (1274, 70, 31, 26, 3, 'Senin', 1, NULL),
 (1275, 70, 31, 26, 4, 'Senin', 1, NULL),
-(1276, 36, 31, 26, 5, 'Senin', 1, '2026-09-02 18:42:01'),
+(1276, 36, 31, 26, 5, 'Senin', 1, NULL),
 (1277, 76, 5, 26, 6, 'Senin', 1, NULL),
 (1278, 76, 5, 26, 7, 'Senin', 1, NULL),
 (1279, 76, 5, 26, 8, 'Senin', 1, NULL),
@@ -1245,7 +1284,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1321, 76, 5, 27, 2, 'Senin', 1, NULL),
 (1322, 76, 5, 27, 3, 'Senin', 1, NULL),
 (1323, 76, 5, 27, 4, 'Senin', 1, NULL),
-(1324, 3, 10, 27, 5, 'Senin', 1, '2026-09-02 18:42:01'),
+(1324, 3, 10, 27, 5, 'Senin', 1, NULL),
 (1325, 36, 10, 27, 6, 'Senin', 1, NULL),
 (1326, 28, 31, 27, 7, 'Senin', 1, NULL),
 (1327, 28, 31, 27, 8, 'Senin', 1, NULL),
@@ -1283,7 +1322,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1359, 9, 7, 27, 13, 'Jumat', 1, NULL),
 (1360, 9, 7, 27, 14, 'Jumat', 1, NULL),
 (1361, 16, 31, 27, 15, 'Jumat', 1, NULL),
-(1362, 52, 31, 27, 16, 'Jumat', 1, '2026-09-02 18:42:01'),
+(1362, 52, 31, 27, 16, 'Jumat', 1, NULL),
 (1363, 88, 6, 27, 17, 'Jumat', 1, NULL),
 (1364, 88, 6, 27, 18, 'Jumat', 1, NULL),
 (1365, 43, 2, 27, 19, 'Jumat', 1, NULL),
@@ -1331,10 +1370,10 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1407, 36, 10, 28, 13, 'Jumat', 1, NULL),
 (1408, 48, 31, 28, 14, 'Jumat', 1, NULL),
 (1409, 48, 31, 28, 15, 'Jumat', 1, NULL),
-(1410, 95, 31, 28, 16, 'Jumat', 1, '2026-09-02 18:42:01'),
+(1410, 95, 31, 28, 16, 'Jumat', 1, NULL),
 (1411, 48, 31, 28, 17, 'Jumat', 1, NULL),
 (1412, 48, 31, 28, 18, 'Jumat', 1, NULL),
-(1413, 95, 31, 28, 19, 'Jumat', 1, '2026-09-02 18:42:01'),
+(1413, 95, 31, 28, 19, 'Jumat', 1, NULL),
 (1414, 27, 5, 28, 20, 'Jumat', 1, NULL),
 (1415, 27, 5, 28, 21, 'Jumat', 1, NULL),
 (1416, 27, 5, 28, 22, 'Jumat', 1, NULL),
@@ -1352,7 +1391,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1428, 80, 35, 29, 28, 'Selasa', 1, NULL),
 (1429, 80, 35, 29, 29, 'Selasa', 1, NULL),
 (1430, 80, 35, 29, 30, 'Selasa', 1, NULL),
-(1431, 27, 35, 29, 31, 'Selasa', 1, '2026-09-02 18:42:01'),
+(1431, 27, 35, 29, 31, 'Selasa', 1, NULL),
 (1432, 55, 35, 29, 32, 'Selasa', 1, NULL),
 (1433, 55, 35, 29, 33, 'Selasa', 1, NULL),
 (1434, 58, 35, 29, 34, 'Rabu', 1, NULL),
@@ -1361,7 +1400,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1437, 112, 15, 29, 37, 'Rabu', 1, NULL),
 (1438, 112, 15, 29, 38, 'Rabu', 1, NULL),
 (1439, 112, 15, 29, 39, 'Rabu', 1, NULL),
-(1440, 122, 8, 29, 40, 'Rabu', 1, '2026-09-02 18:42:01'),
+(1440, 122, 8, 29, 40, 'Rabu', 1, NULL),
 (1441, 115, 8, 29, 41, 'Rabu', 1, NULL),
 (1442, 73, 6, 29, 42, 'Rabu', 1, NULL),
 (1443, 73, 6, 29, 43, 'Rabu', 1, NULL),
@@ -1415,7 +1454,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1491, 116, 14, 30, 45, 'Kamis', 1, NULL),
 (1492, 27, 5, 30, 46, 'Kamis', 1, NULL),
 (1493, 27, 5, 30, 47, 'Kamis', 1, NULL),
-(1494, 71, 5, 30, 48, 'Kamis', 1, '2026-09-02 18:42:01'),
+(1494, 71, 5, 30, 48, 'Kamis', 1, NULL),
 (1495, 41, 7, 30, 49, 'Kamis', 1, NULL),
 (1496, 41, 7, 30, 50, 'Kamis', 1, NULL),
 (1497, 41, 7, 30, 51, 'Kamis', 1, NULL),
@@ -1472,8 +1511,8 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1548, 7, 8, 31, 16, 'Jumat', 1, NULL),
 (1549, 7, 8, 31, 17, 'Jumat', 1, NULL),
 (1550, 12, 1, 31, 18, 'Jumat', 1, NULL),
-(1551, 44, 1, 31, 19, 'Jumat', 1, '2026-09-02 18:42:01'),
-(1552, 44, 1, 31, 20, 'Jumat', 1, '2026-09-02 18:42:01'),
+(1551, 44, 1, 31, 19, 'Jumat', 1, NULL),
+(1552, 44, 1, 31, 20, 'Jumat', 1, NULL),
 (1553, 6, 2, 31, 21, 'Jumat', 1, NULL),
 (1554, 6, 2, 31, 22, 'Jumat', 1, NULL),
 (1555, 91, 29, 32, 2, 'Senin', 1, NULL),
@@ -1681,8 +1720,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1757, 108, 15, 36, 35, 'Rabu', 1, NULL),
 (1758, 2, 30, 36, 36, 'Rabu', 1, NULL),
 (1759, 2, 30, 36, 37, 'Rabu', 1, NULL),
-(1760, 2, 30, 36, 38, 'Rabu', 1, NULL);
-INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `id_jam`, `hari`, `id_tahun_ajaran`, `deleted_at`) VALUES
+(1760, 2, 30, 36, 38, 'Rabu', 1, NULL),
 (1761, 2, 30, 36, 39, 'Rabu', 1, NULL),
 (1762, 125, 6, 36, 40, 'Rabu', 1, NULL),
 (1763, 125, 6, 36, 41, 'Rabu', 1, NULL),
@@ -1694,7 +1732,8 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1769, 7, 8, 36, 47, 'Kamis', 1, NULL),
 (1770, 108, 15, 36, 48, 'Kamis', 1, NULL),
 (1771, 108, 15, 36, 49, 'Kamis', 1, NULL),
-(1772, 108, 15, 36, 50, 'Kamis', 1, NULL),
+(1772, 108, 15, 36, 50, 'Kamis', 1, NULL);
+INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `id_jam`, `hari`, `id_tahun_ajaran`, `deleted_at`) VALUES
 (1773, 117, 7, 36, 51, 'Kamis', 1, NULL),
 (1774, 117, 7, 36, 52, 'Kamis', 1, NULL),
 (1775, 117, 7, 36, 53, 'Kamis', 1, NULL),
@@ -1715,7 +1754,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1790, 117, 7, 37, 5, 'Senin', 1, NULL),
 (1791, 117, 7, 37, 6, 'Senin', 1, NULL),
 (1792, 13, 30, 37, 7, 'Senin', 1, NULL),
-(1793, 108, 30, 37, 8, 'Senin', 1, '2026-09-02 18:42:01'),
+(1793, 108, 30, 37, 8, 'Senin', 1, NULL),
 (1794, 13, 30, 37, 9, 'Senin', 1, NULL),
 (1795, 13, 30, 37, 10, 'Senin', 1, NULL),
 (1796, 107, 5, 37, 24, 'Selasa', 1, NULL),
@@ -1755,13 +1794,13 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1830, 13, 30, 37, 18, 'Jumat', 1, NULL),
 (1831, 13, 30, 37, 19, 'Jumat', 1, NULL),
 (1832, 13, 30, 37, 20, 'Jumat', 1, NULL),
-(1833, 101, 14, 37, 21, 'Jumat', 1, '2026-09-02 18:42:01'),
-(1834, 101, 14, 37, 22, 'Jumat', 1, '2026-09-02 18:42:01'),
+(1833, 101, 14, 37, 21, 'Jumat', 1, NULL),
+(1834, 101, 14, 37, 22, 'Jumat', 1, NULL),
 (1835, 18, 7, 38, 2, 'Senin', 1, NULL),
 (1836, 18, 7, 38, 3, 'Senin', 1, NULL),
 (1837, 18, 7, 38, 4, 'Senin', 1, NULL),
 (1838, 87, 4, 38, 5, 'Senin', 1, NULL),
-(1839, 107, 4, 38, 6, 'Senin', 1, '2026-09-02 18:42:01'),
+(1839, 107, 4, 38, 6, 'Senin', 1, NULL),
 (1840, 21, 30, 38, 7, 'Senin', 1, NULL),
 (1841, 21, 30, 38, 8, 'Senin', 1, NULL),
 (1842, 21, 30, 38, 9, 'Senin', 1, NULL),
@@ -1808,7 +1847,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1883, 103, 30, 39, 2, 'Senin', 1, NULL),
 (1884, 103, 30, 39, 3, 'Senin', 1, NULL),
 (1885, 103, 30, 39, 4, 'Senin', 1, NULL),
-(1886, 70, 30, 39, 5, 'Senin', 1, '2026-09-02 18:42:01'),
+(1886, 70, 30, 39, 5, 'Senin', 1, NULL),
 (1887, 74, 14, 39, 6, 'Senin', 1, NULL),
 (1888, 74, 14, 39, 7, 'Senin', 1, NULL),
 (1889, 18, 7, 39, 8, 'Senin', 1, NULL),
@@ -1817,7 +1856,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1892, 103, 30, 39, 24, 'Selasa', 1, NULL),
 (1893, 103, 30, 39, 25, 'Selasa', 1, NULL),
 (1894, 103, 30, 39, 26, 'Selasa', 1, NULL),
-(1895, 70, 30, 39, 27, 'Selasa', 1, '2026-09-02 18:42:01'),
+(1895, 70, 30, 39, 27, 'Selasa', 1, NULL),
 (1896, 7, 8, 39, 28, 'Selasa', 1, NULL),
 (1897, 7, 8, 39, 29, 'Selasa', 1, NULL),
 (1898, 113, 2, 39, 30, 'Selasa', 1, NULL),
@@ -1830,7 +1869,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1905, 108, 15, 39, 37, 'Rabu', 1, NULL),
 (1906, 108, 15, 39, 38, 'Rabu', 1, NULL),
 (1907, 122, 10, 39, 39, 'Rabu', 1, NULL),
-(1908, 123, 10, 39, 40, 'Rabu', 1, '2026-09-02 18:42:01'),
+(1908, 123, 10, 39, 40, 'Rabu', 1, NULL),
 (1909, 103, 30, 39, 41, 'Rabu', 1, NULL),
 (1910, 103, 30, 39, 42, 'Rabu', 1, NULL),
 (1911, 103, 30, 39, 43, 'Rabu', 1, NULL),
@@ -1851,8 +1890,8 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1926, 123, 1, 39, 18, 'Jumat', 1, NULL),
 (1927, 123, 1, 39, 19, 'Jumat', 1, NULL),
 (1928, 123, 1, 39, 20, 'Jumat', 1, NULL),
-(1929, 70, 30, 39, 21, 'Jumat', 1, '2026-09-02 18:42:01'),
-(1930, 70, 30, 39, 22, 'Jumat', 1, '2026-09-02 18:42:01'),
+(1929, 70, 30, 39, 21, 'Jumat', 1, NULL),
+(1930, 70, 30, 39, 22, 'Jumat', 1, NULL),
 (1931, 17, 1, 40, 2, 'Senin', 1, NULL),
 (1932, 17, 1, 40, 3, 'Senin', 1, NULL),
 (1933, 17, 1, 40, 4, 'Senin', 1, NULL),
@@ -1902,8 +1941,8 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1977, 121, 7, 41, 2, 'Senin', 1, NULL),
 (1978, 121, 7, 41, 3, 'Senin', 1, NULL),
 (1979, 121, 7, 41, 4, 'Senin', 1, NULL),
-(1980, 103, 15, 41, 5, 'Senin', 1, '2026-09-02 18:42:01'),
-(1981, 103, 15, 41, 6, 'Senin', 1, '2026-09-02 18:42:01'),
+(1980, 103, 15, 41, 5, 'Senin', 1, NULL),
+(1981, 103, 15, 41, 6, 'Senin', 1, NULL),
 (1982, 120, 34, 41, 7, 'Senin', 1, NULL),
 (1983, 120, 34, 41, 8, 'Senin', 1, NULL),
 (1984, 120, 34, 41, 9, 'Senin', 1, NULL),
@@ -1911,9 +1950,9 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (1986, 81, 5, 41, 24, 'Selasa', 1, NULL),
 (1987, 81, 5, 41, 25, 'Selasa', 1, NULL),
 (1988, 81, 5, 41, 26, 'Selasa', 1, NULL),
-(1989, 103, 15, 41, 27, 'Selasa', 1, '2026-09-02 18:42:01'),
+(1989, 103, 15, 41, 27, 'Selasa', 1, NULL),
 (1990, 4, 15, 41, 28, 'Selasa', 1, NULL),
-(1991, 103, 15, 41, 29, 'Selasa', 1, '2026-09-02 18:42:01'),
+(1991, 103, 15, 41, 29, 'Selasa', 1, NULL),
 (1992, 7, 8, 41, 30, 'Selasa', 1, NULL),
 (1993, 7, 8, 41, 31, 'Selasa', 1, NULL),
 (1994, 113, 2, 41, 32, 'Selasa', 1, NULL),
@@ -2053,7 +2092,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (2128, 126, 4, 44, 24, 'Selasa', 1, NULL),
 (2129, 126, 4, 44, 25, 'Selasa', 1, NULL),
 (2130, 47, 2, 44, 26, 'Selasa', 1, NULL),
-(2131, 4, 2, 44, 27, 'Selasa', 1, '2026-09-02 18:42:01'),
+(2131, 4, 2, 44, 27, 'Selasa', 1, NULL),
 (2132, 71, 15, 44, 28, 'Selasa', 1, NULL),
 (2133, 71, 15, 44, 29, 'Selasa', 1, NULL),
 (2134, 71, 15, 44, 30, 'Selasa', 1, NULL),
@@ -2071,8 +2110,8 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (2146, 3, 1, 44, 44, 'Kamis', 1, NULL),
 (2147, 3, 1, 44, 45, 'Kamis', 1, NULL),
 (2148, 3, 1, 44, 46, 'Kamis', 1, NULL),
-(2149, 22, 8, 44, 47, 'Kamis', 1, '2026-09-02 18:42:01'),
-(2150, 22, 8, 44, 48, 'Kamis', 1, '2026-09-02 18:42:01'),
+(2149, 22, 8, 44, 47, 'Kamis', 1, NULL),
+(2150, 22, 8, 44, 48, 'Kamis', 1, NULL),
 (2151, 33, 10, 44, 49, 'Kamis', 1, NULL),
 (2152, 33, 10, 44, 50, 'Kamis', 1, NULL),
 (2153, 124, 5, 44, 51, 'Kamis', 1, NULL),
@@ -2139,7 +2178,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (2214, 115, 3, 45, 22, 'Jumat', 1, NULL),
 (2215, 87, 4, 46, 2, 'Senin', 1, NULL),
 (2216, 87, 4, 46, 3, 'Senin', 1, NULL),
-(2217, 105, 1, 46, 4, 'Senin', 1, '2026-09-02 18:42:01'),
+(2217, 105, 1, 46, 4, 'Senin', 1, NULL),
 (2218, 8, 1, 46, 5, 'Senin', 1, NULL),
 (2219, 8, 1, 46, 6, 'Senin', 1, NULL),
 (2220, 40, 28, 46, 7, 'Senin', 1, NULL),
@@ -2181,8 +2220,8 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (2256, 53, 28, 46, 16, 'Jumat', 1, NULL),
 (2257, 53, 28, 46, 17, 'Jumat', 1, NULL),
 (2258, 53, 28, 46, 18, 'Jumat', 1, NULL),
-(2259, 48, 6, 46, 19, 'Jumat', 1, '2026-09-02 18:42:01'),
-(2260, 48, 6, 46, 20, 'Jumat', 1, '2026-09-02 18:42:01'),
+(2259, 48, 6, 46, 19, 'Jumat', 1, NULL),
+(2260, 48, 6, 46, 20, 'Jumat', 1, NULL),
 (2261, 100, 15, 46, 21, 'Jumat', 1, NULL),
 (2262, 100, 15, 46, 22, 'Jumat', 1, NULL),
 (2263, 72, 3, 47, 2, 'Senin', 1, NULL),
@@ -2290,23 +2329,23 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (2366, 83, 13, 1, 12, 'Jumat', 1, NULL),
 (2367, 83, 13, 1, 13, 'Jumat', 1, NULL),
 (2368, 76, 5, 1, 14, 'Jumat', 1, NULL),
-(2369, 131, 2, 73, 1, 'Senin', 1, '2026-09-07 05:41:18'),
-(2370, 131, 2, 73, 2, 'Senin', 1, '2026-09-07 05:41:18'),
-(2371, 131, 2, 73, 3, 'Senin', 1, '2026-09-07 05:41:18'),
-(2372, NULL, 47, 73, 11, 'Jumat', 1, '2026-09-07 05:41:18'),
-(2373, 131, 2, 73, 12, 'Jumat', 1, '2026-09-07 05:41:18'),
-(2374, 131, 2, 73, 13, 'Jumat', 1, '2026-09-07 05:41:18'),
-(2375, 131, 2, 73, 14, 'Jumat', 1, '2026-09-07 05:41:18'),
+(2369, 131, 2, 73, 1, 'Senin', 1, NULL),
+(2370, 131, 2, 73, 2, 'Senin', 1, NULL),
+(2371, 131, 2, 73, 3, 'Senin', 1, NULL),
+(2372, NULL, 47, 73, 11, 'Jumat', 1, NULL),
+(2373, 131, 2, 73, 12, 'Jumat', 1, NULL),
+(2374, 131, 2, 73, 13, 'Jumat', 1, NULL),
+(2375, 131, 2, 73, 14, 'Jumat', 1, NULL),
 (2379, 89, 8, 1, 7, 'Senin', 1, NULL),
 (2380, 89, 8, 1, 8, 'Senin', 1, NULL),
 (2381, 83, 12, 1, 9, 'Senin', 1, NULL),
 (2382, 83, 12, 1, 10, 'Senin', 1, NULL),
-(2387, 55, 26, 1, 31, 'Selasa', 1, '2026-09-07 05:08:47'),
+(2387, 55, 26, 1, 31, 'Selasa', 1, NULL),
 (2392, 36, 10, 1, 36, 'Rabu', 1, NULL),
 (2393, 36, 10, 1, 37, 'Rabu', 1, NULL),
 (2394, 36, 10, 1, 38, 'Rabu', 1, NULL),
 (2395, 123, 1, 1, 39, 'Rabu', 1, NULL),
-(2396, 115, 8, 1, 40, 'Rabu', 1, '2026-09-07 05:08:47'),
+(2396, 115, 8, 1, 40, 'Rabu', 1, NULL),
 (2397, 98, 21, 1, 41, 'Rabu', 1, NULL),
 (2398, 98, 21, 1, 42, 'Rabu', 1, NULL),
 (2399, 98, 21, 1, 43, 'Rabu', 1, NULL),
@@ -2346,7 +2385,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (2455, NULL, 47, 2, 11, 'Jumat', 1, NULL),
 (2456, 93, 6, 2, 12, 'Jumat', 1, NULL),
 (2457, 93, 6, 2, 13, 'Jumat', 1, NULL),
-(2458, NULL, 2, 2, 14, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2458, NULL, 2, 2, 14, 'Jumat', 1, NULL),
 (2459, 56, 9, 2, 18, 'Jumat', 1, NULL),
 (2460, 56, 9, 2, 19, 'Jumat', 1, NULL),
 (2461, 98, 21, 2, 20, 'Jumat', 1, NULL),
@@ -2362,7 +2401,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (2475, 93, 6, 1, 50, 'Kamis', 1, NULL),
 (2481, 76, 5, 1, 16, 'Jumat', 1, NULL),
 (2482, 31, 11, 1, 18, 'Jumat', 1, NULL),
-(2483, NULL, 15, 1, 20, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2483, NULL, 15, 1, 20, 'Jumat', 1, NULL),
 (2484, 25, 21, 1, 21, 'Jumat', 1, NULL),
 (2485, 25, 21, 1, 22, 'Jumat', 1, NULL),
 (2486, 25, 21, 1, 23, 'Jumat', 1, NULL),
@@ -2373,7 +2412,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (2491, 31, 11, 2, 35, 'Rabu', 1, NULL),
 (2494, 25, 21, 2, 40, 'Rabu', 1, NULL),
 (2495, 25, 21, 2, 41, 'Rabu', 1, NULL),
-(2496, 27, 5, 2, 48, 'Kamis', 1, '2026-09-07 05:08:47'),
+(2496, 27, 5, 2, 48, 'Kamis', 1, NULL),
 (2497, 98, 21, 2, 21, 'Jumat', 1, NULL),
 (2498, 89, 8, 2, 22, 'Jumat', 1, NULL),
 (2499, 89, 8, 2, 23, 'Jumat', 1, NULL),
@@ -2463,7 +2502,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (2621, 125, 6, 4, 53, 'Kamis', 1, NULL),
 (2622, NULL, 47, 4, 11, 'Jumat', 1, NULL),
 (2626, 41, 7, 4, 15, 'Jumat', 1, NULL),
-(2627, 48, 26, 4, 16, 'Jumat', 1, '2026-09-07 05:08:47'),
+(2627, 48, 26, 4, 16, 'Jumat', 1, NULL),
 (2628, 30, 1, 4, 17, 'Jumat', 1, NULL),
 (2629, 52, 13, 4, 18, 'Jumat', 1, NULL),
 (2630, 52, 13, 4, 19, 'Jumat', 1, NULL),
@@ -2491,7 +2530,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (2678, 31, 11, 2, 36, 'Rabu', 1, NULL),
 (2711, 36, 10, 3, 2, 'Senin', 1, NULL),
 (2712, 36, 10, 3, 3, 'Senin', 1, NULL),
-(2713, 87, 4, 3, 6, 'Senin', 1, '2026-09-07 05:08:47'),
+(2713, 87, 4, 3, 6, 'Senin', 1, NULL),
 (2714, 53, 12, 3, 9, 'Senin', 1, NULL),
 (2715, 53, 12, 3, 10, 'Senin', 1, NULL),
 (2723, 106, 14, 4, 4, 'Senin', 1, NULL),
@@ -2502,16 +2541,15 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (2728, 36, 10, 4, 44, 'Kamis', 1, NULL),
 (2729, 36, 10, 4, 45, 'Kamis', 1, NULL),
 (2730, 36, 10, 4, 46, 'Kamis', 1, NULL),
-(6928, NULL, 2, 74, 2, 'Senin', 1, '2026-09-07 05:41:18'),
-(11092, 132, 2, 76, 4, 'Senin', 1, '2026-09-07 17:41:16'),
-(11093, 133, 2, 77, 5, 'Senin', 1, '2026-09-07 17:41:16'),
-(11094, NULL, 46, 79, 1, 'Senin', 1, '2026-09-07 17:41:16'),
-(11095, NULL, 46, 80, 1, 'Senin', 1, '2026-09-07 17:41:16'),
-(11096, NULL, 46, 81, 1, 'Senin', 1, '2026-09-07 17:41:16'),
-(11097, NULL, 46, 82, 1, 'Senin', 1, '2026-09-07 17:41:16'),
-(11098, NULL, 46, 83, 1, 'Senin', 1, '2026-09-07 17:41:16'),
-(11104, 1, 1, 75, 1, 'Senin', 1, '2026-09-07 05:41:18'),
-(11105, 125, 1, 70, 1, 'Senin', 1, '2026-09-07 17:41:16'),
+(6928, NULL, 2, 74, 2, 'Senin', 1, NULL),
+(11092, 132, 2, 76, 4, 'Senin', 1, NULL),
+(11093, 133, 2, 77, 5, 'Senin', 1, NULL),
+(11094, NULL, 46, 79, 1, 'Senin', 1, NULL),
+(11095, NULL, 46, 80, 1, 'Senin', 1, NULL),
+(11096, NULL, 46, 81, 1, 'Senin', 1, NULL),
+(11097, NULL, 46, 82, 1, 'Senin', 1, NULL),
+(11098, NULL, 46, 83, 1, 'Senin', 1, NULL),
+(11105, 125, 1, 70, 1, 'Senin', 1, NULL),
 (11108, NULL, 46, 20, 1, 'Senin', 1, NULL),
 (11109, NULL, 47, 20, 11, 'Jumat', 1, NULL),
 (11110, NULL, 46, 21, 1, 'Senin', 1, NULL),
@@ -2917,8 +2955,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (11604, 90, 2, 10, 26, 'Selasa', 1, NULL),
 (11606, 77, 3, 10, 31, 'Selasa', 1, NULL),
 (11607, 18, 7, 10, 34, 'Rabu', 1, NULL),
-(11608, 18, 7, 10, 35, 'Rabu', 1, NULL);
-INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `id_jam`, `hari`, `id_tahun_ajaran`, `deleted_at`) VALUES
+(11608, 18, 7, 10, 35, 'Rabu', 1, NULL),
 (11609, 77, 23, 10, 40, 'Rabu', 1, NULL),
 (11610, 77, 23, 10, 41, 'Rabu', 1, NULL),
 (11611, 59, 9, 5, 4, 'Senin', 1, NULL),
@@ -2949,10 +2986,29 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (11638, 35, 11, 6, 18, 'Jumat', 1, NULL),
 (11639, 55, 25, 6, 19, 'Jumat', 1, NULL),
 (11640, 51, 39, 32, 27, 'Selasa', 1, NULL),
-(11641, 120, 43, 40, 44, 'Kamis', 1, NULL),
+(11641, 120, 43, 40, 44, 'Kamis', 1, NULL);
+INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `id_jam`, `hari`, `id_tahun_ajaran`, `deleted_at`) VALUES
 (11642, 120, 43, 40, 45, 'Kamis', 1, NULL),
 (11643, 58, 44, 30, 27, 'Selasa', 1, NULL),
-(11644, 112, 44, 30, 15, 'Jumat', 1, NULL);
+(11644, 112, 44, 30, 15, 'Jumat', 1, NULL),
+(11645, 138, 1, 84, 1, 'Senin', 1, NULL),
+(11646, 138, 1, 84, 2, 'Senin', 1, NULL),
+(11647, 138, 1, 84, 3, 'Senin', 1, NULL),
+(11648, 139, 1, 85, 1, 'Senin', 1, NULL),
+(11649, 139, 1, 85, 2, 'Senin', 1, NULL),
+(11650, 140, 1, 85, 3, 'Senin', 1, NULL),
+(11652, 141, 1, 86, 1, 'Senin', 1, NULL),
+(11653, 141, 1, 86, 2, 'Senin', 1, NULL),
+(11654, 141, 1, 86, 3, 'Senin', 1, NULL),
+(11655, 142, 1, 87, 1, 'Senin', 1, NULL),
+(11656, 142, 1, 87, 2, 'Senin', 1, NULL),
+(11657, 143, 1, 87, 3, 'Senin', 1, NULL),
+(11662, 146, 1, 91, 1, 'Senin', 1, NULL),
+(11663, 146, 1, 91, 2, 'Senin', 1, NULL),
+(11664, 146, 1, 91, 3, 'Senin', 1, NULL),
+(11665, 147, 1, 92, 1, 'Senin', 1, NULL),
+(11666, 147, 1, 92, 2, 'Senin', 1, NULL),
+(11667, 148, 1, 92, 3, 'Senin', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -2961,9 +3017,9 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 --
 
 CREATE TABLE `jam_pelajaran` (
-  `id_jam` int(11) NOT NULL,
-  `jam_ke` int(11) NOT NULL,
-  `hari` varchar(10) DEFAULT NULL,
+  `id_jam` int NOT NULL,
+  `jam_ke` int NOT NULL,
+  `hari` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `jam_mulai` time NOT NULL,
   `jam_selesai` time NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -3035,14 +3091,15 @@ INSERT INTO `jam_pelajaran` (`id_jam`, `jam_ke`, `hari`, `jam_mulai`, `jam_seles
 --
 
 CREATE TABLE `jurnal_kelas` (
-  `id_jurnal` int(11) NOT NULL,
-  `id_jadwal` int(11) NOT NULL,
-  `id_guru` int(11) DEFAULT NULL,
+  `id_jurnal` int NOT NULL,
+  `id_jadwal` int NOT NULL,
+  `id_guru` int DEFAULT NULL,
   `tanggal` date NOT NULL,
-  `status_kehadiran_guru` enum('Hadir','Tidak Hadir') NOT NULL DEFAULT 'Hadir',
-  `materi` varchar(255) DEFAULT NULL,
-  `jumlah_hadir` int(11) NOT NULL DEFAULT 0,
-  `waktu_input` timestamp NULL DEFAULT current_timestamp(),
+  `status_kehadiran_guru` enum('Hadir','Tidak Hadir') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Hadir',
+  `foto_selfie` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `materi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jumlah_hadir` int NOT NULL DEFAULT '0',
+  `waktu_input` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -3050,12 +3107,28 @@ CREATE TABLE `jurnal_kelas` (
 -- Dumping data for table `jurnal_kelas`
 --
 
-INSERT INTO `jurnal_kelas` (`id_jurnal`, `id_jadwal`, `id_guru`, `tanggal`, `status_kehadiran_guru`, `materi`, `jumlah_hadir`, `waktu_input`, `deleted_at`) VALUES
-(1, 868, 117, '2026-08-15', 'Hadir', 'Pembelajaran Harian', 29, '2026-08-15 14:30:46', NULL),
-(2, 562, 1, '2026-08-25', 'Hadir', 'Absensi Guru Piket', 35, '2026-08-24 22:05:04', NULL),
-(3, 868, 1, '2026-08-31', 'Hadir', 'Absensi Guru Piket', 38, '2026-08-30 23:48:09', NULL),
-(4, 11105, 125, '2026-09-07', 'Hadir', 'Absensi Guru Piket', 33, '2026-09-07 06:27:45', NULL),
-(5, 2042, 83, '2026-09-09', 'Hadir', 'Pembelajaran Harian', 32, '2026-09-09 00:27:30', NULL);
+INSERT INTO `jurnal_kelas` (`id_jurnal`, `id_jadwal`, `id_guru`, `tanggal`, `status_kehadiran_guru`, `foto_selfie`, `materi`, `jumlah_hadir`, `waktu_input`, `deleted_at`) VALUES
+(1, 868, 117, '2026-08-15', 'Hadir', NULL, 'Pembelajaran Harian', 29, '2026-08-15 14:30:46', NULL),
+(2, 562, 1, '2026-08-25', 'Hadir', NULL, 'Absensi Guru Piket', 35, '2026-08-24 22:05:04', NULL),
+(3, 868, 1, '2026-08-31', 'Hadir', NULL, 'Absensi Guru Piket', 38, '2026-08-30 23:48:09', NULL),
+(4, 11105, 125, '2026-09-07', 'Hadir', NULL, 'Absensi Guru Piket', 33, '2026-09-07 06:27:45', NULL),
+(5, 2042, 83, '2026-09-09', 'Hadir', NULL, 'Pembelajaran Harian', 32, '2026-09-09 00:27:30', NULL),
+(6, 2052, 83, '2026-09-10', 'Hadir', NULL, 'Pembelajaran Harian', 32, '2026-09-10 01:01:50', NULL),
+(7, 2053, 83, '2026-09-10', 'Hadir', NULL, 'Pembelajaran Harian', 32, '2026-09-10 02:03:40', NULL),
+(8, 2054, 83, '2026-09-10', 'Hadir', NULL, 'Pembelajaran Harian', 32, '2026-09-10 02:03:40', NULL),
+(9, 2030, 86, '2026-09-14', 'Hadir', NULL, 'Pembelajaran Harian', 31, '2026-09-14 06:51:24', NULL),
+(10, 11645, 138, '2026-09-14', 'Hadir', NULL, 'Materi Jam 1', 1, '2026-09-14 00:15:00', NULL),
+(11, 11647, 138, '2026-09-14', 'Hadir', NULL, 'Materi Jam 3', 0, '2026-09-14 01:35:00', NULL),
+(12, 11648, 139, '2026-09-14', 'Hadir', NULL, 'Materi Sesi Guru 1', 1, '2026-09-14 12:53:34', NULL),
+(13, 11649, 139, '2026-09-14', 'Hadir', NULL, 'Materi Sesi Guru 1', 1, '2026-09-14 12:53:34', NULL),
+(14, 11650, 140, '2026-09-14', 'Hadir', NULL, 'Materi Sesi Guru 2', 2, '2026-09-14 12:53:35', NULL),
+(15, 11652, 141, '2026-09-14', 'Hadir', NULL, 'Materi Jam 1', 1, '2026-09-14 00:15:00', NULL),
+(16, 11654, 141, '2026-09-14', 'Hadir', NULL, 'Materi Jam 3', 0, '2026-09-14 01:35:00', NULL),
+(19, 11662, 146, '2026-09-14', 'Hadir', NULL, 'Materi Jam 1', 1, '2026-09-14 00:15:00', NULL),
+(20, 11664, 146, '2026-09-14', 'Hadir', NULL, 'Materi Jam 3', 0, '2026-09-14 01:35:00', NULL),
+(21, 11665, 147, '2026-09-14', 'Hadir', 'selfie-guru/selfie_147_92_1789390863_YdsW8H.png', 'Materi Sesi Guru 1', 1, '2026-09-14 13:01:04', NULL),
+(22, 11666, 147, '2026-09-14', 'Hadir', 'selfie-guru/selfie_147_92_1789390863_YdsW8H.png', 'Materi Sesi Guru 1', 1, '2026-09-14 13:01:04', NULL),
+(23, 11667, 148, '2026-09-14', 'Hadir', 'selfie-guru/selfie_148_92_1789390864_QoYw1N.png', 'Materi Sesi Guru 2', 2, '2026-09-14 13:01:04', NULL);
 
 -- --------------------------------------------------------
 
@@ -3064,11 +3137,11 @@ INSERT INTO `jurnal_kelas` (`id_jurnal`, `id_jadwal`, `id_guru`, `tanggal`, `sta
 --
 
 CREATE TABLE `jurnal_siswa_tidak_hadir` (
-  `id_absen` int(11) NOT NULL,
-  `id_jurnal` int(11) NOT NULL,
-  `id_siswa` int(11) NOT NULL,
-  `status` enum('S','I','A') NOT NULL,
-  `keterangan` varchar(150) DEFAULT NULL,
+  `id_absen` int NOT NULL,
+  `id_jurnal` int NOT NULL,
+  `id_siswa` int NOT NULL,
+  `status` enum('S','I','D','A') COLLATE utf8mb4_unicode_ci DEFAULT 'S',
+  `keterangan` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -3078,7 +3151,21 @@ CREATE TABLE `jurnal_siswa_tidak_hadir` (
 
 INSERT INTO `jurnal_siswa_tidak_hadir` (`id_absen`, `id_jurnal`, `id_siswa`, `status`, `keterangan`, `deleted_at`) VALUES
 (9, 4, 939, 'I', 'D: lombaa', NULL),
-(10, 4, 940, 'I', 'D: lombaa', NULL);
+(10, 4, 940, 'I', 'D: lombaa', NULL),
+(11, 9, 1734, 'S', NULL, NULL),
+(12, 10, 3376, 'S', 'Sakit Demam', NULL),
+(13, 11, 3375, 'A', 'Tidak Mengikuti Pelajaran', NULL),
+(14, 11, 3376, 'S', 'Sakit Demam', NULL),
+(15, 12, 3378, 'S', 'Sakit Kepala', NULL),
+(16, 13, 3378, 'S', 'Sakit Kepala', NULL),
+(17, 15, 3380, 'S', 'Sakit Demam', NULL),
+(18, 16, 3379, 'A', 'Tidak Mengikuti Pelajaran', NULL),
+(19, 16, 3380, 'S', 'Sakit Demam', NULL),
+(22, 19, 3387, 'S', 'Sakit Demam', NULL),
+(23, 20, 3386, 'A', 'Tidak Mengikuti Pelajaran', NULL),
+(24, 20, 3387, 'S', 'Sakit Demam', NULL),
+(25, 21, 3389, 'S', 'Sakit Kepala', NULL),
+(26, 22, 3389, 'S', 'Sakit Kepala', NULL);
 
 --
 -- Triggers `jurnal_siswa_tidak_hadir`
@@ -3121,11 +3208,11 @@ DELIMITER ;
 --
 
 CREATE TABLE `jurusan` (
-  `id_jurusan` bigint(20) UNSIGNED NOT NULL,
-  `kode_jurusan` varchar(20) NOT NULL,
-  `nama_jurusan` varchar(100) NOT NULL,
-  `deskripsi` text DEFAULT NULL,
-  `is_aktif` tinyint(1) NOT NULL DEFAULT 1,
+  `id_jurusan` bigint UNSIGNED NOT NULL,
+  `kode_jurusan` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_jurusan` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi` text COLLATE utf8mb4_unicode_ci,
+  `is_aktif` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -3154,12 +3241,12 @@ INSERT INTO `jurusan` (`id_jurusan`, `kode_jurusan`, `nama_jurusan`, `deskripsi`
 --
 
 CREATE TABLE `kelas` (
-  `id_kelas` int(11) NOT NULL,
-  `nama_kelas` varchar(50) NOT NULL,
-  `tingkat_kelas` varchar(10) NOT NULL,
-  `jurusan` varchar(50) NOT NULL,
-  `id_tahun_ajaran` int(11) NOT NULL,
-  `id_wali_kelas` int(11) DEFAULT NULL,
+  `id_kelas` int NOT NULL,
+  `nama_kelas` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tingkat_kelas` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jurusan` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_tahun_ajaran` int NOT NULL,
+  `id_wali_kelas` int DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -3242,7 +3329,6 @@ INSERT INTO `kelas` (`id_kelas`, `nama_kelas`, `tingkat_kelas`, `jurusan`, `id_t
 (72, 'XII ULW', 'XII', 'ULW', 1, 94, NULL),
 (73, 'X TKI Import Test', 'X', 'TKI', 1, NULL, NULL),
 (74, 'X TKI Header Typo Test', 'X', 'TKI', 1, NULL, NULL),
-(75, 'X Test GuruJadwal', 'X', 'TKI', 1, NULL, NULL),
 (76, 'X TKI ID Guru Test', 'X', 'TKI', 1, NULL, NULL),
 (77, 'X TKI NIP Test', 'X', 'TKI', 1, NULL, NULL),
 (78, 'X TKI Unmatched Test', 'X', 'TKI', 1, NULL, NULL),
@@ -3250,7 +3336,13 @@ INSERT INTO `kelas` (`id_kelas`, `nama_kelas`, `tingkat_kelas`, `jurusan`, `id_t
 (80, 'X Test Upacara Store', 'X', 'TKI', 1, NULL, NULL),
 (81, 'X Test Upacara Update', 'X', 'TKI', 1, NULL, NULL),
 (82, 'X Test Upacara Tugaskan', 'X', 'TKI', 1, NULL, NULL),
-(83, 'X Test Upacara Display', 'X', 'TKI', 1, NULL, NULL);
+(83, 'X Test Upacara Display', 'X', 'TKI', 1, NULL, NULL),
+(84, 'Kelas Test 6aa7ee49dd121', 'X', 'RPL', 1, NULL, NULL),
+(85, 'Kelas Multi 6aa7ee4e26d8a', 'XI', 'RPL', 1, NULL, NULL),
+(86, 'Kelas Test 6aa7ef4234bea', 'X', 'RPL', 1, NULL, NULL),
+(87, 'Kelas Multi 6aa7ef4401984', 'XI', 'RPL', 1, NULL, NULL),
+(91, 'Kelas Test 6aa7f00ef3f7c', 'X', 'RPL', 1, NULL, NULL),
+(92, 'Kelas Multi 6aa7f00fbbb2d', 'XI', 'RPL', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3259,13 +3351,13 @@ INSERT INTO `kelas` (`id_kelas`, `nama_kelas`, `tingkat_kelas`, `jurusan`, `id_t
 --
 
 CREATE TABLE `laporan` (
-  `id_laporan` int(11) NOT NULL,
-  `role_pelapor` varchar(50) NOT NULL,
-  `nama_pelapor` varchar(100) NOT NULL,
-  `judul` varchar(150) NOT NULL,
-  `isi_laporan` text NOT NULL,
-  `status` enum('menunggu','diterima','ditolak','diproses','selesai','dibatalkan') NOT NULL DEFAULT 'menunggu',
-  `catatan_admin` text DEFAULT NULL,
+  `id_laporan` int NOT NULL,
+  `role_pelapor` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_pelapor` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `judul` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `isi_laporan` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('menunggu','diterima','ditolak','diproses','selesai','dibatalkan') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'menunggu',
+  `catatan_admin` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -3290,10 +3382,10 @@ INSERT INTO `laporan` (`id_laporan`, `role_pelapor`, `nama_pelapor`, `judul`, `i
 --
 
 CREATE TABLE `mapel` (
-  `id_mapel` int(11) NOT NULL,
-  `kode_mapel` varchar(20) DEFAULT NULL,
-  `nama_mapel` varchar(100) NOT NULL,
-  `kelompok` varchar(10) DEFAULT NULL,
+  `id_mapel` int NOT NULL,
+  `kode_mapel` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_mapel` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kelompok` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -3356,9 +3448,9 @@ INSERT INTO `mapel` (`id_mapel`, `kode_mapel`, `nama_mapel`, `kelompok`, `delete
 --
 
 CREATE TABLE `migrations` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `migration` varchar(255) NOT NULL,
-  `batch` int(11) NOT NULL
+  `id` int UNSIGNED NOT NULL,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3408,7 +3500,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (40, '2026_09_01_000001_split_lesson_times_by_day', 20),
 (41, '2026_09_01_000002_normalize_single_admin_account', 21),
 (42, '2026_09_02_000001_create_akun_admin_table', 22),
-(43, '2026_09_02_000002_create_akun_satpam_table', 23);
+(43, '2026_09_02_000002_create_akun_satpam_table', 23),
+(44, '2026_09_02_000001_add_id_mapel_to_guru_table', 24),
+(45, '2026_09_03_000001_set_null_on_delete_guru_foreign_keys', 24),
+(46, '2026_09_09_000001_add_d_to_jurnal_siswa_tidak_hadir_status_enum', 24),
+(47, '2026_09_14_000001_create_akun_waka_sdm_table', 24),
+(48, '2026_09_14_195417_add_foto_selfie_to_jurnal_kelas_table', 24);
 
 -- --------------------------------------------------------
 
@@ -3417,12 +3514,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 --
 
 CREATE TABLE `notifikasi` (
-  `id` int(11) NOT NULL,
-  `judul` varchar(150) NOT NULL,
-  `pesan` text NOT NULL,
-  `tipe` enum('info','success','warning','error') NOT NULL DEFAULT 'info',
-  `is_read` tinyint(1) NOT NULL DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `id` int NOT NULL,
+  `judul` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pesan` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tipe` enum('info','success','warning','error') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'info',
+  `is_read` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -3433,8 +3530,8 @@ CREATE TABLE `notifikasi` (
 --
 
 CREATE TABLE `pengaturan` (
-  `kunci` varchar(50) NOT NULL,
-  `nilai` text DEFAULT NULL
+  `kunci` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `nilai` text COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -3467,12 +3564,12 @@ INSERT INTO `pengaturan` (`kunci`, `nilai`) VALUES
 --
 
 CREATE TABLE `pengumuman` (
-  `id_pengumuman` bigint(20) UNSIGNED NOT NULL,
-  `judul` varchar(150) NOT NULL,
-  `isi` text NOT NULL,
-  `target_role` varchar(255) NOT NULL DEFAULT 'semua',
-  `is_aktif` tinyint(1) NOT NULL DEFAULT 1,
-  `id_admin` int(11) DEFAULT NULL,
+  `id_pengumuman` bigint UNSIGNED NOT NULL,
+  `judul` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `isi` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `target_role` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'semua',
+  `is_aktif` tinyint(1) NOT NULL DEFAULT '1',
+  `id_admin` int DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -3485,14 +3582,14 @@ CREATE TABLE `pengumuman` (
 --
 
 CREATE TABLE `roles` (
-  `id_role` int(11) NOT NULL,
-  `nama_role` varchar(50) NOT NULL,
-  `slug_role` varchar(50) NOT NULL,
-  `deskripsi` text DEFAULT NULL,
-  `route_name` varchar(100) DEFAULT NULL,
-  `is_struktural` tinyint(1) NOT NULL DEFAULT 0,
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `id_role` int NOT NULL,
+  `nama_role` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug_role` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi` text COLLATE utf8mb4_unicode_ci,
+  `route_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_struktural` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3516,12 +3613,12 @@ INSERT INTO `roles` (`id_role`, `nama_role`, `slug_role`, `deskripsi`, `route_na
 --
 
 CREATE TABLE `siswa` (
-  `id_siswa` int(11) NOT NULL,
-  `nisn` varchar(20) DEFAULT NULL,
-  `nama_siswa` varchar(100) NOT NULL,
-  `jenis_kelamin` enum('L','P') NOT NULL,
-  `id_kelas` int(11) NOT NULL,
-  `is_aktif` tinyint(1) NOT NULL DEFAULT 1,
+  `id_siswa` int NOT NULL,
+  `nisn` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_siswa` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jenis_kelamin` enum('L','P') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_kelas` int NOT NULL,
+  `is_aktif` tinyint(1) NOT NULL DEFAULT '1',
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -6116,7 +6213,19 @@ INSERT INTO `siswa` (`id_siswa`, `nisn`, `nama_siswa`, `jenis_kelamin`, `id_kela
 (3371, '0101774753', 'WITA DWI SAPUTRI', 'P', 6, 1, NULL),
 (3372, '0102634116', 'YOSUA RIO IRDIYANTO', 'L', 6, 1, NULL),
 (3373, '0106790976', 'ZAIDAN RIZKY PRATAMA', 'L', 6, 1, NULL),
-(3374, '0119412423', 'ZHAKI ZHAKARIA JORDAN', 'L', 6, 1, NULL);
+(3374, '0119412423', 'ZHAKI ZHAKARIA JORDAN', 'L', 6, 1, NULL),
+(3375, '9999997359', 'Siswa Hadir Jam1', 'L', 84, 1, NULL),
+(3376, '9999996102', 'Siswa Sakit Jam1', 'L', 84, 1, NULL),
+(3377, '8888888049', 'Siswa 1 6aa7ee4e0dc27', 'L', 85, 1, NULL),
+(3378, '7777772850', 'Siswa 2 6aa7ee4e0dc27', 'L', 85, 1, NULL),
+(3379, '9999992385', 'Siswa Hadir Jam1', 'L', 86, 1, NULL),
+(3380, '9999998485', 'Siswa Sakit Jam1', 'L', 86, 1, NULL),
+(3381, '8888881689', 'Siswa 1 6aa7ef43e5a05', 'L', 87, 1, NULL),
+(3382, '7777777093', 'Siswa 2 6aa7ef43e5a05', 'L', 87, 1, NULL),
+(3386, '9999997463', 'Siswa Hadir Jam1', 'L', 91, 1, NULL),
+(3387, '9999999160', 'Siswa Sakit Jam1', 'L', 91, 1, NULL),
+(3388, '8888884208', 'Siswa 1 6aa7f00f9dd43', 'L', 92, 1, NULL),
+(3389, '7777772284', 'Siswa 2 6aa7f00f9dd43', 'L', 92, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -6125,11 +6234,11 @@ INSERT INTO `siswa` (`id_siswa`, `nisn`, `nama_siswa`, `jenis_kelamin`, `id_kela
 --
 
 CREATE TABLE `status_laporan` (
-  `id_status` int(11) NOT NULL,
-  `nama_status` varchar(50) NOT NULL,
-  `slug_status` varchar(50) NOT NULL,
-  `deskripsi_status` varchar(255) DEFAULT NULL,
-  `urutan` int(11) NOT NULL
+  `id_status` int NOT NULL,
+  `nama_status` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug_status` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi_status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `urutan` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -6151,10 +6260,10 @@ INSERT INTO `status_laporan` (`id_status`, `nama_status`, `slug_status`, `deskri
 --
 
 CREATE TABLE `tahun_ajaran` (
-  `id_tahun_ajaran` int(11) NOT NULL,
-  `tahun_ajaran` varchar(20) NOT NULL,
-  `semester` enum('Ganjil','Genap') NOT NULL,
-  `is_aktif` tinyint(1) NOT NULL DEFAULT 0,
+  `id_tahun_ajaran` int NOT NULL,
+  `tahun_ajaran` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `semester` enum('Ganjil','Genap') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_aktif` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -6172,11 +6281,11 @@ INSERT INTO `tahun_ajaran` (`id_tahun_ajaran`, `tahun_ajaran`, `semester`, `is_a
 --
 
 CREATE TABLE `tingkat` (
-  `id_tingkat` int(11) NOT NULL,
-  `nama_tingkat` varchar(10) NOT NULL,
-  `angka` int(11) NOT NULL,
-  `urutan` int(11) NOT NULL,
-  `is_aktif` tinyint(1) NOT NULL DEFAULT 1
+  `id_tingkat` int NOT NULL,
+  `nama_tingkat` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `angka` int NOT NULL,
+  `urutan` int NOT NULL,
+  `is_aktif` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -6205,6 +6314,13 @@ ALTER TABLE `akun_admin`
 ALTER TABLE `akun_satpam`
   ADD PRIMARY KEY (`id_satpam`),
   ADD UNIQUE KEY `akun_satpam_username_unique` (`username`);
+
+--
+-- Indexes for table `akun_waka_sdm`
+--
+ALTER TABLE `akun_waka_sdm`
+  ADD PRIMARY KEY (`id_waka_sdm`),
+  ADD UNIQUE KEY `akun_waka_sdm_username_unique` (`username`);
 
 --
 -- Indexes for table `alumni`
@@ -6383,127 +6499,133 @@ ALTER TABLE `tingkat`
 -- AUTO_INCREMENT for table `akun_admin`
 --
 ALTER TABLE `akun_admin`
-  MODIFY `id_admin` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_admin` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `akun_satpam`
 --
 ALTER TABLE `akun_satpam`
-  MODIFY `id_satpam` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_satpam` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `akun_waka_sdm`
+--
+ALTER TABLE `akun_waka_sdm`
+  MODIFY `id_waka_sdm` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `alumni`
 --
 ALTER TABLE `alumni`
-  MODIFY `id_alumni` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_alumni` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `dispen_siswa`
 --
 ALTER TABLE `dispen_siswa`
-  MODIFY `id_dispen_siswa` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_dispen_siswa` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `guru`
 --
 ALTER TABLE `guru`
-  MODIFY `id_guru` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
+  MODIFY `id_guru` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
 
 --
 -- AUTO_INCREMENT for table `guru_piket`
 --
 ALTER TABLE `guru_piket`
-  MODIFY `id_guru_piket` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+  MODIFY `id_guru_piket` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
 -- AUTO_INCREMENT for table `izin_guru`
 --
 ALTER TABLE `izin_guru`
-  MODIFY `id_izin_guru` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_izin_guru` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `jadwal_mengajar`
 --
 ALTER TABLE `jadwal_mengajar`
-  MODIFY `id_jadwal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11645;
+  MODIFY `id_jadwal` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11672;
 
 --
 -- AUTO_INCREMENT for table `jam_pelajaran`
 --
 ALTER TABLE `jam_pelajaran`
-  MODIFY `id_jam` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id_jam` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT for table `jurnal_kelas`
 --
 ALTER TABLE `jurnal_kelas`
-  MODIFY `id_jurnal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_jurnal` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `jurnal_siswa_tidak_hadir`
 --
 ALTER TABLE `jurnal_siswa_tidak_hadir`
-  MODIFY `id_absen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_absen` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `jurusan`
 --
 ALTER TABLE `jurusan`
-  MODIFY `id_jurusan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_jurusan` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `kelas`
 --
 ALTER TABLE `kelas`
-  MODIFY `id_kelas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
+  MODIFY `id_kelas` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 
 --
 -- AUTO_INCREMENT for table `laporan`
 --
 ALTER TABLE `laporan`
-  MODIFY `id_laporan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_laporan` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `mapel`
 --
 ALTER TABLE `mapel`
-  MODIFY `id_mapel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id_mapel` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `notifikasi`
 --
 ALTER TABLE `notifikasi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `pengumuman`
 --
 ALTER TABLE `pengumuman`
-  MODIFY `id_pengumuman` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_pengumuman` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id_role` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_role` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `siswa`
 --
 ALTER TABLE `siswa`
-  MODIFY `id_siswa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3375;
+  MODIFY `id_siswa` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3393;
 
 --
 -- AUTO_INCREMENT for table `tahun_ajaran`
 --
 ALTER TABLE `tahun_ajaran`
-  MODIFY `id_tahun_ajaran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_tahun_ajaran` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
@@ -6533,7 +6655,7 @@ ALTER TABLE `izin_guru`
 -- Constraints for table `jadwal_mengajar`
 --
 ALTER TABLE `jadwal_mengajar`
-  ADD CONSTRAINT `jadwal_mengajar_ibfk_1` FOREIGN KEY (`id_guru`) REFERENCES `guru` (`id_guru`),
+  ADD CONSTRAINT `jadwal_mengajar_ibfk_1` FOREIGN KEY (`id_guru`) REFERENCES `guru` (`id_guru`) ON DELETE SET NULL,
   ADD CONSTRAINT `jadwal_mengajar_ibfk_2` FOREIGN KEY (`id_mapel`) REFERENCES `mapel` (`id_mapel`),
   ADD CONSTRAINT `jadwal_mengajar_ibfk_3` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`),
   ADD CONSTRAINT `jadwal_mengajar_ibfk_4` FOREIGN KEY (`id_jam`) REFERENCES `jam_pelajaran` (`id_jam`),
@@ -6556,7 +6678,7 @@ ALTER TABLE `jurnal_siswa_tidak_hadir`
 -- Constraints for table `kelas`
 --
 ALTER TABLE `kelas`
-  ADD CONSTRAINT `fk_kelas_wali` FOREIGN KEY (`id_wali_kelas`) REFERENCES `guru` (`id_guru`),
+  ADD CONSTRAINT `fk_kelas_wali` FOREIGN KEY (`id_wali_kelas`) REFERENCES `guru` (`id_guru`) ON DELETE SET NULL,
   ADD CONSTRAINT `kelas_ibfk_1` FOREIGN KEY (`id_tahun_ajaran`) REFERENCES `tahun_ajaran` (`id_tahun_ajaran`);
 
 --

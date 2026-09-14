@@ -74,6 +74,7 @@ Route::middleware('auth.admin')->group(function () {
     Route::get('/pengaturan/status-wa', [PengaturanController::class, 'statusBotWa'])->name('pengaturan.status-wa');
     Route::post('/pengaturan/start-wa', [PengaturanController::class, 'startBotWa'])->name('pengaturan.start-wa');
     Route::post('/pengaturan/restart-wa', [PengaturanController::class, 'restartBotWa'])->name('pengaturan.restart-wa');
+    Route::post('/pengaturan/disconnect-wa', [PengaturanController::class, 'disconnectBotWa'])->name('pengaturan.disconnect-wa');
     Route::get('/pengaturan/qr-wa', [PengaturanController::class, 'qrBotWa'])->name('pengaturan.qr-wa');
     Route::post('/profil/update', [PengaturanController::class, 'updateProfil'])->name('profil.update');
 

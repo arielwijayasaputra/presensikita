@@ -107,18 +107,40 @@
                     </div>
                     <div>
                         @if(($waBotStatus['online'] ?? false))
-                            <span class="badge badge-success" id="wa-bot-status-badge" style="font-size:11.5px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px">
-                                <span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block"></span> Online
+                            <span class="badge badge-success" id="wa-bot-status-badge" style="font-size:11.5px;padding:4px 12px;display:inline-flex;align-items:center;gap:6px;border-radius:20px">
+                                <span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block"></span>
+                                <span id="wa-bot-status-text">Online</span>
                             </span>
                         @else
-                            <span class="badge badge-danger" id="wa-bot-status-badge" style="font-size:11.5px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px">
-                                <span style="width:7px;height:7px;background:#ef4444;border-radius:50%;display:inline-block"></span> Offline
+                            <span class="badge badge-danger" id="wa-bot-status-badge" style="font-size:11.5px;padding:4px 12px;display:inline-flex;align-items:center;gap:6px;border-radius:20px">
+                                <span style="width:7px;height:7px;background:#ef4444;border-radius:50%;display:inline-block"></span>
+                                <span id="wa-bot-status-text">Offline</span>
                             </span>
                         @endif
                     </div>
                 </div>
 
                 <div style="display:grid;gap:14px">
+                    {{-- Info Akun Bot Terhubung --}}
+                    <div id="wa-bot-account-info" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;padding:10px 14px;border-radius:10px;align-items:center;justify-content:space-between">
+                        <div style="font-size:12px;color:#166534">
+                            <strong>Nomor Bot Terhubung:</strong> <span id="wa-bot-account-phone" style="font-family:monospace;font-weight:700">-</span>
+                        </div>
+                    </div>
+
+                    {{-- Box QR Code jika butuh scan login / tambah bot --}}
+                    <div id="wa-bot-qr-box" style="display:none;background:#fff;border:1.5px dashed #059669;border-radius:12px;padding:16px;text-align:center;box-shadow:0 4px 12px rgba(5,150,105,0.08)">
+                        <div style="font-size:13px;font-weight:700;color:#065f46;margin-bottom:4px">Scan QR Code dengan WhatsApp di HP Anda</div>
+                        <div style="font-size:11.5px;color:#047857;margin-bottom:10px">Buka WhatsApp &gt; Perangkat Tertaut &gt; Tautkan Perangkat</div>
+                        <div id="wa-bot-qr-img-wrap" style="display:flex;justify-content:center;margin-bottom:10px">
+                            <img id="wa-bot-qr-img" src="" alt="Scan QR Code WhatsApp" style="width:200px;height:200px;border-radius:10px;border:1px solid #e2e8f0;background:#fff;padding:6px">
+                        </div>
+                        <div style="font-size:11px;color:#64748b;display:flex;align-items:center;justify-content:center;gap:6px">
+                            <span style="display:inline-block;width:6px;height:6px;background:#059669;border-radius:50%;animation:pulse 1.5s infinite"></span>
+                            Menunggu scan... Status akan otomatis terhubung setelah discan.
+                        </div>
+                    </div>
+
                     <div style="background:#f8fafc;border:1px solid #e2e8f0;padding:12px 14px;border-radius:10px">
                         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none">
                             <input type="checkbox" id="set-wa-gateway-aktif" {{ ($waGatewayAktif ?? '1') === '1' ? 'checked' : '' }} style="width:16px;height:16px;accent-color:#059669">
@@ -134,9 +156,28 @@
                         <input type="text" class="filter-input" id="set-wa-endpoint" value="{{ $waGatewayEndpoint ?? 'http://127.0.0.1:3000/send-message' }}" placeholder="http://127.0.0.1:3000/send-message" style="width:100%;margin-top:4px">
                     </div>
 
-                    <div>
-                        <label style="font-size:12px;font-weight:600;color:#475569">URL Publik / Domain WhatsApp Link <span style="font-size:11px;color:#64748b;font-weight:400">(Opsional, misal: ngrok / domain)</span></label>
-                        <input type="text" class="filter-input" id="set-wa-public-url" value="{{ $waPublicUrl ?? '' }}" placeholder="Contoh: https://xxxx.ngrok-free.app (Kosongkan jika menggunakan IP LAN)" style="width:100%;margin-top:4px">
+                    <div style="background:#f8fafc;border:1px solid #e2e8f0;padding:12px 14px;border-radius:10px;display:grid;gap:8px">
+                        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
+                            <label style="font-size:12px;font-weight:700;color:#1e293b;display:flex;align-items:center;gap:6px">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                                URL Domain / Link Akses WhatsApp
+                            </label>
+                            <span style="font-size:11px;color:#059669;font-weight:600" id="set-label-url-mode">Cloudflare / Ngrok / IP Otomatis</span>
+                        </div>
+                        <input type="text" class="filter-input" id="set-wa-public-url" value="{{ $waPublicUrl ?? '' }}" placeholder="Contoh: https://xxxx.trycloudflare.com atau https://xxxx.ngrok-free.app" style="width:100%" oninput="updateLinkPreviewPengaturan()">
+                        <div style="display:flex;gap:6px;flex-wrap:wrap">
+                            <button type="button" class="btn-secondary" onclick="isiUrlOtomatisPengaturan('current')" style="padding:5px 10px;font-size:11.5px;border-radius:6px;display:inline-flex;align-items:center;gap:4px;background:#ecfdf5;color:#059669;border-color:#a7f3d0;font-weight:600">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                                Gunakan Domain Browser Saat Ini
+                            </button>
+                            <button type="button" class="btn-secondary" onclick="isiUrlOtomatisPengaturan('lan')" style="padding:5px 10px;font-size:11.5px;border-radius:6px;display:inline-flex;align-items:center;gap:4px">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                                Reset ke IP Otomatis
+                            </button>
+                        </div>
+                        <div style="font-size:11px;color:#475569;background:#fff;padding:8px 10px;border-radius:6px;border:1px solid #e2e8f0;word-break:break-all">
+                            <strong style="color:#0f172a">Preview Link di WA:</strong> <span id="set-preview-link-wa" style="color:#2563eb;font-family:monospace">Memuat...</span>
+                        </div>
                     </div>
 
                     <div>
@@ -156,15 +197,19 @@
                     </div>
 
                     <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
-                        <button type="button" class="btn-secondary" onclick="startAtauRestartBotPengaturan()" style="flex:1;min-width:130px;border-radius:8px;padding:8px 10px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:5px;background:#f0fdf4;border-color:#bbf7d0;color:#15803d">
+                        <button type="button" class="btn-secondary" id="btn-tambah-bot-pengaturan" onclick="startAtauRestartBotPengaturan()" style="flex:1;min-width:140px;border-radius:8px;padding:8px 10px;font-size:12px;display:none;align-items:center;justify-content:center;gap:5px;background:#f0fdf4;border-color:#bbf7d0;color:#15803d;font-weight:600">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                            Hubungkan / Scan Bot
+                        </button>
+                        <button type="button" class="btn-secondary" id="btn-putuskan-bot-pengaturan" onclick="putuskanBotWaPengaturan()" style="flex:1;min-width:130px;border-radius:8px;padding:8px 10px;font-size:12px;display:none;align-items:center;justify-content:center;gap:5px;background:#fef2f2;border-color:#fecaca;color:#dc2626;font-weight:600">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            Putuskan WA Bot
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="cekStatusBotWa()" style="min-width:95px;border-radius:8px;padding:8px 10px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:5px">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-                            Hubungkan Ulang Bot
+                            Cek Koneksi
                         </button>
-                        <button type="button" class="btn-secondary" onclick="cekStatusBotWa()" style="flex:1;min-width:110px;border-radius:8px;padding:8px 10px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:5px">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                            Cek Koneksi Bot
-                        </button>
-                        <button type="button" class="btn-secondary" onclick="modalTestKirimWa()" style="flex:1;min-width:110px;border-radius:8px;padding:8px 10px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:5px;background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8">
+                        <button type="button" class="btn-secondary" onclick="modalTestKirimWa()" style="min-width:105px;border-radius:8px;padding:8px 10px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:5px;background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                             Test Kirim WA
                         </button>

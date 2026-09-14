@@ -3,7 +3,8 @@ const {
     default: makeWASocket,
     useMultiFileAuthState,
     DisconnectReason,
-    fetchLatestBaileysVersion
+    fetchLatestBaileysVersion,
+    Browsers
 } = require('@whiskeysockets/baileys');
 const pino = require('pino');
 const qrcode = require('qrcode-terminal');
@@ -55,6 +56,10 @@ let isConnected = false;
 let qrCodeString = null;
 let isStarting = false;
 
+// In-memory message store untuk menjawab retry receipt kunci enkripsi E2EE
+const sentMessages = new Map();
+const msgRetryCounterMap = new Map();
+
 async function startWhatsApp() {
     if (isStarting) return;
     isStarting = true;
@@ -79,10 +84,32 @@ async function startWhatsApp() {
             auth: state,
             logger: pino({ level: 'silent' }),
             printQRInTerminal: false,
-            browser: ['PresensiKita', 'Chrome', '1.0.0']
+            browser: Browsers.windows('Desktop'),
+            syncFullHistory: false,
+            markOnlineOnConnect: true,
+            msgRetryCounterCache: {
+                get: (key) => msgRetryCounterMap.get(key),
+                set: (key, val) => msgRetryCounterMap.set(key, val),
+                del: (key) => msgRetryCounterMap.delete(key),
+            },
+            getMessage: async (key) => {
+                if (key.id && sentMessages.has(key.id)) {
+                    return sentMessages.get(key.id);
+                }
+                return {
+                    conversation: 'Notifikasi PresensiKita'
+                };
+            }
         });
 
-        sock.ev.on('creds.update', saveCreds);
+        sock.ev.on('creds.update', async () => {
+            try {
+                await saveCreds();
+                log('💾 Sesi kredensial WhatsApp berhasil disimpan.');
+            } catch (err) {
+                log(`❌ Gagal menyimpan creds: ${err.message || err}`);
+            }
+        });
 
         sock.ev.on('connection.update', (update) => {
             const { connection, lastDisconnect, qr } = update;
@@ -109,7 +136,7 @@ async function startWhatsApp() {
                         log('🔄 Mencoba menghubungkan kembali...');
                         isStarting = false;
                         startWhatsApp().catch((e) => log(`Gagal reconnect: ${e}`));
-                    }, 3000);
+                    }, 2500);
                 } else {
                     log('❌ Sesi telah logout dari WhatsApp.');
                 }
@@ -151,6 +178,21 @@ app.get('/status', (req, res) => {
         });
     }
 
+    const credsPath = path.join(__dirname, 'auth_info_baileys', 'creds.json');
+    if (fs.existsSync(credsPath)) {
+        try {
+            const credsData = JSON.parse(fs.readFileSync(credsPath, 'utf-8'));
+            if (credsData && credsData.me) {
+                return res.json({
+                    online: false,
+                    status: 'connecting',
+                    message: 'Sesi tersimpan, sedang menghubungkan...',
+                    user: credsData.me?.id?.split(':')[0] || null
+                });
+            }
+        } catch (e) {}
+    }
+
     return res.json({
         online: false,
         status: qrCodeString ? 'waiting_qr' : 'disconnected',
@@ -168,6 +210,21 @@ app.get('/qr', async (req, res) => {
             message: 'WhatsApp Bot sudah terhubung dan aktif.',
             user: sock?.user?.id?.split(':')[0] || null
         });
+    }
+
+    // Cek apakah sesi sudah ada dan sedang proses menghubungkan
+    const credsPath = path.join(__dirname, 'auth_info_baileys', 'creds.json');
+    if (fs.existsSync(credsPath)) {
+        try {
+            const credsData = JSON.parse(fs.readFileSync(credsPath, 'utf-8'));
+            if (credsData && credsData.me) {
+                return res.json({
+                    status: 'connecting',
+                    message: 'Sesi tersimpan, sedang memulihkan koneksi...',
+                    user: credsData.me?.id?.split(':')[0] || null
+                });
+            }
+        } catch (e) {}
     }
 
     if (!qrCodeString) {
@@ -189,6 +246,22 @@ app.get('/qr', async (req, res) => {
     }
 });
 
+function clearAuthDir() {
+    const authPath = path.join(__dirname, 'auth_info_baileys');
+    if (fs.existsSync(authPath)) {
+        try {
+            fs.rmSync(authPath, { recursive: true, force: true });
+        } catch (e) {
+            try {
+                const files = fs.readdirSync(authPath);
+                for (const file of files) {
+                    fs.unlinkSync(path.join(authPath, file));
+                }
+            } catch (err) {}
+        }
+    }
+}
+
 // 3. Restart / Reconnect Bot
 app.post('/restart', async (req, res) => {
     try {
@@ -202,7 +275,47 @@ app.post('/restart', async (req, res) => {
     }
 });
 
-// 2. Kirim Pesan WhatsApp
+// 4. Putuskan Koneksi / Logout Bot
+app.post('/disconnect', async (req, res) => {
+    try {
+        log('🔌 Menerima permintaan pemutusan koneksi bot WhatsApp...');
+        if (sock) {
+            try {
+                sock.ev.removeAllListeners();
+                await sock.logout().catch(() => {});
+                sock.end(undefined);
+            } catch (e) {}
+            sock = null;
+        }
+        isConnected = false;
+        qrCodeString = null;
+        sentMessages.clear();
+        msgRetryCounterMap.clear();
+
+        // Hapus file auth
+        clearAuthDir();
+
+        // Mulai ulang WhatsApp agar langsung generate QR baru
+        isStarting = false;
+        setTimeout(() => {
+            startWhatsApp().catch((e) => log(`Error restart setelah disconnect: ${e}`));
+        }, 1000);
+
+        return res.json({
+            status: true,
+            message: 'Koneksi WhatsApp Bot berhasil diputuskan. Silakan scan QR code baru untuk menghubungkan kembali.'
+        });
+    } catch (err) {
+        log(`❌ Gagal memutuskan bot: ${err.message || err}`);
+        return res.status(500).json({ status: false, message: err.message || 'Gagal memutuskan bot.' });
+    }
+});
+
+app.post('/logout', (req, res) => {
+    return res.redirect(307, '/disconnect');
+});
+
+// 5. Kirim Pesan WhatsApp
 app.post('/send-message', async (req, res) => {
     try {
         const { number, message } = req.body;
@@ -224,7 +337,24 @@ app.post('/send-message', async (req, res) => {
         const jid = formatJid(number);
         console.log(`📤 Mengirim pesan ke ${jid}...`);
 
+        // Handshake sesi & presence ke WhatsApp server
+        try {
+            await sock.presenceSubscribe(jid);
+            await sock.sendPresenceUpdate('composing', jid);
+            await new Promise((resolve) => setTimeout(resolve, 300));
+            await sock.sendPresenceUpdate('paused', jid);
+        } catch (e) {}
+
         const result = await sock.sendMessage(jid, { text: message });
+
+        // Simpan salinan pesan untuk melayani retry request E2EE
+        if (result?.key?.id && result?.message) {
+            sentMessages.set(result.key.id, result.message);
+            if (sentMessages.size > 500) {
+                const oldestKey = sentMessages.keys().next().value;
+                sentMessages.delete(oldestKey);
+            }
+        }
 
         console.log(`✅ Pesan berhasil terkirim ke ${jid} (ID: ${result.key?.id})`);
 

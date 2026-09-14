@@ -207,6 +207,18 @@ class PengaturanController extends Controller
     }
 
     /**
+     * Memutuskan koneksi bot WhatsApp (logout sesi aktif).
+     *
+     * @return JsonResponse
+     */
+    public function disconnectBotWa()
+    {
+        $hasil = \App\Services\WhatsAppService::disconnectBot();
+
+        return response()->json($hasil);
+    }
+
+    /**
      * Mengambil QR code jika bot belum terhubung.
      *
      * @return JsonResponse

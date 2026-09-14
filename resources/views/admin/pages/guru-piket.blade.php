@@ -73,32 +73,79 @@
                 @endforeach
             </div>
 
-            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-                <button type="submit" class="btn-primary" style="border-radius:8px;padding:10px 18px;font-size:13px">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                    Simpan Semua Penugasan
-                </button>
-                <span style="font-size:12px;color:#94a3b8">Kosongkan semua pilihan pada hari tertentu untuk membatalkan penugasan di hari tersebut.</span>
-            </div>
         </form>
     </div>
+</div>
 
-    {{-- Modal Pengaturan Nomor WhatsApp Bot / Guru Piket --}}
-    <div id="modal-wa-guru-piket" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:220;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)">
-        <div class="card" style="width:100%;max-width:540px;max-height:90vh;overflow-y:auto;padding:24px;border-radius:14px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid #f1f5f9">
-                <div style="display:flex;align-items:center;gap:12px">
-                    <div style="width:40px;height:40px;background:#ecfdf5;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#059669;flex-shrink:0">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                    </div>
+{{-- Modal Pengaturan Nomor WhatsApp Bot / Guru Piket (Di luar .page-content agar fixed backdrop tidak ikut ter-scroll) --}}
+<div id="modal-wa-guru-piket" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;width:100vw;height:100vh;background:rgba(15,23,42,.65);z-index:1040;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px);box-sizing:border-box" onclick="if(event.target===this) tutupModalPengaturanWaPiket()">
+    <div class="card" style="width:100%;max-width:580px;max-height:calc(100vh - 40px);background:#fff;border-radius:16px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.35);border:1px solid #e2e8f0;display:flex;flex-direction:column;overflow:hidden;animation:modalEnter 0.25s ease-out">
+        {{-- Header Modal --}}
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid #f1f5f9;background:#fafbfc">
+            <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:42px;height:42px;background:#ecfdf5;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#059669;flex-shrink:0;box-shadow:0 2px 6px rgba(5,150,105,0.15)">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </div>
+                <div>
+                    <h3 style="font-size:16px;font-weight:800;color:#0f172a;margin:0">Pengaturan WhatsApp Bot Notifikasi</h3>
+                    <div style="font-size:12px;color:#64748b;margin-top:2px">Integrasi bot WhatsApp &amp; nomor penerima perizinan</div>
+                </div>
+            </div>
+            <button type="button" onclick="tutupModalPengaturanWaPiket()" aria-label="Tutup" style="border:0;background:#f1f5f9;width:32px;height:32px;border-radius:8px;font-size:20px;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s" onmouseover="this.style.background='#e2e8f0';this.style.color='#0f172a'" onmouseout="this.style.background='#f1f5f9';this.style.color='#64748b'">&times;</button>
+        </div>
+
+        {{-- Body Modal (Scrollable) --}}
+        <div style="overflow-y:auto;padding:22px 24px;flex:1;display:grid;gap:18px">
+            {{-- Status & Kontrol Server Bot --}}
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;padding:16px;border-radius:12px;display:grid;gap:12px">
+                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
                     <div>
-                        <h3 style="font-size:16px;font-weight:700;color:#1e293b;margin:0">Pengaturan Nomor WA Notifikasi</h3>
-                        <div style="font-size:12px;color:#64748b;margin-top:2px">Nomor tujuan notifikasi izin guru &amp; dispensasi siswa</div>
+                        <div style="font-size:12.5px;font-weight:700;color:#1e293b">Status Server Bot WhatsApp:</div>
+                        <div id="modal-bot-account-info" style="font-size:11.5px;color:#059669;font-weight:600;margin-top:2px;display:none">
+                            Nomor Bot: <span id="modal-bot-account-phone">-</span>
+                        </div>
+                    </div>
+                    <span class="badge {{ ($waBotStatus['online'] ?? false) ? 'badge-success' : 'badge-danger' }}" id="modal-bot-status-badge" style="font-size:11.5px;padding:5px 12px;display:inline-flex;align-items:center;gap:6px;border-radius:20px">
+                        <span style="width:8px;height:8px;background:{{ ($waBotStatus['online'] ?? false) ? '#22c55e' : '#ef4444' }};border-radius:50%;display:inline-block"></span>
+                        <span id="modal-bot-status-text">{{ ($waBotStatus['online'] ?? false) ? 'Online' : 'Offline' }}</span>
+                    </span>
+                </div>
+
+                {{-- Box QR Code jika butuh scan login / tambah bot --}}
+                <div id="modal-bot-qr-box" style="display:none;background:#fff;border:1.5px dashed #059669;border-radius:12px;padding:16px;text-align:center;box-shadow:0 4px 12px rgba(5,150,105,0.08)">
+                    <div style="font-size:13px;font-weight:700;color:#065f46;margin-bottom:4px">Scan QR Code dengan WhatsApp di HP Anda</div>
+                    <div style="font-size:11.5px;color:#047857;margin-bottom:10px">Buka WhatsApp &gt; Perangkat Tertaut &gt; Tautkan Perangkat</div>
+                    <div id="modal-bot-qr-img-wrap" style="display:flex;justify-content:center;margin-bottom:10px">
+                        <img id="modal-bot-qr-img" src="" alt="Scan QR Code WhatsApp" style="width:200px;height:200px;border-radius:10px;border:1px solid #e2e8f0;background:#fff;padding:6px">
+                    </div>
+                    <div style="font-size:11px;color:#64748b;display:flex;align-items:center;justify-content:center;gap:6px">
+                        <span style="display:inline-block;width:6px;height:6px;background:#059669;border-radius:50%;animation:pulse 1.5s infinite"></span>
+                        Menunggu scan... Status akan otomatis terhubung setelah discan.
                     </div>
                 </div>
-                <button type="button" onclick="tutupModalPengaturanWaPiket()" aria-label="Tutup" style="border:0;background:none;font-size:24px;color:#94a3b8;cursor:pointer;padding:0;line-height:1">&times;</button>
+
+                {{-- Tombol Aksi Kontrol Bot --}}
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <button type="button" class="btn-secondary" id="btn-tambah-bot" onclick="startAtauRestartBot()" style="flex:1;min-width:140px;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;background:#f0fdf4;border-color:#bbf7d0;color:#15803d">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                        Hubungkan / Scan Bot
+                    </button>
+                    <button type="button" class="btn-secondary" id="btn-putuskan-bot-modal" onclick="putuskanBotWaModal()" style="flex:1;min-width:130px;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;background:#fef2f2;border-color:#fecaca;color:#dc2626">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        Putuskan WA Bot
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="cekStatusBotWaModal(true)" style="min-width:95px;border-radius:8px;padding:8px 10px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:5px">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                        Cek Status
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="modalTestKirimWa()" style="min-width:105px;border-radius:8px;padding:8px 10px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:5px;background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        Test Kirim WA
+                    </button>
+                </div>
             </div>
 
+            {{-- Form Nomor Tujuan --}}
             <form id="form-wa-guru-piket" onsubmit="simpanPengaturanWaPiket(event)" style="display:grid;gap:14px">
                 <div style="background:#f8fafc;border:1px solid #e2e8f0;padding:12px 14px;border-radius:10px">
                     <label style="display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none">
@@ -108,6 +155,30 @@
                             <div style="font-size:11.5px;color:#64748b">Kirim link persetujuan langsung saat Guru Piket input surat izin/dispensasi.</div>
                         </div>
                     </label>
+                </div>
+
+                <div style="background:#f8fafc;border:1px solid #e2e8f0;padding:12px 14px;border-radius:10px;display:grid;gap:8px">
+                    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
+                        <label style="font-size:12px;font-weight:700;color:#1e293b;display:flex;align-items:center;gap:6px">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                            URL Domain / Link Akses WhatsApp
+                        </label>
+                        <span style="font-size:11px;color:#059669;font-weight:600" id="modal-label-url-mode">Cloudflare / Ngrok / IP Otomatis</span>
+                    </div>
+                    <input type="text" class="filter-input" id="modal-set-wa-public-url" value="{{ $waPublicUrl ?? '' }}" placeholder="Contoh: https://xxxx.trycloudflare.com atau https://xxxx.ngrok-free.app" style="width:100%" oninput="updateLinkPreviewModal()">
+                    <div style="display:flex;gap:6px;flex-wrap:wrap">
+                        <button type="button" class="btn-secondary" onclick="isiUrlOtomatisModal('current')" style="padding:5px 10px;font-size:11.5px;border-radius:6px;display:inline-flex;align-items:center;gap:4px;background:#ecfdf5;color:#059669;border-color:#a7f3d0;font-weight:600">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                            Gunakan Domain Browser Saat Ini
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="isiUrlOtomatisModal('lan')" style="padding:5px 10px;font-size:11.5px;border-radius:6px;display:inline-flex;align-items:center;gap:4px">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                            Reset ke IP Otomatis
+                        </button>
+                    </div>
+                    <div style="font-size:11px;color:#475569;background:#fff;padding:8px 10px;border-radius:6px;border:1px solid #e2e8f0;word-break:break-all">
+                        <strong style="color:#0f172a">Preview Link di WA:</strong> <span id="modal-preview-link-wa" style="color:#2563eb;font-family:monospace">Memuat...</span>
+                    </div>
                 </div>
 
                 <div>
@@ -134,42 +205,7 @@
                     <input type="text" class="filter-input" id="modal-set-wa-waka-kesiswaan" value="{{ $waNomorWakaKesiswaan ?? '' }}" placeholder="Contoh: 081234567890" style="width:100%">
                 </div>
 
-                {{-- Status & Kontrol Server Bot --}}
-                <div style="background:#f8fafc;border:1px solid #e2e8f0;padding:12px 14px;border-radius:10px;display:grid;gap:10px">
-                    <div style="display:flex;align-items:center;justify-content:space-between">
-                        <div style="font-size:12px;font-weight:700;color:#334155">Status Server Bot WhatsApp:</div>
-                        <span class="badge {{ ($waBotStatus['online'] ?? false) ? 'badge-success' : 'badge-danger' }}" id="modal-bot-status-badge" style="font-size:11.5px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px">
-                            <span style="width:7px;height:7px;background:{{ ($waBotStatus['online'] ?? false) ? '#22c55e' : '#ef4444' }};border-radius:50%;display:inline-block"></span>
-                            {{ ($waBotStatus['online'] ?? false) ? 'Online' : 'Offline' }}
-                        </span>
-                    </div>
-
-                    {{-- Box QR Code jika butuh scan --}}
-                    <div id="modal-bot-qr-box" style="display:none;background:#fff;border:1px dashed #cbd5e1;border-radius:8px;padding:12px;text-align:center">
-                        <div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:6px">Scan QR Code dengan WhatsApp di HP Anda:</div>
-                        <div id="modal-bot-qr-img-wrap" style="display:flex;justify-content:center;margin-bottom:6px">
-                            <img id="modal-bot-qr-img" src="" alt="Scan QR Code" style="width:200px;height:200px;border-radius:8px;border:1px solid #e2e8f0">
-                        </div>
-                        <div style="font-size:11px;color:#64748b">Buka WhatsApp &rarr; Perangkat Tertaut &rarr; Tautkan Perangkat</div>
-                    </div>
-
-                    <div style="display:flex;gap:8px;flex-wrap:wrap">
-                        <button type="button" class="btn-secondary" id="btn-hubungkan-bot" onclick="startAtauRestartBot()" style="flex:1;min-width:130px;border-radius:8px;padding:8px 10px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:5px;background:#f0fdf4;border-color:#bbf7d0;color:#15803d">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-                            Hubungkan Ulang Bot
-                        </button>
-                        <button type="button" class="btn-secondary" onclick="cekStatusBotWaModal()" style="flex:1;min-width:100px;border-radius:8px;padding:8px 10px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:5px">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                            Cek Status
-                        </button>
-                        <button type="button" class="btn-secondary" onclick="modalTestKirimWa()" style="flex:1;min-width:100px;border-radius:8px;padding:8px 10px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:5px;background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                            Test Kirim WA
-                        </button>
-                    </div>
-                </div>
-
-                <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:4px;padding-top:14px;border-top:1px solid #f1f5f9">
+                <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:6px;padding-top:14px;border-top:1px solid #f1f5f9">
                     <button type="button" class="btn-secondary" onclick="tutupModalPengaturanWaPiket()" style="border-radius:8px;padding:9px 18px;font-size:13px">Batal</button>
                     <button type="submit" class="btn-primary" id="btn-simpan-wa-piket" style="border-radius:8px;padding:9px 20px;font-size:13px;font-weight:600;background:#059669;border-color:#059669">
                         Simpan Nomor WA
@@ -181,10 +217,69 @@
 </div>
 
 <script>
+let waModalPollInterval = null;
+
+function updateLinkPreviewModal() {
+    const input = document.getElementById('modal-set-wa-public-url');
+    const preview = document.getElementById('modal-preview-link-wa');
+    const labelMode = document.getElementById('modal-label-url-mode');
+    if (!preview) return;
+
+    let val = (input?.value || '').trim();
+    if (val) {
+        if (!val.startsWith('http://') && !val.startsWith('https://')) {
+            val = 'https://' + val;
+        }
+        val = val.replace(/\/+$/, '');
+        preview.textContent = val + '/persetujuan-izin-guru/1/kepsek?signature=xxxx';
+        if (labelMode) {
+            if (val.includes('trycloudflare') || val.includes('cloudflare')) {
+                labelMode.textContent = 'Cloudflare Tunnel Aktif';
+            } else if (val.includes('ngrok')) {
+                labelMode.textContent = 'Ngrok Tunnel Aktif';
+            } else {
+                labelMode.textContent = 'Custom Domain Aktif';
+            }
+        }
+    } else {
+        const origin = window.location.origin;
+        preview.textContent = origin + '/persetujuan-izin-guru/1/kepsek?signature=xxxx';
+        if (labelMode) labelMode.textContent = 'Otomatis Menyesuaikan Host/IP';
+    }
+}
+
+function isiUrlOtomatisModal(type) {
+    const input = document.getElementById('modal-set-wa-public-url');
+    if (!input) return;
+
+    if (type === 'current') {
+        const origin = window.location.origin;
+        input.value = origin;
+        Swal.fire({
+            icon: 'info',
+            title: 'Domain Terdeteksi',
+            text: 'Menggunakan domain browser saat ini: ' + origin,
+            timer: 1800,
+            showConfirmButton: false
+        });
+    } else {
+        input.value = '';
+        Swal.fire({
+            icon: 'info',
+            title: 'Mode IP Otomatis',
+            text: 'Link akan otomatis menggunakan IP LAN atau host aktif saat surat dibuat.',
+            timer: 1800,
+            showConfirmButton: false
+        });
+    }
+    updateLinkPreviewModal();
+}
+
 function bukaModalPengaturanWaPiket() {
     const modal = document.getElementById('modal-wa-guru-piket');
     if (modal) {
         modal.style.display = 'flex';
+        updateLinkPreviewModal();
         cekStatusBotWaModal(false);
     }
 }
@@ -194,16 +289,27 @@ function tutupModalPengaturanWaPiket() {
     if (modal) {
         modal.style.display = 'none';
     }
+    if (waModalPollInterval) {
+        clearInterval(waModalPollInterval);
+        waModalPollInterval = null;
+    }
 }
 
 function cekStatusBotWaModal(showAlert = true) {
     const badge = document.getElementById('modal-bot-status-badge');
+    const textEl = document.getElementById('modal-bot-status-text');
     const qrBox = document.getElementById('modal-bot-qr-box');
     const qrImg = document.getElementById('modal-bot-qr-img');
+    const accInfo = document.getElementById('modal-bot-account-info');
+    const accPhone = document.getElementById('modal-bot-account-phone');
+
+    const btnPutuskan = document.getElementById('btn-putuskan-bot-modal');
+    const btnTambah = document.getElementById('btn-tambah-bot');
 
     if (badge) {
         badge.className = 'badge badge-info';
-        badge.innerHTML = '<span style="width:7px;height:7px;background:#3b82f6;border-radius:50%;display:inline-block"></span> Memeriksa...';
+        badge.style.cssText = 'font-size:11.5px;padding:5px 12px;display:inline-flex;align-items:center;gap:6px;border-radius:20px;background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd';
+        badge.innerHTML = '<span style="width:8px;height:8px;background:#0284c7;border-radius:50%;display:inline-block"></span> <span>Memeriksa...</span>';
     }
 
     fetch(@json(route('pengaturan.qr-wa')), {
@@ -212,59 +318,124 @@ function cekStatusBotWaModal(showAlert = true) {
     .then(r => r.json())
     .then(data => {
         if (data.status === 'connected') {
+            if (waModalPollInterval) {
+                clearInterval(waModalPollInterval);
+                waModalPollInterval = null;
+            }
             if (badge) {
                 badge.className = 'badge badge-success';
-                badge.style.cssText = 'font-size:11.5px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px';
-                badge.innerHTML = '<span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block"></span> Online' + (data.user ? ' (' + data.user + ')' : '');
+                badge.style.cssText = 'font-size:11.5px;padding:5px 12px;display:inline-flex;align-items:center;gap:6px;border-radius:20px;background:#dcfce7;color:#15803d;border:1px solid #bbf7d0';
+                badge.innerHTML = '<span style="width:8px;height:8px;background:#22c55e;border-radius:50%;display:inline-block"></span> <span>Online</span>';
+            }
+            if (accInfo && accPhone) {
+                accPhone.textContent = data.user ? '+' + data.user : 'Terhubung';
+                accInfo.style.display = 'block';
+            }
+            // Sembunyikan barcode scan saat WA sudah terhubung
+            if (qrBox) qrBox.style.display = 'none';
+            // Tampilkan tombol Putuskan WA, sembunyikan tombol Hubungkan
+            if (btnPutuskan) btnPutuskan.style.display = 'inline-flex';
+            if (btnTambah) btnTambah.style.display = 'none';
+
+            if (showAlert) {
+                Swal.fire({ icon: 'success', title: 'Bot WhatsApp Online!', text: data.message || 'Bot terhubung dan siap mengirim notifikasi.', timer: 2000, showConfirmButton: false });
+            }
+        } else if (data.status === 'connecting') {
+            if (badge) {
+                badge.className = 'badge badge-info';
+                badge.style.cssText = 'font-size:11.5px;padding:5px 12px;display:inline-flex;align-items:center;gap:6px;border-radius:20px;background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd';
+                badge.innerHTML = '<span style="width:8px;height:8px;background:#0284c7;border-radius:50%;display:inline-block"></span> <span>Menghubungkan Sesi...</span>';
+            }
+            if (accInfo && accPhone && data.user) {
+                accPhone.textContent = '+' + data.user;
+                accInfo.style.display = 'block';
             }
             if (qrBox) qrBox.style.display = 'none';
-            if (showAlert) {
-                Swal.fire({ icon: 'success', title: 'Bot WhatsApp Online!', text: data.message || 'Bot terhubung dan siap digunakan.', timer: 2000, showConfirmButton: false });
+            if (btnPutuskan) btnPutuskan.style.display = 'inline-flex';
+            if (btnTambah) btnTambah.style.display = 'none';
+
+            if (!waModalPollInterval) {
+                waModalPollInterval = setInterval(() => {
+                    const modal = document.getElementById('modal-wa-guru-piket');
+                    if (modal && modal.style.display !== 'none') {
+                        cekStatusBotWaModal(false);
+                    } else {
+                        clearInterval(waModalPollInterval);
+                        waModalPollInterval = null;
+                    }
+                }, 2000);
             }
         } else if (data.status === 'waiting_qr' && data.qr_image) {
             if (badge) {
                 badge.className = 'badge badge-warning';
-                badge.style.cssText = 'font-size:11.5px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px;background:#fef3c7;color:#92400e;border:1px solid #fde68a';
-                badge.innerHTML = '<span style="width:7px;height:7px;background:#f59e0b;border-radius:50%;display:inline-block"></span> Menunggu Scan QR';
+                badge.style.cssText = 'font-size:11.5px;padding:5px 12px;display:inline-flex;align-items:center;gap:6px;border-radius:20px;background:#fef3c7;color:#92400e;border:1px solid #fde68a';
+                badge.innerHTML = '<span style="width:8px;height:8px;background:#f59e0b;border-radius:50%;display:inline-block"></span> <span>Menunggu Scan QR</span>';
             }
+            if (accInfo) accInfo.style.display = 'none';
+            // Munculkan barcode baru untuk di-scan jika terputus
             if (qrBox && qrImg) {
                 qrImg.src = data.qr_image;
                 qrBox.style.display = 'block';
             }
+            // Sembunyikan Putuskan, tampilkan tombol Hubungkan / Refresh
+            if (btnPutuskan) btnPutuskan.style.display = 'none';
+            if (btnTambah) btnTambah.style.display = 'inline-flex';
+
+            // Auto poll tiap 3 detik saat menunggu QR
+            if (!waModalPollInterval) {
+                waModalPollInterval = setInterval(() => {
+                    const modal = document.getElementById('modal-wa-guru-piket');
+                    if (modal && modal.style.display !== 'none') {
+                        cekStatusBotWaModal(false);
+                    } else {
+                        clearInterval(waModalPollInterval);
+                        waModalPollInterval = null;
+                    }
+                }, 3000);
+            }
             if (showAlert) {
-                Swal.fire({ icon: 'info', title: 'Perlu Scan QR Code', text: 'Silakan scan QR Code yang muncul di layar dengan aplikasi WhatsApp Anda.' });
+                Swal.fire({ icon: 'info', title: 'Scan QR Code', text: 'Silakan scan QR Code yang muncul dengan WhatsApp di HP Anda.' });
             }
         } else {
             if (badge) {
                 badge.className = 'badge badge-danger';
-                badge.style.cssText = 'font-size:11.5px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px';
-                badge.innerHTML = '<span style="width:7px;height:7px;background:#ef4444;border-radius:50%;display:inline-block"></span> Offline';
+                badge.style.cssText = 'font-size:11.5px;padding:5px 12px;display:inline-flex;align-items:center;gap:6px;border-radius:20px;background:#fee2e2;color:#b91c1c;border:1px solid #fecaca';
+                badge.innerHTML = '<span style="width:8px;height:8px;background:#ef4444;border-radius:50%;display:inline-block"></span> <span>Offline</span>';
             }
+            if (accInfo) accInfo.style.display = 'none';
+            if (btnPutuskan) btnPutuskan.style.display = 'none';
+            if (btnTambah) btnTambah.style.display = 'inline-flex';
+
+            // Jika offline, coba trigger start WhatsApp otomatis agar generate QR
             if (qrBox) qrBox.style.display = 'none';
             if (showAlert) {
-                Swal.fire({ icon: 'warning', title: 'Bot Offline', text: data.message || 'Server bot WhatsApp belum aktif. Klik "Hubungkan Ulang Bot" untuk menyalakan.', confirmButtonColor: '#ea580c' });
+                Swal.fire({ icon: 'warning', title: 'Bot Offline', text: data.message || 'Server bot WhatsApp belum aktif. Klik "Hubungkan / Scan Bot".', confirmButtonColor: '#059669' });
             }
         }
     })
     .catch(err => {
         if (badge) {
             badge.className = 'badge badge-danger';
-            badge.innerHTML = '<span style="width:7px;height:7px;background:#ef4444;border-radius:50%;display:inline-block"></span> Offline';
+            badge.style.cssText = 'font-size:11.5px;padding:5px 12px;display:inline-flex;align-items:center;gap:6px;border-radius:20px;background:#fee2e2;color:#b91c1c;border:1px solid #fecaca';
+            badge.innerHTML = '<span style="width:8px;height:8px;background:#ef4444;border-radius:50%;display:inline-block"></span> <span>Offline</span>';
         }
+        if (accInfo) accInfo.style.display = 'none';
         if (qrBox) qrBox.style.display = 'none';
+        if (btnPutuskan) btnPutuskan.style.display = 'none';
+        if (btnTambah) btnTambah.style.display = 'inline-flex';
         if (showAlert) {
-            Swal.fire({ icon: 'warning', title: 'Bot Belum Aktif', text: 'Server bot belum berjalan. Klik tombol "Hubungkan Ulang Bot" untuk mengaktifkan.', confirmButtonColor: '#ea580c' });
+            Swal.fire({ icon: 'warning', title: 'Bot Belum Aktif', text: 'Server bot belum berjalan. Klik tombol "Hubungkan / Scan Bot" untuk mengaktifkan.', confirmButtonColor: '#059669' });
         }
     });
 }
 
 function startAtauRestartBot() {
-    const btn = document.getElementById('btn-hubungkan-bot');
+    const btn = document.getElementById('btn-tambah-bot');
     if (btn) btn.disabled = true;
 
     Swal.fire({
-        title: 'Menghubungkan Bot...',
-        text: 'Memulai server bot WhatsApp di background...',
+        title: 'Menyiapkan Bot WhatsApp...',
+        text: 'Memulai server bot dan menyiapkan sesi QR Code...',
         allowOutsideClick: false,
         didOpen: () => Swal.showLoading()
     });
@@ -281,17 +452,68 @@ function startAtauRestartBot() {
     .then(() => {
         setTimeout(() => {
             Swal.close();
-            cekStatusBotWaModal(true);
-        }, 2500);
+            cekStatusBotWaModal(false);
+        }, 2000);
     })
     .catch(() => {
         setTimeout(() => {
             Swal.close();
-            cekStatusBotWaModal(true);
+            cekStatusBotWaModal(false);
         }, 2000);
     })
     .finally(() => {
         if (btn) btn.disabled = false;
+    });
+}
+
+function putuskanBotWaModal() {
+    Swal.fire({
+        title: 'Putuskan WhatsApp Bot?',
+        text: 'Sesi bot aktif akan di-logout dan koneksi diputuskan. Anda harus scan QR code baru untuk menghubungkan kembali.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Ya, Putuskan Bot',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: 'Memutuskan Bot...',
+                text: 'Menghapus sesi auth dan me-reset WhatsApp bot...',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
+            });
+
+            fetch(@json(route('pengaturan.disconnect-wa')), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
+                }
+            })
+            .then(r => r.json())
+            .then(data => {
+                setTimeout(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Bot Berhasil Diputuskan',
+                        text: 'Sesi WhatsApp telah dihapus. Silakan scan QR code baru jika ingin menghubungkan kembali.',
+                        timer: 2500,
+                        showConfirmButton: false
+                    });
+                    cekStatusBotWaModal(false);
+                }, 1500);
+            })
+            .catch(err => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Memutuskan',
+                    text: err.message || 'Terjadi kesalahan saat memutuskan bot.'
+                });
+            });
+        }
     });
 }
 
@@ -303,6 +525,7 @@ function simpanPengaturanWaPiket(event) {
     const kepsek = document.getElementById('modal-set-wa-kepsek')?.value?.trim() ?? '';
     const wakaSdm = document.getElementById('modal-set-wa-waka-sdm')?.value?.trim() ?? '';
     const wakaKesiswaan = document.getElementById('modal-set-wa-waka-kesiswaan')?.value?.trim() ?? '';
+    const publicUrl = document.getElementById('modal-set-wa-public-url')?.value?.trim() ?? '';
     const gatewayAktif = document.getElementById('modal-set-wa-gateway-aktif')?.checked ? 1 : 0;
 
     fetch(@json(route('pengaturan.update-wa')), {
@@ -316,6 +539,7 @@ function simpanPengaturanWaPiket(event) {
             wa_nomor_kepsek: kepsek,
             wa_nomor_waka_sdm: wakaSdm,
             wa_nomor_waka_kesiswaan: wakaKesiswaan,
+            wa_public_url: publicUrl,
             wa_gateway_aktif: gatewayAktif
         })
     })
@@ -329,10 +553,12 @@ function simpanPengaturanWaPiket(event) {
         const setKepsek = document.getElementById('set-wa-kepsek');
         const setWakaSdm = document.getElementById('set-wa-waka-sdm');
         const setWakaKesiswaan = document.getElementById('set-wa-waka-kesiswaan');
+        const setPublicUrl = document.getElementById('set-wa-public-url');
         const setGwAktif = document.getElementById('set-wa-gateway-aktif');
         if (setKepsek) setKepsek.value = kepsek;
         if (setWakaSdm) setWakaSdm.value = wakaSdm;
         if (setWakaKesiswaan) setWakaKesiswaan.value = wakaKesiswaan;
+        if (setPublicUrl) setPublicUrl.value = publicUrl;
         if (setGwAktif) setGwAktif.checked = !!gatewayAktif;
 
         tutupModalPengaturanWaPiket();

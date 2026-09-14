@@ -34,6 +34,7 @@ Route::middleware('auth.struktural')->group(function () {
     Route::post('/struktural/pengaturan/test-wa', [PengaturanController::class, 'testKirimWa'])->name('struktural.pengaturan.test-wa');
     Route::get('/struktural/pengaturan/status-wa', [PengaturanController::class, 'statusBotWa'])->name('struktural.pengaturan.status-wa');
     Route::post('/struktural/pengaturan/restart-wa', [PengaturanController::class, 'restartBotWa'])->name('struktural.pengaturan.restart-wa');
+    Route::post('/struktural/pengaturan/disconnect-wa', [PengaturanController::class, 'disconnectBotWa'])->name('struktural.pengaturan.disconnect-wa');
     Route::get('/struktural/pengaturan/qr-wa', [PengaturanController::class, 'qrBotWa'])->name('struktural.pengaturan.qr-wa');
 });
 

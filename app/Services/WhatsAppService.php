@@ -219,23 +219,59 @@ class WhatsAppService
      */
     public static function restartBot(): array
     {
-        $status = static::checkBotStatus();
-        if ($status['online']) {
-            $endpoint = static::getEndpoint();
-            $baseHost = preg_replace('#/send-message.*$#', '', $endpoint);
-            $restartUrl = rtrim($baseHost, '/').'/restart';
+        $endpoint = static::getEndpoint();
+        $baseHost = preg_replace('#/send-message.*$#', '', $endpoint);
+        $restartUrl = rtrim($baseHost, '/').'/restart';
 
-            try {
-                $response = Http::timeout(2)->post($restartUrl);
-                if ($response->successful()) {
-                    return $response->json();
-                }
-            } catch (\Throwable $e) {
-                // Lanjut restart lokal jika API restart error
+        try {
+            $response = Http::timeout(3)->post($restartUrl);
+            if ($response->successful()) {
+                return $response->json();
             }
+        } catch (\Throwable $e) {
+            // Lanjut restart lokal jika API restart error
         }
 
         return static::startLocalBot();
+    }
+
+    /**
+     * Memutuskan koneksi bot WhatsApp (logout sesi aktif dan reset auth).
+     */
+    public static function disconnectBot(): array
+    {
+        $endpoint = static::getEndpoint();
+        $baseHost = preg_replace('#/send-message.*$#', '', $endpoint);
+        $disconnectUrl = rtrim($baseHost, '/').'/disconnect';
+
+        $apiSuccess = false;
+        try {
+            $response = Http::timeout(4)->post($disconnectUrl);
+            if ($response->successful()) {
+                $apiSuccess = true;
+            }
+        } catch (\Throwable $e) {
+            // Fallback jika REST API bot offline
+        }
+
+        // Hapus juga file auth secara lokal jika ada
+        $botDir = base_path('whatsapp-bot');
+        $authDir = $botDir.DIRECTORY_SEPARATOR.'auth_info_baileys';
+        if (\Illuminate\Support\Facades\File::exists($authDir)) {
+            try {
+                \Illuminate\Support\Facades\File::deleteDirectory($authDir);
+            } catch (\Throwable $th) {
+                // Abaikan
+            }
+        }
+
+        // Jalankan ulang bot agar langsung generate QR code baru
+        static::startLocalBot();
+
+        return [
+            'success' => true,
+            'message' => 'Koneksi WhatsApp Bot berhasil diputuskan. Silakan scan QR Code baru.',
+        ];
     }
 
     /**
@@ -431,29 +467,46 @@ class WhatsAppService
     public static function generateLanSignedRoute(string $name, $expiration, array $parameters = []): string
     {
         try {
-            // Cek apakah ada URL publik kustom (seperti ngrok / domain) di pengaturan
+            // 1. Cek apakah ada URL publik kustom (seperti ngrok / Cloudflare Tunnel / domain) di pengaturan
             $customPublicUrl = trim(Pengaturan::get('wa_public_url', ''));
             if (! empty($customPublicUrl)) {
+                if (! str_starts_with($customPublicUrl, 'http://') && ! str_starts_with($customPublicUrl, 'https://')) {
+                    $customPublicUrl = 'https://' . $customPublicUrl;
+                }
                 \Illuminate\Support\Facades\URL::forceRootUrl(rtrim($customPublicUrl, '/'));
             } else {
-                $lanIp = gethostbyname(gethostname());
-                $port = 8000;
+                // 2. Jika kosong, otomatis sesuaikan dengan host yang sedang aktif (Cloudflare Tunnel, Ngrok, atau Domain sekolah)
+                $host = '';
                 $scheme = 'http';
+                $port = 8000;
+                $isPublicHost = false;
 
                 try {
                     if (request()) {
                         $scheme = request()->getScheme() ?: 'http';
+                        $host = request()->getHost();
                         $reqPort = request()->getPort();
                         if ($reqPort && ! in_array($reqPort, [80, 443])) {
                             $port = $reqPort;
+                        }
+
+                        // Jika host bukan localhost/127.0.0.1, gunakan host aktif browser otomatis
+                        if (! empty($host) && ! in_array($host, ['localhost', '127.0.0.1']) && ! str_starts_with($host, '127.')) {
+                            $isPublicHost = true;
+                            $portStr = ($port && ! in_array($port, [80, 443])) ? ':'.$port : '';
+                            \Illuminate\Support\Facades\URL::forceRootUrl("{$scheme}://{$host}{$portStr}");
                         }
                     }
                 } catch (\Throwable $e) {
                 }
 
-                if (! empty($lanIp) && $lanIp !== '127.0.0.1' && ! str_starts_with($lanIp, '127.')) {
-                    $portStr = ($port && ! in_array($port, [80, 443])) ? ':'.$port : '';
-                    \Illuminate\Support\Facades\URL::forceRootUrl("{$scheme}://{$lanIp}{$portStr}");
+                // 3. Fallback jika diakses dari localhost atau CLI background, gunakan IP LAN lokal
+                if (! $isPublicHost) {
+                    $lanIp = gethostbyname(gethostname());
+                    if (! empty($lanIp) && $lanIp !== '127.0.0.1' && ! str_starts_with($lanIp, '127.')) {
+                        $portStr = ($port && ! in_array($port, [80, 443])) ? ':'.$port : '';
+                        \Illuminate\Support\Facades\URL::forceRootUrl("{$scheme}://{$lanIp}{$portStr}");
+                    }
                 }
             }
 

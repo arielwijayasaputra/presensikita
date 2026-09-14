@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\AkunAdmin;
 use App\Models\AkunSatpam;
+use App\Models\AkunWakaSdm;
 use App\Models\Guru;
 use App\Models\GuruPiket;
 use App\Models\Kelas;
@@ -27,6 +28,10 @@ class AuthController extends Controller
 
         if (session('auth_role') === 'satpam' && session('auth_satpam_id')) {
             return redirect()->route('satpam.index');
+        }
+
+        if (session('auth_role') === 'waka_sdm' && session('auth_waka_sdm_id')) {
+            return redirect()->route('wakasdm.index');
         }
 
         if (session('auth_guru_id')) {
@@ -313,6 +318,40 @@ class AuthController extends Controller
             return redirect()->route('satpam.index');
         }
 
+        // ── LOGIN WAKA SDM: pakai tabel akun_waka_sdm sendiri ──
+        if ($roleRecord && $roleRecord->slug_role === 'waka_sdm') {
+            $wakaSdm = AkunWakaSdm::where('username', $request->username)->first();
+
+            if (! $wakaSdm) {
+                return back()->withErrors([
+                    'username' => 'Username atau password salah.',
+                ])->withInput($request->only('username', 'peran', 'role'));
+            }
+
+            if ($wakaSdm->is_aktif == 0) {
+                return back()->withErrors([
+                    'username' => 'Akun anda telah dinonaktifkan.',
+                ])->withInput($request->only('username', 'peran', 'role'));
+            }
+
+            if (! Hash::check($request->password, $wakaSdm->password_hash)) {
+                return back()->withErrors([
+                    'username' => 'Username atau password salah.',
+                ])->withInput($request->only('username', 'peran', 'role'));
+            }
+
+            session([
+                'auth_waka_sdm_id' => $wakaSdm->id_waka_sdm,
+                'auth_guru_id' => null,
+                'auth_nama_guru' => $wakaSdm->nama,
+                'auth_is_admin' => 0,
+                'auth_role' => 'waka_sdm',
+            ]);
+            $request->session()->regenerate();
+
+            return redirect()->route('wakasdm.index');
+        }
+
         // ── LOGIN PERAN LAINNYA (Waka, Kepsek, dll): tetap pakai tabel guru ──
         $guru = Guru::where('username', $request->username)->first();
 
@@ -452,6 +491,7 @@ class AuthController extends Controller
             'auth_admin_id',
             'auth_nama_admin',
             'auth_satpam_id',
+            'auth_waka_sdm_id',
             'auth_guru_id',
             'auth_nama_guru',
             'auth_is_admin',

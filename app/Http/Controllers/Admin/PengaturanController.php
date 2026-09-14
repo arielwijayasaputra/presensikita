@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AkunAdmin;
 use App\Models\AkunSatpam;
+use App\Models\AkunWakaSdm;
 use App\Models\Guru;
 use App\Models\Pengaturan;
 use App\Models\TahunAjaran;
@@ -395,6 +396,84 @@ class PengaturanController extends Controller
                     'foto_profil' => isset($satpam->foto_profil) && $satpam->foto_profil ? asset($satpam->foto_profil) : null,
                     'nama_guru' => $satpam->nama,
                     'username' => $satpam->username,
+                ]);
+            }
+
+            if (session('auth_role') === 'waka_sdm' || session('auth_waka_sdm_id')) {
+                $wakaSdmId = session('auth_waka_sdm_id');
+                $wakaSdm = $wakaSdmId ? AkunWakaSdm::find($wakaSdmId) : AkunWakaSdm::first();
+
+                if (! $wakaSdm) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'User Waka SDM tidak ditemukan.',
+                    ], 404);
+                }
+
+                $request->validate([
+                    'nama_guru' => 'required|string|max:100',
+                    'username' => 'required|string|max:50|unique:akun_waka_sdm,username,'.$wakaSdm->id_waka_sdm.',id_waka_sdm',
+                    'no_hp' => 'nullable|string|max:20',
+                    'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+                    'new_password' => 'nullable|string|min:4',
+                ], [
+                    'nama_guru.required' => 'Nama lengkap wajib diisi.',
+                    'username.required' => 'Username wajib diisi.',
+                    'username.unique' => 'Username ini sudah digunakan oleh akun lain.',
+                    'foto.image' => 'File harus berupa gambar.',
+                    'foto.max' => 'Ukuran foto maksimal 2MB.',
+                    'new_password.min' => 'Password baru minimal 4 karakter.',
+                ]);
+
+                $updateData = [
+                    'nama' => trim($request->nama_guru),
+                    'username' => trim($request->username),
+                    'no_hp' => trim($request->no_hp ?? ''),
+                ];
+
+                if ($request->filled('new_password')) {
+                    if (! $request->filled('current_password')) {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'Password saat ini wajib diisi.',
+                        ], 422);
+                    }
+                    if (! Hash::check($request->current_password, $wakaSdm->password_hash)) {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'Password saat ini salah.',
+                        ], 422);
+                    }
+                    $updateData['password_hash'] = Hash::make($request->new_password);
+                }
+
+                if ($request->hasFile('foto')) {
+                    $file = $request->file('foto');
+                    $filename = 'profile_waka_sdm_'.$wakaSdm->id_waka_sdm.'_'.time().'.'.$file->getClientOriginalExtension();
+                    $destinationPath = public_path('uploads/profile');
+
+                    if (! File::exists($destinationPath)) {
+                        File::makeDirectory($destinationPath, 0755, true, true);
+                    }
+
+                    if (isset($wakaSdm->foto_profil) && $wakaSdm->foto_profil && File::exists(public_path($wakaSdm->foto_profil))) {
+                        @File::delete(public_path($wakaSdm->foto_profil));
+                    }
+
+                    $file->move($destinationPath, $filename);
+                    $updateData['foto_profil'] = 'uploads/profile/'.$filename;
+                }
+
+                $wakaSdm->update($updateData);
+
+                session(['auth_nama_guru' => $wakaSdm->nama]);
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Profil Waka SDM berhasil diperbarui!',
+                    'foto_profil' => isset($wakaSdm->foto_profil) && $wakaSdm->foto_profil ? asset($wakaSdm->foto_profil) : null,
+                    'nama_guru' => $wakaSdm->nama,
+                    'username' => $wakaSdm->username,
                 ]);
             }
 

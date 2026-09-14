@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\AkunSatpam;
+use App\Models\AkunWakaSdm;
 use App\Models\Guru;
 use App\Models\Role;
 use Closure;
@@ -19,6 +20,20 @@ class StrukturalMiddleware
             $satpamId = session('auth_satpam_id');
             $satpam = $satpamId ? AkunSatpam::find($satpamId) : null;
             if (! $satpam || $satpam->is_aktif == 0) {
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return redirect()->route('login');
+            }
+
+            return $next($request);
+        }
+
+        // Khusus role Waka SDM (menggunakan model AkunWakaSdm)
+        if ($role === 'waka_sdm' || session('auth_waka_sdm_id')) {
+            $wakaSdmId = session('auth_waka_sdm_id');
+            $wakaSdm = $wakaSdmId ? AkunWakaSdm::find($wakaSdmId) : null;
+            if (! $wakaSdm || $wakaSdm->is_aktif == 0) {
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
 

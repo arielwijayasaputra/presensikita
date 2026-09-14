@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Struktural;
 
 use App\Http\Controllers\Controller;
 use App\Models\AkunSatpam;
+use App\Models\AkunWakaSdm;
 use App\Models\DispenSiswa;
 use App\Models\Guru;
 use App\Models\Hari;
@@ -27,9 +28,12 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $isSatpam = session('auth_role') === 'satpam';
+        $isWakaSDM = session('auth_role') === 'waka_sdm';
         $guru = $isSatpam
             ? (AkunSatpam::find(session('auth_satpam_id')) ?? AkunSatpam::first())
-            : (Guru::find(session('auth_guru_id')) ?? Guru::first());
+            : ($isWakaSDM
+                ? (AkunWakaSdm::find(session('auth_waka_sdm_id')) ?? AkunWakaSdm::first())
+                : (Guru::find(session('auth_guru_id')) ?? Guru::first()));
 
         $namaSekolah = Pengaturan::get('nama_sekolah', 'SMKN 1 Boyolangu');
         $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();

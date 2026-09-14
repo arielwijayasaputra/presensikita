@@ -217,52 +217,172 @@ function refreshJadwalGuru(){
 }
 
 let selfieStream = null;
+let selfieFacingMode = 'user';
+
+function getMediaDevices() {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        return navigator.mediaDevices;
+    }
+    const legacy = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+    if (legacy) {
+        return {
+            getUserMedia: function(constraints) {
+                return new Promise((resolve, reject) => {
+                    legacy.call(navigator, constraints, resolve, reject);
+                });
+            }
+        };
+    }
+    return null;
+}
 
 function startSelfieCamera() {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Kamera Tidak Didukung',
-            text: 'Browser Anda tidak mendukung akses kamera langsung. Silakan gunakan opsi "Upload / File" untuk memilih atau mengambil foto.',
-            confirmButtonColor: '#1a3268'
-        });
-        return;
-    }
+    const media = getMediaDevices();
 
-    navigator.mediaDevices.getUserMedia({
-        video: {
-            facingMode: 'user',
-            width: { ideal: 640 },
-            height: { ideal: 480 }
-        },
-        audio: false
-    }).then(stream => {
-        selfieStream = stream;
-        const root = absensiRoot();
-        const video = root ? qs('#selfie-video', root) : document.getElementById('selfie-video');
-        const placeholder = root ? qs('#camera-placeholder', root) : document.getElementById('camera-placeholder');
-        const overlay = root ? qs('#camera-overlay-controls', root) : document.getElementById('camera-overlay-controls');
-        const startBtn = root ? qs('#btn-start-camera', root) : document.getElementById('btn-start-camera');
-
-        if (video) {
-            video.srcObject = stream;
-            video.style.display = 'block';
-            video.play();
+    // Jika WebRTC getUserMedia tersedia, coba aktifkan live stream kamera
+    if (media) {
+        // Stop stream aktif sebelumnya jika ada
+        if (selfieStream) {
+            selfieStream.getTracks().forEach(t => t.stop());
+            selfieStream = null;
         }
-        if (placeholder) placeholder.style.display = 'none';
-        if (overlay) overlay.style.display = 'flex';
-        if (startBtn) startBtn.style.display = 'none';
-    }).catch(err => {
-        console.error('Error akses kamera:', err);
-        Swal.fire({
-            icon: 'error',
-            title: 'Izin Kamera Diperlukan',
-            text: 'Tidak dapat mengakses kamera. Pastikan izin kamera telah diizinkan di peramban Anda atau gunakan tombol "Upload / File".',
-            confirmButtonColor: '#1a3268'
-        });
-    });
+
+        const constraintList = [
+            { video: { facingMode: { ideal: selfieFacingMode }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false },
+            { video: { facingMode: selfieFacingMode }, audio: false },
+            { video: true, audio: false }
+        ];
+
+        async function attemptCamera() {
+            let lastError = null;
+            for (const c of constraintList) {
+                try {
+                    return await media.getUserMedia(c);
+                } catch (err) {
+                    lastError = err;
+                    if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                        throw err;
+                    }
+                }
+            }
+            throw lastError || new Error('Gagal membuka WebRTC kamera.');
+        }
+
+        attemptCamera()
+            .then(stream => {
+                selfieStream = stream;
+                const root = absensiRoot();
+                const video = root ? qs('#selfie-video', root) : document.getElementById('selfie-video');
+                const placeholder = root ? qs('#camera-placeholder', root) : document.getElementById('camera-placeholder');
+                const overlay = root ? qs('#camera-overlay-controls', root) : document.getElementById('camera-overlay-controls');
+                const startBtn = root ? qs('#btn-start-camera', root) : document.getElementById('btn-start-camera');
+                const stopBtn = root ? qs('#btn-stop-camera', root) : document.getElementById('btn-stop-camera');
+
+                if (video) {
+                    video.srcObject = stream;
+                    video.setAttribute('playsinline', '');
+                    video.setAttribute('webkit-playsinline', '');
+                    video.muted = true;
+                    video.style.transform = (selfieFacingMode === 'user') ? 'scaleX(-1)' : 'scaleX(1)';
+                    video.style.display = 'block';
+                    video.onloadedmetadata = () => {
+                        video.play().catch(e => console.warn('Video auto-play suppressed:', e));
+                    };
+                }
+                if (placeholder) placeholder.style.display = 'none';
+                if (overlay) overlay.style.display = 'flex';
+                if (startBtn) startBtn.style.display = 'none';
+                if (stopBtn) stopBtn.style.display = 'inline-flex';
+            })
+            .catch(err => {
+                console.warn('WebRTC tidak berhasil, mengaktifkan kamera native HP/perangkat:', err);
+                // Fallback otomatis ke kamera native perangkat via HTML5 capture API
+                triggerNativeCameraCapture();
+            });
+    } else {
+        // Lingkungan HTTP Non-SSL / Browser tanpa WebRTC: Buka kamera native perangkat secara langsung
+        triggerNativeCameraCapture();
+    }
 }
 window.startSelfieCamera = startSelfieCamera;
+
+function triggerNativeCameraCapture() {
+    const root = absensiRoot();
+    const nativeInput = root ? qs('#native-camera-input', root) : document.getElementById('native-camera-input');
+    if (nativeInput) {
+        nativeInput.click();
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Kamera Tidak Tersedia',
+            text: 'Perangkat atau browser tidak mendukung pembukaan kamera.',
+            confirmButtonColor: '#1a3268'
+        });
+    }
+}
+
+function handleNativeCameraCapture(input) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            const maxDimension = 1280;
+            let width = img.width;
+            let height = img.height;
+            if (width > maxDimension || height > maxDimension) {
+                if (width > height) {
+                    height = Math.round((height * maxDimension) / width);
+                    width = maxDimension;
+                } else {
+                    width = Math.round((width * maxDimension) / height);
+                    height = maxDimension;
+                }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+
+            const root = absensiRoot();
+            const inputHidden = root ? qs('#input-foto-selfie', root) : document.getElementById('input-foto-selfie');
+            const preview = root ? qs('#selfie-preview', root) : document.getElementById('selfie-preview');
+            const previewPlaceholder = root ? qs('#preview-placeholder', root) : document.getElementById('preview-placeholder');
+            const retakeBtn = root ? qs('#btn-retake-photo', root) : document.getElementById('btn-retake-photo');
+            const statusBadge = root ? qs('#selfie-status-badge', root) : document.getElementById('selfie-status-badge');
+
+            if (inputHidden) inputHidden.value = dataUrl;
+            if (preview) {
+                preview.src = dataUrl;
+                preview.style.display = 'block';
+            }
+            if (previewPlaceholder) previewPlaceholder.style.display = 'none';
+            if (retakeBtn) retakeBtn.style.display = 'inline-flex';
+            if (statusBadge) {
+                statusBadge.style.background = '#dcfce7';
+                statusBadge.style.color = '#15803d';
+                statusBadge.style.borderColor = '#bbf7d0';
+                statusBadge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Foto Selfie Siap Disimpan`;
+            }
+
+            input.value = '';
+            stopSelfieCamera();
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+window.handleNativeCameraCapture = handleNativeCameraCapture;
+
+function switchSelfieCamera() {
+    selfieFacingMode = (selfieFacingMode === 'user') ? 'environment' : 'user';
+    startSelfieCamera();
+}
+window.switchSelfieCamera = switchSelfieCamera;
 
 function stopSelfieCamera() {
     if (selfieStream) {
@@ -274,6 +394,7 @@ function stopSelfieCamera() {
     const placeholder = root ? qs('#camera-placeholder', root) : document.getElementById('camera-placeholder');
     const overlay = root ? qs('#camera-overlay-controls', root) : document.getElementById('camera-overlay-controls');
     const startBtn = root ? qs('#btn-start-camera', root) : document.getElementById('btn-start-camera');
+    const stopBtn = root ? qs('#btn-stop-camera', root) : document.getElementById('btn-stop-camera');
 
     if (video) {
         video.pause();
@@ -283,17 +404,18 @@ function stopSelfieCamera() {
     if (placeholder) placeholder.style.display = 'block';
     if (overlay) overlay.style.display = 'none';
     if (startBtn) startBtn.style.display = 'inline-flex';
+    if (stopBtn) stopBtn.style.display = 'none';
 }
 window.stopSelfieCamera = stopSelfieCamera;
 
 function snapSelfiePhoto() {
     const root = absensiRoot();
     const video = root ? qs('#selfie-video', root) : document.getElementById('selfie-video');
-    if (!video || !video.videoWidth) {
+    if (!video || !video.videoWidth || !video.videoHeight) {
         Swal.fire({
             icon: 'warning',
             title: 'Kamera Belum Siap',
-            text: 'Tunggu beberapa saat hingga kamera aktif.',
+            text: 'Tunggu beberapa saat hingga gambar kamera muncul sebelum mengambil foto.',
             confirmButtonColor: '#1a3268'
         });
         return;
@@ -303,8 +425,12 @@ function snapSelfiePhoto() {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext('2d');
-    ctx.translate(canvas.width, 0);
-    ctx.scale(-1, 1);
+    
+    // Cerminkan hasil jepretan jika kamera depan
+    if (selfieFacingMode === 'user') {
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+    }
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
@@ -326,7 +452,7 @@ function snapSelfiePhoto() {
         statusBadge.style.background = '#dcfce7';
         statusBadge.style.color = '#15803d';
         statusBadge.style.borderColor = '#bbf7d0';
-        statusBadge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Foto Siap Disimpan`;
+        statusBadge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Foto Selfie Siap Disimpan`;
     }
 
     stopSelfieCamera();
@@ -358,38 +484,6 @@ function retakeSelfiePhoto() {
     startSelfieCamera();
 }
 window.retakeSelfiePhoto = retakeSelfiePhoto;
-
-function handleSelfieFileSelect(input) {
-    if (!input.files || !input.files[0]) return;
-    const file = input.files[0];
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const dataUrl = e.target.result;
-        const root = absensiRoot();
-        const inputHidden = root ? qs('#input-foto-selfie', root) : document.getElementById('input-foto-selfie');
-        const preview = root ? qs('#selfie-preview', root) : document.getElementById('selfie-preview');
-        const previewPlaceholder = root ? qs('#preview-placeholder', root) : document.getElementById('preview-placeholder');
-        const retakeBtn = root ? qs('#btn-retake-photo', root) : document.getElementById('btn-retake-photo');
-        const statusBadge = root ? qs('#selfie-status-badge', root) : document.getElementById('selfie-status-badge');
-
-        if (inputHidden) inputHidden.value = dataUrl;
-        if (preview) {
-            preview.src = dataUrl;
-            preview.style.display = 'block';
-        }
-        if (previewPlaceholder) previewPlaceholder.style.display = 'none';
-        if (retakeBtn) retakeBtn.style.display = 'inline-flex';
-        if (statusBadge) {
-            statusBadge.style.background = '#dcfce7';
-            statusBadge.style.color = '#15803d';
-            statusBadge.style.borderColor = '#bbf7d0';
-            statusBadge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Foto Siap Disimpan`;
-        }
-        stopSelfieCamera();
-    };
-    reader.readAsDataURL(file);
-}
-window.handleSelfieFileSelect = handleSelfieFileSelect;
 
 function muatAbsensiTersimpan(){
     const root = absensiRoot();

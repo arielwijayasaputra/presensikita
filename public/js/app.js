@@ -71,6 +71,7 @@ function showPage(page){
         }
     }
     if(page==='laporan') initLaporanCharts();
+    if(page !== 'jurnal-absensi') stopSelfieCamera();
     if (window.location.hash !== '#' + page) {
         history.replaceState(null, '', '#' + page);
     }
@@ -215,6 +216,181 @@ function refreshJadwalGuru(){
         .catch(err => console.error('Error mengecek jadwal aktif:', err));
 }
 
+let selfieStream = null;
+
+function startSelfieCamera() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Kamera Tidak Didukung',
+            text: 'Browser Anda tidak mendukung akses kamera langsung. Silakan gunakan opsi "Upload / File" untuk memilih atau mengambil foto.',
+            confirmButtonColor: '#1a3268'
+        });
+        return;
+    }
+
+    navigator.mediaDevices.getUserMedia({
+        video: {
+            facingMode: 'user',
+            width: { ideal: 640 },
+            height: { ideal: 480 }
+        },
+        audio: false
+    }).then(stream => {
+        selfieStream = stream;
+        const root = absensiRoot();
+        const video = root ? qs('#selfie-video', root) : document.getElementById('selfie-video');
+        const placeholder = root ? qs('#camera-placeholder', root) : document.getElementById('camera-placeholder');
+        const overlay = root ? qs('#camera-overlay-controls', root) : document.getElementById('camera-overlay-controls');
+        const startBtn = root ? qs('#btn-start-camera', root) : document.getElementById('btn-start-camera');
+
+        if (video) {
+            video.srcObject = stream;
+            video.style.display = 'block';
+            video.play();
+        }
+        if (placeholder) placeholder.style.display = 'none';
+        if (overlay) overlay.style.display = 'flex';
+        if (startBtn) startBtn.style.display = 'none';
+    }).catch(err => {
+        console.error('Error akses kamera:', err);
+        Swal.fire({
+            icon: 'error',
+            title: 'Izin Kamera Diperlukan',
+            text: 'Tidak dapat mengakses kamera. Pastikan izin kamera telah diizinkan di peramban Anda atau gunakan tombol "Upload / File".',
+            confirmButtonColor: '#1a3268'
+        });
+    });
+}
+window.startSelfieCamera = startSelfieCamera;
+
+function stopSelfieCamera() {
+    if (selfieStream) {
+        selfieStream.getTracks().forEach(track => track.stop());
+        selfieStream = null;
+    }
+    const root = absensiRoot();
+    const video = root ? qs('#selfie-video', root) : document.getElementById('selfie-video');
+    const placeholder = root ? qs('#camera-placeholder', root) : document.getElementById('camera-placeholder');
+    const overlay = root ? qs('#camera-overlay-controls', root) : document.getElementById('camera-overlay-controls');
+    const startBtn = root ? qs('#btn-start-camera', root) : document.getElementById('btn-start-camera');
+
+    if (video) {
+        video.pause();
+        video.srcObject = null;
+        video.style.display = 'none';
+    }
+    if (placeholder) placeholder.style.display = 'block';
+    if (overlay) overlay.style.display = 'none';
+    if (startBtn) startBtn.style.display = 'inline-flex';
+}
+window.stopSelfieCamera = stopSelfieCamera;
+
+function snapSelfiePhoto() {
+    const root = absensiRoot();
+    const video = root ? qs('#selfie-video', root) : document.getElementById('selfie-video');
+    if (!video || !video.videoWidth) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Kamera Belum Siap',
+            text: 'Tunggu beberapa saat hingga kamera aktif.',
+            confirmButtonColor: '#1a3268'
+        });
+        return;
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.translate(canvas.width, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+
+    const inputHidden = root ? qs('#input-foto-selfie', root) : document.getElementById('input-foto-selfie');
+    const preview = root ? qs('#selfie-preview', root) : document.getElementById('selfie-preview');
+    const previewPlaceholder = root ? qs('#preview-placeholder', root) : document.getElementById('preview-placeholder');
+    const retakeBtn = root ? qs('#btn-retake-photo', root) : document.getElementById('btn-retake-photo');
+    const statusBadge = root ? qs('#selfie-status-badge', root) : document.getElementById('selfie-status-badge');
+
+    if (inputHidden) inputHidden.value = dataUrl;
+    if (preview) {
+        preview.src = dataUrl;
+        preview.style.display = 'block';
+    }
+    if (previewPlaceholder) previewPlaceholder.style.display = 'none';
+    if (retakeBtn) retakeBtn.style.display = 'inline-flex';
+    if (statusBadge) {
+        statusBadge.style.background = '#dcfce7';
+        statusBadge.style.color = '#15803d';
+        statusBadge.style.borderColor = '#bbf7d0';
+        statusBadge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Foto Siap Disimpan`;
+    }
+
+    stopSelfieCamera();
+}
+window.snapSelfiePhoto = snapSelfiePhoto;
+
+function retakeSelfiePhoto() {
+    const root = absensiRoot();
+    const inputHidden = root ? qs('#input-foto-selfie', root) : document.getElementById('input-foto-selfie');
+    const preview = root ? qs('#selfie-preview', root) : document.getElementById('selfie-preview');
+    const previewPlaceholder = root ? qs('#preview-placeholder', root) : document.getElementById('preview-placeholder');
+    const retakeBtn = root ? qs('#btn-retake-photo', root) : document.getElementById('btn-retake-photo');
+    const statusBadge = root ? qs('#selfie-status-badge', root) : document.getElementById('selfie-status-badge');
+
+    if (inputHidden) inputHidden.value = '';
+    if (preview) {
+        preview.src = '';
+        preview.style.display = 'none';
+    }
+    if (previewPlaceholder) previewPlaceholder.style.display = 'block';
+    if (retakeBtn) retakeBtn.style.display = 'none';
+    if (statusBadge) {
+        statusBadge.style.background = '#fee2e2';
+        statusBadge.style.color = '#b91c1c';
+        statusBadge.style.borderColor = '#fecaca';
+        statusBadge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Belum Ambil Foto`;
+    }
+
+    startSelfieCamera();
+}
+window.retakeSelfiePhoto = retakeSelfiePhoto;
+
+function handleSelfieFileSelect(input) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        const root = absensiRoot();
+        const inputHidden = root ? qs('#input-foto-selfie', root) : document.getElementById('input-foto-selfie');
+        const preview = root ? qs('#selfie-preview', root) : document.getElementById('selfie-preview');
+        const previewPlaceholder = root ? qs('#preview-placeholder', root) : document.getElementById('preview-placeholder');
+        const retakeBtn = root ? qs('#btn-retake-photo', root) : document.getElementById('btn-retake-photo');
+        const statusBadge = root ? qs('#selfie-status-badge', root) : document.getElementById('selfie-status-badge');
+
+        if (inputHidden) inputHidden.value = dataUrl;
+        if (preview) {
+            preview.src = dataUrl;
+            preview.style.display = 'block';
+        }
+        if (previewPlaceholder) previewPlaceholder.style.display = 'none';
+        if (retakeBtn) retakeBtn.style.display = 'inline-flex';
+        if (statusBadge) {
+            statusBadge.style.background = '#dcfce7';
+            statusBadge.style.color = '#15803d';
+            statusBadge.style.borderColor = '#bbf7d0';
+            statusBadge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Foto Siap Disimpan`;
+        }
+        stopSelfieCamera();
+    };
+    reader.readAsDataURL(file);
+}
+window.handleSelfieFileSelect = handleSelfieFileSelect;
+
 function muatAbsensiTersimpan(){
     const root = absensiRoot();
     if (!root) return;
@@ -260,6 +436,43 @@ function muatAbsensiTersimpan(){
                 const materiInput = qs('#input-materi', root);
                 if (materiInput && !materiInput.value) {
                     materiInput.value = data.jurnal.materi;
+                }
+            }
+
+            // Sync status foto selfie
+            const fotoInput = root ? qs('#input-foto-selfie', root) : document.getElementById('input-foto-selfie');
+            const preview = root ? qs('#selfie-preview', root) : document.getElementById('selfie-preview');
+            const previewPlaceholder = root ? qs('#preview-placeholder', root) : document.getElementById('preview-placeholder');
+            const retakeBtn = root ? qs('#btn-retake-photo', root) : document.getElementById('btn-retake-photo');
+            const statusBadge = root ? qs('#selfie-status-badge', root) : document.getElementById('selfie-status-badge');
+
+            if (data.jurnal && data.jurnal.foto_selfie_url) {
+                if (fotoInput) fotoInput.value = '';
+                if (preview) {
+                    preview.src = data.jurnal.foto_selfie_url;
+                    preview.style.display = 'block';
+                }
+                if (previewPlaceholder) previewPlaceholder.style.display = 'none';
+                if (retakeBtn) retakeBtn.style.display = 'inline-flex';
+                if (statusBadge) {
+                    statusBadge.style.background = '#dbeafe';
+                    statusBadge.style.color = '#1d4ed8';
+                    statusBadge.style.borderColor = '#bfdbfe';
+                    statusBadge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Foto Tersimpan`;
+                }
+            } else {
+                if (fotoInput) fotoInput.value = '';
+                if (preview) {
+                    preview.src = '';
+                    preview.style.display = 'none';
+                }
+                if (previewPlaceholder) previewPlaceholder.style.display = 'block';
+                if (retakeBtn) retakeBtn.style.display = 'none';
+                if (statusBadge) {
+                    statusBadge.style.background = '#fee2e2';
+                    statusBadge.style.color = '#b91c1c';
+                    statusBadge.style.borderColor = '#fecaca';
+                    statusBadge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Belum Ambil Foto`;
                 }
             }
 
@@ -431,6 +644,20 @@ function submitAbsensi(){
     const kelasId = (root ? qs('#pilih-kelas', root) : document.getElementById('pilih-kelas')).value;
     const tanggal = (root ? qs('#input-tanggal', root) : document.getElementById('input-tanggal')).value;
     const materi = (root ? qs('#input-materi', root) : document.getElementById('input-materi'))?.value || '';
+    const fotoSelfie = (root ? qs('#input-foto-selfie', root) : document.getElementById('input-foto-selfie'))?.value || '';
+    const previewSrc = (root ? qs('#selfie-preview', root) : document.getElementById('selfie-preview'))?.getAttribute('src') || '';
+
+    // Validasi foto selfie: wajib ada foto selfie baru atau foto tersimpan sebelumnya
+    if (!fotoSelfie && (!previewSrc || previewSrc === '' || previewSrc === window.location.href)) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Foto Selfie Diperlukan',
+            text: 'Silakan ambil foto selfie mengajar terlebih dahulu di awal pembelajaran kelas ini.',
+            confirmButtonColor: '#1a3268'
+        });
+        return;
+    }
+
     const absensiData = {};
 
     currentSiswaList.forEach(s => {
@@ -460,6 +687,7 @@ function submitAbsensi(){
             id_kelas: kelasId,
             tanggal: tanggal,
             materi: materi,
+            foto_selfie: fotoSelfie,
             absensi: absensiData
         })
     })
@@ -2168,4 +2396,21 @@ function tampilkanNotifikasi() {
             });
         });
 }
+
+window.showSelfiePopup = function(url, title) {
+    Swal.fire({
+        title: title || 'Foto Selfie Mengajar',
+        imageUrl: url,
+        imageAlt: 'Foto Selfie Mengajar',
+        imageWidth: 420,
+        imageHeight: 'auto',
+        showCloseButton: true,
+        confirmButtonText: 'Tutup',
+        customClass: {
+            popup: 'custom-swal-popup',
+            confirmButton: 'custom-swal-confirm'
+        },
+        buttonsStyling: false
+    });
+};
 

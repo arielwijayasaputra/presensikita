@@ -267,6 +267,8 @@ class AbsensiPerJamTest extends TestCase
         ]);
 
         // 1. Guru 1 menyimpan absensi: Siswa 1 Hadir, Siswa 2 Sakit
+        $dummySelfie = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+
         $responseG1 = $this->withSession([
             'auth_guru_id' => $guru1->id_guru,
             'auth_role' => 'guru',
@@ -274,6 +276,7 @@ class AbsensiPerJamTest extends TestCase
             'id_kelas' => $kelas->id_kelas,
             'tanggal' => $today,
             'materi' => 'Materi Sesi Guru 1',
+            'foto_selfie' => $dummySelfie,
             'absensi' => [
                 $siswa1->id_siswa => ['status' => 'H', 'keterangan' => ''],
                 $siswa2->id_siswa => ['status' => 'S', 'keterangan' => 'Sakit Kepala'],
@@ -326,6 +329,7 @@ class AbsensiPerJamTest extends TestCase
             'id_kelas' => $kelas->id_kelas,
             'tanggal' => $today,
             'materi' => 'Materi Sesi Guru 2',
+            'foto_selfie' => $dummySelfie,
             'absensi' => [
                 $siswa1->id_siswa => ['status' => 'H', 'keterangan' => ''],
                 $siswa2->id_siswa => ['status' => 'H', 'keterangan' => ''],

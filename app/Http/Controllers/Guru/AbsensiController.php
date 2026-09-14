@@ -16,6 +16,8 @@ use App\Models\TahunAjaran;
 use App\Services\AbsensiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class AbsensiController extends Controller
 {
@@ -413,6 +415,8 @@ class AbsensiController extends Controller
             'jurnal' => $jurnal ? [
                 'id_jurnal' => $jurnal->id_jurnal,
                 'materi' => $jurnal->materi,
+                'foto_selfie' => $jurnal->foto_selfie,
+                'foto_selfie_url' => $jurnal->foto_selfie ? Storage::disk('public')->url($jurnal->foto_selfie) : null,
                 'jumlah_hadir' => $jurnal->jumlah_hadir,
                 'status_kehadiran_guru' => $jurnal->status_kehadiran_guru,
                 'waktu_input' => $jurnal->waktu_input,
@@ -522,6 +526,47 @@ class AbsensiController extends Controller
                 $targetBlock = $blocks[0] ?? $jadwalGuruHariIni->all();
             }
 
+            // Proses upload / decode foto selfie guru
+            $fotoPath = null;
+            if ($request->hasFile('foto_selfie')) {
+                $fotoPath = $request->file('foto_selfie')->store('selfie-guru', 'public');
+            } elseif ($request->filled('foto_selfie') && str_starts_with($request->foto_selfie, 'data:image')) {
+                $base64Image = $request->foto_selfie;
+                if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $type)) {
+                    $base64Image = substr($base64Image, strpos($base64Image, ',') + 1);
+                    $type = strtolower($type[1]);
+                    if (! in_array($type, ['jpg', 'jpeg', 'png', 'webp'])) {
+                        $type = 'jpg';
+                    }
+                    $decodedImage = base64_decode($base64Image);
+                    if ($decodedImage !== false) {
+                        $filename = 'selfie_' . $idGuru . '_' . $kelasId . '_' . time() . '_' . Str::random(6) . '.' . $type;
+                        Storage::disk('public')->put('selfie-guru/' . $filename, $decodedImage);
+                        $fotoPath = 'selfie-guru/' . $filename;
+                    }
+                }
+            }
+
+            // Cek apakah sudah ada foto selfie sebelumnya pada blok jadwal ini
+            $hasExistingSelfie = false;
+            foreach ($targetBlock as $jadwalTarget) {
+                $existingCheck = JurnalKelas::where('id_jadwal', $jadwalTarget->id_jadwal)
+                    ->whereDate('tanggal', $tanggal)
+                    ->whereNotNull('foto_selfie')
+                    ->first();
+                if ($existingCheck) {
+                    $hasExistingSelfie = true;
+                    break;
+                }
+            }
+
+            // Jika belum ada foto selfie sama sekali dan tidak ada foto baru diunggah, tolak
+            if (! $fotoPath && ! $hasExistingSelfie) {
+                DB::rollBack();
+
+                return response()->json(['status' => 'error', 'message' => 'Foto selfie wajib diambil di awal pembelajaran kelas ini.'], 422);
+            }
+
             $guruSedangIzin = IzinGuru::where('id_guru', $idGuru)
                 ->whereDate('tanggal_izin', $tanggal)
                 ->where('status_kepsek', 'disetujui')
@@ -536,6 +581,8 @@ class AbsensiController extends Controller
                     ->whereDate('tanggal', $tanggal)
                     ->first();
 
+                $fotoToSave = $fotoPath ?? ($existing ? $existing->foto_selfie : null);
+
                 if ($existing) {
                     if ($existing->trashed()) {
                         $existing->restore();
@@ -544,6 +591,7 @@ class AbsensiController extends Controller
                     $jurnal->update([
                         'id_guru' => $idGuru,
                         'status_kehadiran_guru' => $statusKehadiranGuru,
+                        'foto_selfie' => $fotoToSave,
                         'materi' => $request->materi ?? $jurnal->materi,
                         'jumlah_hadir' => $jumlahHadir,
                         'waktu_input' => now(),
@@ -556,6 +604,7 @@ class AbsensiController extends Controller
                         'id_guru' => $idGuru,
                         'tanggal' => $tanggal,
                         'status_kehadiran_guru' => $statusKehadiranGuru,
+                        'foto_selfie' => $fotoToSave,
                         'materi' => $request->materi ?? 'Pembelajaran Harian',
                         'jumlah_hadir' => $jumlahHadir,
                         'waktu_input' => now(),

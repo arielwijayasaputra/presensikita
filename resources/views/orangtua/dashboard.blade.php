@@ -833,6 +833,9 @@
             }
             .attendance-gauge-box {
                 text-align: left;
+                width: 100%;
+                border-top: 1px solid rgba(255,255,255,0.12);
+                padding-top: 14px;
             }
             .gauge-number {
                 font-size: 30px;
@@ -884,7 +887,13 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+            /* Stats grid: gunakan 2 kolom di HP */
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px;
+            }
         }
+
 
         @media (max-width: 480px) {
             .nav-brand-icon {
@@ -897,15 +906,20 @@
             .nav-brand-sub {
                 font-size: 10px;
             }
+            /* Tombol di nav: sembunyikan teks, tampilkan icon saja di HP sangat kecil */
+            .btn-logout span,
+            .btn-logout-text {
+                display: none;
+            }
             .btn-logout {
-                padding: 8px 12px;
+                padding: 8px 10px;
                 font-size: 12px;
-                flex: 1;
-                justify-content: center;
+                border-radius: 8px;
             }
             .nav-right {
-                width: 100%;
-                justify-content: flex-end;
+                gap: 6px;
+                flex-wrap: nowrap;
+                align-items: center;
             }
             .student-avatar {
                 width: 56px;
@@ -959,7 +973,12 @@
             .gauge-label {
                 font-size: 11px;
             }
+            /* Stats: 1 kolom di HP paling kecil */
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
         }
+
 
         /* SweetAlert Popup Image for Foto Surat */
         .swal-popup-image {
@@ -1267,7 +1286,7 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                 </svg>
-                Lapor Admin
+                <span class="btn-logout-text">Lapor Admin</span>
             </button>
 
             <form action="{{ route('logout') }}" method="POST" id="logout-form" style="display:none">
@@ -1279,8 +1298,9 @@
                     <polyline points="16 17 21 12 16 7"/>
                     <line x1="21" y1="12" x2="9" y2="12"/>
                 </svg>
-                Keluar
+                <span class="btn-logout-text">Keluar</span>
             </button>
+
         </div>
     </header>
 
@@ -1939,6 +1959,23 @@
                             </span>
                             ${p.keterangan !== '-' ? `<span class="ket-note">Ket: ${p.keterangan}</span>` : ''}
                         `;
+                    }
+
+                    // Update Materi
+                    const subjectCol = row.querySelector('.jam-subject-info');
+                    if (subjectCol) {
+                        const existingMateri = subjectCol.querySelector('.materi-text');
+                        if (p.materi && p.materi !== '-') {
+                            if (existingMateri) {
+                                existingMateri.textContent = 'Materi: ' + p.materi;
+                            } else {
+                                const mDiv = document.createElement('div');
+                                mDiv.innerHTML = `<span class="materi-text">Materi: ${p.materi}</span>`;
+                                subjectCol.appendChild(mDiv);
+                            }
+                        } else if (existingMateri) {
+                            existingMateri.closest('div')?.remove();
+                        }
                     }
 
                     // Update Session Badge / State

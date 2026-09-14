@@ -476,33 +476,12 @@ class AbsensiService
         $currentTidakHadir = [];
 
         foreach ($jadwalList as $j) {
-            $isSelesai = $isPastDate || ($isToday && $nowTime >= $j->jam_selesai);
-
-            // Cek apakah ada siswa yang mengambil dispen pada rentang jam ini
-            foreach ($dispenList as $d) {
-                $wMulai = $d->waktu_keluar ? $d->waktu_keluar->format('H:i:s') : ($d->created_at ? $d->created_at->format('H:i:s') : '00:00:00');
-                $wSelesai = $d->waktu_masuk ? $d->waktu_masuk->format('H:i:s') : '23:59:59';
-                if ($j->jam_selesai > $wMulai && $j->jam_mulai < $wSelesai) {
-                    $st = $d->jenis_absen ?? 'D';
-                    $currentTidakHadir[$d->id_siswa] = [
-                        'id_siswa' => $d->id_siswa,
-                        'status' => $st,
-                        'keterangan' => strtoupper($st) . ($d->alasan ? ': ' . $d->alasan : ''),
-                    ];
-                }
-            }
-
-            $jurnal = JurnalKelas::withTrashed()
-                ->where('id_jadwal', $j->id_jadwal)
+            $jurnal = JurnalKelas::where('id_jadwal', $j->id_jadwal)
                 ->whereDate('tanggal', $tanggal)
                 ->first();
 
             if ($jurnal) {
-                if ($jurnal->trashed()) {
-                    $jurnal->restore();
-                }
-
-                // Tambahkan data dispen aktif ke jurnal ini jika belum ada
+                // Tambahkan data dispen aktif ke jurnal ini jika bertepatan
                 foreach ($dispenList as $d) {
                     $wMulai = $d->waktu_keluar ? $d->waktu_keluar->format('H:i:s') : ($d->created_at ? $d->created_at->format('H:i:s') : '00:00:00');
                     $wSelesai = $d->waktu_masuk ? $d->waktu_masuk->format('H:i:s') : '23:59:59';
@@ -512,42 +491,6 @@ class AbsensiService
                             ['id_jurnal' => $jurnal->id_jurnal, 'id_siswa' => $d->id_siswa],
                             ['status' => $st, 'keterangan' => strtoupper($st) . ($d->alasan ? ': ' . $d->alasan : '')]
                         );
-                    }
-                }
-
-                $thRows = JurnalSiswaTidakHadir::where('id_jurnal', $jurnal->id_jurnal)->get();
-                $currentTidakHadir = [];
-                foreach ($thRows as $row) {
-                    $currentTidakHadir[$row->id_siswa] = [
-                        'id_siswa' => $row->id_siswa,
-                        'status' => $row->status,
-                        'keterangan' => $row->keterangan ?? '',
-                    ];
-                }
-            } else {
-                // Jam ini belum memiliki jurnal sendiri.
-                // Jika jam pelajaran sudah selesai, simpan otomatis (ngesv) absen terakhir di jam itu
-                if ($isSelesai) {
-                    $jumlahHadir = max(0, $totalSiswa - count($currentTidakHadir));
-                    $waktuInput = $isToday ? now() : Carbon::parse($tanggal . ' ' . $j->jam_selesai);
-
-                    $newJurnal = JurnalKelas::create([
-                        'id_jadwal' => $j->id_jadwal,
-                        'id_guru' => $j->id_guru,
-                        'tanggal' => $tanggal,
-                        'status_kehadiran_guru' => 'Hadir',
-                        'materi' => 'Pembelajaran Harian',
-                        'jumlah_hadir' => $jumlahHadir,
-                        'waktu_input' => $waktuInput,
-                    ]);
-
-                    foreach ($currentTidakHadir as $th) {
-                        JurnalSiswaTidakHadir::create([
-                            'id_jurnal' => $newJurnal->id_jurnal,
-                            'id_siswa' => $th['id_siswa'],
-                            'status' => $th['status'],
-                            'keterangan' => $th['keterangan'],
-                        ]);
                     }
                 }
             }

@@ -143,10 +143,7 @@ class AbsensiController extends Controller
 
         // 3. Ambil Jurnal & Presensi Siswa per Jam Pelajaran pada Tanggal Tersebut
         $presensiPerJam = [];
-        $statHarian = ['Hadir' => 0, 'Sakit' => 0, 'Izin' => 0, 'Dispen' => 0, 'Alpa' => 0, 'Menunggu' => 0];
-
-        // Running status absensi terakhir pada hari ini (default: kosong → semua Hadir)
-        $runningTidakHadir = [];
+        $statHarian = ['Hadir' => 0, 'Sakit' => 0, 'Izin' => 0, 'Dispen' => 0, 'Alpa' => 0, 'Belum Diabsen' => 0, 'Menunggu' => 0];
 
         foreach ($jadwalList as $j) {
             $isSelesai = $isPastDate || ($isToday && $nowTime >= $j->jam_selesai);
@@ -175,7 +172,7 @@ class AbsensiController extends Controller
             });
 
             if ($dispenJamIni) {
-                // Jam ini bertepatan saat siswa mengambil dispen
+                // Jam ini bertepatan saat siswa mengambil dispen / izin / sakit piket
                 $alasanText = $dispenJamIni->alasan ? ': ' . $dispenJamIni->alasan : '';
                 if ($dispenJamIni->jenis_absen === 'D') {
                     $status = 'Dispen';
@@ -197,31 +194,24 @@ class AbsensiController extends Controller
                     $materi = $jurnal->materi ?? 'Pembelajaran Harian';
                 }
             } elseif ($jurnal) {
-                // Jam ini memiliki data jurnal tersimpan (guru sudah mengabsen)
+                // Jam ini memiliki data jurnal tersimpan (guru pengampu SUDAH mengabsen)
                 $materi = $jurnal->materi ?? 'Pembelajaran Harian';
 
-                // Update $runningTidakHadir dari jurnal ini
-                $thRows = JurnalSiswaTidakHadir::where('id_jurnal', $jurnal->id_jurnal)->get();
-                $runningTidakHadir = [];
-                foreach ($thRows as $row) {
-                    $runningTidakHadir[$row->id_siswa] = [
-                        'status' => $row->status,
-                        'keterangan' => $row->keterangan ?? '',
-                    ];
-                }
+                $th = JurnalSiswaTidakHadir::where('id_jurnal', $jurnal->id_jurnal)
+                    ->where('id_siswa', $siswa->id_siswa)
+                    ->first();
 
-                $th = $runningTidakHadir[$siswa->id_siswa] ?? null;
                 if ($th) {
-                    $ketLower = strtolower($th['keterangan'] ?? '');
-                    if ($th['status'] === 'S') {
+                    $ketLower = strtolower($th->keterangan ?? '');
+                    if ($th->status === 'S') {
                         $status = 'Sakit';
                         $statusLabel = 'Sakit';
                         $badgeClass = 'badge-warning';
-                    } elseif ($th['status'] === 'D' || str_starts_with($ketLower, 'd:') || str_contains($ketLower, 'dispensasi')) {
+                    } elseif ($th->status === 'D' || str_starts_with($ketLower, 'd:') || str_contains($ketLower, 'dispensasi')) {
                         $status = 'Dispen';
                         $statusLabel = 'Dispensasi';
                         $badgeClass = 'badge-dispen';
-                    } elseif ($th['status'] === 'I') {
+                    } elseif ($th->status === 'I') {
                         $status = 'Izin';
                         $statusLabel = 'Izin';
                         $badgeClass = 'badge-info';
@@ -230,55 +220,20 @@ class AbsensiController extends Controller
                         $statusLabel = 'Alpa';
                         $badgeClass = 'badge-danger';
                     }
-                    $keterangan = $th['keterangan'] ?: '-';
+                    $keterangan = $th->keterangan ?: '-';
                 } else {
                     $status = 'Hadir';
                     $statusLabel = 'Hadir';
                     $badgeClass = 'badge-success';
                 }
             } else {
-                // Jam ini belum memiliki jurnal (guru belum mengabsen).
-                if ($isSelesai) {
-                    // Jam sudah selesai tapi guru tidak mengabsen sama sekali:
-                    // carry-over status dari jurnal terakhir yang ada (jam sebelumnya),
-                    // sehingga siswa yang S/I/A tetap tercatat, siswa lain dianggap Hadir.
-                    $th = $runningTidakHadir[$siswa->id_siswa] ?? null;
-                    if ($th) {
-                        $ketLower = strtolower($th['keterangan'] ?? '');
-                        if ($th['status'] === 'S') {
-                            $status = 'Sakit';
-                            $statusLabel = 'Sakit';
-                            $badgeClass = 'badge-warning';
-                        } elseif ($th['status'] === 'D' || str_starts_with($ketLower, 'd:') || str_contains($ketLower, 'dispensasi')) {
-                            $status = 'Dispen';
-                            $statusLabel = 'Dispensasi';
-                            $badgeClass = 'badge-dispen';
-                        } elseif ($th['status'] === 'I') {
-                            $status = 'Izin';
-                            $statusLabel = 'Izin';
-                            $badgeClass = 'badge-info';
-                        } else {
-                            $status = 'Alpa';
-                            $statusLabel = 'Alpa';
-                            $badgeClass = 'badge-danger';
-                        }
-                        $keterangan = $th['keterangan'] ?: '-';
-                    } else {
-                        // Tidak ada jurnal sama sekali sebelumnya → anggap Hadir
-                        $status = 'Hadir';
-                        $statusLabel = 'Hadir';
-                        $badgeClass = 'badge-success';
-                    }
-                } else {
-                    // Jam sedang berlangsung atau belum dimulai dan guru BELUM mengabsen:
-                    // Tampilkan "Menunggu Absensi" agar tidak menyesatkan orang tua.
-                    // Status hadir HANYA muncul setelah guru yang bersangkutan mengabsen.
-                    $status = 'Menunggu';
-                    $statusLabel = 'Menunggu Absensi';
-                    $badgeClass = 'badge-secondary';
-                    $materi = '-';
-                    $keterangan = '-';
-                }
+                // Guru pada jam ini BELUM / TIDAK mengisi jurnal atau mengabsen
+                // Status HARUS 'Belum Diabsen' / 'Menunggu Absensi', BUKAN 'Hadir'
+                $status = $isSelesai ? 'Belum Diabsen' : 'Menunggu';
+                $statusLabel = $isSelesai ? 'Belum Diabsen' : 'Menunggu Absensi';
+                $badgeClass = 'badge-secondary';
+                $materi = '-';
+                $keterangan = '-';
             }
 
             $sessionState = 'finished';

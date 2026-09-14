@@ -1774,3 +1774,365 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
         width: auto !important;
     }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE — Satpam Dispen Table (min-width:900px → kartu di HP)
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    /* ── Satpam: Log Keluar-Masuk ── */
+    #page-satpam .data-table { min-width: 0 !important; }
+    #page-satpam .data-table thead { display: none; }
+    #page-satpam .data-table,
+    #page-satpam .data-table tbody { display: block; width: 100%; }
+    #page-satpam .data-table tbody tr {
+        display: block;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 14px 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 1px 4px rgba(15,23,42,0.06);
+    }
+    #page-satpam .data-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0 !important;
+        border: none !important;
+        font-size: 13px;
+        gap: 10px;
+    }
+    /* Kolom 1: Siswa & Kelas — header tanpa label */
+    #page-satpam .data-table tbody tr td:nth-child(1) {
+        display: block;
+        border-bottom: 1px solid #f1f5f9 !important;
+        padding-bottom: 10px !important;
+        margin-bottom: 6px;
+    }
+    #page-satpam .data-table tbody tr td:nth-child(1) strong {
+        display: block;
+        font-size: 14.5px;
+        font-weight: 700;
+        color: #0f172a;
+    }
+    #page-satpam .data-table tbody tr td:nth-child(2)::before { content: "Alasan: "; font-weight: 700; color: #64748b; font-size: 11.5px; }
+    #page-satpam .data-table tbody tr td:nth-child(3)::before { content: "Status Waka: "; font-weight: 700; color: #64748b; font-size: 11.5px; }
+    #page-satpam .data-table tbody tr td:nth-child(4)::before { content: "Surat: "; font-weight: 700; color: #64748b; font-size: 11.5px; }
+    /* Status + waktu keluar + waktu masuk berdampingan */
+    #page-satpam .data-table tbody tr td:nth-child(5),
+    #page-satpam .data-table tbody tr td:nth-child(6),
+    #page-satpam .data-table tbody tr td:nth-child(7) {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 6px;
+        width: auto !important;
+        margin-right: 8px;
+        flex: none;
+        justify-content: flex-start !important;
+    }
+    #page-satpam .data-table tbody tr td:nth-child(6)::before { content: "Keluar: "; font-size: 11px; font-weight: 700; color: #64748b; }
+    #page-satpam .data-table tbody tr td:nth-child(7)::before { content: "Masuk: "; font-size: 11px; font-weight: 700; color: #64748b; }
+    /* Aksi Satpam — tombol full width */
+    #page-satpam .data-table tbody tr td:nth-child(8) {
+        display: block !important;
+        margin-top: 10px;
+        width: 100% !important;
+        text-align: center;
+        justify-content: center !important;
+    }
+    #page-satpam .data-table tbody tr td:nth-child(8) button {
+        width: 100% !important;
+        padding: 11px 0 !important;
+        font-size: 13.5px !important;
+        border-radius: 10px !important;
+    }
+    /* stat-cards di satpam: 3 kolom kompak */
+    #page-satpam .stat-cards {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 10px;
+    }
+    #page-satpam .stat-card {
+        padding: 12px 10px;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 6px;
+    }
+}
+
+/* ── Satpam Harian page ── */
+@media (max-width: 768px) {
+    #page-satpam-harian .data-table { min-width: 0 !important; }
+    #page-satpam-harian .data-table thead { display: none; }
+    #page-satpam-harian .data-table,
+    #page-satpam-harian .data-table tbody { display: block; width: 100%; }
+    #page-satpam-harian .data-table tbody tr {
+        display: block;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 12px 14px;
+        margin-bottom: 10px;
+        box-shadow: 0 1px 3px rgba(15,23,42,0.05);
+    }
+    #page-satpam-harian .data-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0 !important;
+        border: none !important;
+        font-size: 12.5px;
+    }
+    #page-satpam-harian .data-table tbody tr td:nth-child(1) {
+        font-size: 14px; font-weight: 700; color: #0f172a;
+        border-bottom: 1px solid #f1f5f9 !important;
+        padding-bottom: 8px !important; margin-bottom: 4px; display: block;
+    }
+    #page-satpam-harian .data-table tbody tr td:nth-child(2)::before { content: "Kelas: "; font-weight: 700; color: #64748b; font-size: 11.5px; }
+    #page-satpam-harian .data-table tbody tr td:nth-child(3)::before { content: "Tanggal: "; font-weight: 700; color: #64748b; font-size: 11.5px; }
+    #page-satpam-harian .data-table tbody tr td:nth-child(4)::before { content: "Keluar: "; font-weight: 700; color: #64748b; font-size: 11.5px; }
+    #page-satpam-harian .data-table tbody tr td:nth-child(5)::before { content: "Masuk: "; font-weight: 700; color: #64748b; font-size: 11.5px; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE — Dispen Siswa Table (min-width:950px → kartu di HP)
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    #page-dispen-siswa .data-table { min-width: 0 !important; }
+    #page-dispen-siswa .data-table thead { display: none; }
+    #page-dispen-siswa .data-table,
+    #page-dispen-siswa .data-table tbody { display: block; width: 100%; }
+    #page-dispen-siswa .data-table tbody tr {
+        display: block;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
+        box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+    }
+    #page-dispen-siswa .data-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0 !important;
+        border: none !important;
+        font-size: 13px;
+        gap: 10px;
+    }
+    #page-dispen-siswa .data-table tbody tr td:nth-child(1) {
+        font-size: 14px; font-weight: 700; color: #0f172a;
+        border-bottom: 1px solid #f1f5f9 !important;
+        padding-bottom: 8px !important; margin-bottom: 4px; display: block;
+    }
+    #page-dispen-siswa .data-table tbody tr td:nth-child(2)::before { content: "Kelas: "; font-weight: 700; color: #64748b; font-size: 11.5px; }
+    #page-dispen-siswa .data-table tbody tr td:nth-child(3)::before { content: "Tanggal: "; font-weight: 700; color: #64748b; font-size: 11.5px; }
+    #page-dispen-siswa .data-table tbody tr td:nth-child(4)::before { content: "Alasan: "; font-weight: 700; color: #64748b; font-size: 11.5px; }
+    #page-dispen-siswa .data-table tbody tr td:nth-child(5)::before { content: "Surat: "; font-weight: 700; color: #64748b; font-size: 11.5px; }
+    #page-dispen-siswa .data-table tbody tr td:nth-child(6)::before { content: "Status Waka: "; font-weight: 700; color: #64748b; font-size: 11.5px; }
+    #page-dispen-siswa .data-table tbody tr td:nth-child(7)::before { content: "Keluar-Masuk: "; font-weight: 700; color: #64748b; font-size: 11.5px; }
+    #page-dispen-siswa .data-table tbody tr td:nth-child(8)::before { content: "Link Waka: "; font-weight: 700; color: #64748b; font-size: 11.5px; }
+    /* Form dispen: grid 2 kolom → 1 kolom */
+    #page-dispen-siswa [style*="grid-template-columns:1fr 180px"],
+    #page-dispen-siswa [style*="grid-template-columns: 1fr 180px"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE — Wali Kelas Rekap (table-wali-rekap) → kartu di HP
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    #table-wali-rekap { min-width: 0 !important; }
+    #table-wali-rekap thead { display: none; }
+    #table-wali-rekap, #table-wali-rekap tbody { display: block; width: 100%; }
+    #table-wali-rekap tbody tr {
+        display: block;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 10px;
+        box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+    }
+    #table-wali-rekap tbody td { display: block; border: none !important; padding: 4px 0 !important; }
+    #table-wali-rekap tbody tr td:nth-child(1) { display: none; }
+    #table-wali-rekap tbody tr td:nth-child(2) { font-family: monospace; font-size: 11px; color: #94a3b8; font-weight: 600; }
+    #table-wali-rekap tbody tr td:nth-child(3) { font-size: 14.5px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+    #table-wali-rekap tbody tr td:nth-child(4),
+    #table-wali-rekap tbody tr td:nth-child(5),
+    #table-wali-rekap tbody tr td:nth-child(6),
+    #table-wali-rekap tbody tr td:nth-child(7),
+    #table-wali-rekap tbody tr td:nth-child(8) {
+        display: inline-block !important; width: auto !important; margin-right: 14px;
+    }
+    #table-wali-rekap tbody tr td:nth-child(4)::before { content: "H: "; color: #15803d; font-weight: 700; font-size: 12px; }
+    #table-wali-rekap tbody tr td:nth-child(5)::before { content: "S: "; color: #b45309; font-weight: 700; font-size: 12px; }
+    #table-wali-rekap tbody tr td:nth-child(6)::before { content: "I: "; color: #1d4ed8; font-weight: 700; font-size: 12px; }
+    #table-wali-rekap tbody tr td:nth-child(7)::before { content: "D: "; color: #7c3aed; font-weight: 700; font-size: 12px; }
+    #table-wali-rekap tbody tr td:nth-child(8)::before { content: "A: "; color: #b91c1c; font-weight: 700; font-size: 12px; }
+    #table-wali-rekap tbody tr td:nth-child(9) { margin-top: 6px; }
+    #table-wali-rekap tbody tr td:nth-child(9) > div { justify-content: flex-start !important; }
+
+    /* Wali Kelas header buttons: full width */
+    #page-walikelas > div:first-child {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    #page-walikelas > div:first-child > div:last-child {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+    #page-walikelas > div:first-child > div:last-child > a,
+    #page-walikelas > div:first-child > div:last-child > button {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+    /* Search input dalam card full width */
+    #page-walikelas [style*="width:250px"] { width: 100% !important; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE — Structural pages: Waka SDM, Guru Piket, dll
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    #page-waka-sdm .data-table,
+    #page-guru-piket .data-table,
+    #page-absensi-siswa .data-table,
+    #page-izin-guru-waka .data-table,
+    #page-buat-laporan .data-table { min-width: 0 !important; }
+
+    #page-waka-sdm .data-table thead,
+    #page-guru-piket .data-table thead,
+    #page-absensi-siswa .data-table thead,
+    #page-izin-guru-waka .data-table thead,
+    #page-buat-laporan .data-table thead { display: none; }
+
+    #page-waka-sdm .data-table,
+    #page-waka-sdm .data-table tbody,
+    #page-guru-piket .data-table,
+    #page-guru-piket .data-table tbody,
+    #page-absensi-siswa .data-table,
+    #page-absensi-siswa .data-table tbody,
+    #page-izin-guru-waka .data-table,
+    #page-izin-guru-waka .data-table tbody { display: block; width: 100%; }
+
+    #page-waka-sdm .data-table tbody tr,
+    #page-guru-piket .data-table tbody tr,
+    #page-absensi-siswa .data-table tbody tr,
+    #page-izin-guru-waka .data-table tbody tr {
+        display: block;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 10px;
+        box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+    }
+    #page-waka-sdm .data-table tbody td,
+    #page-guru-piket .data-table tbody td,
+    #page-absensi-siswa .data-table tbody td,
+    #page-izin-guru-waka .data-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0 !important;
+        border: none !important;
+        font-size: 12.5px;
+        gap: 8px;
+    }
+    #page-waka-sdm .data-table tbody tr td:first-child,
+    #page-guru-piket .data-table tbody tr td:first-child,
+    #page-absensi-siswa .data-table tbody tr td:first-child,
+    #page-izin-guru-waka .data-table tbody tr td:first-child {
+        font-size: 14px;
+        font-weight: 700;
+        color: #0f172a;
+        display: block;
+        border-bottom: 1px solid #f1f5f9 !important;
+        padding-bottom: 8px !important;
+        margin-bottom: 4px;
+        justify-content: flex-start !important;
+    }
+
+    /* Tombol aksi: full width */
+    #page-waka-sdm .data-table tbody td:last-child button,
+    #page-guru-piket .data-table tbody td:last-child button,
+    #page-absensi-siswa .data-table tbody td:last-child button,
+    #page-izin-guru-waka .data-table tbody td:last-child button {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MOBILE — Global Touch & UX Improvements
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    /* Area tap minimal 40px untuk semua tombol dalam tabel */
+    .main-content:not(.is-admin) tbody td button,
+    .main-content:not(.is-admin) tbody td a.btn-primary,
+    .main-content:not(.is-admin) tbody td a.btn-secondary {
+        min-height: 38px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    /* Sembunyikan overflow body */
+    body { overflow-x: hidden; }
+    .page-content { overflow-x: hidden; }
+    /* Rekap chips scroll horizontal (overflow nowrap) */
+    .rekap-chips { overflow-x: auto; padding-bottom: 4px; }
+    .rekap-chips::-webkit-scrollbar { height: 3px; }
+    .rekap-chips::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+    /* Card dengan div overflow-x berisi table lebar: pastikan smooth scroll */
+    .card > div[style*="overflow-x"] {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   DARK MODE — Mobile card overrides untuk halaman struktural
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    [data-theme="dark"] #page-satpam .data-table tbody tr,
+    [data-theme="dark"] #page-satpam-harian .data-table tbody tr,
+    [data-theme="dark"] #page-dispen-siswa .data-table tbody tr,
+    [data-theme="dark"] #table-wali-rekap tbody tr,
+    [data-theme="dark"] #page-waka-sdm .data-table tbody tr,
+    [data-theme="dark"] #page-guru-piket .data-table tbody tr,
+    [data-theme="dark"] #page-absensi-siswa .data-table tbody tr,
+    [data-theme="dark"] #page-izin-guru-waka .data-table tbody tr {
+        background: #111827 !important;
+        border-color: #1e3a5f !important;
+    }
+    [data-theme="dark"] #page-satpam .data-table tbody td,
+    [data-theme="dark"] #page-satpam-harian .data-table tbody td,
+    [data-theme="dark"] #page-dispen-siswa .data-table tbody td,
+    [data-theme="dark"] #table-wali-rekap tbody td,
+    [data-theme="dark"] #page-waka-sdm .data-table tbody td,
+    [data-theme="dark"] #page-guru-piket .data-table tbody td,
+    [data-theme="dark"] #page-absensi-siswa .data-table tbody td,
+    [data-theme="dark"] #page-izin-guru-waka .data-table tbody td {
+        color: #94a3b8 !important;
+    }
+    [data-theme="dark"] #page-satpam .data-table tbody tr td:nth-child(1) strong,
+    [data-theme="dark"] #page-satpam-harian .data-table tbody tr td:nth-child(1),
+    [data-theme="dark"] #page-dispen-siswa .data-table tbody tr td:nth-child(1),
+    [data-theme="dark"] #table-wali-rekap tbody tr td:nth-child(3),
+    [data-theme="dark"] #page-waka-sdm .data-table tbody tr td:first-child,
+    [data-theme="dark"] #page-guru-piket .data-table tbody tr td:first-child,
+    [data-theme="dark"] #page-absensi-siswa .data-table tbody tr td:first-child,
+    [data-theme="dark"] #page-izin-guru-waka .data-table tbody tr td:first-child {
+        color: #f1f5f9 !important;
+    }
+    [data-theme="dark"] #page-satpam .data-table tbody tr td:nth-child(1),
+    [data-theme="dark"] #page-satpam-harian .data-table tbody tr td:nth-child(1),
+    [data-theme="dark"] #page-dispen-siswa .data-table tbody tr td:nth-child(1),
+    [data-theme="dark"] #page-waka-sdm .data-table tbody tr td:first-child,
+    [data-theme="dark"] #page-guru-piket .data-table tbody tr td:first-child,
+    [data-theme="dark"] #page-izin-guru-waka .data-table tbody tr td:first-child {
+        border-bottom-color: #1e3a5f !important;
+    }
+}

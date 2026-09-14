@@ -170,7 +170,7 @@ class AbsensiPerJamTest extends TestCase
         $this->assertEquals('Hadir', $jam1Presensi['status'], 'Di portal orang tua, Jam 1 harus Hadir.');
         $jam2Presensi = collect($presensiPerJam)->firstWhere('jam_ke', 2);
         if ($jam2Presensi) {
-            $this->assertEquals('Hadir', $jam2Presensi['status'], 'Di portal orang tua, Jam 2 harus Hadir mengikuti absen terakhir yang disimpan sebelum Jam 3.');
+            $this->assertTrue(in_array($jam2Presensi['status'], ['Belum Diabsen', 'Menunggu']), 'Di portal orang tua, Jam 2 yang tidak diisi jurnal oleh guru harus Belum Diabsen/Menunggu, bukan Hadir.');
         }
         $this->assertEquals('Alpa', $jam3Presensi['status'], 'Di portal orang tua, Jam 3 harus Alpa.');
 

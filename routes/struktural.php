@@ -39,18 +39,18 @@ Route::middleware('auth.struktural')->group(function () {
 });
 
 Route::get('/persetujuan-izin-guru/{izin}', [IzinGuruController::class, 'publicShow'])
-    ->middleware('signed')
+    ->middleware('signed:relative')
     ->name('izin-guru.public');
 
 Route::get('/persetujuan-izin-guru/{izin}/{role}', [IzinGuruController::class, 'publicShow'])
-    ->middleware('signed')
+    ->middleware('signed:relative')
     ->name('izin-guru.public.role');
 
 Route::post('/persetujuan-izin-guru/{izin}/{role}', [IzinGuruController::class, 'approve'])
-    ->middleware('signed')
+    ->middleware('signed:relative')
     ->name('izin-guru.approve');
 
 Route::get('/persetujuan-dispen-siswa/{dispen}/{role}', [DispenSiswaController::class, 'publicShow'])
-    ->middleware('signed')->name('dispen-siswa.public');
+    ->middleware('signed:relative')->name('dispen-siswa.public');
 Route::post('/persetujuan-dispen-siswa/{dispen}/{role}', [DispenSiswaController::class, 'approve'])
-    ->middleware('signed')->name('dispen-siswa.approve');
+    ->middleware('signed:relative')->name('dispen-siswa.approve');

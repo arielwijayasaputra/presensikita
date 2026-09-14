@@ -52,17 +52,27 @@ class PengaturanController extends Controller
         Pengaturan::set('izin_edit_jurnal', $request->has('izin_edit_jurnal') ? '1' : '0');
 
         // Pengaturan Bot WhatsApp
-        Pengaturan::set('wa_gateway_aktif', $request->has('wa_gateway_aktif') ? '1' : '0');
-        if ($request->filled('wa_gateway_endpoint')) {
+        if ($request->has('wa_gateway_aktif')) {
+            Pengaturan::set('wa_gateway_aktif', ($request->boolean('wa_gateway_aktif') || $request->wa_gateway_aktif === '1' || $request->wa_gateway_aktif === 1) ? '1' : '0');
+        }
+        if ($request->has('wa_gateway_endpoint') && $request->filled('wa_gateway_endpoint')) {
             Pengaturan::set('wa_gateway_endpoint', trim($request->wa_gateway_endpoint));
         }
         if ($request->has('wa_public_url')) {
             Pengaturan::set('wa_public_url', trim($request->wa_public_url ?? ''));
         }
-        Pengaturan::set('wa_nomor_bot', trim($request->wa_nomor_bot ?? ''));
-        Pengaturan::set('wa_nomor_waka_kesiswaan', trim($request->wa_nomor_waka_kesiswaan ?? ''));
-        Pengaturan::set('wa_nomor_waka_sdm', trim($request->wa_nomor_waka_sdm ?? ''));
-        Pengaturan::set('wa_nomor_kepsek', trim($request->wa_nomor_kepsek ?? ''));
+        if ($request->has('wa_nomor_bot') && $request->filled('wa_nomor_bot')) {
+            Pengaturan::set('wa_nomor_bot', trim($request->wa_nomor_bot));
+        }
+        if ($request->has('wa_nomor_waka_kesiswaan')) {
+            Pengaturan::set('wa_nomor_waka_kesiswaan', trim($request->wa_nomor_waka_kesiswaan ?? ''));
+        }
+        if ($request->has('wa_nomor_waka_sdm')) {
+            Pengaturan::set('wa_nomor_waka_sdm', trim($request->wa_nomor_waka_sdm ?? ''));
+        }
+        if ($request->has('wa_nomor_kepsek')) {
+            Pengaturan::set('wa_nomor_kepsek', trim($request->wa_nomor_kepsek ?? ''));
+        }
 
         $tahun = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
         if ($tahun) {
@@ -178,6 +188,9 @@ class PengaturanController extends Controller
     public function statusBotWa()
     {
         $status = \App\Services\WhatsAppService::checkBotStatus();
+        if (! empty($status['user'])) {
+            Pengaturan::set('wa_nomor_bot', (string) $status['user']);
+        }
 
         return response()->json($status);
     }
@@ -226,6 +239,9 @@ class PengaturanController extends Controller
     public function qrBotWa()
     {
         $qr = \App\Services\WhatsAppService::getQrCode();
+        if (! empty($qr['user'])) {
+            Pengaturan::set('wa_nomor_bot', (string) $qr['user']);
+        }
 
         return response()->json($qr);
     }

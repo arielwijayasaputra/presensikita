@@ -466,56 +466,43 @@ class WhatsAppService
      */
     public static function generateLanSignedRoute(string $name, $expiration, array $parameters = []): string
     {
-        try {
-            // 1. Cek apakah ada URL publik kustom (seperti ngrok / Cloudflare Tunnel / domain) di pengaturan
-            $customPublicUrl = trim(Pengaturan::get('wa_public_url', ''));
-            if (! empty($customPublicUrl)) {
-                if (! str_starts_with($customPublicUrl, 'http://') && ! str_starts_with($customPublicUrl, 'https://')) {
-                    $customPublicUrl = 'https://' . $customPublicUrl;
-                }
-                \Illuminate\Support\Facades\URL::forceRootUrl(rtrim($customPublicUrl, '/'));
-            } else {
-                // 2. Jika kosong, otomatis sesuaikan dengan host yang sedang aktif (Cloudflare Tunnel, Ngrok, atau Domain sekolah)
-                $host = '';
-                $scheme = 'http';
-                $port = 8000;
-                $isPublicHost = false;
+        // 1. Generate signature sebagai relative URL agar validasi signature kebal terhadap perbedaan domain/protocol
+        $relativeSignedUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute($name, $expiration, $parameters, false);
 
-                try {
-                    if (request()) {
-                        $scheme = request()->getScheme() ?: 'http';
-                        $host = request()->getHost();
-                        $reqPort = request()->getPort();
-                        if ($reqPort && ! in_array($reqPort, [80, 443])) {
-                            $port = $reqPort;
-                        }
+        // 2. Tentukan Base URL publik (Cloudflare Tunnel / Ngrok / Custom Domain / IP LAN)
+        $baseUrl = '';
+        $customPublicUrl = trim(Pengaturan::get('wa_public_url', ''));
+        if (! empty($customPublicUrl)) {
+            if (! str_starts_with($customPublicUrl, 'http://') && ! str_starts_with($customPublicUrl, 'https://')) {
+                $customPublicUrl = 'https://' . $customPublicUrl;
+            }
+            $baseUrl = rtrim($customPublicUrl, '/');
+        } else {
+            try {
+                if (request()) {
+                    $scheme = request()->getScheme() ?: 'http';
+                    $host = request()->getHost();
+                    $reqPort = request()->getPort();
+                    $portStr = ($reqPort && ! in_array($reqPort, [80, 443])) ? ':'.$reqPort : '';
 
-                        // Jika host bukan localhost/127.0.0.1, gunakan host aktif browser otomatis
-                        if (! empty($host) && ! in_array($host, ['localhost', '127.0.0.1']) && ! str_starts_with($host, '127.')) {
-                            $isPublicHost = true;
-                            $portStr = ($port && ! in_array($port, [80, 443])) ? ':'.$port : '';
-                            \Illuminate\Support\Facades\URL::forceRootUrl("{$scheme}://{$host}{$portStr}");
-                        }
+                    if (! empty($host) && ! in_array($host, ['localhost', '127.0.0.1']) && ! str_starts_with($host, '127.')) {
+                        $baseUrl = "{$scheme}://{$host}{$portStr}";
                     }
-                } catch (\Throwable $e) {
                 }
+            } catch (\Throwable $e) {}
 
-                // 3. Fallback jika diakses dari localhost atau CLI background, gunakan IP LAN lokal
-                if (! $isPublicHost) {
-                    $lanIp = gethostbyname(gethostname());
-                    if (! empty($lanIp) && $lanIp !== '127.0.0.1' && ! str_starts_with($lanIp, '127.')) {
-                        $portStr = ($port && ! in_array($port, [80, 443])) ? ':'.$port : '';
-                        \Illuminate\Support\Facades\URL::forceRootUrl("{$scheme}://{$lanIp}{$portStr}");
-                    }
+            if (empty($baseUrl)) {
+                $lanIp = gethostbyname(gethostname());
+                if (! empty($lanIp) && $lanIp !== '127.0.0.1' && ! str_starts_with($lanIp, '127.')) {
+                    $reqPort = (request() && request()->getPort()) ? request()->getPort() : 8000;
+                    $portStr = ($reqPort && ! in_array($reqPort, [80, 443])) ? ':'.$reqPort : '';
+                    $baseUrl = "http://{$lanIp}{$portStr}";
+                } else {
+                    $baseUrl = rtrim(config('app.url', 'http://localhost'), '/');
                 }
             }
-
-            $signedUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute($name, $expiration, $parameters);
-        } finally {
-            // Selalu kembalikan URL root ke setelan semula agar tidak mempengaruhi halaman lain
-            \Illuminate\Support\Facades\URL::forceRootUrl(null);
         }
 
-        return $signedUrl;
+        return rtrim($baseUrl, '/') . '/' . ltrim($relativeSignedUrl, '/');
     }
 }

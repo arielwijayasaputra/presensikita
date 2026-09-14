@@ -126,22 +126,22 @@ class IzinGuruController extends Controller
         if ($role === 'kepsek') {
             return view('izin_guru_kepsek', [
                 'izin' => $izin->load(['guru', 'guruPiket']),
-                'approvalUrl' => URL::temporarySignedRoute('izin-guru.approve', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'kepsek']),
+                'approvalUrl' => URL::temporarySignedRoute('izin-guru.approve', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'kepsek'], false),
             ]);
         }
 
         if ($role === 'waka') {
             return view('izin_guru_waka', [
                 'izin' => $izin->load(['guru', 'guruPiket']),
-                'approvalUrl' => URL::temporarySignedRoute('izin-guru.approve', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'waka']),
+                'approvalUrl' => URL::temporarySignedRoute('izin-guru.approve', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'waka'], false),
             ]);
         }
 
         return view('izin_guru_public', [
             'izin' => $izin->load(['guru', 'guruPiket']),
             'role' => $role,
-            'kepsekUrl' => URL::temporarySignedRoute('izin-guru.approve', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'kepsek']),
-            'wakaUrl' => URL::temporarySignedRoute('izin-guru.approve', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'waka']),
+            'kepsekUrl' => URL::temporarySignedRoute('izin-guru.approve', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'kepsek'], false),
+            'wakaUrl' => URL::temporarySignedRoute('izin-guru.approve', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'waka'], false),
         ]);
     }
 
@@ -174,7 +174,8 @@ class IzinGuruController extends Controller
         $resultUrl = URL::temporarySignedRoute(
             'izin-guru.public.role',
             now()->addDays(2),
-            ['izin' => $izin->id_izin_guru, 'role' => $role]
+            ['izin' => $izin->id_izin_guru, 'role' => $role],
+            false
         );
 
         return redirect()->to($resultUrl)

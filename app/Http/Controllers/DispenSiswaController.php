@@ -126,7 +126,7 @@ class DispenSiswaController extends Controller
             'dispen' => $dispen->load(['siswa.kelas', 'guruPiket']),
             'role' => $role,
             'status' => $dispen->status_waka,
-            'approvalUrl' => URL::temporarySignedRoute('dispen-siswa.approve', now()->addDays(2), ['dispen' => $dispen->id_dispen_siswa, 'role' => $role]),
+            'approvalUrl' => URL::temporarySignedRoute('dispen-siswa.approve', now()->addDays(2), ['dispen' => $dispen->id_dispen_siswa, 'role' => $role], false),
         ]);
     }
 
@@ -142,7 +142,7 @@ class DispenSiswaController extends Controller
         $dispen->{$dateField} = $data['keputusan'] === 'disetujui' ? now() : null;
         $dispen->save();
 
-        $url = URL::temporarySignedRoute('dispen-siswa.public', now()->addDays(2), ['dispen' => $dispen->id_dispen_siswa, 'role' => $role]);
+        $url = URL::temporarySignedRoute('dispen-siswa.public', now()->addDays(2), ['dispen' => $dispen->id_dispen_siswa, 'role' => $role], false);
 
         return redirect()->to($url)->with('approval_message', 'Keputusan '.strtoupper($role).' berhasil disimpan.');
     }

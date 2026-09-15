@@ -6,6 +6,44 @@
             <div class="page-subtitle">Sistem Informasi Kehadiran Siswa - PresensiKita</div>
         </div>
     </div>
+
+    {{-- ── Peringatan Data Belum Lengkap ── --}}
+    @if(($totalPeringatan ?? 0) > 0)
+    <div id="dashboard-peringatan" class="card" style="margin-bottom:20px;padding:16px 20px;border-left:5px solid #f59e0b;background:#fffbeb">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <div style="width:34px;height:34px;border-radius:10px;background:#fef3c7;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div>
+                <div style="font-size:14.5px;font-weight:800;color:#92400e">Perhatian: ada {{ $totalPeringatan }} data yang belum lengkap</div>
+                <div style="font-size:12.5px;color:#a16207">Klik salah satu peringatan di bawah untuk melihat detail datanya.</div>
+            </div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+            @if($kelasTanpaWali->count() > 0)
+            <button type="button" onclick="bukaModalPeringatan('kelas')" class="peringatan-item" style="flex:1;min-width:240px;display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid #fcd34d;border-radius:10px;background:#fff;cursor:pointer;text-align:left;font-family:inherit">
+                <div style="font-size:26px;font-weight:800;color:#b45309;line-height:1;min-width:34px;text-align:center">{{ $kelasTanpaWali->count() }}</div>
+                <div>
+                    <div style="font-size:13.5px;font-weight:700;color:#1e293b">Kelas belum memiliki wali kelas</div>
+                    <div style="font-size:12px;color:#64748b">Klik untuk melihat daftar kelas</div>
+                </div>
+                <svg style="margin-left:auto;flex-shrink:0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            @endif
+            @if($jadwalBermasalah->count() > 0)
+            <button type="button" onclick="bukaModalPeringatan('jadwal')" class="peringatan-item" style="flex:1;min-width:240px;display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid #fcd34d;border-radius:10px;background:#fff;cursor:pointer;text-align:left;font-family:inherit">
+                <div style="font-size:26px;font-weight:800;color:#b45309;line-height:1;min-width:34px;text-align:center">{{ $jadwalBermasalah->count() }}</div>
+                <div>
+                    <div style="font-size:13.5px;font-weight:700;color:#1e293b">Jadwal mengajar belum lengkap</div>
+                    <div style="font-size:12px;color:#64748b">Belum ada jam pelajaran, guru pengajar, atau kelas</div>
+                </div>
+                <svg style="margin-left:auto;flex-shrink:0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            @endif
+        </div>
+    </div>
+    @endif
+
     <div class="stat-cards">
         <div class="stat-card">
             <div class="stat-icon green"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
@@ -107,3 +145,142 @@
         </div>
     </div>
 </div>
+
+@if(($totalPeringatan ?? 0) > 0)
+{{-- ── Modal: Kelas Tanpa Wali Kelas ── --}}
+<div id="modal-peringatan-kelas" class="modal-peringatan" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:220;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this) tutupModalPeringatan('kelas')">
+    <div class="card" style="width:100%;max-width:720px;max-height:85vh;display:flex;flex-direction:column;padding:24px;border-radius:var(--radius);box-shadow:0 12px 36px rgba(0,0,0,0.2)">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid #e2e8f0">
+            <div>
+                <h3 style="font-size:18px;font-weight:800;color:#0f172a;display:flex;align-items:center;gap:8px">
+                    <span style="width:10px;height:10px;background:#f59e0b;border-radius:50%;display:inline-block"></span>
+                    Kelas Belum Memiliki Wali Kelas ({{ $kelasTanpaWali->count() }})
+                </h3>
+                <p style="font-size:13px;color:#64748b;margin-top:3px">Berikut daftar kelas yang belum ditetapkan wali kelasnya. Klik <strong>Atur Wali Kelas</strong> untuk membuka halaman Data Kelas.</p>
+            </div>
+            <button type="button" onclick="tutupModalPeringatan('kelas')" aria-label="Tutup" style="border:0;background:none;font-size:24px;color:#64748b;cursor:pointer;line-height:1">&times;</button>
+        </div>
+        <div style="overflow-y:auto;flex:1;padding-right:4px">
+            <table class="data-table" style="width:100%">
+                <thead>
+                    <tr style="background:#f8fafc">
+                        <th style="width:40px">No</th>
+                        <th>Nama Kelas</th>
+                        <th>Tingkat</th>
+                        <th>Jurusan</th>
+                        <th style="text-align:center">Jumlah Siswa</th>
+                        <th style="text-align:center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($kelasTanpaWali as $idx => $k)
+                    <tr>
+                        <td style="color:#94a3b8;font-weight:600">{{ $idx + 1 }}</td>
+                        <td><strong>{{ $k->nama_kelas }}</strong></td>
+                        <td>{{ $k->tingkat_kelas ?: '-' }}</td>
+                        <td>{{ $k->jurusan ?: '-' }}</td>
+                        <td style="text-align:center">{{ $k->siswa_count ?? 0 }}</td>
+                        <td style="text-align:center">
+                            <button type="button" class="btn-primary" onclick="tutupModalPeringatan('kelas'); showPage('data-kelas')" style="padding:6px 14px;font-size:12px;background:#d97706;border-color:#b45309;border-radius:6px;font-weight:700">Atur Wali Kelas</button>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:16px;padding-top:12px;border-top:1px solid #e2e8f0">
+            <button type="button" class="btn-secondary" onclick="tutupModalPeringatan('kelas')">Tutup</button>
+        </div>
+    </div>
+</div>
+
+{{-- ── Modal: Jadwal Mengajar Belum Lengkap ── --}}
+<div id="modal-peringatan-jadwal" class="modal-peringatan" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:220;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this) tutupModalPeringatan('jadwal')">
+    <div class="card" style="width:100%;max-width:900px;max-height:85vh;display:flex;flex-direction:column;padding:24px;border-radius:var(--radius);box-shadow:0 12px 36px rgba(0,0,0,0.2)">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid #e2e8f0">
+            <div>
+                <h3 style="font-size:18px;font-weight:800;color:#0f172a;display:flex;align-items:center;gap:8px">
+                    <span style="width:10px;height:10px;background:#f59e0b;border-radius:50%;display:inline-block"></span>
+                    Jadwal Mengajar Belum Lengkap ({{ $jadwalBermasalah->count() }})
+                </h3>
+                <p style="font-size:13px;color:#64748b;margin-top:3px">Jadwal berikut belum memiliki jam pelajaran, guru pengajar, atau kelas. Klik <strong>Perbaiki</strong> untuk membuka halaman Jadwal Mengajar.</p>
+            </div>
+            <button type="button" onclick="tutupModalPeringatan('jadwal')" aria-label="Tutup" style="border:0;background:none;font-size:24px;color:#64748b;cursor:pointer;line-height:1">&times;</button>
+        </div>
+        <div style="overflow-y:auto;flex:1;padding-right:4px">
+            <table class="data-table" style="width:100%">
+                <thead>
+                    <tr style="background:#f8fafc">
+                        <th style="width:40px">No</th>
+                        <th>Hari</th>
+                        <th>Jam Ke- &amp; Waktu</th>
+                        <th>Kelas</th>
+                        <th>Mata Pelajaran</th>
+                        <th>Guru</th>
+                        <th>Masalah</th>
+                        <th style="text-align:center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($jadwalBermasalah as $idx => $j)
+                    <tr>
+                        <td style="color:#94a3b8;font-weight:600">{{ $idx + 1 }}</td>
+                        <td><strong>{{ $j->hari ?: '-' }}</strong></td>
+                        <td>
+                            @if(!empty($j->jam_ke))
+                                <span class="badge badge-info" style="font-size:11.5px">Jam ke-{{ $j->jam_ke >= 100 ? $j->jam_ke - 100 : $j->jam_ke }}</span>
+                                <span style="font-size:12px;color:#64748b;display:block;margin-top:2px">{{ substr($j->jam_mulai, 0, 5) }} - {{ substr($j->jam_selesai, 0, 5) }}</span>
+                            @else
+                                <span class="badge" style="background:#fee2e2;color:#b91c1c;padding:4px 8px;border-radius:6px;font-size:11.5px;font-weight:700">Belum ada</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if(!empty($j->nama_kelas))
+                                <strong>{{ $j->nama_kelas }}</strong>
+                            @else
+                                <span class="badge" style="background:#fee2e2;color:#b91c1c;padding:4px 8px;border-radius:6px;font-size:11.5px;font-weight:700">Belum ada</span>
+                            @endif
+                        </td>
+                        <td>{{ $j->nama_mapel ?: '-' }}</td>
+                        <td>
+                            @if(!empty($j->nama_guru))
+                                {{ $j->nama_guru }}
+                            @else
+                                <span class="badge" style="background:#fee2e2;color:#b91c1c;padding:4px 8px;border-radius:6px;font-size:11.5px;font-weight:700">Belum ada</span>
+                            @endif
+                        </td>
+                        <td>
+                            @foreach($j->masalah as $m)
+                                <span style="display:inline-block;background:#fef3c7;color:#b45309;border:1px solid #fcd34d;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;margin:2px 2px 0">{{ $m }}</span>
+                            @endforeach
+                        </td>
+                        <td style="text-align:center">
+                            <button type="button" class="btn-primary" onclick="tutupModalPeringatan('jadwal'); showPage('jadwal')" style="padding:6px 14px;font-size:12px;background:#d97706;border-color:#b45309;border-radius:6px;font-weight:700">Perbaiki</button>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:16px;padding-top:12px;border-top:1px solid #e2e8f0">
+            <button type="button" class="btn-secondary" onclick="tutupModalPeringatan('jadwal')">Tutup</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function bukaModalPeringatan(jenis) {
+    const el = document.getElementById('modal-peringatan-' + jenis);
+    if (el) el.style.display = 'flex';
+}
+function tutupModalPeringatan(jenis) {
+    const el = document.getElementById('modal-peringatan-' + jenis);
+    if (el) el.style.display = 'none';
+}
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-peringatan').forEach(m => m.style.display = 'none');
+    }
+});
+</script>
+@endif

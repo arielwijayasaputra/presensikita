@@ -486,17 +486,12 @@ class AbsensiService
             ->keyBy('id_jadwal');
 
         foreach ($jadwalList as $j) {
-<<<<<<< HEAD
             $isUpcoming = $isToday && ($nowTime < $j->jam_mulai);
             if ($isUpcoming) {
                 // Jam belum dimulai hari ini, jangan sinkronkan
                 continue;
             }
 
-            $jurnal = JurnalKelas::where('id_jadwal', $j->id_jadwal)
-                ->whereDate('tanggal', $tanggal)
-                ->first();
-=======
             $jurnal = $jurnalsHariIni->get($j->id_jadwal);
 
             // Auto-Hadir: jam sudah dimulai/selesai tapi belum ada jurnal.
@@ -529,7 +524,6 @@ class AbsensiService
                     }
                 }
             }
->>>>>>> b207d31ad3fa231e78ca83ff3f4ad58b6e7efa9b
 
             if ($jurnal) {
                 // Tambahkan data dispen aktif ke jurnal ini jika bertepatan

@@ -225,6 +225,72 @@ class DashboardController extends Controller
         $totalJadwalAktif = $allJadwal->count();
         $totalJadwalTanpaGuru = $allJadwal->whereNull('id_guru')->filter(fn ($item) => !Mapel::isUpacaraName($item->nama_mapel))->count();
 
+        // ── Peringatan data belum lengkap (dashboard) ──
+        // 1) Kelas yang belum memiliki wali kelas (kosong atau guru-nya sudah dihapus)
+        $kelasTanpaWali = $allKelas->filter(fn ($k) => empty($k->id_wali_kelas) || ! $k->waliKelas)->values();
+
+        // 2) Jadwal mengajar bermasalah: belum ada jam pelajaran / belum ada guru / belum ada kelas.
+        //    Query terpisah dengan LEFT JOIN agar jadwal yang relasinya hilang tetap ikut terdeteksi.
+        $jadwalBermasalah = DB::table('jadwal_mengajar')
+            ->leftJoin('guru', function ($join) {
+                $join->on('jadwal_mengajar.id_guru', '=', 'guru.id_guru')
+                    ->whereNull('guru.deleted_at');
+            })
+            ->leftJoin('mapel', function ($join) {
+                $join->on('jadwal_mengajar.id_mapel', '=', 'mapel.id_mapel')
+                    ->whereNull('mapel.deleted_at');
+            })
+            ->leftJoin('kelas', function ($join) {
+                $join->on('jadwal_mengajar.id_kelas', '=', 'kelas.id_kelas')
+                    ->whereNull('kelas.deleted_at');
+            })
+            ->leftJoin('jam_pelajaran', function ($join) {
+                $join->on('jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
+                    ->whereNull('jam_pelajaran.deleted_at');
+            })
+            ->whereNull('jadwal_mengajar.deleted_at')
+            ->where(function ($q) {
+                $q->whereNull('guru.id_guru')
+                    ->orWhereNull('kelas.id_kelas')
+                    ->orWhereNull('jam_pelajaran.id_jam');
+            })
+            ->select(
+                'jadwal_mengajar.id_jadwal',
+                'jadwal_mengajar.hari',
+                'jadwal_mengajar.id_guru',
+                'jadwal_mengajar.id_kelas',
+                'jadwal_mengajar.id_jam',
+                'guru.nama_guru',
+                'mapel.nama_mapel',
+                'kelas.nama_kelas',
+                'jam_pelajaran.jam_ke',
+                'jam_pelajaran.jam_mulai',
+                'jam_pelajaran.jam_selesai'
+            )
+            ->orderBy('jadwal_mengajar.hari')
+            ->orderBy('jam_pelajaran.jam_ke')
+            ->get()
+            ->map(function ($item) {
+                $masalah = [];
+                if (empty($item->jam_ke)) {
+                    $masalah[] = 'Belum ada jam pelajaran';
+                }
+                if (empty($item->nama_guru) && ! Mapel::isUpacaraName($item->nama_mapel ?? '')) {
+                    $masalah[] = 'Belum ada guru pengajar';
+                }
+                if (empty($item->nama_kelas)) {
+                    $masalah[] = 'Belum ada kelas';
+                }
+                $item->masalah = $masalah;
+
+                return $item;
+            })
+            // Jadwal upacara tanpa guru adalah normal, jadi hanya tampilkan yang benar-benar bermasalah
+            ->filter(fn ($item) => count($item->masalah) > 0)
+            ->values();
+
+        $totalPeringatan = $kelasTanpaWali->count() + $jadwalBermasalah->count();
+
         $adminId = session('auth_admin_id') ?? session('auth_guru_id');
         $admin = ($adminId ? AkunAdmin::find($adminId) : null) ?? AkunAdmin::first();
         $guru = $admin ?? Guru::find(session('auth_guru_id')) ?? Guru::first();
@@ -345,6 +411,9 @@ class DashboardController extends Controller
             'allJadwal',
             'totalJadwalAktif',
             'totalJadwalTanpaGuru',
+            'kelasTanpaWali',
+            'jadwalBermasalah',
+            'totalPeringatan',
             'guru',
             'admin',
             'namaSekolah',

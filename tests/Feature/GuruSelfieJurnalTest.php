@@ -199,5 +199,102 @@ class GuruSelfieJurnalTest extends TestCase
             $guru->forceDelete();
         }
     }
+
+    public function test_guru_can_update_existing_jurnal_without_reuploading_selfie()
+    {
+        Storage::fake('public');
+
+        $today = Carbon::now()->toDateString();
+        $hariMap = Hari::getActiveDays()->pluck('nama_hari', 'nama_inggris')->toArray();
+        $hariIni = $hariMap[now()->format('l')] ?? now()->format('l');
+
+        $uniq = uniqid();
+        $guru = Guru::create([
+            'nama_guru' => 'Guru Test ' . $uniq,
+            'username' => 'guru_' . $uniq,
+            'password_hash' => bcrypt('password'),
+            'nip' => '9999' . rand(1000, 9999),
+            'is_aktif' => 1,
+        ]);
+        $tahun = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::create(['tahun_ajaran' => '2026/2027', 'semester' => 'Ganjil', 'is_aktif' => 1]);
+        $kelas = Kelas::create([
+            'nama_kelas' => 'X Test UpdateSelfie ' . $uniq,
+            'tingkat_kelas' => 'X',
+            'jurusan' => 'RPL',
+            'id_tahun_ajaran' => $tahun->id_tahun_ajaran,
+        ]);
+
+        $siswa1 = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa 1', 'nisn' => '999999' . rand(1000, 9999), 'is_aktif' => 1]);
+        $mapel = Mapel::first() ?? Mapel::create(['nama_mapel' => 'Pemrograman Web', 'kode_mapel' => 'PW', 'kelompok' => 'C']);
+        $jam1 = JamPelajaran::firstOrCreate(
+            ['hari' => $hariIni, 'jam_ke' => 1],
+            ['jam_mulai' => '07:00:00', 'jam_selesai' => '07:45:00']
+        );
+
+        $j1 = JadwalMengajar::create([
+            'id_guru' => $guru->id_guru,
+            'id_mapel' => $mapel->id_mapel,
+            'id_kelas' => $kelas->id_kelas,
+            'id_jam' => $jam1->id_jam,
+            'hari' => $hariIni,
+            'id_tahun_ajaran' => $tahun->id_tahun_ajaran,
+        ]);
+
+        $dummyBase64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+
+        // 1. Simpan jurnal awal dengan selfie
+        $initialPayload = [
+            'id_kelas' => $kelas->id_kelas,
+            'tanggal' => $today,
+            'materi' => 'Materi Sesi 1',
+            'foto_selfie' => $dummyBase64,
+            'absensi' => [
+                $siswa1->id_siswa => ['status' => 'H', 'keterangan' => ''],
+            ],
+        ];
+
+        try {
+            $response1 = $this->withSession([
+                'auth_guru_id' => $guru->id_guru,
+                'auth_role' => 'guru',
+            ])->postJson(route('absensi.simpan'), $initialPayload);
+
+            $response1->assertStatus(200);
+
+            $jurnalAwal = JurnalKelas::where('id_jadwal', $j1->id_jadwal)->whereDate('tanggal', $today)->first();
+            $this->assertNotNull($jurnalAwal);
+            $initialPhotoPath = $jurnalAwal->foto_selfie;
+            $this->assertNotNull($initialPhotoPath);
+
+            // 2. Update jurnal tanpa upload foto_selfie baru
+            $updatePayload = [
+                'id_kelas' => $kelas->id_kelas,
+                'tanggal' => $today,
+                'materi' => 'Materi Sesi 1 Revisi',
+                'absensi' => [
+                    $siswa1->id_siswa => ['status' => 'I', 'keterangan' => 'Ada urusan'],
+                ],
+            ];
+
+            $response2 = $this->withSession([
+                'auth_guru_id' => $guru->id_guru,
+                'auth_role' => 'guru',
+            ])->postJson(route('absensi.simpan'), $updatePayload);
+
+            $response2->assertStatus(200);
+            $response2->assertJson(['status' => 'success']);
+
+            $jurnalUpdated = JurnalKelas::where('id_jadwal', $j1->id_jadwal)->whereDate('tanggal', $today)->first();
+            $this->assertEquals('Materi Sesi 1 Revisi', $jurnalUpdated->materi);
+            $this->assertEquals($initialPhotoPath, $jurnalUpdated->foto_selfie);
+
+        } finally {
+            JurnalKelas::withTrashed()->where('id_jadwal', $j1->id_jadwal)->forceDelete();
+            JadwalMengajar::withTrashed()->where('id_jadwal', $j1->id_jadwal)->forceDelete();
+            $siswa1->forceDelete();
+            $kelas->forceDelete();
+            $guru->forceDelete();
+        }
+    }
 }
 

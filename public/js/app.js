@@ -427,7 +427,10 @@ function handleNativeCameraCapture(input) {
             const retakeBtn = root ? qs('#btn-retake-photo', root) : document.getElementById('btn-retake-photo');
             const statusBadge = root ? qs('#selfie-status-badge', root) : document.getElementById('selfie-status-badge');
 
-            if (inputHidden) inputHidden.value = dataUrl;
+            if (inputHidden) {
+                inputHidden.value = dataUrl;
+                inputHidden.dataset.hasExistingSelfie = '1';
+            }
             if (preview) {
                 preview.src = dataUrl;
                 preview.style.display = 'block';
@@ -513,7 +516,10 @@ function snapSelfiePhoto() {
     const retakeBtn = root ? qs('#btn-retake-photo', root) : document.getElementById('btn-retake-photo');
     const statusBadge = root ? qs('#selfie-status-badge', root) : document.getElementById('selfie-status-badge');
 
-    if (inputHidden) inputHidden.value = dataUrl;
+    if (inputHidden) {
+        inputHidden.value = dataUrl;
+        inputHidden.dataset.hasExistingSelfie = '1';
+    }
     if (preview) {
         preview.src = dataUrl;
         preview.style.display = 'block';
@@ -539,7 +545,10 @@ function retakeSelfiePhoto() {
     const retakeBtn = root ? qs('#btn-retake-photo', root) : document.getElementById('btn-retake-photo');
     const statusBadge = root ? qs('#selfie-status-badge', root) : document.getElementById('selfie-status-badge');
 
-    if (inputHidden) inputHidden.value = '';
+    if (inputHidden) {
+        inputHidden.value = '';
+        inputHidden.dataset.hasExistingSelfie = '0';
+    }
     if (preview) {
         preview.src = '';
         preview.style.display = 'none';
@@ -618,16 +627,19 @@ function muatAbsensiTersimpan(){
             const selfieGridContainer = root ? qs('#selfie-section > div:last-child', root) : document.querySelector('#selfie-section > div:last-child');
             const sudahAbsensiMsg = root ? qs('#sudah-absensi-message', root) : document.getElementById('sudah-absensi-message');
 
-            if (data.jurnal && data.jurnal.foto_selfie_url) {
+            if (data.jurnal && (data.jurnal.foto_selfie_url || data.jurnal.foto_selfie)) {
                 // Sudah ada selfie untuk kelas ini - sembunyikan seluruh UI kamera dan preview
-                if (fotoInput) fotoInput.value = '';
+                if (fotoInput) {
+                    fotoInput.value = '';
+                    fotoInput.dataset.hasExistingSelfie = '1';
+                }
                 if (cameraBox) cameraBox.style.display = 'none';
                 if (startCameraBtn) startCameraBtn.style.display = 'none';
                 if (stopCameraBtn) stopCameraBtn.style.display = 'none';
                 if (retakeBtn) retakeBtn.style.display = 'none';
                 if (nativeCameraInput) nativeCameraInput.style.display = 'none';
                 if (preview) {
-                    preview.src = '';
+                    preview.src = data.jurnal.foto_selfie_url || '';
                     preview.style.display = 'none';
                 }
                 if (previewPlaceholder) previewPlaceholder.style.display = 'none';
@@ -653,7 +665,10 @@ function muatAbsensiTersimpan(){
                 stopSelfieCamera();
             } else {
                 // Belum ada selfie - tampilkan UI kamera normal
-                if (fotoInput) fotoInput.value = '';
+                if (fotoInput) {
+                    fotoInput.value = '';
+                    fotoInput.dataset.hasExistingSelfie = '0';
+                }
                 if (selfieGridContainer) selfieGridContainer.style.display = 'grid';
                 if (cameraBox) cameraBox.style.display = 'flex';
                 if (startCameraBtn) startCameraBtn.style.display = 'inline-flex';
@@ -858,11 +873,14 @@ function submitAbsensi(){
     const kelasId = (root ? qs('#pilih-kelas', root) : document.getElementById('pilih-kelas')).value;
     const tanggal = (root ? qs('#input-tanggal', root) : document.getElementById('input-tanggal')).value;
     const materi = (root ? qs('#input-materi', root) : document.getElementById('input-materi'))?.value || '';
-    const fotoSelfie = (root ? qs('#input-foto-selfie', root) : document.getElementById('input-foto-selfie'))?.value || '';
+    const fotoInputEl = root ? qs('#input-foto-selfie', root) : document.getElementById('input-foto-selfie');
+    const fotoSelfie = fotoInputEl?.value || '';
     const previewSrc = (root ? qs('#selfie-preview', root) : document.getElementById('selfie-preview'))?.getAttribute('src') || '';
+    const hasExistingSelfie = fotoInputEl?.dataset?.hasExistingSelfie === '1'
+        || (document.getElementById('sudah-absensi-message') && document.getElementById('sudah-absensi-message').style.display !== 'none');
 
     // Validasi foto selfie: wajib ada foto selfie baru atau foto tersimpan sebelumnya
-    if (!fotoSelfie && (!previewSrc || previewSrc === '' || previewSrc === window.location.href)) {
+    if (!hasExistingSelfie && !fotoSelfie && (!previewSrc || previewSrc === '' || previewSrc === window.location.href)) {
         Swal.fire({
             icon: 'warning',
             title: 'Foto Selfie Diperlukan',

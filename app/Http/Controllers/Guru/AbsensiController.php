@@ -453,6 +453,17 @@ class AbsensiController extends Controller
                 ->orderByDesc('jurnal_kelas.waktu_input')
                 ->orderByDesc('jurnal_kelas.id_jurnal')
                 ->first();
+
+            if ($jurnal && ! $jurnal->foto_selfie) {
+                $otherSelfie = JurnalKelas::whereIn('id_jadwal', $jadwalIds)
+                    ->whereDate('tanggal', $tanggal)
+                    ->whereNotNull('foto_selfie')
+                    ->where('foto_selfie', '!=', '')
+                    ->value('foto_selfie');
+                if ($otherSelfie) {
+                    $jurnal->foto_selfie = $otherSelfie;
+                }
+            }
         }
 
         $jurnalIds = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
@@ -671,17 +682,16 @@ class AbsensiController extends Controller
                 }
             }
 
-            // Cek apakah sudah ada foto selfie sebelumnya pada blok jadwal ini
+            // Cek apakah sudah ada foto selfie sebelumnya pada jadwal hari ini untuk guru & kelas ini
             $hasExistingSelfie = false;
-            foreach ($targetBlock as $jadwalTarget) {
-                $existingCheck = JurnalKelas::where('id_jadwal', $jadwalTarget->id_jadwal)
-                    ->whereDate('tanggal', $tanggal)
-                    ->whereNotNull('foto_selfie')
-                    ->first();
-                if ($existingCheck) {
-                    $hasExistingSelfie = true;
-                    break;
-                }
+            $allJadwalIds = $jadwalGuruHariIni->pluck('id_jadwal')->toArray();
+            $existingCheck = JurnalKelas::whereIn('id_jadwal', $allJadwalIds)
+                ->whereDate('tanggal', $tanggal)
+                ->whereNotNull('foto_selfie')
+                ->where('foto_selfie', '!=', '')
+                ->first();
+            if ($existingCheck) {
+                $hasExistingSelfie = true;
             }
 
             // Jika belum ada foto selfie sama sekali dan tidak ada foto baru diunggah, tolak
@@ -739,7 +749,7 @@ class AbsensiController extends Controller
                     ->whereDate('tanggal', $tanggal)
                     ->first();
 
-                $fotoToSave = $fotoPath ?? ($existing ? $existing->foto_selfie : null);
+                $fotoToSave = $fotoPath ?? ($existing && $existing->foto_selfie ? $existing->foto_selfie : ($existingCheck ? $existingCheck->foto_selfie : null));
 
                 if ($existing) {
                     if ($existing->trashed()) {

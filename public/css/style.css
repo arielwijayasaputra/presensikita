@@ -1107,6 +1107,10 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     .main-content:not(.is-admin) .mobile-top-save-bar {
         display: block !important;
     }
+    /* Sembunyikan tombol Simpan paling bawah di mobile (guru), cukup pakai tombol atas */
+    .main-content:not(.is-admin) #page-jurnal-absensi #btn-submit-jurnal {
+        display: none !important;
+    }
 }
 
 /* ── HP kecil (≤ 480px) ── */

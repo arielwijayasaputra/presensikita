@@ -476,6 +476,12 @@ class AbsensiService
         $currentTidakHadir = [];
 
         foreach ($jadwalList as $j) {
+            $isUpcoming = $isToday && ($nowTime < $j->jam_mulai);
+            if ($isUpcoming) {
+                // Jam belum dimulai hari ini, jangan sinkronkan
+                continue;
+            }
+
             $jurnal = JurnalKelas::where('id_jadwal', $j->id_jadwal)
                 ->whereDate('tanggal', $tanggal)
                 ->first();

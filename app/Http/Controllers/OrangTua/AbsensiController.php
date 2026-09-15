@@ -150,90 +150,115 @@ class AbsensiController extends Controller
             $isSedangBerlangsung = $isToday && ($nowTime >= $j->jam_mulai && $nowTime < $j->jam_selesai);
             $isUpcoming = $isToday && ($nowTime < $j->jam_mulai);
 
-            $jurnal = JurnalKelas::where('id_jadwal', $j->id_jadwal)
-                ->whereDate('tanggal', $tanggal)
-                ->first();
-
             $status = 'Hadir';
             $statusLabel = 'Hadir';
             $materi = '-';
             $keterangan = '-';
             $badgeClass = 'badge-success';
 
-            // Cek apakah jam pelajaran ini bertepatan dengan dispen siswa
-            $dispenJamIni = $dispenHariIniList->first(function ($d) use ($j) {
-                $wMulai = $d->waktu_keluar 
-                    ? $d->waktu_keluar->format('H:i:s') 
-                    : ($d->created_at ? $d->created_at->format('H:i:s') : '00:00:00');
-                $wSelesai = $d->waktu_masuk 
-                    ? $d->waktu_masuk->format('H:i:s') 
-                    : '23:59:59';
-                return ($j->jam_selesai > $wMulai && $j->jam_mulai < $wSelesai);
-            });
-
-            if ($dispenJamIni) {
-                // Jam ini bertepatan saat siswa mengambil dispen / izin / sakit piket
-                $alasanText = $dispenJamIni->alasan ? ': ' . $dispenJamIni->alasan : '';
-                if ($dispenJamIni->jenis_absen === 'D') {
-                    $status = 'Dispen';
-                    $statusLabel = 'Dispensasi';
-                    $badgeClass = 'badge-dispen';
-                    $keterangan = 'Dispen' . $alasanText;
-                } elseif ($dispenJamIni->jenis_absen === 'S') {
-                    $status = 'Sakit';
-                    $statusLabel = 'Sakit';
-                    $badgeClass = 'badge-warning';
-                    $keterangan = 'Sakit' . $alasanText;
-                } elseif ($dispenJamIni->jenis_absen === 'I') {
-                    $status = 'Izin';
-                    $statusLabel = 'Izin';
-                    $badgeClass = 'badge-info';
-                    $keterangan = 'Izin' . $alasanText;
-                }
-                if ($jurnal) {
-                    $materi = $jurnal->materi ?? 'Pembelajaran Harian';
-                }
-            } elseif ($jurnal) {
-                // Jam ini memiliki data jurnal tersimpan (guru pengampu SUDAH mengabsen)
-                $materi = $jurnal->materi ?? 'Pembelajaran Harian';
-
-                $th = JurnalSiswaTidakHadir::where('id_jurnal', $jurnal->id_jurnal)
-                    ->where('id_siswa', $siswa->id_siswa)
-                    ->first();
-
-                if ($th) {
-                    $ketLower = strtolower($th->keterangan ?? '');
-                    if ($th->status === 'S') {
-                        $status = 'Sakit';
-                        $statusLabel = 'Sakit';
-                        $badgeClass = 'badge-warning';
-                    } elseif ($th->status === 'D' || str_starts_with($ketLower, 'd:') || str_contains($ketLower, 'dispensasi')) {
-                        $status = 'Dispen';
-                        $statusLabel = 'Dispensasi';
-                        $badgeClass = 'badge-dispen';
-                    } elseif ($th->status === 'I') {
-                        $status = 'Izin';
-                        $statusLabel = 'Izin';
-                        $badgeClass = 'badge-info';
-                    } else {
-                        $status = 'Alpa';
-                        $statusLabel = 'Alpa';
-                        $badgeClass = 'badge-danger';
-                    }
-                    $keterangan = $th->keterangan ?: '-';
-                } else {
-                    $status = 'Hadir';
-                    $statusLabel = 'Hadir';
-                    $badgeClass = 'badge-success';
-                }
-            } else {
-                // Guru pada jam ini BELUM / TIDAK mengisi jurnal atau mengabsen
-                // Status HARUS 'Belum Diabsen' / 'Menunggu Absensi', BUKAN 'Hadir'
-                $status = $isSelesai ? 'Belum Diabsen' : 'Menunggu';
-                $statusLabel = $isSelesai ? 'Belum Diabsen' : 'Menunggu Absensi';
+            // Jika jam belum dimulai (akan datang hari ini), status adalah "Menunggu Jam"
+            if ($isUpcoming) {
+                $status = 'Menunggu';
+                $statusLabel = 'Menunggu Jam';
                 $badgeClass = 'badge-secondary';
                 $materi = '-';
                 $keterangan = '-';
+            } else {
+                // Cek apakah jam pelajaran ini bertepatan dengan dispen siswa
+                $dispenJamIni = $dispenHariIniList->first(function ($d) use ($j) {
+                    $wMulai = $d->waktu_keluar 
+                        ? $d->waktu_keluar->format('H:i:s') 
+                        : ($d->created_at ? $d->created_at->format('H:i:s') : '00:00:00');
+                    $wSelesai = $d->waktu_masuk 
+                        ? $d->waktu_masuk->format('H:i:s') 
+                        : '23:59:59';
+                    return ($j->jam_selesai > $wMulai && $j->jam_mulai < $wSelesai);
+                });
+
+                // Cari jurnal yang persis untuk id_jadwal ini
+                $jurnal = JurnalKelas::where('id_jadwal', $j->id_jadwal)
+                    ->whereDate('tanggal', $tanggal)
+                    ->first();
+
+                // Jika belum ada jurnal langsung untuk jam ini, cari jurnal terakhir pada sesi mapel yang sama hari ini hingga jam ini
+                if (! $jurnal) {
+                    $jurnal = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
+                        ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
+                        ->whereNull('jurnal_kelas.deleted_at')
+                        ->whereNull('jadwal_mengajar.deleted_at')
+                        ->where('jadwal_mengajar.id_kelas', $siswa->id_kelas)
+                        ->where('jadwal_mengajar.id_mapel', $j->id_mapel ?? null)
+                        ->where('jadwal_mengajar.hari', $hariIndo)
+                        ->whereDate('jurnal_kelas.tanggal', $tanggal)
+                        ->where('jam_pelajaran.jam_ke', '<=', $j->jam_ke)
+                        ->orderByDesc('jam_pelajaran.jam_ke')
+                        ->select('jurnal_kelas.*')
+                        ->first();
+                }
+
+                if ($dispenJamIni) {
+                    // Jam ini bertepatan saat siswa mengambil dispen / izin / sakit piket
+                    $alasanText = $dispenJamIni->alasan ? ': ' . $dispenJamIni->alasan : '';
+                    if ($dispenJamIni->jenis_absen === 'D') {
+                        $status = 'Dispen';
+                        $statusLabel = 'Dispensasi';
+                        $badgeClass = 'badge-dispen';
+                        $keterangan = 'Dispen' . $alasanText;
+                    } elseif ($dispenJamIni->jenis_absen === 'S') {
+                        $status = 'Sakit';
+                        $statusLabel = 'Sakit';
+                        $badgeClass = 'badge-warning';
+                        $keterangan = 'Sakit' . $alasanText;
+                    } elseif ($dispenJamIni->jenis_absen === 'I') {
+                        $status = 'Izin';
+                        $statusLabel = 'Izin';
+                        $badgeClass = 'badge-info';
+                        $keterangan = 'Izin' . $alasanText;
+                    }
+                    if ($jurnal) {
+                        $materi = $jurnal->materi ?? 'Pembelajaran Harian';
+                    }
+                } elseif ($jurnal) {
+                    // Jam ini memiliki data jurnal tersimpan (guru pengampu SUDAH mengabsen)
+                    $materi = $jurnal->materi ?? 'Pembelajaran Harian';
+
+                    $th = JurnalSiswaTidakHadir::where('id_jurnal', $jurnal->id_jurnal)
+                        ->where('id_siswa', $siswa->id_siswa)
+                        ->first();
+
+                    if ($th) {
+                        $ketLower = strtolower($th->keterangan ?? '');
+                        if ($th->status === 'S') {
+                            $status = 'Sakit';
+                            $statusLabel = 'Sakit';
+                            $badgeClass = 'badge-warning';
+                        } elseif ($th->status === 'D' || str_starts_with($ketLower, 'd:') || str_contains($ketLower, 'dispensasi')) {
+                            $status = 'Dispen';
+                            $statusLabel = 'Dispensasi';
+                            $badgeClass = 'badge-dispen';
+                        } elseif ($th->status === 'I') {
+                            $status = 'Izin';
+                            $statusLabel = 'Izin';
+                            $badgeClass = 'badge-info';
+                        } else {
+                            $status = 'Alpa';
+                            $statusLabel = 'Alpa';
+                            $badgeClass = 'badge-danger';
+                        }
+                        $keterangan = $th->keterangan ?: '-';
+                    } else {
+                        $status = 'Hadir';
+                        $statusLabel = 'Hadir';
+                        $badgeClass = 'badge-success';
+                    }
+                } else {
+                    // Guru pada jam ini BELUM / TIDAK mengisi jurnal atau mengabsen
+                    $status = $isSelesai ? 'Belum Diabsen' : 'Menunggu';
+                    $statusLabel = $isSelesai ? 'Belum Diabsen' : 'Menunggu Absensi';
+                    $badgeClass = 'badge-secondary';
+                    $materi = '-';
+                    $keterangan = '-';
+                }
             }
 
             $sessionState = 'finished';
@@ -246,7 +271,9 @@ class AbsensiController extends Controller
                 $sessionLabel = 'Akan Datang';
             }
 
-            if (isset($statHarian[$status])) {
+            if ($isUpcoming) {
+                $statHarian['Menunggu']++;
+            } elseif (isset($statHarian[$status])) {
                 $statHarian[$status]++;
             } else {
                 $statHarian['Hadir']++;

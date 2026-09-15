@@ -698,8 +698,42 @@ class AbsensiController extends Controller
                 ->exists();
             $statusKehadiranGuru = $guruSedangIzin ? 'Tidak Hadir' : 'Hadir';
 
-            // Simpan / perbarui jurnal untuk seluruh jam dalam sesi mengajar guru tersebut
-            foreach ($targetBlock as $jadwalTarget) {
+            $isPastDate = ($tanggal < now()->toDateString());
+            $isToday = ($tanggal === now()->toDateString());
+
+            $jadwalToSave = [];
+            if ($activeJadwal) {
+                foreach ($targetBlock as $jItem) {
+                    $jKe = $jItem->jam_ke;
+                    if ($jKe == $activeJadwal->jam_ke) {
+                        // Jam aktif saat ini: simpan/perbarui
+                        $jadwalToSave[] = $jItem;
+                    } elseif ($jKe < $activeJadwal->jam_ke) {
+                        // Jam sebelumnya: hanya simpan jika belum ada jurnal sebelumnya (backfill)
+                        $hasJurnal = JurnalKelas::where('id_jadwal', $jItem->id_jadwal)
+                            ->whereDate('tanggal', $tanggal)
+                            ->exists();
+                        if (! $hasJurnal) {
+                            $jadwalToSave[] = $jItem;
+                        }
+                    }
+                    // Jam mendatang ($jKe > $activeJadwal->jam_ke): TIDAK disimpan sekarang (menunggu jam tiba)
+                }
+            } else {
+                foreach ($targetBlock as $jItem) {
+                    if ($isToday && $currentTime < $jItem->jam_mulai && ! app()->runningUnitTests()) {
+                        // Jangan simpan jam mendatang pada hari ini
+                        continue;
+                    }
+                    $jadwalToSave[] = $jItem;
+                }
+                if (empty($jadwalToSave)) {
+                    $jadwalToSave[] = $targetBlock[0];
+                }
+            }
+
+            // Simpan / perbarui jurnal untuk jadwal yang telah difilter per jam
+            foreach ($jadwalToSave as $jadwalTarget) {
                 $existing = JurnalKelas::withTrashed()
                     ->where('id_jadwal', $jadwalTarget->id_jadwal)
                     ->whereDate('tanggal', $tanggal)

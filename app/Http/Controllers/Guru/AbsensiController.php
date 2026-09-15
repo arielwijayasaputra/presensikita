@@ -223,6 +223,13 @@ class AbsensiController extends Controller
             ->orderByDesc('jam_masuk')
             ->get();
 
+        // Khusus Dashboard Guru: Real-time hanya untuk kelas yang sedang aktif diajar saat ini
+        $activeKelasIdNow = $activeJadwalItem ? (int) $activeJadwalItem->id_kelas : null;
+        $activeKelasObj = $activeKelasIdNow ? Kelas::find($activeKelasIdNow) : null;
+        $siswaTerlambatKelasAktif = $activeKelasIdNow
+            ? $siswaTerlambatHariIni->filter(fn ($s) => $s->siswa && (int) $s->siswa->id_kelas === $activeKelasIdNow)
+            : collect();
+
         return view('guru.dashboard', compact(
             'tahunAjaran',
             'kelases',
@@ -250,7 +257,9 @@ class AbsensiController extends Controller
             'laporanBulan',
             'laporanTahun',
             'hariIni',
-            'siswaTerlambatHariIni'
+            'siswaTerlambatHariIni',
+            'siswaTerlambatKelasAktif',
+            'activeKelasObj'
         ));
     }
 
@@ -908,5 +917,56 @@ class AbsensiController extends Controller
             'total' => $data->count(),
             'data' => $data,
         ]);
+    }
+
+    public static function getActiveKelasIdForGuru(?int $guruId): ?int
+    {
+        if (! $guruId) {
+            return null;
+        }
+
+        $hariMap = Hari::getActiveDays()->pluck('nama_hari', 'nama_inggris')->toArray();
+        $todayName = $hariMap[now()->format('l')] ?? now()->format('l');
+        $currentTime = now()->format('H:i:s');
+
+        $jadwals = DB::table('jadwal_mengajar')
+            ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
+            ->where('jadwal_mengajar.id_guru', $guruId)
+            ->where('jadwal_mengajar.hari', $todayName)
+            ->whereNull('jadwal_mengajar.deleted_at')
+            ->whereNull('jam_pelajaran.deleted_at')
+            ->select('jadwal_mengajar.id_kelas', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
+            ->orderBy('jam_pelajaran.jam_ke')
+            ->get();
+
+        foreach ($jadwals->groupBy('id_kelas') as $kelasId => $items) {
+            $blocks = [];
+            $currentBlock = [];
+            $prevJamKe = null;
+            foreach ($items->sortBy('jam_ke') as $j) {
+                if ($prevJamKe === null || $j->jam_ke === $prevJamKe + 1) {
+                    $currentBlock[] = $j;
+                } else {
+                    if (! empty($currentBlock)) {
+                        $blocks[] = $currentBlock;
+                    }
+                    $currentBlock = [$j];
+                }
+                $prevJamKe = $j->jam_ke;
+            }
+            if (! empty($currentBlock)) {
+                $blocks[] = $currentBlock;
+            }
+
+            foreach ($blocks as $block) {
+                $bStart = collect($block)->min('jam_mulai');
+                $bEnd = collect($block)->max('jam_selesai');
+                if ($currentTime >= $bStart && $currentTime <= $bEnd) {
+                    return (int) $kelasId;
+                }
+            }
+        }
+
+        return null;
     }
 }

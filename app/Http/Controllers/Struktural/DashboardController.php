@@ -370,6 +370,27 @@ class DashboardController extends Controller
                 ->pluck('total', 'id_siswa')
                 ->toArray();
 
+            $keterlambatanBySiswa = $waliKeterlambatanList->groupBy('id_siswa');
+
+            $waliSiswaTerlambatSummary = $waliSiswaList->map(function ($siswa) use ($keterlambatanBySiswa) {
+                $items = $keterlambatanBySiswa->get($siswa->id_siswa, collect());
+                return [
+                    'id_siswa' => $siswa->id_siswa,
+                    'nisn' => $siswa->nisn ?: '-',
+                    'nama_siswa' => $siswa->nama_siswa,
+                    'jenis_kelamin' => $siswa->jenis_kelamin ?: 'L',
+                    'total_telat' => $items->count(),
+                    'riwayat' => $items->map(function ($item) {
+                        return [
+                            'tanggal' => date('d-m-Y', strtotime($item->tanggal)),
+                            'jam_masuk' => substr($item->jam_masuk, 0, 5) . ' WIB',
+                            'jam_ke' => 'Jam ke-' . $item->jam_ke,
+                            'alasan' => $item->alasan ?: '-',
+                        ];
+                    })->values()->toArray(),
+                ];
+            });
+
             // 4. Rekap Jurnal Pembelajaran Kelas (Filter Tanggal Bebas)
             $waliTglMulaiJurnal = $request->get('jurnal_tgl_mulai', date('Y-01-01'));
             $waliTglSelesaiJurnal = $request->get('jurnal_tgl_selesai', date('Y-m-d'));
@@ -405,6 +426,7 @@ class DashboardController extends Controller
             $waliRekapAbsensiRange = [];
             $waliKeterlambatanList = collect();
             $waliTotalTerlambatPerSiswa = [];
+            $waliSiswaTerlambatSummary = collect();
             $waliTglMulaiJurnal = date('Y-01-01');
             $waliTglSelesaiJurnal = date('Y-m-d');
             $waliRekapJurnalList = collect();
@@ -437,7 +459,7 @@ class DashboardController extends Controller
             'waliKelasObj', 'waliKelasId', 'waliSiswaList', 'waliBulan', 'waliTahun', 'waliRekapData', 'dispenDanIzinKelas', 'siswaPerluPerhatian',
             'waliTanggalHariIni', 'waliAbsensiHariIniList', 'waliStatsHariIni', 'waliJadwalHariIni', 'waliStatsJurnalHariIni',
             'waliTglMulaiAbsen', 'waliTglSelesaiAbsen', 'waliRekapAbsensiRange',
-            'waliKeterlambatanList', 'waliTotalTerlambatPerSiswa',
+            'waliKeterlambatanList', 'waliTotalTerlambatPerSiswa', 'waliSiswaTerlambatSummary',
             'waliTglMulaiJurnal', 'waliTglSelesaiJurnal', 'waliRekapJurnalList',
             'satpamTanggal', 'satpamDispenRiwayat',
             'waGatewayAktif', 'waGatewayEndpoint', 'waPublicUrl', 'waNomorBot', 'waNomorWakaKesiswaan', 'waNomorWakaSdm', 'waNomorKepsek', 'waBotStatus'

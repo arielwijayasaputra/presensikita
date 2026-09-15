@@ -34,12 +34,29 @@ class NotifikasiController extends Controller
                 }
             });
         } elseif ($guruId) {
-            // Guru Pengajar HANYA melihat notifikasi miliknya (id_guru = guruId) atau pengumuman broadcast sistem (id_guru NULL DAN id_kelas NULL)
-            $query->where(function ($q) use ($guruId) {
-                $q->where('id_guru', $guruId)
-                  ->orWhere(function ($sub) {
-                      $sub->whereNull('id_guru')->whereNull('id_kelas');
-                  });
+            $isGuru = session('auth_role') === 'guru';
+            $activeKelasId = $request->get('kelas_id') ?: ($isGuru ? \App\Http\Controllers\Guru\AbsensiController::getActiveKelasIdForGuru((int) $guruId) : null);
+
+            $query->where(function ($q) use ($guruId, $isGuru, $activeKelasId) {
+                $q->where(function ($sub) {
+                    $sub->whereNull('id_guru')->whereNull('id_kelas');
+                });
+
+                if ($isGuru) {
+                    $q->orWhere(function ($sub) use ($guruId, $activeKelasId) {
+                        $sub->where('id_guru', $guruId);
+                        if ($activeKelasId) {
+                            $sub->where(function ($sub2) use ($activeKelasId) {
+                                $sub2->whereNull('id_kelas')
+                                     ->orWhere('id_kelas', $activeKelasId);
+                            });
+                        } else {
+                            $sub->whereNull('id_kelas');
+                        }
+                    });
+                } else {
+                    $q->orWhere('id_guru', $guruId);
+                }
             });
         } else {
             // Role lainnya hanya melihat broadcast global

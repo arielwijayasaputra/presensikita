@@ -191,7 +191,7 @@ class SiswaTerlambatTest extends TestCase
             'auth_nama_guru' => $guruKelas->nama_guru,
             'auth_is_admin' => 0,
             'auth_role' => 'guru',
-        ])->getJson(route('notifikasi.index'));
+        ])->getJson(route('notifikasi.index', ['kelas_id' => $kelas->id_kelas]));
 
         $notifResponse->assertStatus(200);
         $guruNotifs = collect($notifResponse->json('notifikasi'))->where('id_kelas', $kelas->id_kelas);
@@ -327,8 +327,9 @@ class SiswaTerlambatTest extends TestCase
         ])->get(route('walikelas.index'));
 
         $waliResponse->assertStatus(200);
-        $waliResponse->assertSee('Riwayat Siswa Terlambat');
-        $waliResponse->assertSee('JUMLAH TERLAMBAT');
+        $waliResponse->assertSee('Daftar Siswa Terlambat');
+        $waliResponse->assertSee('Jumlah Telat');
+        $waliResponse->assertSee('Lihat Detail');
         $waliResponse->assertSee($siswa->nama_siswa);
         $waliResponse->assertSee('1 Kali');
 

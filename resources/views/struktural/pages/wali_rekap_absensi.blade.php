@@ -181,66 +181,67 @@
         </div>
     </div>
 
-    <!-- ══ TABEL RIWAYAT SISWA TERLAMBAT KELAS ══ -->
+    <!-- ══ TABEL REKAPITULASI SISWA TERLAMBAT KELAS ══ -->
     <div class="card" style="padding:22px 24px; margin-top:24px">
         <div class="card-header" style="margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px">
             <div>
-                <div class="card-title" style="font-size:16px; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:8px">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    Riwayat Siswa Terlambat
+                <div class="card-title" style="font-size:16px; font-weight:700; color:#0f172a">
+                    Daftar Siswa Terlambat Kelas {{ $namaKelasAktif }}
                 </div>
                 <div style="font-size:12px; color:#64748b; margin-top:2px">
-                    Daftar siswa di kelas <strong>{{ $namaKelasAktif }}</strong> yang tercatat datang terlambat pada periode terpilih
+                    Periode: <strong>{{ date('d-m-Y', strtotime($waliTglMulaiAbsen)) }}</strong> s/d <strong>{{ date('d-m-Y', strtotime($waliTglSelesaiAbsen)) }}</strong> (Total Siswa Terlambat: {{ $waliSiswaTerlambatSummary->where('total_telat', '>', 0)->count() }})
                 </div>
             </div>
 
-            <div>
-                <span class="badge" style="background:#ffedd5; color:#c2410c; border:1px solid #fdba74; font-size:12px; font-weight:700; padding:5px 12px; border-radius:99px; display:inline-flex; align-items:center; gap:6px">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    Total: {{ count($waliKeterlambatanList ?? []) }} Siswa Terlambat
-                </span>
+            <div style="position:relative; width:250px">
+                <input type="text" id="search-wali-rekap-terlambat-tbl" onkeyup="filterTable('search-wali-rekap-terlambat-tbl', 'table-wali-rekap-terlambat-tbl')" placeholder="Cari siswa / NISN..." class="filter-input" style="width:100%; padding:7px 12px 7px 32px; font-size:12.5px; border-radius:8px; border:1px solid #cbd5e1">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" style="position:absolute; left:10px; top:9px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             </div>
         </div>
 
         <div style="overflow-x:auto">
-            <table class="data-table" id="table-wali-rekap-terlambat-tbl" style="min-width:750px">
+            <table class="data-table" id="table-wali-rekap-terlambat-tbl" style="width:100%; table-layout:fixed; min-width:700px">
                 <thead>
                     <tr>
-                        <th>SISWA</th>
-                        <th>KELAS</th>
-                        <th>WAKTU DATANG</th>
-                        <th>MULAI MASUK</th>
-                        <th>ALASAN</th>
-                        <th style="text-align:center">JUMLAH TERLAMBAT</th>
+                        <th style="width:50px; text-align:center">No</th>
+                        <th style="width:130px">NISN</th>
+                        <th>Nama Lengkap Siswa</th>
+                        <th style="text-align:center; width:65px; white-space:nowrap">L/P</th>
+                        <th style="text-align:center; width:130px; white-space:nowrap">Jumlah Telat</th>
+                        <th style="text-align:center; width:130px; white-space:nowrap">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($waliKeterlambatanList ?? [] as $item)
+                    @forelse($waliSiswaTerlambatSummary ?? [] as $idx => $item)
                         <tr>
-                            <td>
-                                <strong>{{ $item->siswa->nama_siswa ?? '-' }}</strong>
-                                @if(!empty($item->siswa->nisn))
-                                    <span style="font-size:11px; color:#64748b; display:block; font-family:monospace">NISN: {{ $item->siswa->nisn }}</span>
+                            <td style="color:#94a3b8; font-weight:600">{{ $idx + 1 }}</td>
+                            <td style="font-family:monospace; font-size:12.5px; color:#64748b">{{ $item['nisn'] ?? '-' }}</td>
+                            <td><strong style="color:#0f172a">{{ $item['nama_siswa'] }}</strong></td>
+                            <td style="text-align:center">{{ $item['jenis_kelamin'] ?? 'L' }}</td>
+                            <td style="text-align:center">
+                                @if(($item['total_telat'] ?? 0) > 0)
+                                    <span class="badge" style="background:#ffedd5; color:#c2410c; border:1px solid #fed7aa; font-weight:700; font-size:12px; padding:3px 8px; border-radius:6px">
+                                        {{ $item['total_telat'] }} Kali
+                                    </span>
+                                @else
+                                    <span style="color:#94a3b8; font-size:12px">0 Kali</span>
                                 @endif
                             </td>
-                            <td>{{ $item->siswa->kelas->nama_kelas ?? $namaKelasAktif }}</td>
-                            <td>
-                                {{ substr($item->jam_masuk, 0, 5) }} WIB ({{ \Carbon\Carbon::parse($item->tanggal)->format('d-m-Y') }})
-                            </td>
-                            <td>
-                                <span class="badge badge-info" style="font-size:11.5px; padding:3px 8px">Jam ke-{{ $item->jam_ke }}</span>
-                            </td>
-                            <td>{{ $item->alasan ?: '-' }}</td>
                             <td style="text-align:center">
-                                <span class="badge" style="background:#ffedd5; color:#c2410c; border:1px solid #fed7aa; font-weight:700; font-size:12px; padding:4px 10px; border-radius:6px">
-                                    {{ $waliTotalTerlambatPerSiswa[$item->id_siswa] ?? 1 }} Kali
-                                </span>
+                                @if(($item['total_telat'] ?? 0) > 0)
+                                    <button type="button" class="btn-primary" onclick='lihatDetailTelatSiswa(@json($item))' style="font-size:11.5px; padding:4px 10px; border-radius:6px; background:#2563eb; color:#fff; border:none; cursor:pointer; font-weight:700; display:inline-flex; align-items:center; gap:5px; white-space:nowrap">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        <span>Lihat Detail</span>
+                                    </button>
+                                @else
+                                    <span style="color:#94a3b8; font-size:12px">-</span>
+                                @endif
                             </td>
                         </tr>
                     @empty
                         <tr>
                             <td colspan="6" style="text-align:center; color:#64748b; padding:24px">
-                                Tidak ada catatan siswa terlambat pada rentang tanggal terpilih.
+                                Belum ada data siswa pada kelas ini.
                             </td>
                         </tr>
                     @endforelse
@@ -250,3 +251,73 @@
     </div>
 
 </div>
+
+<!-- ══ SCRIPT POPUP DETAIL KETERLAMBATAN SISWA ══ -->
+<script>
+function lihatDetailTelatSiswa(data) {
+    if (!data || !data.riwayat || data.riwayat.length === 0) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Detail Keterlambatan',
+            text: 'Tidak ada rincian riwayat keterlambatan.',
+            confirmButtonColor: '#2563eb'
+        });
+        return;
+    }
+
+    let rowsHtml = data.riwayat.map((r, idx) => `
+        <tr style="border-bottom: 1px solid #e2e8f0; font-size: 13px;">
+            <td style="padding: 10px 8px; text-align: center; color: #64748b; font-weight: 600;">${idx + 1}</td>
+            <td style="padding: 10px 8px; font-weight: 600; color: #1e293b;">${r.tanggal}</td>
+            <td style="padding: 10px 8px; color: #0369a1; font-weight: 600;">${r.jam_masuk}</td>
+            <td style="padding: 10px 8px; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 6px; font-size: 11.5px; font-weight: 700;">${r.jam_ke}</span></td>
+            <td style="padding: 10px 8px; color: #475569; text-align: left;">${r.alasan}</td>
+        </tr>
+    `).join('');
+
+    let contentHtml = `
+        <div style="text-align: left; margin-top: 6px;">
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                        <div style="font-size: 15px; font-weight: 800; color: #0f172a;">${data.nama_siswa}</div>
+                        <div style="font-size: 12px; color: #64748b; font-family: monospace;">NISN: ${data.nisn} &bull; ${data.jenis_kelamin === 'P' ? 'Perempuan' : 'Laki-Laki'}</div>
+                    </div>
+                    <div>
+                        <span style="background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; font-weight: 800; font-size: 12px; padding: 4px 10px; border-radius: 8px;">
+                            Total: ${data.total_telat} Kali Terlambat
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="max-height: 320px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px;">
+                <table style="width: 100%; border-collapse: collapse; font-family: inherit;">
+                    <thead>
+                        <tr style="background: #f1f5f9; text-align: left; font-size: 12px; color: #475569; border-bottom: 1px solid #cbd5e1;">
+                            <th style="padding: 8px; text-align: center; width: 40px;">No</th>
+                            <th style="padding: 8px;">Tanggal Telat</th>
+                            <th style="padding: 8px;">Jam Datang</th>
+                            <th style="padding: 8px; text-align: center;">Mulai Masuk</th>
+                            <th style="padding: 8px;">Alasan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rowsHtml}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+
+    Swal.fire({
+        title: '<div style="font-size: 18px; font-weight: 800; color: #0f172a;">Detail Keterlambatan Siswa</div>',
+        html: contentHtml,
+        width: '650px',
+        showCloseButton: true,
+        showConfirmButton: true,
+        confirmButtonText: 'Tutup',
+        confirmButtonColor: '#2563eb'
+    });
+}
+</script>

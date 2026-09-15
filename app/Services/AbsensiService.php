@@ -413,6 +413,10 @@ class AbsensiService
      * - Default kehadiran adalah Hadir (H).
      * - Setiap jam yang sudah berjalan/selesai, jika belum memiliki jurnal sendiri,
      *   akan otomatis menyimpan presensi sesuai dengan status absensi terakhir pada saat itu.
+     * - Auto-Hadir: jam yang sudah dimulai/selesai dan belum memiliki jurnal,
+     *   otomatis dibuat (semua siswa Hadir, materi disalin dari jurnal lain yang sudah ada)
+     *   selama guru pengampunya sudah pernah mengisi jurnal lain pada kelas & hari yang sama.
+     * - Jam yang belum dimulai tidak dibuatkan jurnal (tetap menunggu absensi).
      * - Jurnal jam sebelumnya tidak akan tertimpa saat ada perubahan absensi di jam berikutnya.
      */
     public function syncPresensiPerJam(int $kelasId, string $tanggal): void
@@ -472,10 +476,17 @@ class AbsensiService
             ->whereDate('tanggal_dispen', $tanggal)
             ->get();
 
-        // Status berjalan ketidakhadiran siswa (default: kosong -> semua Hadir)
-        $currentTidakHadir = [];
+        // Preload seluruh jurnal kelas & tanggal ini agar sinkronisasi efisien.
+        $jurnalsHariIni = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
+            ->whereNull('jadwal_mengajar.deleted_at')
+            ->where('jadwal_mengajar.id_kelas', $kelasId)
+            ->whereDate('jurnal_kelas.tanggal', $tanggal)
+            ->select('jurnal_kelas.*')
+            ->get()
+            ->keyBy('id_jadwal');
 
         foreach ($jadwalList as $j) {
+<<<<<<< HEAD
             $isUpcoming = $isToday && ($nowTime < $j->jam_mulai);
             if ($isUpcoming) {
                 // Jam belum dimulai hari ini, jangan sinkronkan
@@ -485,6 +496,40 @@ class AbsensiService
             $jurnal = JurnalKelas::where('id_jadwal', $j->id_jadwal)
                 ->whereDate('tanggal', $tanggal)
                 ->first();
+=======
+            $jurnal = $jurnalsHariIni->get($j->id_jadwal);
+
+            // Auto-Hadir: jam sudah dimulai/selesai tapi belum ada jurnal.
+            // Jika guru pengampu sudah submit jurnal lain hari ini untuk kelas yang sama,
+            // buat jurnal otomatis (semua siswa Hadir, salin materi dari jurnal sebelumnya).
+            if (! $jurnal && $j->id_guru) {
+                $isSelesai = $isPastDate || ($isToday && $nowTime >= $j->jam_selesai);
+                $isSedangBerlangsung = $isToday && $nowTime >= $j->jam_mulai && $nowTime < $j->jam_selesai;
+
+                if ($isSelesai || $isSedangBerlangsung) {
+                    $source = $jurnalsHariIni
+                        ->filter(fn ($juk) => (int) $juk->id_jadwal !== (int) $j->id_jadwal && (int) $juk->id_guru === (int) $j->id_guru)
+                        ->sortByDesc('waktu_input')
+                        ->first();
+
+                    if ($source) {
+                        $auto = JurnalKelas::create([
+                            'id_jadwal' => $j->id_jadwal,
+                            'id_guru' => $j->id_guru,
+                            'tanggal' => $tanggal,
+                            'status_kehadiran_guru' => $source->status_kehadiran_guru,
+                            'foto_selfie' => null,
+                            'materi' => $source->materi,
+                            'jumlah_hadir' => $totalSiswa,
+                            'waktu_input' => now(),
+                        ]);
+
+                        $jurnalsHariIni->put($j->id_jadwal, $auto);
+                        $jurnal = $auto;
+                    }
+                }
+            }
+>>>>>>> b207d31ad3fa231e78ca83ff3f4ad58b6e7efa9b
 
             if ($jurnal) {
                 // Tambahkan data dispen aktif ke jurnal ini jika bertepatan

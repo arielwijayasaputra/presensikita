@@ -887,7 +887,11 @@ html.theme-transitioning *::after {
 
 /* Hardcoded light bg on inputs (readonly / disabled look) */
 [data-theme="dark"] input[style*="background:#f8fafc"],
-[data-theme="dark"] input[style*="background: #f8fafc"] {
+[data-theme="dark"] input[style*="background: #f8fafc"],
+[data-theme="dark"] input[style*="background:#f1f5f9"],
+[data-theme="dark"] input[style*="background: #f1f5f9"],
+[data-theme="dark"] select[style*="background:#f1f5f9"],
+[data-theme="dark"] select[style*="background: #f1f5f9"] {
     background: #1e293b !important;
     color: #94a3b8 !important;
     border-color: var(--border) !important;

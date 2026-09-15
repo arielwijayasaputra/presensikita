@@ -33,8 +33,8 @@
         </div>
         <div class="jurnal-form-grid">
             <div class="form-field">
-                <label for="pilih-kelas">Pilih Kelas</label>
-                <select id="pilih-kelas" class="form-select" onchange="loadSiswaByKelas(this.value)" {{ !$canInputJurnal ? 'disabled' : '' }}>
+                <label for="pilih-kelas">Kelas</label>
+                <select id="pilih-kelas" class="form-select" disabled style="background:#f1f5f9;color:#64748b;cursor:not-allowed;border-color:#cbd5e1;" title="Kelas otomatis mengikuti jadwal mengajar Anda">
                     @foreach($kelases as $k)
                     <option value="{{ $k->id_kelas }}" {{ (isset($selectedKelas->id_kelas) && $selectedKelas->id_kelas == $k->id_kelas) ? 'selected' : '' }}>
                         {{ $k->nama_kelas }}
@@ -44,7 +44,7 @@
             </div>
             <div class="form-field">
                 <label for="input-tanggal">Tanggal Pelaksanaan</label>
-                <input type="date" id="input-tanggal" class="form-input" value="{{ date('Y-m-d') }}" readonly>
+                <input type="date" id="input-tanggal" class="form-input" value="{{ date('Y-m-d') }}" readonly disabled style="background:#f1f5f9;color:#64748b;cursor:not-allowed;border-color:#cbd5e1;" title="Tanggal otomatis hari ini">
             </div>
             <div class="form-field">
                 <label for="input-materi">Materi Pembelajaran</label>
@@ -141,6 +141,10 @@
 
     {{-- ── Kontainer Tabel Absensi Siswa (Hanya tampil saat jam mengajar aktif) ── --}}
     <div id="absensi-table-wrapper" class="table-card" style="margin-top:16px;{{ !$canInputJurnal ? 'display:none;' : '' }}">
+        {{-- Tombol Simpan khusus Mobile (ditampilkan di atas) --}}
+        <div id="mobile-top-save" class="mobile-top-save-bar" style="display:none;padding:14px 16px;border-bottom:1px solid #e2e8f0;background:#f0fdf4">
+            <button id="btn-submit-jurnal-top" class="btn-submit-jurnal" onclick="submitAbsensi()" style="width:100%;text-align:center" {{ !$canInputJurnal ? 'disabled' : '' }}>Simpan Jurnal &amp; Absensi</button>
+        </div>
         <div class="absensi-toolbar" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #e2e8f0">
             <div>
                 <h3 style="font-size:16px;font-weight:700;color:#1e293b;margin:0" id="guru-absensi-subtitle">Daftar Absensi Siswa - {{ $selectedKelas->nama_kelas }}</h3>

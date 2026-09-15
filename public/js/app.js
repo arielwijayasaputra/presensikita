@@ -149,6 +149,7 @@ function updateGuruJurnalUI(data, targetKelasId) {
 
     const materiInput = page.querySelector('#input-materi');
     const submitButton = page.querySelector('#btn-submit-jurnal');
+    const submitButtonTop = page.querySelector('#btn-submit-jurnal-top');
     const startCameraBtn = page.querySelector('#btn-start-camera');
     const tandaiButtons = page.querySelectorAll('.btn-tandai');
     const formCard = page.querySelector('#jurnal-form-card');
@@ -158,7 +159,7 @@ function updateGuruJurnalUI(data, targetKelasId) {
     let alert = page.querySelector('#jadwal-status-alert');
 
     // Controls disability
-    [materiInput, submitButton, startCameraBtn, ...tandaiButtons].forEach(control => {
+    [materiInput, submitButton, submitButtonTop, startCameraBtn, ...tandaiButtons].forEach(control => {
         if (control) control.disabled = !canInput;
     });
     page.querySelectorAll('#siswa-tbody input').forEach(control => { control.disabled = !canInput; });
@@ -610,45 +611,85 @@ function muatAbsensiTersimpan(){
             const previewPlaceholder = root ? qs('#preview-placeholder', root) : document.getElementById('preview-placeholder');
             const retakeBtn = root ? qs('#btn-retake-photo', root) : document.getElementById('btn-retake-photo');
             const statusBadge = root ? qs('#selfie-status-badge', root) : document.getElementById('selfie-status-badge');
+            const cameraBox = root ? qs('#camera-box', root) : document.getElementById('camera-box');
+            const startCameraBtn = root ? qs('#btn-start-camera', root) : document.getElementById('btn-start-camera');
+            const stopCameraBtn = root ? qs('#btn-stop-camera', root) : document.getElementById('btn-stop-camera');
+            const nativeCameraInput = root ? qs('#native-camera-input', root) : document.getElementById('native-camera-input');
+            const selfieGridContainer = root ? qs('#selfie-section > div:last-child', root) : document.querySelector('#selfie-section > div:last-child');
+            const sudahAbsensiMsg = root ? qs('#sudah-absensi-message', root) : document.getElementById('sudah-absensi-message');
 
             if (data.jurnal && data.jurnal.foto_selfie_url) {
+                // Sudah ada selfie untuk kelas ini - sembunyikan seluruh UI kamera dan preview
                 if (fotoInput) fotoInput.value = '';
+                if (cameraBox) cameraBox.style.display = 'none';
+                if (startCameraBtn) startCameraBtn.style.display = 'none';
+                if (stopCameraBtn) stopCameraBtn.style.display = 'none';
+                if (retakeBtn) retakeBtn.style.display = 'none';
+                if (nativeCameraInput) nativeCameraInput.style.display = 'none';
                 if (preview) {
-                    preview.src = data.jurnal.foto_selfie_url;
-                    preview.style.display = 'block';
+                    preview.src = '';
+                    preview.style.display = 'none';
                 }
                 if (previewPlaceholder) previewPlaceholder.style.display = 'none';
-                if (retakeBtn) retakeBtn.style.display = 'inline-flex';
+                // Sembunyikan seluruh grid kamera & preview
+                if (selfieGridContainer) selfieGridContainer.style.display = 'none';
                 if (statusBadge) {
-                    statusBadge.style.background = '#dbeafe';
-                    statusBadge.style.color = '#1d4ed8';
-                    statusBadge.style.borderColor = '#bfdbfe';
-                    statusBadge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Foto Tersimpan`;
+                    statusBadge.style.background = '#dcfce7';
+                    statusBadge.style.color = '#15803d';
+                    statusBadge.style.borderColor = '#bbf7d0';
+                    statusBadge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Sudah Absensi`;
                 }
+                // Tampilkan pesan 'Sudah Absensi' di bawah header selfie section
+                const selfieSection = root ? qs('#selfie-section', root) : document.getElementById('selfie-section');
+                if (sudahAbsensiMsg) {
+                    sudahAbsensiMsg.style.display = 'flex';
+                } else if (selfieSection) {
+                    const msg = document.createElement('div');
+                    msg.id = 'sudah-absensi-message';
+                    msg.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:10px;padding:20px;background:#f0fdf4;border:2px solid #bbf7d0;border-radius:10px;text-align:center;margin-top:12px';
+                    msg.innerHTML = `<div><div style="width:44px;height:44px;border-radius:50%;background:#dcfce7;color:#16a34a;display:flex;align-items:center;justify-content:center;margin:0 auto 8px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><div style="font-size:14px;font-weight:700;color:#15803d">Sudah Absensi</div><div style="font-size:12px;color:#16a34a;margin-top:2px">Foto selfie untuk kelas ini sudah diambil</div></div>`;
+                    selfieSection.appendChild(msg);
+                }
+                stopSelfieCamera();
             } else {
+                // Belum ada selfie - tampilkan UI kamera normal
                 if (fotoInput) fotoInput.value = '';
+                if (selfieGridContainer) selfieGridContainer.style.display = 'grid';
+                if (cameraBox) cameraBox.style.display = 'flex';
+                if (startCameraBtn) startCameraBtn.style.display = 'inline-flex';
+                if (stopCameraBtn) stopCameraBtn.style.display = 'none';
+                if (retakeBtn) retakeBtn.style.display = 'none';
+                if (nativeCameraInput) nativeCameraInput.style.display = 'none';
                 if (preview) {
                     preview.src = '';
                     preview.style.display = 'none';
                 }
                 if (previewPlaceholder) previewPlaceholder.style.display = 'block';
-                if (retakeBtn) retakeBtn.style.display = 'none';
                 if (statusBadge) {
                     statusBadge.style.background = '#fee2e2';
                     statusBadge.style.color = '#b91c1c';
                     statusBadge.style.borderColor = '#fecaca';
                     statusBadge.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Belum Ambil Foto`;
                 }
+                // Hapus pesan 'Sudah Absensi' jika ada
+                if (sudahAbsensiMsg) {
+                    sudahAbsensiMsg.style.display = 'none';
+                }
             }
 
             const submitBtn = root ? qs('#btn-submit-jurnal', root) : document.getElementById('btn-submit-jurnal');
+            const submitBtnTop = root ? qs('#btn-submit-jurnal-top', root) : document.getElementById('btn-submit-jurnal-top');
             const formHeader = root ? qs('#jurnal-form-card .card-heading', root) : document.querySelector('#jurnal-form-card .card-heading');
             let modeBadge = root ? qs('#jurnal-mode-badge', root) : document.getElementById('jurnal-mode-badge');
 
             if (data.jurnal) {
                 if (submitBtn) {
-                    submitBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:5px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit Jurnal &amp; Absensi`;
+                    submitBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:5px"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Simpan Perubahan Jurnal &amp; Absensi`;
                     submitBtn.style.background = 'linear-gradient(135deg, #d97706, #f59e0b)';
+                }
+                if (submitBtnTop) {
+                    submitBtnTop.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:5px"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Simpan Perubahan Jurnal &amp; Absensi`;
+                    submitBtnTop.style.background = 'linear-gradient(135deg, #d97706, #f59e0b)';
                 }
                 if (formHeader && !modeBadge) {
                     modeBadge = document.createElement('span');
@@ -662,6 +703,10 @@ function muatAbsensiTersimpan(){
                 if (submitBtn) {
                     submitBtn.textContent = 'Simpan Jurnal & Absensi';
                     submitBtn.style.background = '';
+                }
+                if (submitBtnTop) {
+                    submitBtnTop.textContent = 'Simpan Jurnal & Absensi';
+                    submitBtnTop.style.background = '';
                 }
                 if (modeBadge) {
                     modeBadge.remove();

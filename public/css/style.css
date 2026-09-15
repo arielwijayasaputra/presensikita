@@ -1096,12 +1096,16 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     .main-content:not(.is-admin) .rekap-chip {
         justify-content: center;
     }
-
     /* Toast & fixed notifications */
     .main-content:not(.is-admin) [style*="position:fixed"][style*="right:20px"] {
         right: 12px !important;
         left: 12px !important;
         max-width: calc(100vw - 24px) !important;
+    }
+
+    /* Tombol Simpan di atas untuk mobile */
+    .main-content:not(.is-admin) .mobile-top-save-bar {
+        display: block !important;
     }
 }
 

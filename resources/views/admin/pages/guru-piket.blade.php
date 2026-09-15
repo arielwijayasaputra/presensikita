@@ -73,6 +73,12 @@
                 @endforeach
             </div>
 
+            <div style="display:flex;justify-content:flex-end;padding-top:8px">
+                <button type="submit" form="guru-piket-form" class="btn-primary" style="padding:10px 28px;border-radius:10px;font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:8px;background:#ea580c;border-color:#ea580c">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                    Simpan Penugasan
+                </button>
+            </div>
         </form>
     </div>
 </div>

@@ -1731,6 +1731,92 @@
             </div>
         </div>
 
+        <!-- RIWAYAT & REKAPITULASI KETERLAMBATAN SISWA -->
+        <div class="card-main-box" style="margin-top:28px">
+            <div class="card-box-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px">
+                <div class="card-box-title" style="margin:0">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Riwayat &amp; Rekapitulasi Keterlambatan Siswa
+                </div>
+                <div>
+                    <span class="badge" style="background:#ffedd5; color:#c2410c; border:1px solid #fdba74; font-size:12px; font-weight:700; padding:5px 12px; border-radius:99px; display:inline-flex; align-items:center; gap:6px">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Total: {{ isset($riwayatKeterlambatan) ? $riwayatKeterlambatan->count() : 0 }} Kali Terlambat
+                    </span>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th style="width:45px">No</th>
+                            <th>Tanggal</th>
+                            <th style="text-align:center">Waktu Datang</th>
+                            <th style="text-align:center">Mulai Masuk</th>
+                            <th>Alasan Keterlambatan</th>
+                            <th>Guru Piket</th>
+                            <th style="text-align:center">Status</th>
+                            <th style="text-align:center">Bukti / Foto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $namaHariIndo = [
+                                'Sunday' => 'Minggu',
+                                'Monday' => 'Senin',
+                                'Tuesday' => 'Selasa',
+                                'Wednesday' => 'Rabu',
+                                'Thursday' => 'Kamis',
+                                'Friday' => 'Jumat',
+                                'Saturday' => 'Sabtu',
+                            ];
+                        @endphp
+                        @forelse($riwayatKeterlambatan ?? [] as $idx => $rk)
+                        <tr>
+                            <td style="font-weight:700;">{{ $idx + 1 }}</td>
+                            <td>
+                                <strong>{{ \Carbon\Carbon::parse($rk->tanggal)->format('d-m-Y') }}</strong>
+                                <span style="font-size:11px; color:#64748b; display:block;">{{ $namaHariIndo[\Carbon\Carbon::parse($rk->tanggal)->format('l')] ?? \Carbon\Carbon::parse($rk->tanggal)->format('l') }}</span>
+                            </td>
+                            <td style="text-align:center">
+                                <span style="font-weight:700; color:#1e293b">{{ substr($rk->jam_masuk, 0, 5) }} WIB</span>
+                            </td>
+                            <td style="text-align:center">
+                                <span class="badge badge-info" style="font-size:11.5px; padding:3px 8px">Jam ke-{{ $rk->jam_ke }}</span>
+                            </td>
+                            <td>
+                                <span style="color:#334155">{{ $rk->alasan ?: '-' }}</span>
+                            </td>
+                            <td>
+                                <span style="color:#475569; font-size:12.5px">{{ $rk->guruPiket->nama_guru ?? '-' }}</span>
+                            </td>
+                            <td style="text-align:center">
+                                <span class="badge" style="background:#ffedd5; color:#c2410c; font-size:11.5px; padding:4px 9px; font-weight:700; border-radius:6px">Diizinkan Masuk</span>
+                            </td>
+                            <td style="text-align:center">
+                                @if($rk->foto_surat)
+                                    <button type="button" class="btn-lihat-surat" onclick="showSuratPopup('{{ Storage::disk('public')->url($rk->foto_surat) }}')" style="font-size:11.5px; font-weight:700; color:#2563eb; background:#dbeafe; border:1.5px solid #93c5fd; padding:4px 10px; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:4px">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        Lihat Foto
+                                    </button>
+                                @else
+                                    <span style="color:#94a3b8; font-size:12px">-</span>
+                                @endif
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="8" style="text-align:center; color:#64748b; padding:24px;">
+                                Belum ada catatan riwayat keterlambatan siswa.
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- RIWAYAT DISPENSASI & SURAT IZIN SISWA -->
         <div class="card" style="padding:22px 24px; margin-top:28px; background:#fff; border-radius:var(--radius); border:1px solid #e2e8f0; box-shadow:var(--shadow)">
             <div style="margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px">

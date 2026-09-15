@@ -389,6 +389,18 @@ class AbsensiController extends Controller
             ];
         }
 
+        $riwayatKeterlambatan = KeterlambatanSiswa::with('guruPiket')
+            ->where('id_siswa', $siswa->id_siswa)
+            ->where('status', 'diizinkan')
+            ->orderByDesc('tanggal')
+            ->orderByDesc('jam_masuk')
+            ->get();
+
+        $totalTerlambatBulanIni = $riwayatKeterlambatan
+            ->filter(function ($k) use ($bulanFilter, $tahunFilter) {
+                return date('m', strtotime($k->tanggal)) === $bulanFilter && date('Y', strtotime($k->tanggal)) === $tahunFilter;
+            })->count();
+
         return [
             'siswa' => $siswa,
             'tahunAjaran' => $tahunAjaran,
@@ -406,6 +418,8 @@ class AbsensiController extends Controller
             'rekapPerMapel' => $rekapPerMapel,
             'dispenHariIni' => $dispenHariIni,
             'riwayatDispen' => $riwayatDispen,
+            'riwayatKeterlambatan' => $riwayatKeterlambatan,
+            'totalTerlambatBulanIni' => $totalTerlambatBulanIni,
             'waktuServer' => now()->format('H:i:s'),
         ];
     }

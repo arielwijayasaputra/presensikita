@@ -293,7 +293,18 @@ class SiswaTerlambatTest extends TestCase
         $this->assertEquals('Hadir', $itemJam2['status']);
         $this->assertEquals('Hadir', $itemJam2['status_label']);
 
-        // Skenario 6: Guru Piket menghapus catatan keterlambatan
+        // Verifikasi Orang Tua Dashboard Web View memuat riwayat keterlambatan
+        $ortuViewResponse = $this->withSession([
+            'auth_siswa_id' => $siswa->id_siswa,
+            'auth_nisn' => $siswa->nisn,
+            'auth_nama_siswa' => $siswa->nama_siswa,
+            'auth_role' => 'orangtua',
+        ])->get(route('orangtua.index', ['tanggal' => $today]));
+
+        $ortuViewResponse->assertStatus(200);
+        $ortuViewResponse->assertSee('Riwayat &amp; Rekapitulasi Keterlambatan Siswa', false);
+        $ortuViewResponse->assertSee('Kali Terlambat');
+        $ortuViewResponse->assertSee('Macet parah karena pohon tumbang');
         $keterlambatan = KeterlambatanSiswa::where('id_siswa', $siswa->id_siswa)->first();
         $this->assertNotNull($keterlambatan);
 

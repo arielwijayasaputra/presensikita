@@ -20,15 +20,40 @@ class NotifikasiController extends Controller
      */
     public function index(Request $request)
     {
-        // Ambil notifikasi dari DB, terbaru dulu, max 20
-        $rows = DB::table('notifikasi')
-            ->orderByDesc('created_at')
+        $guruId = session('auth_guru_id');
+        $isAdmin = (session('auth_is_admin') == 1) || (session('auth_role') === 'admin');
+
+        $query = DB::table('notifikasi');
+
+        if ($isAdmin) {
+            // Admin melihat notifikasi yang ditujukan untuk admin (id_guru NULL) atau notifikasi miliknya
+            $query->where(function ($q) use ($guruId) {
+                $q->whereNull('id_guru');
+                if ($guruId) {
+                    $q->orWhere('id_guru', $guruId);
+                }
+            });
+        } elseif ($guruId) {
+            // Guru Pengajar HANYA melihat notifikasi miliknya (id_guru = guruId) atau pengumuman broadcast sistem (id_guru NULL DAN id_kelas NULL)
+            $query->where(function ($q) use ($guruId) {
+                $q->where('id_guru', $guruId)
+                  ->orWhere(function ($sub) {
+                      $sub->whereNull('id_guru')->whereNull('id_kelas');
+                  });
+            });
+        } else {
+            // Role lainnya hanya melihat broadcast global
+            $query->whereNull('id_guru')->whereNull('id_kelas');
+        }
+
+        $rows = $query->orderByDesc('created_at')
             ->limit(20)
             ->get();
 
         $items = $rows->map(function ($n) {
             return [
                 'id' => $n->id,
+                'id_kelas' => $n->id_kelas,
                 'judul' => $n->judul,
                 'pesan' => $n->pesan,
                 'tipe' => $n->tipe ?? 'info',  // info | success | warning | error
@@ -52,12 +77,21 @@ class NotifikasiController extends Controller
      */
     public function markRead(Request $request)
     {
+        $guruId = session('auth_guru_id');
+        $isAdmin = (session('auth_is_admin') == 1) || (session('auth_role') === 'admin');
         $ids = $request->input('ids', []);
+
         if (! empty($ids)) {
             DB::table('notifikasi')->whereIn('id', $ids)->update(['is_read' => 1]);
         } else {
-            // Tandai semua sudah dibaca
-            DB::table('notifikasi')->update(['is_read' => 1]);
+            if ($isAdmin) {
+                DB::table('notifikasi')->whereNull('id_guru')->update(['is_read' => 1]);
+                if ($guruId) {
+                    DB::table('notifikasi')->where('id_guru', $guruId)->update(['is_read' => 1]);
+                }
+            } elseif ($guruId) {
+                DB::table('notifikasi')->where('id_guru', $guruId)->update(['is_read' => 1]);
+            }
         }
 
         return response()->json(['status' => 'success']);

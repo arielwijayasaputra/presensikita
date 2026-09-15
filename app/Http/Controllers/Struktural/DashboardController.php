@@ -13,6 +13,7 @@ use App\Models\JamPelajaran;
 use App\Models\JurnalKelas;
 use App\Models\JurnalSiswaTidakHadir;
 use App\Models\Kelas;
+use App\Models\KeterlambatanSiswa;
 use App\Models\Pengaturan;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
@@ -62,6 +63,9 @@ class DashboardController extends Controller
         $absensiSiswaTerbaru = DispenSiswa::with(['siswa.kelas'])
             ->where('id_guru_piket', session('auth_guru_id'))
             ->whereIn('jenis_absen', ['S', 'I'])
+            ->latest()->limit(25)->get();
+        $keterlambatanTerbaru = KeterlambatanSiswa::with(['siswa.kelas', 'guruPiket'])
+            ->where('id_guru_piket', session('auth_guru_id'))
             ->latest()->limit(25)->get();
         $hariMap = Hari::getActiveDays()->pluck('nama_hari', 'urutan')->toArray();
         $hariIni = $hariMap[now()->dayOfWeekIso];
@@ -403,7 +407,7 @@ class DashboardController extends Controller
             'totalKelasHariIni',
             'totalGuruHariIni',
             'jamAktif',
-            'guruAktif', 'izinGuruTerbaru', 'isGuruPiket', 'isWaliKelas', 'kelasesWali', 'kelases', 'selectedKelas', 'laporanBulan', 'laporanTahun', 'laporanRekap', 'siswaAktif', 'dispenTerbaru', 'absensiSiswaTerbaru', 'isSatpam', 'dispenHariIni',
+            'guruAktif', 'izinGuruTerbaru', 'isGuruPiket', 'isWaliKelas', 'kelasesWali', 'kelases', 'selectedKelas', 'laporanBulan', 'laporanTahun', 'laporanRekap', 'siswaAktif', 'dispenTerbaru', 'absensiSiswaTerbaru', 'keterlambatanTerbaru', 'isSatpam', 'dispenHariIni',
             'isWakaSDM', 'sdmTanggal', 'sdmJadwal', 'sdmIzinGuru', 'sdmStatHadir', 'sdmStatTidakHadir', 'sdmStatBelumIsi', 'sdmBulan', 'sdmTahun', 'sdmRekapGuru',
             'waliKelasObj', 'waliKelasId', 'waliSiswaList', 'waliBulan', 'waliTahun', 'waliRekapData', 'dispenDanIzinKelas', 'siswaPerluPerhatian',
             'waliTanggalHariIni', 'waliAbsensiHariIniList', 'waliStatsHariIni', 'waliJadwalHariIni', 'waliStatsJurnalHariIni',

@@ -15,6 +15,31 @@
         <div id="jadwal-status-alert" class="alert-card" style="background:#fef2f2;border-color:#fecaca;margin-bottom:16px"><div class="alert-text"><p style="color:#b91c1c">Di luar jam mengajar aktif</p><span style="color:#7f1d1d">Pengisian jurnal dan absensi hanya dapat dilakukan saat jam mengajar Anda sedang berlangsung sesuai jadwal yang telah ditentukan.</span></div></div>
     @endif
 
+    @php
+        $siswaTerlambatKelasIni = isset($siswaTerlambatHariIni) ? $siswaTerlambatHariIni->filter(function($s) use ($selectedKelas) {
+            return $s->siswa && $s->siswa->id_kelas == ($selectedKelas->id_kelas ?? null);
+        }) : collect();
+    @endphp
+
+    @if($siswaTerlambatKelasIni->isNotEmpty())
+        <div class="alert-terlambat-banner" onclick="tampilkanModalSiswaTerlambat('{{ $selectedKelas->id_kelas ?? '' }}', '{{ addslashes($selectedKelas->nama_kelas ?? '') }}')">
+            <div class="alert-terlambat-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="alert-terlambat-content">
+                <div class="alert-terlambat-header">
+                    <p class="alert-terlambat-title">Pemberitahuan Siswa Terlambat di Kelas {{ $selectedKelas->nama_kelas ?? '' }} ({{ $siswaTerlambatKelasIni->count() }} Siswa)</p>
+                    <span class="alert-terlambat-btn">
+                        Lihat Daftar Siswa &rarr;
+                    </span>
+                </div>
+                <span class="alert-terlambat-desc">
+                    Terdapat siswa di kelas ini yang datang terlambat dan telah diizinkan Guru Piket. Status absensi jam sebelum masuk otomatis "Masuk Terlambat" dan jam berikutnya "Hadir".
+                </span>
+            </div>
+        </div>
+    @endif
+
     <div id="jurnal-form-card" class="card" style="padding:24px;{{ !$canInputJurnal ? 'opacity:.6' : '' }}">
         <div class="card-heading" style="font-size:15px;font-weight:700;color:#1e293b;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
             <span>Form Jurnal Mengajar</span>

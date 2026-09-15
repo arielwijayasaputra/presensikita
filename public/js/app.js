@@ -2750,13 +2750,17 @@ function tampilkanNotifikasi() {
                 items.forEach(n => {
                     const ic = iconMap[n.tipe] || iconMap.info;
                     const bg = n.is_read ? '#f8fafc' : '#eff6ff';
+                    const isTerlambat = (n.judul || '').toLowerCase().includes('terlambat');
                     htmlIsi += `
-                        <div style="display:flex;gap:12px;padding:12px;background:${bg};border-radius:10px;border:1px solid #e2e8f0;align-items:flex-start">
+                        <div style="display:flex;gap:12px;padding:12px;background:${bg};border-radius:10px;border:1px solid #e2e8f0;align-items:flex-start;${isTerlambat ? 'cursor:pointer;' : ''}" ${isTerlambat ? `onclick="Swal.close();tampilkanModalSiswaTerlambat(${n.id_kelas ? `'${n.id_kelas}'` : 'null'});"` : ''}>
                             <div style="width:34px;height:34px;background:${ic.bg};border-radius:8px;display:flex;align-items:center;justify-content:center;color:${ic.color};flex-shrink:0;margin-top:2px">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${ic.svg}</svg>
                             </div>
-                            <div>
-                                <div style="font-size:13px;font-weight:700;color:#1e293b">${n.judul}</div>
+                            <div style="flex:1">
+                                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                                    <div style="font-size:13px;font-weight:700;color:#1e293b">${n.judul}</div>
+                                    ${isTerlambat ? '<span style="font-size:10.5px;color:#ea580c;background:#fff7ed;padding:2px 6px;border-radius:4px;font-weight:700;border:1px solid #fed7aa">Lihat Detail &rarr;</span>' : ''}
+                                </div>
                                 <div style="font-size:12px;color:#64748b;margin-top:2px">${n.pesan}</div>
                                 <div style="font-size:11px;color:#94a3b8;margin-top:4px">${n.waktu_relatif || ''}</div>
                             </div>
@@ -2806,6 +2810,108 @@ function tampilkanNotifikasi() {
             });
         });
 }
+
+window.tampilkanModalSiswaTerlambat = function(kelasId, namaKelas) {
+    let url = '/guru/siswa-terlambat';
+    const params = [];
+    if (kelasId) {
+        params.push('kelas_id=' + encodeURIComponent(kelasId));
+    }
+    if (params.length > 0) {
+        url += '?' + params.join('&');
+    }
+
+    fetch(url)
+        .then(r => r.json())
+        .then(data => {
+            const list = data.data || [];
+            const headerTitle = namaKelas ? `Siswa Terlambat - ${namaKelas}` : 'Daftar Siswa Terlambat Hari Ini';
+            if (list.length === 0) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Tidak Ada Siswa Terlambat',
+                    text: namaKelas 
+                        ? `Tidak ada siswa yang tercatat terlambat di kelas ${namaKelas} untuk hari ini.` 
+                        : 'Belum ada data siswa yang tercatat terlambat di kelas Anda untuk hari ini.',
+                    confirmButtonColor: '#2563eb'
+                });
+                return;
+            }
+
+            let html = '<div class="siswa-terlambat-modal-list">';
+            list.forEach(s => {
+                html += `
+                    <div class="siswa-terlambat-modal-item">
+                        <div class="siswa-terlambat-modal-item-top">
+                            <div class="siswa-terlambat-modal-name">${s.nama_siswa}</div>
+                            <span class="badge" style="background:#ffedd5;color:#c2410c;font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap">Mulai Jam ke-${s.jam_ke}</span>
+                        </div>
+                        <div class="siswa-terlambat-modal-grid">
+                            <div><span style="color:#64748b">Kelas:</span> <strong style="color:#1e293b">${s.nama_kelas}</strong></div>
+                            <div><span style="color:#64748b">Waktu Datang:</span> <strong style="color:#1e293b">${s.jam_masuk} WIB</strong></div>
+                            <div style="grid-column: 1 / -1;"><span style="color:#64748b">Guru Piket:</span> <strong style="color:#1e293b">${s.guru_piket}</strong></div>
+                        </div>
+                        <div class="siswa-terlambat-modal-alasan">
+                            <strong>Alasan:</strong> ${s.alasan || 'Tanpa keterangan'}
+                        </div>
+                        ${s.foto_surat_url ? `
+                            <div style="margin-top:6px">
+                                <a href="${s.foto_surat_url}" target="_blank" rel="noopener" class="siswa-terlambat-modal-link">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:-2px;margin-right:3px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                    Lihat Foto Surat / Bukti
+                                </a>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            html += '</div>';
+
+            Swal.fire({
+                title: `<div class="siswa-terlambat-modal-title">
+                    <span>${headerTitle}</span>
+                    <span class="siswa-terlambat-modal-count">${list.length} Siswa</span>
+                </div>`,
+                html: html,
+                confirmButtonText: 'Tutup',
+                confirmButtonColor: '#2563eb',
+                customClass: { 
+                    popup: 'custom-swal-popup siswa-terlambat-popup'
+                }
+            });
+        })
+        .catch(() => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: 'Gagal memuat data siswa terlambat.',
+                confirmButtonColor: '#dc2626'
+            });
+        });
+};
+
+function perbaruiBadgeNotifikasi() {
+    fetch(window.notifUrl || '/admin/notifikasi')
+        .then(r => r.json())
+        .then(data => {
+            const badge = document.getElementById('notif-badge-count');
+            const jumlahBaru = data.total_baru || (data.notifikasi ? data.notifikasi.filter(n => !n.is_read).length : 0);
+            if (badge) {
+                if (jumlahBaru > 0) {
+                    badge.textContent = jumlahBaru > 99 ? '99+' : jumlahBaru;
+                    badge.style.display = 'flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+        })
+        .catch(() => {});
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    perbaruiBadgeNotifikasi();
+    setInterval(perbaruiBadgeNotifikasi, 30000);
+});
 
 window.showSelfiePopup = function(url, title) {
     Swal.fire({

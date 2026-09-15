@@ -2147,3 +2147,366 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
         border-bottom-color: #1e3a5f !important;
     }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   FITUR SISWA TERLAMBAT — Komponen & Responsif Mobile
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Banner Notifikasi Terlambat (Guru Dashboard & Jurnal) */
+.alert-terlambat-banner {
+    background: linear-gradient(135deg, #fff7ed 0%, #fffbeb 100%);
+    border: 1px solid #fdba74;
+    border-radius: var(--radius, 12px);
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 2px 8px rgba(249, 115, 22, 0.08);
+}
+.alert-terlambat-banner:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(249, 115, 22, 0.15);
+}
+.alert-terlambat-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #f97316;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.alert-terlambat-content {
+    flex: 1;
+    min-width: 0;
+}
+.alert-terlambat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.alert-terlambat-title {
+    color: #9a3412;
+    font-weight: 700;
+    font-size: 14px;
+    margin: 0;
+}
+.alert-terlambat-btn {
+    background: #ffedd5;
+    color: #c2410c;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 99px;
+    border: 1px solid #fdba74;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.alert-terlambat-desc {
+    color: #c2410c;
+    font-size: 12.5px;
+    margin-top: 4px;
+    display: block;
+    line-height: 1.45;
+}
+
+/* Dark mode untuk banner terlambat */
+[data-theme="dark"] .alert-terlambat-banner {
+    background: linear-gradient(135deg, rgba(154, 52, 18, 0.25) 0%, rgba(124, 45, 18, 0.15) 100%);
+    border-color: #9a3412;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+[data-theme="dark"] .alert-terlambat-title {
+    color: #fed7aa;
+}
+[data-theme="dark"] .alert-terlambat-desc {
+    color: #fdba74;
+}
+[data-theme="dark"] .alert-terlambat-btn {
+    background: #431407;
+    color: #ffedd5;
+    border-color: #9a3412;
+}
+
+/* Form Input Siswa Terlambat (Guru Piket) */
+.siswa-terlambat-form-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+.btn-submit-terlambat {
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 13.5px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: auto;
+}
+
+/* Modal Popup Siswa Terlambat (SweetAlert2) */
+.custom-swal-popup.siswa-terlambat-popup {
+    width: 540px !important;
+    max-width: 95vw !important;
+    padding: 20px 16px !important;
+    border-radius: 16px !important;
+    box-sizing: border-box !important;
+}
+.siswa-terlambat-modal-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 16px;
+    font-weight: 800;
+    color: #0f172a;
+    gap: 8px;
+    box-sizing: border-box;
+}
+.siswa-terlambat-modal-count {
+    font-size: 12px;
+    background: #ffedd5;
+    color: #c2410c;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.siswa-terlambat-modal-list {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 4px 2px;
+    -webkit-overflow-scrolling: touch;
+}
+.siswa-terlambat-modal-item {
+    background: #ffffff;
+    border: 1px solid #fed7aa;
+    border-left: 4px solid #f97316;
+    border-radius: 10px;
+    padding: 12px 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.siswa-terlambat-modal-item-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.siswa-terlambat-modal-name {
+    font-weight: 800;
+    font-size: 14px;
+    color: #1e293b;
+    word-break: break-word;
+}
+.siswa-terlambat-modal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 6px 12px;
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+.siswa-terlambat-modal-alasan {
+    background: #fff7ed;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #9a3412;
+    line-height: 1.4;
+    word-break: break-word;
+}
+.siswa-terlambat-modal-link {
+    font-size: 12px;
+    color: #2563eb;
+    text-decoration: underline;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Dark mode untuk modal */
+[data-theme="dark"] .siswa-terlambat-modal-title {
+    border-bottom-color: #334155;
+    color: #f1f5f9;
+}
+[data-theme="dark"] .siswa-terlambat-modal-item {
+    background: #1e293b;
+    border-color: #475569;
+    border-left-color: #f97316;
+}
+[data-theme="dark"] .siswa-terlambat-modal-name {
+    color: #f8fafc;
+}
+[data-theme="dark"] .siswa-terlambat-modal-grid {
+    color: #94a3b8;
+}
+[data-theme="dark"] .siswa-terlambat-modal-alasan {
+    background: #2d1e18;
+    color: #fdba74;
+}
+
+/* ── Breakpoint Tablet & Ponsel (< 992px) ── */
+@media (max-width: 992px) {
+    .siswa-terlambat-form-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* ── Breakpoint Ponsel (< 768px) ── */
+@media (max-width: 768px) {
+    .alert-terlambat-banner {
+        padding: 12px 14px;
+        gap: 10px;
+    }
+    .alert-terlambat-icon {
+        width: 34px;
+        height: 34px;
+    }
+    .alert-terlambat-title {
+        font-size: 13.5px;
+    }
+    .alert-terlambat-desc {
+        font-size: 12px;
+    }
+    .alert-terlambat-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 6px 12px;
+        margin-top: 4px;
+        box-sizing: border-box;
+    }
+
+    .siswa-terlambat-form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    .btn-submit-terlambat {
+        width: 100%;
+        padding: 12px 16px;
+    }
+
+    #page-siswa-terlambat .card {
+        padding: 16px 14px !important;
+    }
+
+    /* Tabel Siswa Terlambat diubah menjadi kartu rapi di mobile */
+    #page-siswa-terlambat table.data-table { min-width: 0 !important; width: 100% !important; }
+    #page-siswa-terlambat thead { display: none; }
+    #page-siswa-terlambat .card > div[style*="overflow-x"] { overflow: visible !important; }
+    #page-siswa-terlambat tbody,
+    #page-siswa-terlambat tbody tr,
+    #page-siswa-terlambat tbody td { display: block; width: 100% !important; text-align: left !important; box-sizing: border-box; }
+    #page-siswa-terlambat tbody tr {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-left: 4px solid #f97316;
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 12px;
+        box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+    }
+    #page-siswa-terlambat tbody td { border: none !important; padding: 4px 0 !important; }
+    
+    /* Baris 1: Nama Siswa */
+    #page-siswa-terlambat tbody tr td:nth-child(1) {
+        font-size: 15px; font-weight: 800; color: #1e293b; padding-bottom: 2px !important;
+    }
+    /* Baris 2: Kelas */
+    #page-siswa-terlambat tbody tr td:nth-child(2) {
+        font-size: 13px; font-weight: 600; color: #2563eb;
+    }
+    #page-siswa-terlambat tbody tr td:nth-child(2)::before {
+        content: "Kelas: "; color: #64748b; font-weight: 500;
+    }
+    /* Baris 3: Waktu Datang */
+    #page-siswa-terlambat tbody tr td:nth-child(3) {
+        font-size: 12.5px; color: #475569;
+    }
+    #page-siswa-terlambat tbody tr td:nth-child(3)::before {
+        content: "Datang: "; color: #64748b; font-weight: 600;
+    }
+    /* Baris 4: Mulai Masuk Jam ke- */
+    #page-siswa-terlambat tbody tr td:nth-child(4) {
+        margin-top: 4px;
+    }
+    /* Baris 5: Alasan */
+    #page-siswa-terlambat tbody tr td:nth-child(5) {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 8px 10px !important;
+        margin-top: 6px;
+        font-size: 12px;
+        color: #334155;
+    }
+    #page-siswa-terlambat tbody tr td:nth-child(5)::before {
+        content: "Alasan: "; font-weight: 700; color: #64748b;
+    }
+    /* Baris 6: Bukti Foto */
+    #page-siswa-terlambat tbody tr td:nth-child(6) {
+        font-size: 12px; margin-top: 4px;
+    }
+    #page-siswa-terlambat tbody tr td:nth-child(6)::before {
+        content: "Bukti: "; color: #64748b; font-weight: 600;
+    }
+    /* Baris 7: Status */
+    #page-siswa-terlambat tbody tr td:nth-child(7) {
+        margin-top: 6px;
+    }
+    /* Baris 8: Tombol Hapus */
+    #page-siswa-terlambat tbody tr td:nth-child(8) {
+        margin-top: 8px;
+        padding-top: 8px !important;
+        border-top: 1px dashed #e2e8f0 !important;
+    }
+    #page-siswa-terlambat tbody tr td:nth-child(8) button {
+        width: 100%;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+/* Dark mode untuk tabel riwayat terlambat mobile */
+@media (max-width: 768px) {
+    [data-theme="dark"] #page-siswa-terlambat tbody tr {
+        background: #111827 !important;
+        border-color: #1e3a5f !important;
+        border-left-color: #f97316 !important;
+    }
+    [data-theme="dark"] #page-siswa-terlambat tbody tr td:nth-child(1) strong {
+        color: #f1f5f9 !important;
+    }
+    [data-theme="dark"] #page-siswa-terlambat tbody tr td:nth-child(5) {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+        color: #cbd5e1 !important;
+    }
+    [data-theme="dark"] #page-siswa-terlambat tbody tr td:nth-child(8) {
+        border-top-color: #1e3a5f !important;
+    }
+}

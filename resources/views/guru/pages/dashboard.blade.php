@@ -6,6 +6,25 @@
         </div>
     </div>
 
+    @if(isset($siswaTerlambatHariIni) && $siswaTerlambatHariIni->isNotEmpty())
+        <div class="alert-terlambat-banner" onclick="tampilkanModalSiswaTerlambat()">
+            <div class="alert-terlambat-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="alert-terlambat-content">
+                <div class="alert-terlambat-header">
+                    <p class="alert-terlambat-title">Pemberitahuan Siswa Terlambat di Kelas Anda ({{ $siswaTerlambatHariIni->count() }} Siswa)</p>
+                    <span class="alert-terlambat-btn">
+                        Lihat Daftar Siswa &rarr;
+                    </span>
+                </div>
+                <span class="alert-terlambat-desc">
+                    Terdapat siswa pada kelas yang Anda ajar hari ini yang datang terlambat dan telah diizinkan Guru Piket. Klik notifikasi ini untuk melihat rincian siswa.
+                </span>
+            </div>
+        </div>
+    @endif
+
     <div class="stat-cards">
         <div class="stat-card">
             <div class="stat-icon blue"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>

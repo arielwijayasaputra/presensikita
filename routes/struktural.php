@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\DispenSiswaController;
 use App\Http\Controllers\IzinGuruController;
+use App\Http\Controllers\KeterlambatanSiswaController;
 use App\Http\Controllers\Struktural\DashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,9 @@ Route::middleware('auth.struktural')->group(function () {
     Route::get('/guru-piket/dispen-siswa', [DispenSiswaController::class, 'form'])->name('dispen-siswa.form');
     Route::post('/guru-piket/dispen-siswa', [DispenSiswaController::class, 'store'])->name('dispen-siswa.store');
     Route::post('/guru-piket/absensi-siswa', [DispenSiswaController::class, 'storeAbsensi'])->name('absensi-siswa.store');
+    Route::get('/guru-piket/siswa-terlambat', [KeterlambatanSiswaController::class, 'form'])->name('siswa-terlambat.form');
+    Route::post('/guru-piket/siswa-terlambat', [KeterlambatanSiswaController::class, 'store'])->name('siswa-terlambat.store');
+    Route::delete('/guru-piket/siswa-terlambat/{id}', [KeterlambatanSiswaController::class, 'destroy'])->name('siswa-terlambat.destroy');
 
     Route::post('/satpam/izinkan-keluar/{dispen}', [DashboardController::class, 'izinkanKeluar'])->name('satpam.izinkan-keluar');
     Route::post('/satpam/izinkan-masuk/{dispen}', [DashboardController::class, 'izinkanMasuk'])->name('satpam.izinkan-masuk');

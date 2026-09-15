@@ -58,7 +58,7 @@ class AbsensiService
 
         $hadir = (int) $jurnals->sum('jumlah_hadir');
 
-        $statusCounts = ['S' => 0, 'I' => 0, 'D' => 0, 'A' => 0];
+        $statusCounts = ['S' => 0, 'I' => 0, 'D' => 0, 'A' => 0, 'T' => 0];
         $perSiswaStatus = [];
 
         if ($jurnalCount > 0) {
@@ -70,7 +70,7 @@ class AbsensiService
                 }
                 if ($withSiswa) {
                     if (! isset($perSiswaStatus[$row->id_siswa])) {
-                        $perSiswaStatus[$row->id_siswa] = ['S' => 0, 'I' => 0, 'D' => 0, 'A' => 0];
+                        $perSiswaStatus[$row->id_siswa] = ['S' => 0, 'I' => 0, 'D' => 0, 'A' => 0, 'T' => 0];
                     }
                     if (isset($perSiswaStatus[$row->id_siswa][$st])) {
                         $perSiswaStatus[$row->id_siswa][$st]++;
@@ -83,7 +83,8 @@ class AbsensiService
         $izin = $statusCounts['I'];
         $dispen = $statusCounts['D'];
         $alpa = $statusCounts['A'];
-        $totalEvents = $hadir + $sakit + $izin + $dispen + $alpa;
+        $terlambat = $statusCounts['T'];
+        $totalEvents = $hadir + $sakit + $izin + $dispen + $alpa + $terlambat;
 
         $pctHadir = $totalEvents > 0 ? (int) round(($hadir / $totalEvents) * 100) : 0;
         $pctSakit = $totalEvents > 0 ? (int) round(($sakit / $totalEvents) * 100) : 0;
@@ -325,7 +326,7 @@ class AbsensiService
 
         $hadir = (int) $jurnals->sum('jumlah_hadir');
 
-        $statusCounts = ['S' => 0, 'I' => 0, 'D' => 0, 'A' => 0];
+        $statusCounts = ['S' => 0, 'I' => 0, 'D' => 0, 'A' => 0, 'T' => 0];
         $perSiswaStatus = [];
 
         if ($jurnalCount > 0) {
@@ -337,7 +338,7 @@ class AbsensiService
                 }
                 if ($withSiswa) {
                     if (! isset($perSiswaStatus[$row->id_siswa])) {
-                        $perSiswaStatus[$row->id_siswa] = ['S' => 0, 'I' => 0, 'D' => 0, 'A' => 0];
+                        $perSiswaStatus[$row->id_siswa] = ['S' => 0, 'I' => 0, 'D' => 0, 'A' => 0, 'T' => 0];
                     }
                     if (isset($perSiswaStatus[$row->id_siswa][$st])) {
                         $perSiswaStatus[$row->id_siswa][$st]++;
@@ -350,7 +351,8 @@ class AbsensiService
         $izin = $statusCounts['I'];
         $dispen = $statusCounts['D'];
         $alpa = $statusCounts['A'];
-        $totalEvents = $hadir + $sakit + $izin + $dispen + $alpa;
+        $terlambat = $statusCounts['T'];
+        $totalEvents = $hadir + $sakit + $izin + $dispen + $alpa + $terlambat;
 
         $pctHadir = $totalEvents > 0 ? (int) round(($hadir / $totalEvents) * 100) : 0;
         $pctSakit = $totalEvents > 0 ? (int) round(($sakit / $totalEvents) * 100) : 0;
@@ -476,6 +478,11 @@ class AbsensiService
             ->whereDate('tanggal_dispen', $tanggal)
             ->get();
 
+        $keterlambatanList = \App\Models\KeterlambatanSiswa::whereIn('id_siswa', $allSiswa->pluck('id_siswa'))
+            ->whereDate('tanggal', $tanggal)
+            ->where('status', 'diizinkan')
+            ->get();
+
         // Preload seluruh jurnal kelas & tanggal ini agar sinkronisasi efisien.
         $jurnalsHariIni = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
             ->whereNull('jadwal_mengajar.deleted_at')
@@ -526,6 +533,8 @@ class AbsensiService
             }
 
             if ($jurnal) {
+                $normalizedJamKe = $j->jam_ke >= 100 ? $j->jam_ke - 100 : $j->jam_ke;
+
                 // Tambahkan data dispen aktif ke jurnal ini jika bertepatan
                 foreach ($dispenList as $d) {
                     $wMulai = $d->waktu_keluar ? $d->waktu_keluar->format('H:i:s') : ($d->created_at ? $d->created_at->format('H:i:s') : '00:00:00');
@@ -538,6 +547,32 @@ class AbsensiService
                         );
                     }
                 }
+
+                // Sinkronisasi data keterlambatan siswa
+                foreach ($keterlambatanList as $k) {
+                    $targetJamKe = (int) $k->jam_ke;
+                    $th = JurnalSiswaTidakHadir::where('id_jurnal', $jurnal->id_jurnal)->where('id_siswa', $k->id_siswa)->first();
+
+                    if ($normalizedJamKe < $targetJamKe) {
+                        // Jam sebelum siswa hadir: jika Alpha atau belum tercatat, ubah jadi 'T'
+                        if ($th && $th->status === 'A') {
+                            $th->update([
+                                'status' => 'T',
+                                'keterangan' => 'Masuk Terlambat' . ($k->alasan ? ': ' . $k->alasan : ''),
+                            ]);
+                        }
+                    } else {
+                        // Jam saat/setelah siswa hadir: jika sebelumnya Alpha, hapus dan jadikan Hadir
+                        if ($th && $th->status === 'A') {
+                            $th->forceDelete();
+                        }
+                    }
+                }
+
+                $countTidakHadir = JurnalSiswaTidakHadir::where('id_jurnal', $jurnal->id_jurnal)->count();
+                JurnalKelas::where('id_jurnal', $jurnal->id_jurnal)->update([
+                    'jumlah_hadir' => max(0, $totalSiswa - $countTidakHadir),
+                ]);
             }
         }
     }

@@ -10,10 +10,12 @@ use App\Models\IzinGuru;
 use App\Models\JurnalKelas;
 use App\Models\JurnalSiswaTidakHadir;
 use App\Models\Kelas;
+use App\Models\KeterlambatanSiswa;
 use App\Models\Pengaturan;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
 use App\Services\AbsensiService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -210,6 +212,17 @@ class AbsensiController extends Controller
 
         $izinEditJurnal = Pengaturan::get('izin_edit_jurnal', '0');
 
+        $kelasDiajarIds = $jadwalMengajarHariIni->pluck('id_kelas')->unique()->filter()->values()->toArray();
+
+        $siswaTerlambatHariIni = KeterlambatanSiswa::with(['siswa.kelas', 'guruPiket'])
+            ->whereDate('tanggal', now()->toDateString())
+            ->where('status', 'diizinkan')
+            ->whereHas('siswa', function ($q) use ($kelasDiajarIds) {
+                $q->whereIn('id_kelas', $kelasDiajarIds);
+            })
+            ->orderByDesc('jam_masuk')
+            ->get();
+
         return view('guru.dashboard', compact(
             'tahunAjaran',
             'kelases',
@@ -236,7 +249,8 @@ class AbsensiController extends Controller
             'laporanRekap',
             'laporanBulan',
             'laporanTahun',
-            'hariIni'
+            'hariIni',
+            'siswaTerlambatHariIni'
         ));
     }
 
@@ -491,10 +505,21 @@ class AbsensiController extends Controller
             ->get()
             ->keyBy('id_siswa');
 
+        $keterlambatanMap = KeterlambatanSiswa::whereIn('id_siswa', $siswaList->pluck('id_siswa'))
+            ->whereDate('tanggal', $tanggal)
+            ->where('status', 'diizinkan')
+            ->get()
+            ->keyBy('id_siswa');
+
+        $firstJam = $jadwalHariIni->first();
+        $currentJamKe = $firstJam ? ($firstJam->jam_ke ?? 1) : 1;
+        $normalizedCurrentJamKe = $currentJamKe >= 100 ? $currentJamKe - 100 : $currentJamKe;
+
         $nowTime = now()->format('H:i:s');
-        $siswa = $siswaList->map(function ($s) use ($tidakHadirMap, $dispenMap, $nowTime) {
+        $siswa = $siswaList->map(function ($s) use ($tidakHadirMap, $dispenMap, $keterlambatanMap, $normalizedCurrentJamKe, $nowTime) {
             $th = $tidakHadirMap->get($s->id_siswa);
             $dp = $dispenMap->get($s->id_siswa);
+            $kt = $keterlambatanMap->get($s->id_siswa);
 
             $status = $th ? $th->status : 'H';
             $keterangan = $th ? ($th->keterangan ?? '') : '';
@@ -506,6 +531,13 @@ class AbsensiController extends Controller
                 if ($nowTime >= $wMulai && $nowTime < $wSelesai) {
                     $status = $dp->jenis_absen ?? 'D';
                     $keterangan = strtoupper($status) . ($dp->alasan ? ': ' . $dp->alasan : '');
+                }
+            } elseif (! $th && $kt) {
+                if ($normalizedCurrentJamKe < $kt->jam_ke) {
+                    $status = 'T';
+                    $keterangan = 'Masuk Terlambat' . ($kt->alasan ? ': ' . $kt->alasan : '');
+                } else {
+                    $status = 'H';
                 }
             }
 
@@ -545,7 +577,7 @@ class AbsensiController extends Controller
         try {
             $jumlahHadir = 0;
             $tidakHadirList = [];
-            $validStatuses = ['H', 'S', 'I', 'D', 'A'];
+            $validStatuses = ['H', 'S', 'I', 'D', 'A', 'T'];
             $validSiswaIds = Siswa::where('id_kelas', $request->id_kelas)->where('is_aktif', 1)->pluck('id_siswa')->map(fn ($id) => (string) $id)->toArray();
 
             foreach ($request->absensi as $idSiswa => $item) {
@@ -804,6 +836,7 @@ class AbsensiController extends Controller
                     'sakit' => count(array_filter($tidakHadirList, fn ($x) => $x['status'] === 'S')),
                     'izin' => count(array_filter($tidakHadirList, fn ($x) => $x['status'] === 'I')),
                     'alpa' => count(array_filter($tidakHadirList, fn ($x) => $x['status'] === 'A')),
+                    'terlambat' => count(array_filter($tidakHadirList, fn ($x) => $x['status'] === 'T')),
                 ],
             ]);
         } catch (\Exception $e) {
@@ -814,5 +847,66 @@ class AbsensiController extends Controller
                 'message' => 'Gagal menyimpan absensi: '.$e->getMessage(),
             ], 500);
         }
+    }
+
+    public function getSiswaTerlambatHariIni(Request $request)
+    {
+        $tanggal = $request->get('tanggal', now()->toDateString());
+        $kelasId = $request->get('kelas_id');
+        $guruId = session('auth_guru_id');
+
+        $query = KeterlambatanSiswa::with(['siswa.kelas', 'guruPiket'])
+            ->whereDate('tanggal', $tanggal)
+            ->where('status', 'diizinkan');
+
+        if (!empty($kelasId)) {
+            $query->whereHas('siswa', function ($q) use ($kelasId) {
+                $q->where('id_kelas', $kelasId);
+            });
+        } else {
+            // Batasi hanya untuk kelas yang diajar oleh guru ini pada hari tersebut
+            $hariMap = Hari::getActiveDays()->pluck('nama_hari', 'nama_inggris')->toArray();
+            $carbonDate = Carbon::parse($tanggal);
+            $namaHari = $hariMap[$carbonDate->format('l')] ?? $carbonDate->format('l');
+
+            $kelasDiajarHariIni = DB::table('jadwal_mengajar')
+                ->where('id_guru', $guruId)
+                ->where('hari', $namaHari)
+                ->whereNull('deleted_at')
+                ->pluck('id_kelas')
+                ->unique()
+                ->filter()
+                ->values()
+                ->toArray();
+
+            $query->whereHas('siswa', function ($q) use ($kelasDiajarHariIni) {
+                $q->whereIn('id_kelas', $kelasDiajarHariIni);
+            });
+        }
+
+        $rows = $query->orderByDesc('jam_masuk')->get();
+
+        $data = $rows->map(function ($k) {
+            return [
+                'id_keterlambatan' => $k->id_keterlambatan,
+                'id_siswa' => $k->id_siswa,
+                'nama_siswa' => $k->siswa->nama_siswa ?? '-',
+                'nisn' => $k->siswa->nisn ?? '-',
+                'id_kelas' => $k->siswa->id_kelas ?? null,
+                'nama_kelas' => $k->siswa->kelas->nama_kelas ?? '-',
+                'jam_masuk' => substr($k->jam_masuk, 0, 5),
+                'jam_ke' => $k->jam_ke,
+                'alasan' => $k->alasan ?? '-',
+                'foto_surat_url' => $k->foto_surat_url,
+                'guru_piket' => $k->guruPiket->nama_guru ?? 'Guru Piket',
+                'status' => 'Diizinkan Masuk',
+            ];
+        });
+
+        return response()->json([
+            'status' => 'success',
+            'total' => $data->count(),
+            'data' => $data,
+        ]);
     }
 }

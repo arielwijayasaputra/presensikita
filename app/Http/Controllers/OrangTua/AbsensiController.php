@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DispenSiswa;
 use App\Models\JurnalKelas;
 use App\Models\JurnalSiswaTidakHadir;
+use App\Models\KeterlambatanSiswa;
 use App\Models\Pengaturan;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
@@ -141,9 +142,14 @@ class AbsensiController extends Controller
             ->whereDate('tanggal_dispen', $tanggal)
             ->get();
 
+        $keterlambatanHariIni = KeterlambatanSiswa::where('id_siswa', $siswa->id_siswa)
+            ->whereDate('tanggal', $tanggal)
+            ->where('status', 'diizinkan')
+            ->first();
+
         // 3. Ambil Jurnal & Presensi Siswa per Jam Pelajaran pada Tanggal Tersebut
         $presensiPerJam = [];
-        $statHarian = ['Hadir' => 0, 'Sakit' => 0, 'Izin' => 0, 'Dispen' => 0, 'Alpa' => 0, 'Belum Diabsen' => 0, 'Menunggu' => 0];
+        $statHarian = ['Hadir' => 0, 'Sakit' => 0, 'Izin' => 0, 'Dispen' => 0, 'Alpa' => 0, 'Terlambat' => 0, 'Belum Diabsen' => 0, 'Menunggu' => 0];
 
         foreach ($jadwalList as $j) {
             $isSelesai = $isPastDate || ($isToday && $nowTime >= $j->jam_selesai);
@@ -240,6 +246,10 @@ class AbsensiController extends Controller
                             $status = 'Izin';
                             $statusLabel = 'Izin';
                             $badgeClass = 'badge-info';
+                        } elseif ($th->status === 'T' || str_contains($ketLower, 'terlambat')) {
+                            $status = 'Terlambat';
+                            $statusLabel = 'Masuk Terlambat';
+                            $badgeClass = 'badge-warning';
                         } else {
                             $status = 'Alpa';
                             $statusLabel = 'Alpa';
@@ -252,12 +262,20 @@ class AbsensiController extends Controller
                         $badgeClass = 'badge-success';
                     }
                 } else {
-                    // Guru pada jam ini BELUM / TIDAK mengisi jurnal atau mengabsen
-                    $status = $isSelesai ? 'Belum Diabsen' : 'Menunggu';
-                    $statusLabel = $isSelesai ? 'Belum Diabsen' : 'Menunggu Absensi';
-                    $badgeClass = 'badge-secondary';
-                    $materi = '-';
-                    $keterangan = '-';
+                    $normalizedJamKe = $j->jam_ke >= 100 ? $j->jam_ke - 100 : $j->jam_ke;
+                    if ($keterlambatanHariIni && $normalizedJamKe < $keterlambatanHariIni->jam_ke) {
+                        $status = 'Terlambat';
+                        $statusLabel = 'Masuk Terlambat';
+                        $badgeClass = 'badge-warning';
+                        $keterangan = 'Masuk Terlambat' . ($keterlambatanHariIni->alasan ? ': ' . $keterlambatanHariIni->alasan : '');
+                    } else {
+                        // Guru pada jam ini BELUM / TIDAK mengisi jurnal atau mengabsen
+                        $status = $isSelesai ? 'Belum Diabsen' : 'Menunggu';
+                        $statusLabel = $isSelesai ? 'Belum Diabsen' : 'Menunggu Absensi';
+                        $badgeClass = 'badge-secondary';
+                        $materi = '-';
+                        $keterangan = '-';
+                    }
                 }
             }
 

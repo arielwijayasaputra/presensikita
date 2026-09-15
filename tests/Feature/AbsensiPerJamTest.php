@@ -170,7 +170,14 @@ class AbsensiPerJamTest extends TestCase
         $this->assertEquals('Hadir', $jam1Presensi['status'], 'Di portal orang tua, Jam 1 harus Hadir.');
         $jam2Presensi = collect($presensiPerJam)->firstWhere('jam_ke', 2);
         if ($jam2Presensi) {
-            $this->assertTrue(in_array($jam2Presensi['status'], ['Belum Diabsen', 'Menunggu']), 'Di portal orang tua, Jam 2 yang tidak diisi jurnal oleh guru harus Belum Diabsen/Menunggu, bukan Hadir.');
+            // Fitur Auto-Hadir: jam yang sudah dimulai/selesai dengan guru pengampu yang sama
+            // (sudah mengisi jurnal lain hari ini) otomatis menjadi Hadir, bukan Menunggu.
+            $jam2SudahMulai = Carbon::now()->format('H:i:s') >= $jam2->jam_mulai;
+            if ($jam2SudahMulai) {
+                $this->assertEquals('Hadir', $jam2Presensi['status'], 'Di portal orang tua, Jam 2 otomatis Hadir setelah jam berjalan karena guru yang sama sudah submit jurnal lain hari ini.');
+            } else {
+                $this->assertTrue(in_array($jam2Presensi['status'], ['Belum Diabsen', 'Menunggu']), 'Di portal orang tua, Jam 2 yang belum dimulai tetap Menunggu Absensi (belum dibuat jurnal otomatis).');
+            }
         }
         $this->assertEquals('Alpa', $jam3Presensi['status'], 'Di portal orang tua, Jam 3 harus Alpa.');
 

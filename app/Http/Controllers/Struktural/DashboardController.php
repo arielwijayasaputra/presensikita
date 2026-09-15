@@ -347,6 +347,29 @@ class DashboardController extends Controller
             $waliTglSelesaiAbsen = $request->get('wali_tgl_selesai', date('Y-m-d'));
             $waliRekapAbsensiRange = $this->absensiService->buildAbsensiRekapRange($waliKelasId, $waliTglMulaiAbsen, $waliTglSelesaiAbsen, true);
 
+            // Riwayat Keterlambatan Siswa di Kelas Wali pada Rentang Tanggal Terpilih
+            $waliKeterlambatanList = KeterlambatanSiswa::with(['siswa.kelas', 'guruPiket'])
+                ->whereHas('siswa', function ($q) use ($waliKelasId) {
+                    $q->where('id_kelas', $waliKelasId);
+                })
+                ->where('status', 'diizinkan')
+                ->when($waliTglMulaiAbsen, fn ($q) => $q->whereDate('tanggal', '>=', $waliTglMulaiAbsen))
+                ->when($waliTglSelesaiAbsen, fn ($q) => $q->whereDate('tanggal', '<=', $waliTglSelesaiAbsen))
+                ->orderByDesc('tanggal')
+                ->orderByDesc('jam_masuk')
+                ->get();
+
+            $waliTotalTerlambatPerSiswa = KeterlambatanSiswa::whereHas('siswa', function ($q) use ($waliKelasId) {
+                    $q->where('id_kelas', $waliKelasId);
+                })
+                ->where('status', 'diizinkan')
+                ->when($waliTglMulaiAbsen, fn ($q) => $q->whereDate('tanggal', '>=', $waliTglMulaiAbsen))
+                ->when($waliTglSelesaiAbsen, fn ($q) => $q->whereDate('tanggal', '<=', $waliTglSelesaiAbsen))
+                ->selectRaw('id_siswa, COUNT(*) as total')
+                ->groupBy('id_siswa')
+                ->pluck('total', 'id_siswa')
+                ->toArray();
+
             // 4. Rekap Jurnal Pembelajaran Kelas (Filter Tanggal Bebas)
             $waliTglMulaiJurnal = $request->get('jurnal_tgl_mulai', date('Y-01-01'));
             $waliTglSelesaiJurnal = $request->get('jurnal_tgl_selesai', date('Y-m-d'));
@@ -380,6 +403,8 @@ class DashboardController extends Controller
             $waliTglMulaiAbsen = date('Y-m-01');
             $waliTglSelesaiAbsen = date('Y-m-d');
             $waliRekapAbsensiRange = [];
+            $waliKeterlambatanList = collect();
+            $waliTotalTerlambatPerSiswa = [];
             $waliTglMulaiJurnal = date('Y-01-01');
             $waliTglSelesaiJurnal = date('Y-m-d');
             $waliRekapJurnalList = collect();
@@ -412,6 +437,7 @@ class DashboardController extends Controller
             'waliKelasObj', 'waliKelasId', 'waliSiswaList', 'waliBulan', 'waliTahun', 'waliRekapData', 'dispenDanIzinKelas', 'siswaPerluPerhatian',
             'waliTanggalHariIni', 'waliAbsensiHariIniList', 'waliStatsHariIni', 'waliJadwalHariIni', 'waliStatsJurnalHariIni',
             'waliTglMulaiAbsen', 'waliTglSelesaiAbsen', 'waliRekapAbsensiRange',
+            'waliKeterlambatanList', 'waliTotalTerlambatPerSiswa',
             'waliTglMulaiJurnal', 'waliTglSelesaiJurnal', 'waliRekapJurnalList',
             'satpamTanggal', 'satpamDispenRiwayat',
             'waGatewayAktif', 'waGatewayEndpoint', 'waPublicUrl', 'waNomorBot', 'waNomorWakaKesiswaan', 'waNomorWakaSdm', 'waNomorKepsek', 'waBotStatus'

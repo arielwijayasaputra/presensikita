@@ -305,6 +305,34 @@ class SiswaTerlambatTest extends TestCase
         $ortuViewResponse->assertSee('Riwayat &amp; Rekapitulasi Keterlambatan Siswa', false);
         $ortuViewResponse->assertSee('Kali Terlambat');
         $ortuViewResponse->assertSee('Macet parah karena pohon tumbang');
+
+        // Skenario 6: Wali Kelas melihat halaman Rekap Absensi Kelas dan melihat tabel siswa terlambat
+        $waliKelas = Guru::create([
+            'nama_guru' => 'Wali Kelas ' . $uniq,
+            'username' => 'wali_' . $uniq,
+            'password_hash' => bcrypt('password'),
+            'nip' => '5555' . rand(1000, 9999),
+            'is_aktif' => 1,
+            'is_admin' => 0,
+        ]);
+        $kelas->update(['id_wali_kelas' => $waliKelas->id_guru]);
+
+        $waliResponse = $this->withSession([
+            'auth_guru_id' => $waliKelas->id_guru,
+            'auth_nama_guru' => $waliKelas->nama_guru,
+            'auth_is_admin' => 0,
+            'auth_role' => 'walikelas',
+            'auth_kelas_id' => $kelas->id_kelas,
+            'auth_nama_kelas' => $kelas->nama_kelas,
+        ])->get(route('walikelas.index'));
+
+        $waliResponse->assertStatus(200);
+        $waliResponse->assertSee('Riwayat Siswa Terlambat');
+        $waliResponse->assertSee('JUMLAH TERLAMBAT');
+        $waliResponse->assertSee($siswa->nama_siswa);
+        $waliResponse->assertSee('1 Kali');
+
+        // Skenario 7: Guru Piket menghapus catatan keterlambatan
         $keterlambatan = KeterlambatanSiswa::where('id_siswa', $siswa->id_siswa)->first();
         $this->assertNotNull($keterlambatan);
 

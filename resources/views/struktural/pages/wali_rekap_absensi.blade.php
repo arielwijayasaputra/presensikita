@@ -181,4 +181,72 @@
         </div>
     </div>
 
+    <!-- ══ TABEL RIWAYAT SISWA TERLAMBAT KELAS ══ -->
+    <div class="card" style="padding:22px 24px; margin-top:24px">
+        <div class="card-header" style="margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px">
+            <div>
+                <div class="card-title" style="font-size:16px; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:8px">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Riwayat Siswa Terlambat
+                </div>
+                <div style="font-size:12px; color:#64748b; margin-top:2px">
+                    Daftar siswa di kelas <strong>{{ $namaKelasAktif }}</strong> yang tercatat datang terlambat pada periode terpilih
+                </div>
+            </div>
+
+            <div>
+                <span class="badge" style="background:#ffedd5; color:#c2410c; border:1px solid #fdba74; font-size:12px; font-weight:700; padding:5px 12px; border-radius:99px; display:inline-flex; align-items:center; gap:6px">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Total: {{ count($waliKeterlambatanList ?? []) }} Siswa Terlambat
+                </span>
+            </div>
+        </div>
+
+        <div style="overflow-x:auto">
+            <table class="data-table" id="table-wali-rekap-terlambat-tbl" style="min-width:750px">
+                <thead>
+                    <tr>
+                        <th>SISWA</th>
+                        <th>KELAS</th>
+                        <th>WAKTU DATANG</th>
+                        <th>MULAI MASUK</th>
+                        <th>ALASAN</th>
+                        <th style="text-align:center">JUMLAH TERLAMBAT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($waliKeterlambatanList ?? [] as $item)
+                        <tr>
+                            <td>
+                                <strong>{{ $item->siswa->nama_siswa ?? '-' }}</strong>
+                                @if(!empty($item->siswa->nisn))
+                                    <span style="font-size:11px; color:#64748b; display:block; font-family:monospace">NISN: {{ $item->siswa->nisn }}</span>
+                                @endif
+                            </td>
+                            <td>{{ $item->siswa->kelas->nama_kelas ?? $namaKelasAktif }}</td>
+                            <td>
+                                {{ substr($item->jam_masuk, 0, 5) }} WIB ({{ \Carbon\Carbon::parse($item->tanggal)->format('d-m-Y') }})
+                            </td>
+                            <td>
+                                <span class="badge badge-info" style="font-size:11.5px; padding:3px 8px">Jam ke-{{ $item->jam_ke }}</span>
+                            </td>
+                            <td>{{ $item->alasan ?: '-' }}</td>
+                            <td style="text-align:center">
+                                <span class="badge" style="background:#ffedd5; color:#c2410c; border:1px solid #fed7aa; font-weight:700; font-size:12px; padding:4px 10px; border-radius:6px">
+                                    {{ $waliTotalTerlambatPerSiswa[$item->id_siswa] ?? 1 }} Kali
+                                </span>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" style="text-align:center; color:#64748b; padding:24px">
+                                Tidak ada catatan siswa terlambat pada rentang tanggal terpilih.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>

@@ -269,6 +269,10 @@ class JadwalMengajarController extends Controller
                 continue;
             }
 
+            $isPembiasaanJumat = $hari === 'Jumat'
+                && str_contains(strtolower($mapelRaw), 'pembiasaan')
+                && in_array(101, $jamNumbers, true);
+
             $guru = null;
             $guruUnmatched = false;
             $guruUnmatchedDesc = '';
@@ -311,6 +315,22 @@ class JadwalMengajarController extends Controller
                 $skipped[] = 'Baris '.($line + 1).': guru tidak dapat dicocokkan — '.$guruUnmatchedDesc.'. Perbaiki kolom Guru/ID/NIP atau daftarkan guru terlebih dahulu di halaman Guru.';
 
                 continue;
+            }
+
+            // Jumat jam pertama (Pembiasaan): gunakan guru dari jam ke-2 jika tidak diisi manual
+            if ($isPembiasaanJumat && ! $guru && ! filled($idGuruRaw) && ! filled($nipRaw) && ($guruRaw === '' || $guruRaw === '-' || strtolower($guruRaw) === 'null')) {
+                $jamKe2 = $jamByHariKe->get('Jumat:102');
+                if ($jamKe2) {
+                    $existingJadwal = JadwalMengajar::whereNull('deleted_at')
+                        ->where('hari', 'Jumat')
+                        ->where('id_jam', $jamKe2->id_jam)
+                        ->where('id_kelas', $kelas->id_kelas)
+                        ->where('id_tahun_ajaran', $tahunId)
+                        ->first();
+                    if ($existingJadwal && $existingJadwal->id_guru) {
+                        $guru = $guruById->get($existingJadwal->id_guru);
+                    }
+                }
             }
 
             foreach ($jamNumbers as $jamKe) {

@@ -63,21 +63,34 @@ class KeterlambatanSiswaController extends Controller
                 $carbonDate = Carbon::parse($data['tanggal']);
                 $namaHari = $hariMap[$carbonDate->format('l')] ?? $carbonDate->format('l');
 
-                $guruKelasIds = DB::table('jadwal_mengajar')
+                // Notifikasi telat hanya untuk: (1) wali kelas siswa, (2) guru pengajar saat jam itu
+                $waliKelasId = DB::table('kelas')
                     ->where('id_kelas', $siswa->id_kelas)
-                    ->where('hari', $namaHari)
-                    ->whereNull('deleted_at')
-                    ->pluck('id_guru')
-                    ->unique()
+                    ->value('id_wali_kelas');
+
+                $jamKeMasuk = (int) $data['jam_ke'];
+                $guruPengajarSaatItuIds = DB::table('jadwal_mengajar')
+                    ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
+                    ->where('jadwal_mengajar.id_kelas', $siswa->id_kelas)
+                    ->where('jadwal_mengajar.hari', $namaHari)
+                    ->where(function ($q) use ($jamKeMasuk) {
+                        $q->where('jam_pelajaran.jam_ke', $jamKeMasuk)
+                          ->orWhere('jam_pelajaran.jam_ke', $jamKeMasuk + 100);
+                    })
+                    ->whereNull('jadwal_mengajar.deleted_at')
+                    ->whereNull('jam_pelajaran.deleted_at')
+                    ->pluck('jadwal_mengajar.id_guru')
+                    ->merge([$waliKelasId])
                     ->filter()
+                    ->unique()
                     ->values()
                     ->toArray();
 
                 $judulNotif = 'Siswa Terlambat: ' . $siswa->nama_siswa . ' (' . ($siswa->kelas->nama_kelas ?? '-') . ')';
                 $pesanNotif = 'Siswa ' . $siswa->nama_siswa . ' terlambat (datang jam ' . substr($data['jam_masuk'], 0, 5) . ', mulai masuk jam ke-' . $data['jam_ke'] . '). Alasan: ' . ($data['alasan'] ?: 'Tanpa keterangan') . '. Diizinkan oleh: ' . $guruPiket->nama_guru . '.';
 
-                // Kirim notifikasi sistem khusus ke guru-guru yang mengajar di kelas tersebut hari ini
-                foreach ($guruKelasIds as $gId) {
+                // Kirim notifikasi sistem khusus ke wali kelas dan guru pengajar saat itu
+                foreach ($guruPengajarSaatItuIds as $gId) {
                     DB::table('notifikasi')->insert([
                         'id_guru' => $gId,
                         'id_kelas' => $siswa->id_kelas,
@@ -88,17 +101,6 @@ class KeterlambatanSiswaController extends Controller
                         'created_at' => now(),
                     ]);
                 }
-
-                // Kirim juga notifikasi ke Admin / Kepala Sekolah (id_guru null, id_kelas terisi)
-                DB::table('notifikasi')->insert([
-                    'id_guru' => null,
-                    'id_kelas' => $siswa->id_kelas,
-                    'judul' => $judulNotif,
-                    'pesan' => $pesanNotif,
-                    'tipe' => 'warning',
-                    'is_read' => 0,
-                    'created_at' => now(),
-                ]);
 
                 // Sinkronisasi otomatis ke Jurnal yang sudah ada hari ini
                 $jurnalsWithJadwal = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')

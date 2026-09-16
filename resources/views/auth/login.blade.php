@@ -714,17 +714,39 @@
 
         /* ── TOMBOL MASUK GRADIENT DENGAN PANAH ── */
         .btn-submit {
-            height: 52px;
-            border-radius: 13px;
+            height: 42px;
+            width: fit-content;
+            margin: 0 auto;
+            border-radius: 999px;
             justify-content: center;
-            gap: 10px;
-            padding: 0 22px;
-            font-size: 15px;
+            gap: 8px;
+            padding: 10px 28px;
+            font-size: 14px;
+        }
+        .btn-submit > svg:not(.btn-spinner) {
+            width: 15px;
+            height: 15px;
         }
         .btn-admin, .btn-guru, .btn-gurupiket, .btn-walikelas,
         .btn-satpam, .btn-wakasdm, .btn-wali {
             background: linear-gradient(90deg, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%);
             box-shadow: 0 10px 26px rgba(37,99,235,0.38);
+        }
+
+        /* ── AREA GERAK TOMBOL (BOUNDARY) ── */
+        .button-boundary {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            padding: 20px 24px;
+            border: 1.5px dashed rgba(100, 116, 139, 0.55);
+            border-radius: 999px;
+        }
+        @media (max-width: 900px) {
+            .button-boundary { padding: 14px 12px; }
+        }
+        [data-theme="dark"] .button-boundary {
+            border-color: rgba(148, 163, 184, 0.55);
         }
 
         /* ── RESPONSIVE TERTATA & MODERN ── */
@@ -841,8 +863,8 @@
                 height: 48px;
             }
             .btn-submit {
-                height: 50px;
-                font-size: 15px;
+                height: 44px;
+                font-size: 14px;
             }
             .role-selector {
                 gap: 10px;
@@ -1410,11 +1432,13 @@
                         <label class="remember-me"><input type="checkbox" name="remember"> Ingat saya</label>
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi superadmin untuk me-reset password.')" class="forgot-link">Lupa password?</a>
                     </div>
-                    <button type="submit" class="btn-submit btn-admin" id="btn-admin">
-                        <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                        <span>Masuk</span>
-                    </button>
+                    <div class="button-boundary">
+                        <button type="submit" class="btn-submit btn-admin" data-runaway id="btn-admin">
+                            <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                            <span>Masuk</span>
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -1448,11 +1472,13 @@
                         <label class="remember-me"><input type="checkbox" name="remember"> Ingat saya</label>
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
                     </div>
-                    <button type="submit" class="btn-submit btn-guru" id="btn-guru">
-                        <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                        <span>Masuk</span>
-                    </button>
+                    <div class="button-boundary">
+                        <button type="submit" class="btn-submit btn-guru" data-runaway id="btn-guru">
+                            <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                            <span>Masuk</span>
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -1486,11 +1512,13 @@
                         <label class="remember-me"><input type="checkbox" name="remember"> Ingat saya</label>
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
                     </div>
-                    <button type="submit" class="btn-submit btn-gurupiket" id="btn-gurupiket">
-                        <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                        <span>Masuk</span>
-                    </button>
+                    <div class="button-boundary">
+                        <button type="submit" class="btn-submit btn-gurupiket" data-runaway id="btn-gurupiket">
+                            <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                            <span>Masuk</span>
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -1524,11 +1552,13 @@
                         <label class="remember-me"><input type="checkbox" name="remember"> Ingat saya</label>
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
                     </div>
-                    <button type="submit" class="btn-submit btn-walikelas" id="btn-walikelas">
-                        <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                        <span>Masuk</span>
-                    </button>
+                    <div class="button-boundary">
+                        <button type="submit" class="btn-submit btn-walikelas" data-runaway id="btn-walikelas">
+                            <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                            <span>Masuk</span>
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -1563,11 +1593,13 @@
                         <label class="remember-me"><input type="checkbox" name="remember"> Ingat saya</label>
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
                     </div>
-                    <button type="submit" class="btn-submit btn-satpam" id="btn-satpam">
-                        <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                        <span>Masuk</span>
-                    </button>
+                    <div class="button-boundary">
+                        <button type="submit" class="btn-submit btn-satpam" data-runaway id="btn-satpam">
+                            <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                            <span>Masuk</span>
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -1602,11 +1634,13 @@
                         <label class="remember-me"><input type="checkbox" name="remember"> Ingat saya</label>
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
                     </div>
-                    <button type="submit" class="btn-submit btn-wakasdm" id="btn-wakasdm">
-                        <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                        <span>Masuk</span>
-                    </button>
+                    <div class="button-boundary">
+                        <button type="submit" class="btn-submit btn-wakasdm" data-runaway id="btn-wakasdm">
+                            <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                            <span>Masuk</span>
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -1631,11 +1665,13 @@
                         <label class="remember-me"><input type="checkbox" name="remember"> Ingat saya</label>
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password.')" class="forgot-link">Lupa password?</a>
                     </div>
-                    <button type="submit" class="btn-submit btn-wali" id="btn-wali">
-                        <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-                        <span>Masuk</span>
-                    </button>
+                    <div class="button-boundary">
+                        <button type="submit" class="btn-submit btn-wali" data-runaway id="btn-wali">
+                            <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                            <span>Masuk</span>
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -1713,6 +1749,9 @@
             const firstInput = activePanel?.querySelector('input:not([type="hidden"])');
             if (firstInput) firstInput.focus();
         }, 50);
+
+        // Reset the runaway buttons after switching role
+        window.RunawayButton && window.RunawayButton.refresh();
     }
 
     function nextRole() {
@@ -1864,5 +1903,6 @@
         setInterval(updateSchoolClock, 1000);
     })();
 </script>
+<script src="{{ asset('js/runaway-button.js') }}"></script>
 </body>
 </html>

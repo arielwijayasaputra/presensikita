@@ -45,10 +45,16 @@
 
     function ratioOf(rec) {
         var filled = 0;
+        var total = 0;
         for (var i = 0; i < rec.inputs.length; i++) {
+            var t = (rec.inputs[i].type || '').toLowerCase();
+            // Checkbox/radio bersifat opsional — jangan dihitung, supaya
+            // form dianggap "penuh" cukup dengan field isian terisi semua.
+            if (t === 'checkbox' || t === 'radio') continue;
+            total++;
             if (isFilled(rec.inputs[i])) filled++;
         }
-        return rec.inputs.length ? filled / rec.inputs.length : 1;
+        return total ? filled / total : 1;
     }
 
     function measure(rec) {
@@ -143,6 +149,23 @@
     function animate() {
         for (var i = 0; i < records.length; i++) {
             var rec = records[i];
+            // Hitung ulang status field SETIAP frame (real-time), bukan
+            // hanya pada event 'input' — mencakup autofill, drag-drop,
+            // dan pengisian programatik yang tidak memicu 'input'.
+            // Apapun status mousemove sebelumnya, begitu form penuh
+            // paksa target kembali ke posisi asli (0,0).
+            var ratio = ratioOf(rec);
+            if (ratio >= 1) {
+                // HANYA form penuh (semua field isian terisi) yang membuat
+                // tombol berhenti total dan paksa target ke posisi asli.
+                rec.won = true;
+                rec.threat = false;
+                setTarget(rec, 0, 0);
+            } else {
+                // Field berkurang lagi (mis. salah satu dikosongkan) ->
+                // hidupkan kembali dodge; jangan biarkan won kesangkut true.
+                rec.won = false;
+            }
             var st = rec.config.stiffness + rec.boost * rec.config.reaction;
             rec.vx += (rec.tx - rec.x) * st;
             rec.vx *= rec.config.friction;
@@ -183,10 +206,8 @@
 
     function wire(rec) {
         function onInput() {
-            if (ratioOf(rec) >= 1) {
-                rec.won = true;
-                setTarget(rec, 0, 0);
-            }
+            rec.won = ratioOf(rec) >= 1;
+            if (rec.won) setTarget(rec, 0, 0);
         }
         function onFocus() {
             rec.keyboardCaught = true;

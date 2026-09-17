@@ -47,6 +47,7 @@ Route::middleware('auth.admin')->group(function () {
     Route::post('/guru/tambah', [GuruController::class, 'store'])->name('guru.tambah');
     Route::post('/guru/import', [GuruController::class, 'import'])->name('guru.import');
     Route::post('/guru/hapus-semua', [GuruController::class, 'hapusSemua'])->name('guru.hapus-semua');
+    Route::post('/guru/hapus-terpilih', [GuruController::class, 'hapusTerpilih'])->name('guru.hapus-terpilih');
     Route::post('/guru/{id}/update', [GuruController::class, 'update'])->name('guru.update');
     Route::patch('/guru/{id}/toggle-aktif', [GuruController::class, 'toggleAktif'])->name('guru.toggle');
     Route::post('/guru/{id}/alihkan-jadwal', [GuruController::class, 'alihkanJadwal'])->name('guru.alihkan-jadwal');

@@ -2923,10 +2923,122 @@ window.tampilkanModalSiswaTerlambat = function(kelasId, namaKelas) {
         }
     };
 
+    const escapeChecklistHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;',
+    })[character]);
+
+    const getSelectedGuruData = selectedIds => selectedIds.map(id => {
+        const checkbox = document.querySelector('.checklist-item[data-page="guru"][data-id="' + id + '"]');
+        const row = checkbox ? checkbox.closest('tr') : null;
+        const nameCell = row ? row.querySelector('td:nth-child(4)') : null;
+
+        return {
+            id: Number(id),
+            nama: nameCell ? nameCell.textContent.trim() : 'Guru ' + id,
+            jadwalCount: Math.max(0, Number(row ? row.dataset.jadwalCount || 0 : 0)),
+        };
+    });
+
+    window.hapusGuruTerpilih = async function(ids) {
+        const selected = getSelectedGuruData(ids);
+        const withSchedules = selected.filter(guru => guru.jadwalCount > 0);
+        const totalSchedules = withSchedules.reduce((total, guru) => total + guru.jadwalCount, 0);
+        const affectedList = withSchedules.map(guru => (
+            '<div style="padding:7px 0;border-bottom:1px solid #e2e8f0">' +
+            '<span style="font-weight:600;color:#334155">' + escapeChecklistHtml(guru.nama) + '</span>' +
+            '<span style="float:right;color:#b45309;font-weight:700">' + guru.jadwalCount + ' jadwal</span>' +
+            '</div>'
+        )).join('');
+        const warningHtml = withSchedules.length > 0
+            ? '<div style="margin-top:12px;padding:12px;background:#fef3c7;border:1px solid #fde68a;border-radius:8px;color:#92400e;line-height:1.5">' +
+                '<strong>Peringatan:</strong> ' + withSchedules.length + ' guru masih memiliki total ' + totalSchedules + ' jadwal mengajar. Jadwal tidak dihapus, tetapi akan diubah menjadi <strong>Kosong (Belum Ada Guru Pengampu)</strong>.' +
+                (affectedList ? '<div style="margin-top:8px;max-height:180px;overflow:auto">' + affectedList + '</div>' : '') +
+              '</div>'
+            : '<p style="margin-top:10px;color:#64748b;font-size:12.5px">Tidak ada jadwal mengajar yang perlu dilepas.</p>';
+        const result = await Swal.fire({
+            title: 'Hapus ' + selected.length + ' data guru?',
+            icon: withSchedules.length > 0 ? 'warning' : 'question',
+            html: '<div style="text-align:left;font-size:13.5px;color:#334155;line-height:1.55">' +
+                '<p> Data guru yang dipilih akan dihapus. ' +
+                (withSchedules.length > 0
+                    ? 'Relasi guru pada jadwal mengajar akan diputus terlebih dahulu.'
+                    : 'Semua guru terpilih tidak memiliki jadwal mengajar.') +
+                '</p>' + warningHtml + '</div>',
+            showCancelButton: true,
+            confirmButtonText: withSchedules.length > 0 ? 'Ya, putuskan jadwal dan hapus' : 'Ya, hapus',
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
+            customClass: {
+                popup: 'custom-swal-popup',
+                title: 'custom-swal-title',
+                confirmButton: 'custom-swal-confirm',
+                cancelButton: 'custom-swal-cancel',
+            },
+            buttonsStyling: false,
+        });
+
+        if (!result.isConfirmed) return;
+
+        Swal.fire({
+            title: 'Menghapus data...',
+            text: 'Mohon tunggu sebentar',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); },
+        });
+
+        try {
+            const response = await fetch('/guru/hapus-terpilih', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ ids: selected.map(guru => guru.id) }),
+            });
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok || data.status !== 'success') {
+                throw new Error(data.message || 'Gagal menghapus data guru terpilih.');
+            }
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: data.message,
+                timer: 1800,
+                showConfirmButton: false,
+            }).then(() => location.reload());
+            cancelChecklist('guru');
+        } catch (error) {
+            Swal.close();
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: error.message || 'Gagal menghapus data guru terpilih.',
+                customClass: {
+                    popup: 'custom-swal-popup',
+                    title: 'custom-swal-title',
+                    confirmButton: 'custom-swal-confirm',
+                },
+                buttonsStyling: false,
+            });
+        }
+    };
+
     window.hapusTerpilih = function(page) {
         const ids = Array.from(document.querySelectorAll('.checklist-item[data-page="' + page + '"]:checked')).map(cb => cb.dataset.id);
         if (ids.length === 0) return;
-        let label = page === 'siswa' ? 'siswa' : (page === 'kelas' ? 'kelas' : 'guru');
+        if (page === 'guru') {
+            window.hapusGuruTerpilih(ids);
+            return;
+        }
+
+        let label = page === 'siswa' ? 'siswa' : 'kelas';
         confirmDeleteData({
             title: 'Hapus ' + ids.length + ' Data ' + label + '?',
             itemName: ids.length + ' ' + label + ' terpilih',
@@ -2953,7 +3065,7 @@ window.tampilkanModalSiswaTerlambat = function(kelasId, namaKelas) {
                             successCount++;
                         } else {
                             const errData = await res.text();
-                            lastError = errData.substring(0, 50); // Keep short
+                            lastError = errData.substring(0, 50);
                         }
                     }
                     

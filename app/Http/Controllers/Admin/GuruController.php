@@ -370,6 +370,59 @@ class GuruController extends Controller
         return response()->json(['status' => 'success', 'message' => $message, 'deleted' => $total]);
     }
 
+    public function hapusTerpilih(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'ids' => ['required', 'array', 'min:1', 'max:100'],
+            'ids.*' => ['integer', 'distinct', 'exists:guru,id_guru'],
+        ], [
+            'ids.required' => 'Pilih data guru yang akan dihapus.',
+            'ids.min' => 'Pilih minimal satu data guru.',
+            'ids.*.exists' => 'Sebagian data guru tidak ditemukan atau sudah dihapus.',
+        ]);
+
+        $ids = array_values(array_unique(array_map('intval', $data['ids'])));
+        $selfId = (int) session('auth_guru_id', 0);
+
+        if ($selfId > 0 && in_array($selfId, $ids, true)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Guru yang sedang digunakan untuk login tidak dapat dihapus. Hapus guru tersebut dari pilihan.',
+            ], 422);
+        }
+
+        $gurus = Guru::whereIn('id_guru', $ids)->get();
+        if ($gurus->count() !== count($ids)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Sebagian data guru tidak ditemukan atau sudah dihapus.',
+            ], 422);
+        }
+
+        $scheduleCounts = JadwalMengajar::whereIn('id_guru', $ids)
+            ->selectRaw('id_guru, COUNT(*) as jumlah')
+            ->groupBy('id_guru')
+            ->pluck('jumlah', 'id_guru');
+        $clearedCount = (int) $scheduleCounts->sum();
+
+        DB::transaction(function () use ($ids) {
+            Kelas::whereIn('id_wali_kelas', $ids)->update(['id_wali_kelas' => null]);
+            JadwalMengajar::whereIn('id_guru', $ids)->update(['id_guru' => null]);
+            Guru::whereIn('id_guru', $ids)->delete();
+        });
+
+        $message = $clearedCount > 0
+            ? 'Sebanyak '.count($ids)." data guru berhasil dihapus dan {$clearedCount} jadwal mengajar dilepas dari guru."
+            : 'Sebanyak '.count($ids).' data guru berhasil dihapus.';
+
+        return response()->json([
+            'status' => 'success',
+            'message' => $message,
+            'deleted_count' => count($ids),
+            'cleared_count' => $clearedCount,
+        ]);
+    }
+
     /**
      * Menghapus data guru berdasarkan ID, dengan pelepasan relasi wali kelas dan pengecekan jadwal aktif.
      *

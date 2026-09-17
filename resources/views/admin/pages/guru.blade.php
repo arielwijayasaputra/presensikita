@@ -18,6 +18,7 @@
             </div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+
             <button class="btn-primary" onclick="tambahGuruModal()" style="border-radius:10px;padding:10px 20px;font-size:13.5px">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 Tambah Guru
@@ -140,11 +141,20 @@
 
     </div>
 
+    <div id="checklist-bar-guru" class="checklist-bar" style="display:none;margin-bottom:16px;padding:12px 18px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <span style="font-size:13px;font-weight:600;color:#4338ca">Terpilih: <strong id="checklist-count-guru">0</strong> data</span>
+        <div style="display:flex;gap:8px">
+            <button class="btn-danger" onclick="hapusTerpilih('guru')" style="border-radius:8px;padding:8px 16px;font-size:12.5px;background:#dc2626;border-color:#dc2626;color:#fff;font-weight:700">Hapus Terpilih</button>
+            <button class="btn-secondary" onclick="cancelChecklist('guru')" style="border-radius:8px;padding:8px 16px;font-size:12.5px">Batal</button>
+        </div>
+    </div>
+
     {{-- ── Main Table ── --}}
     <div class="table-card" style="margin-bottom:20px">
         <table id="guru-table">
             <thead>
                 <tr>
+                    <th style="width:40px"><input type="checkbox" class="checklist-select-all" data-page="guru"></th>
                     <th style="width:48px">No.</th>
                     <th style="width:160px">NIP</th>
                     <th>Nama Guru</th>
@@ -166,6 +176,7 @@
                     data-peran="{{ strtolower($peranNama) }}"
                     data-status="{{ $isAktif ? 'aktif' : 'nonaktif' }}"
                     data-jadwal-count="{{ $jadwalCount }}">
+                    <td style="width:40px"><input type="checkbox" class="checklist-item" data-id="{{ $g->id_guru }}" data-page="guru"></td>
                     <td style="color:#94a3b8;font-weight:600;font-size:13px">{{ $idx + 1 }}</td>
                     <td style="font-family:monospace;font-size:13px;color:#475569">{{ $g->nip ?? '-' }}</td>
                     <td style="font-weight:600;color:#1e293b;font-size:13.5px">
@@ -224,7 +235,7 @@
                 </tr>
                 @endforeach
                 <tr id="guru-empty-state" style="display:none">
-                    <td colspan="7" style="text-align:center;padding:40px;color:#94a3b8">
+                    <td colspan="8" style="text-align:center;padding:40px;color:#94a3b8">
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" style="margin:0 auto 10px;display:block"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                         Tidak ada data guru yang cocok dengan pencarian/filter.
                     </td>
@@ -263,7 +274,12 @@
 }
 @media (max-width: 600px) {
     #page-data-guru [style*="grid-template-columns:repeat(4"] { grid-template-columns: 1fr !important; }
-}
+.checklist-item { width:16px; height:16px; accent-color:#6366f1; cursor:pointer; }
+.checklist-item:disabled { cursor:not-allowed; opacity:0.4; }
+.checklist-select-all { width:16px; height:16px; accent-color:#6366f1; cursor:pointer; }
+.checklist-select-all:disabled { cursor:not-allowed; opacity:0.4; }
+.checklist-bar { animation: checklistIn 0.2s ease; }
+@keyframes checklistIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
 </style>
 
 {{-- ── JS: Filter + Pagination + Edit ── --}}
@@ -273,7 +289,7 @@ function bukaImportGuruModal() {
     if (oldModal) oldModal.remove();
     const modal = document.createElement('div');
     modal.id = 'guru-upload-modal';
-    modal.innerHTML = `<div class="guru-upload-backdrop"><div class="guru-upload-dialog" role="dialog" aria-modal="true" aria-labelledby="guru-upload-title"><div class="guru-upload-head"><div><h3 id="guru-upload-title">Upload Data Guru</h3><p>CSV, Excel, atau TXT</p></div><button type="button" class="guru-upload-close" aria-label="Tutup">&times;</button></div><div id="guru-upload-drop" class="guru-upload-drop"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.7"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><strong>Tarik file ke sini</strong><span>atau pilih file dari komputer</span><button type="button" id="guru-upload-choose" class="guru-upload-choose">Pilih File</button><input id="guru-upload-input" type="file" accept=".csv,.txt,.xlsx,.xls" hidden><div id="guru-upload-name">Belum ada file dipilih</div></div><div style="padding:0 22px 6px;font-size:11.5px;color:#64748b;line-height:1.6"><div style="font-weight:700;color:#334155;margin-bottom:4px">Format kolom yang didukung:</div><div style="display:flex;gap:6px;flex-wrap:wrap"><span style="background:#f1f5f9;padding:2px 8px;border-radius:6px;font-weight:600;font-size:11px">NIP</span><span style="background:#f1f5f9;padding:2px 8px;border-radius:6px;font-weight:600;font-size:11px">Nama Guru</span><span style="background:#f1f5f9;padding:2px 8px;border-radius:6px;font-weight:600;font-size:11px">Role / Jabatan</span><span style="background:#f1f5f9;padding:2px 8px;border-radius:6px;font-weight:600;font-size:11px">Wali Kelas</span><span style="background:#f1f5f9;padding:2px 8px;border-radius:6px;font-weight:600;font-size:11px;color:#94a3b8">No HP (opsional)</span><span style="background:#f1f5f9;padding:2px 8px;border-radius:6px;font-weight:600;font-size:11px;color:#94a3b8">Username (opsional)</span></div><div style="margin-top:6px;color:#94a3b8;font-size:11px">Sesuai format file Data Guru SMKN. Kolom No akan diabaikan otomatis. Maks 25MB.</div></div><div class="guru-upload-foot"><button type="button" id="guru-upload-cancel" class="guru-upload-cancel">Batal</button><button type="button" id="guru-upload-submit" class="guru-upload-submit" disabled>Upload Sekarang</button></div></div></div>`;
+    modal.innerHTML = `<div class="guru-upload-backdrop"><div class="guru-upload-dialog" role="dialog" aria-modal="true" aria-labelledby="guru-upload-title"><div class="guru-upload-head"><div><h3 id="guru-upload-title">Upload Data Guru</h3><p>CSV, Excel, atau TXT</p></div><button type="button" class="guru-upload-close" aria-label="Tutup">&times;</button></div><div id="guru-upload-drop" class="guru-upload-drop"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.7"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><strong>Tarik file ke sini</strong><span>atau pilih file dari komputer</span><button type="button" id="guru-upload-choose" class="guru-upload-choose">Pilih File</button><input id="guru-upload-input" type="file" accept=".csv,.txt,.xlsx,.xls" hidden><div id="guru-upload-name">Belum ada file dipilih</div></div><div style="padding:0 22px 6px;font-size:11.5px;color:#64748b;line-height:1.6"><div style="font-weight:700;color:#334155;margin-bottom:4px">Format kolom yang didukung:</div><div style="display:flex;gap:6px;flex-wrap:wrap"><span style="background:#f1f5f9;padding:2px 8px;border-radius:6px;font-weight:600;font-size:11px">NIP</span><span style="background:#f1f5f9;padding:2px 8px;border-radius:6px;font-weight:600;font-size:11px">Nama Guru</span><span style="background:#f1f5f9;padding:2px 8px;border-radius:6px;font-weight:600;font-size:11px">Role / Jabatan</span><span style="background:#f1f5f9;padding:2px 8px;border-radius:6px;font-weight:600;font-size:11px">Wali Kelas</span><span style="background:#f1f5f9;padding:2px 8px;border-radius:6px;font-weight:600;font-size:11px;color:#94a3b8">No HP (opsional)</span><span style="background:#f1f5f9;padding:2px 8px;border-radius:6px;font-weight:600;font-size:11px;color:#94a3b8">Username (opsional)</span></div><div style="margin-top:6px;color:#94a3b8;font-size:11px">Sesuai format file Data Guru SMKN. Kolom No akan diabaikan otomatis. Maks 25MB.</div></div><div class="guru-upload-foot"><button type="button" id="guru-upload-cancel" class="guru-upload-cancel">Batal</button><button type="button" id="guru-upload-submit" class="guru-upload-submit">Upload Sekarang</button></div></div></div>`;
     document.body.appendChild(modal);
     const backdrop = modal.querySelector('.guru-upload-backdrop');
     const drop = modal.querySelector('#guru-upload-drop');
@@ -421,7 +437,7 @@ function uploadGuruFile(formData) {
         guruFiltered.forEach((r, i) => {
             r.style.display = (i >= start && i < end) ? '' : 'none';
             if(i >= start && i < end){
-                r.querySelector('td').textContent = start + (i - start) + 1;
+                r.querySelectorAll('td')[1].textContent = start + (i - start) + 1;
             }
         });
 

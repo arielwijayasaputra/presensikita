@@ -9,7 +9,8 @@
                 {{ $allKelas->first()->nama_kelas ?? 'Semua Kelas' }}
             </div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+
             <button class="btn-primary" onclick="tambahSiswaModal()" style="border-radius:10px;padding:10px 20px;font-size:13.5px">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 Tambah Siswa
@@ -157,11 +158,20 @@
 
     </div>
 
+    <div id="checklist-bar-siswa" class="checklist-bar" style="display:none;margin-bottom:16px;padding:12px 18px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <span style="font-size:13px;font-weight:600;color:#4338ca">Terpilih: <strong id="checklist-count-siswa">0</strong> data</span>
+        <div style="display:flex;gap:8px">
+            <button class="btn-danger" onclick="hapusTerpilih('siswa')" style="border-radius:8px;padding:8px 16px;font-size:12.5px;background:#dc2626;border-color:#dc2626;color:#fff;font-weight:700">Hapus Terpilih</button>
+            <button class="btn-secondary" onclick="cancelChecklist('siswa')" style="border-radius:8px;padding:8px 16px;font-size:12.5px">Batal</button>
+        </div>
+    </div>
+
     {{-- ── Main Table ── --}}
     <div class="table-card" style="margin-bottom:20px">
         <table id="siswa-table">
             <thead>
                 <tr>
+                    <th style="width:40px"><input type="checkbox" class="checklist-select-all" data-page="siswa"></th>
                     <th style="width:48px">No.</th>
                     <th style="width:110px">NISN</th>
                     <th>Nama Siswa</th>
@@ -178,6 +188,7 @@
                     data-kelas="{{ $s->id_kelas }}"
                     data-jk="{{ $s->jenis_kelamin }}"
                     data-status="{{ $s->is_aktif ? 'aktif' : 'nonaktif' }}">
+                    <td style="width:40px"><input type="checkbox" class="checklist-item" data-id="{{ $s->id_siswa }}" data-page="siswa"></td>
                     <td style="color:#94a3b8;font-weight:600;font-size:13px">{{ $idx + 1 }}</td>
                     <td style="font-family:monospace;font-size:13px;color:#475569">{{ $s->nisn ?? '-' }}</td>
                     <td style="font-weight:600;color:#1e293b;font-size:13.5px">{{ $s->nama_siswa }}</td>
@@ -219,7 +230,7 @@
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                 @endforeach
                 <tr id="siswa-empty-state" style="display:none">
-                    <td colspan="7" style="text-align:center;padding:40px;color:#94a3b8">
+                    <td colspan="8" style="text-align:center;padding:40px;color:#94a3b8">
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" style="margin:0 auto 10px;display:block"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                         Tidak ada data siswa yang cocok dengan pencarian/filter.
                     </td>
@@ -261,7 +272,12 @@
 }
 @media (max-width: 480px) {
     #page-data-siswa [style*="grid-template-columns:repeat(5"] { grid-template-columns: 1fr !important; }
-}
+.checklist-item { width:16px; height:16px; accent-color:#6366f1; cursor:pointer; }
+.checklist-item:disabled { cursor:not-allowed; opacity:0.4; }
+.checklist-select-all { width:16px; height:16px; accent-color:#6366f1; cursor:pointer; }
+.checklist-select-all:disabled { cursor:not-allowed; opacity:0.4; }
+.checklist-bar { animation: checklistIn 0.2s ease; }
+@keyframes checklistIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
 </style>
 
 {{-- ── JS: Filter + Pagination ── --}}
@@ -341,7 +357,7 @@
         siswaFiltered.forEach((r, i) => {
             r.style.display = (i >= start && i < end) ? '' : 'none';
             if(i >= start && i < end){
-                r.querySelector('td').textContent = start + (i - start) + 1;
+                r.querySelectorAll('td')[1].textContent = start + (i - start) + 1;
             }
         });
 

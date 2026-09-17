@@ -23,20 +23,8 @@
 
     @if($siswaTerlambatKelasIni->isNotEmpty())
         <div class="alert-terlambat-banner" onclick="tampilkanModalSiswaTerlambat('{{ $selectedKelas->id_kelas ?? '' }}', '{{ addslashes($selectedKelas->nama_kelas ?? '') }}')">
-            <div class="alert-terlambat-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            </div>
-            <div class="alert-terlambat-content">
-                <div class="alert-terlambat-header">
-                    <p class="alert-terlambat-title">Pemberitahuan Siswa Terlambat di Kelas {{ $selectedKelas->nama_kelas ?? '' }} ({{ $siswaTerlambatKelasIni->count() }} Siswa)</p>
-                    <span class="alert-terlambat-btn">
-                        Lihat Daftar Siswa &rarr;
-                    </span>
-                </div>
-                <span class="alert-terlambat-desc">
-                    Terdapat siswa di kelas ini yang datang terlambat dan telah diizinkan Guru Piket. Status absensi jam sebelum masuk otomatis "Masuk Terlambat" dan jam berikutnya "Hadir".
-                </span>
-            </div>
+            <p class="alert-terlambat-title">Pemberitahuan Siswa Terlambat di Kelas {{ $selectedKelas->nama_kelas ?? '' }}</p>
+            <button type="button" class="alert-terlambat-btn">Lihat Daftar Siswa</button>
         </div>
     @endif
 

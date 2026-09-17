@@ -8,20 +8,8 @@
 
     @if(isset($siswaTerlambatKelasAktif) && $siswaTerlambatKelasAktif->isNotEmpty() && isset($activeKelasObj))
         <div class="alert-terlambat-banner" onclick="tampilkanModalSiswaTerlambat('{{ $activeKelasObj->id_kelas }}', '{{ $activeKelasObj->nama_kelas }}')">
-            <div class="alert-terlambat-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            </div>
-            <div class="alert-terlambat-content">
-                <div class="alert-terlambat-header">
-                    <p class="alert-terlambat-title">Pemberitahuan Siswa Terlambat di Kelas {{ $activeKelasObj->nama_kelas }} ({{ $siswaTerlambatKelasAktif->count() }} Siswa)</p>
-                    <span class="alert-terlambat-btn">
-                        Lihat Daftar Siswa &rarr;
-                    </span>
-                </div>
-                <span class="alert-terlambat-desc">
-                    Terdapat {{ $siswaTerlambatKelasAktif->count() }} siswa di kelas <strong>{{ $activeKelasObj->nama_kelas }}</strong> yang datang terlambat hari ini dan telah diizinkan Guru Piket. Klik notifikasi ini untuk melihat rincian siswa.
-                </span>
-            </div>
+            <p class="alert-terlambat-title">Pemberitahuan Siswa Terlambat di Kelas {{ $activeKelasObj->nama_kelas }}</p>
+            <button type="button" class="alert-terlambat-btn">Lihat Daftar Siswa</button>
         </div>
     @endif
 

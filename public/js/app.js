@@ -2886,9 +2886,160 @@ window.tampilkanModalSiswaTerlambat = function(kelasId, namaKelas) {
                 title: 'Gagal',
                 text: 'Gagal memuat data siswa terlambat.',
                 confirmButtonColor: '#dc2626'
-            });
         });
+    });
 };
+
+/* ── Checklist Feature (Admin Data Tables) ── */
+(function(){
+    const CHECKLIST_KEY = 'admin_checklist_';
+
+    window.toggleChecklistMode = function(page) {
+        const toggleBtn = document.getElementById('btn-toggle-checklist-' + page);
+        const bar = document.getElementById('checklist-bar-' + page);
+        const selectAll = document.querySelector('.checklist-select-all');
+        const isActive = toggleBtn && toggleBtn.dataset.active === '1';
+        if (!isActive) {
+            if (toggleBtn) {
+                toggleBtn.dataset.active = '1';
+                toggleBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Batal Pilih';
+                toggleBtn.style.background = '#dc2626';
+                toggleBtn.style.borderColor = '#dc2626';
+            }
+            if (bar) bar.style.display = 'flex';
+            if (selectAll) selectAll.disabled = false;
+            document.querySelectorAll('.checklist-item[data-page="' + page + '"]').forEach(cb => cb.disabled = false);
+            loadChecklist(page);
+        } else {
+            if (toggleBtn) {
+                toggleBtn.dataset.active = '0';
+                toggleBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Edit Pilih';
+                toggleBtn.style.background = '#6366f1';
+                toggleBtn.style.borderColor = '#6366f1';
+            }
+            if (bar) bar.style.display = 'none';
+            document.querySelectorAll('.checklist-item[data-page="' + page + '"]').forEach(cb => cb.disabled = true);
+            if (selectAll) selectAll.disabled = true;
+        }
+    };
+
+    window.hapusTerpilih = function(page) {
+        const ids = Array.from(document.querySelectorAll('.checklist-item[data-page="' + page + '"]:checked')).map(cb => cb.dataset.id);
+        if (ids.length === 0) return;
+        let label = page === 'siswa' ? 'siswa' : (page === 'kelas' ? 'kelas' : 'guru');
+        confirmDeleteData({
+            title: 'Hapus ' + ids.length + ' Data ' + label + '?',
+            itemName: ids.length + ' ' + label + ' terpilih',
+            onConfirm: async function() {
+                try {
+                    let successCount = 0;
+                    let lastError = '';
+                    Swal.fire({
+                        title: 'Menghapus Data...',
+                        text: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        didOpen: () => { Swal.showLoading(); }
+                    });
+                    
+                    for (let i = 0; i < ids.length; i++) {
+                        const res = await fetch('/' + page + '/' + ids[i], {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'Accept': 'application/json'
+                            }
+                        });
+                        if (res.ok) {
+                            successCount++;
+                        } else {
+                            const errData = await res.text();
+                            lastError = errData.substring(0, 50); // Keep short
+                        }
+                    }
+                    
+                    if (successCount === ids.length) {
+                        location.reload();
+                    } else {
+                        throw new Error('Gagal menghapus sebagian atau semua data. ' + (ids.length - successCount) + ' gagal. Hint: ' + lastError);
+                    }
+                } catch (err) {
+                    Swal.fire({ icon: 'error', title: 'Gagal', text: err.message, buttonsStyling: false });
+                }
+            }
+        });
+    };
+
+    window.cancelChecklist = function(page) {
+        document.querySelectorAll('.checklist-item[data-page="' + page + '"]').forEach(cb => cb.checked = false);
+        const selectAll = document.querySelector('.checklist-select-all');
+        if (selectAll) selectAll.checked = false;
+        localStorage.removeItem(CHECKLIST_KEY + page);
+        updateChecklistCount(page);
+    };
+
+    window.loadChecklist = function(page) {
+        const saved = JSON.parse(localStorage.getItem(CHECKLIST_KEY + page) || '[]');
+        document.querySelectorAll('.checklist-item[data-page="' + page + '"]').forEach(cb => {
+            cb.checked = saved.includes(cb.dataset.id);
+        });
+        var items = document.querySelectorAll('.checklist-item[data-page="' + page + '"]');
+        var allChecked = items.length > 0 && Array.from(items).every(cb => saved.includes(cb.dataset.id));
+        var selectAll = document.querySelector('.checklist-select-all');
+        if (selectAll) selectAll.checked = allChecked;
+        updateChecklistCount(page);
+    }
+
+    window.updateChecklistCount = function(page) {
+        var count = document.querySelectorAll('.checklist-item[data-page="' + page + '"]:checked').length;
+        var countEl = document.getElementById('checklist-count-' + page);
+        if (countEl) countEl.textContent = count;
+        var bar = document.getElementById('checklist-bar-' + page);
+        if (bar) bar.style.display = count > 0 ? 'flex' : 'none';
+    };
+
+    document.addEventListener('change', function(e) {
+        if (e.target && e.target.classList.contains('checklist-item')) {
+            var page = e.target.dataset.page;
+            var checked = [];
+            document.querySelectorAll('.checklist-item[data-page="' + page + '"]:checked').forEach(function(cb) { checked.push(cb.dataset.id); });
+            localStorage.setItem(CHECKLIST_KEY + page, JSON.stringify(checked));
+            updateChecklistCount(page);
+            var items = document.querySelectorAll('.checklist-item[data-page="' + page + '"]');
+            var allChecked = items.length > 0 && Array.from(items).every(cb => cb.checked);
+            var selectAll = document.querySelector('.checklist-select-all');
+            if (selectAll && !selectAll.disabled) selectAll.checked = allChecked;
+        }
+        if (e.target && e.target.classList.contains('checklist-select-all')) {
+            var table = e.target.closest('table');
+            if (table) {
+                var itemInTable = table.querySelector('.checklist-item');
+                if (itemInTable) {
+                    var page = itemInTable.dataset.page;
+                    var checkboxes = document.querySelectorAll('.checklist-item[data-page="' + page + '"]');
+                    checkboxes.forEach(function(cb) { cb.checked = e.target.checked; });
+                    var checked = [];
+                    checkboxes.forEach(function(cb) { if (cb.checked) checked.push(cb.dataset.id); });
+                    localStorage.setItem(CHECKLIST_KEY + page, JSON.stringify(checked));
+                    updateChecklistCount(page);
+                }
+            }
+        }
+    });
+
+    ['siswa', 'kelas', 'guru'].forEach(function(page) {
+        var saved = JSON.parse(localStorage.getItem(CHECKLIST_KEY + page) || '[]');
+        if (saved.length > 0) {
+            document.querySelectorAll('.checklist-item[data-page="' + page + '"]').forEach(function(cb) {
+                if (saved.includes(cb.dataset.id)) cb.checked = true;
+            });
+            var items = document.querySelectorAll('.checklist-item[data-page="' + page + '"]');
+            var allChecked = items.length > 0 && Array.from(items).every(cb => saved.includes(cb.dataset.id));
+            var selectAll = document.querySelector('.checklist-select-all');
+            if (selectAll) selectAll.checked = allChecked;
+        }
+    });
+})();
+
 
 function perbaruiBadgeNotifikasi() {
     fetch(window.notifUrl || '/admin/notifikasi')

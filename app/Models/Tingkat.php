@@ -19,12 +19,9 @@ class Tingkat extends Model
         'is_aktif',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'is_aktif' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'is_aktif' => 'boolean',
+    ];
 
     /**
      * Get all active tingkat ordered by urutan.

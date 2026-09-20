@@ -3,16 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\AkunAdmin;
-use App\Models\DispenSiswa;
-use App\Models\Guru;
-use App\Models\Hari;
-use App\Models\IzinGuru;
-use App\Models\JamPelajaran;
-use App\Models\Kelas;
-use App\Models\Mapel;
 use App\Models\Pengaturan;
-use App\Models\Siswa;
-use App\Models\TahunAjaran;
 use App\Services\WhatsAppService;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;

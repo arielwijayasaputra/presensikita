@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\AkunAdmin;
 use App\Models\Guru;
-use App\Models\Hari;
 use App\Models\JadwalMengajar;
 use App\Models\JamPelajaran;
 use App\Models\Kelas;

@@ -12,7 +12,6 @@ use App\Models\Mapel;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -28,22 +27,22 @@ class GuruSelfieJurnalTest extends TestCase
 
         $uniq = uniqid();
         $guru = Guru::create([
-            'nama_guru' => 'Guru Test ' . $uniq,
-            'username' => 'guru_' . $uniq,
+            'nama_guru' => 'Guru Test '.$uniq,
+            'username' => 'guru_'.$uniq,
             'password_hash' => bcrypt('password'),
-            'nip' => '9999' . rand(1000, 9999),
+            'nip' => '9999'.rand(1000, 9999),
             'is_aktif' => 1,
         ]);
         $tahun = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::create(['tahun_ajaran' => '2026/2027', 'semester' => 'Ganjil', 'is_aktif' => 1]);
         $kelas = Kelas::create([
-            'nama_kelas' => 'X Test Selfie ' . $uniq,
+            'nama_kelas' => 'X Test Selfie '.$uniq,
             'tingkat_kelas' => 'X',
             'jurusan' => 'RPL',
             'id_tahun_ajaran' => $tahun->id_tahun_ajaran,
         ]);
 
-        $siswa1 = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa 1', 'nisn' => '999999' . rand(1000, 9999), 'is_aktif' => 1]);
-        $siswa2 = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa 2', 'nisn' => '999999' . rand(1000, 9999), 'is_aktif' => 1]);
+        $siswa1 = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa 1', 'nisn' => '999999'.rand(1000, 9999), 'is_aktif' => 1]);
+        $siswa2 = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa 2', 'nisn' => '999999'.rand(1000, 9999), 'is_aktif' => 1]);
 
         $mapel = Mapel::first() ?? Mapel::create(['nama_mapel' => 'Pemrograman Web', 'kode_mapel' => 'PW', 'kelompok' => 'C']);
 
@@ -142,21 +141,21 @@ class GuruSelfieJurnalTest extends TestCase
 
         $uniq = uniqid();
         $guru = Guru::create([
-            'nama_guru' => 'Guru Test ' . $uniq,
-            'username' => 'guru_' . $uniq,
+            'nama_guru' => 'Guru Test '.$uniq,
+            'username' => 'guru_'.$uniq,
             'password_hash' => bcrypt('password'),
-            'nip' => '9999' . rand(1000, 9999),
+            'nip' => '9999'.rand(1000, 9999),
             'is_aktif' => 1,
         ]);
         $tahun = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::create(['tahun_ajaran' => '2026/2027', 'semester' => 'Ganjil', 'is_aktif' => 1]);
         $kelas = Kelas::create([
-            'nama_kelas' => 'X Test NoSelfie ' . $uniq,
+            'nama_kelas' => 'X Test NoSelfie '.$uniq,
             'tingkat_kelas' => 'X',
             'jurusan' => 'RPL',
             'id_tahun_ajaran' => $tahun->id_tahun_ajaran,
         ]);
 
-        $siswa = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa 1', 'nisn' => '999999' . rand(1000, 9999), 'is_aktif' => 1]);
+        $siswa = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa 1', 'nisn' => '999999'.rand(1000, 9999), 'is_aktif' => 1]);
         $mapel = Mapel::first() ?? Mapel::create(['nama_mapel' => 'Pemrograman Web', 'kode_mapel' => 'PW', 'kelompok' => 'C']);
         $jam1 = JamPelajaran::firstOrCreate(
             ['hari' => $hariIni, 'jam_ke' => 1],
@@ -210,21 +209,21 @@ class GuruSelfieJurnalTest extends TestCase
 
         $uniq = uniqid();
         $guru = Guru::create([
-            'nama_guru' => 'Guru Test ' . $uniq,
-            'username' => 'guru_' . $uniq,
+            'nama_guru' => 'Guru Test '.$uniq,
+            'username' => 'guru_'.$uniq,
             'password_hash' => bcrypt('password'),
-            'nip' => '9999' . rand(1000, 9999),
+            'nip' => '9999'.rand(1000, 9999),
             'is_aktif' => 1,
         ]);
         $tahun = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::create(['tahun_ajaran' => '2026/2027', 'semester' => 'Ganjil', 'is_aktif' => 1]);
         $kelas = Kelas::create([
-            'nama_kelas' => 'X Test UpdateSelfie ' . $uniq,
+            'nama_kelas' => 'X Test UpdateSelfie '.$uniq,
             'tingkat_kelas' => 'X',
             'jurusan' => 'RPL',
             'id_tahun_ajaran' => $tahun->id_tahun_ajaran,
         ]);
 
-        $siswa1 = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa 1', 'nisn' => '999999' . rand(1000, 9999), 'is_aktif' => 1]);
+        $siswa1 = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa 1', 'nisn' => '999999'.rand(1000, 9999), 'is_aktif' => 1]);
         $mapel = Mapel::first() ?? Mapel::create(['nama_mapel' => 'Pemrograman Web', 'kode_mapel' => 'PW', 'kelompok' => 'C']);
         $jam1 = JamPelajaran::firstOrCreate(
             ['hari' => $hariIni, 'jam_ke' => 1],
@@ -297,4 +296,3 @@ class GuruSelfieJurnalTest extends TestCase
         }
     }
 }
-

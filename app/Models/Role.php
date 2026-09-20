@@ -18,12 +18,9 @@ class Role extends Model
         'is_struktural',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'is_struktural' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'is_struktural' => 'boolean',
+    ];
 
     /**
      * Get all struktural roles.

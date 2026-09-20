@@ -128,7 +128,7 @@ class AbsensiController extends Controller
                 'jam_pelajaran.jam_selesai',
                 'mapel.kode_mapel',
                 'mapel.nama_mapel',
-                DB::raw("COALESCE(guru.nama_guru, 'Belum ditugaskan') as nama_guru" )
+                DB::raw("COALESCE(guru.nama_guru, 'Belum ditugaskan') as nama_guru")
             )
             ->orderBy('jam_pelajaran.jam_ke')
             ->get();
@@ -172,13 +172,14 @@ class AbsensiController extends Controller
             } else {
                 // Cek apakah jam pelajaran ini bertepatan dengan dispen siswa
                 $dispenJamIni = $dispenHariIniList->first(function ($d) use ($j) {
-                    $wMulai = $d->waktu_keluar 
-                        ? $d->waktu_keluar->format('H:i:s') 
+                    $wMulai = $d->waktu_keluar
+                        ? $d->waktu_keluar->format('H:i:s')
                         : ($d->created_at ? $d->created_at->format('H:i:s') : '00:00:00');
-                    $wSelesai = $d->waktu_masuk 
-                        ? $d->waktu_masuk->format('H:i:s') 
+                    $wSelesai = $d->waktu_masuk
+                        ? $d->waktu_masuk->format('H:i:s')
                         : '23:59:59';
-                    return ($j->jam_selesai > $wMulai && $j->jam_mulai < $wSelesai);
+
+                    return $j->jam_selesai > $wMulai && $j->jam_mulai < $wSelesai;
                 });
 
                 // Cari jurnal yang persis untuk id_jadwal ini
@@ -204,22 +205,22 @@ class AbsensiController extends Controller
 
                 if ($dispenJamIni) {
                     // Jam ini bertepatan saat siswa mengambil dispen / izin / sakit piket
-                    $alasanText = $dispenJamIni->alasan ? ': ' . $dispenJamIni->alasan : '';
+                    $alasanText = $dispenJamIni->alasan ? ': '.$dispenJamIni->alasan : '';
                     if ($dispenJamIni->jenis_absen === 'D') {
                         $status = 'Dispen';
                         $statusLabel = 'Dispensasi';
                         $badgeClass = 'badge-dispen';
-                        $keterangan = 'Dispen' . $alasanText;
+                        $keterangan = 'Dispen'.$alasanText;
                     } elseif ($dispenJamIni->jenis_absen === 'S') {
                         $status = 'Sakit';
                         $statusLabel = 'Sakit';
                         $badgeClass = 'badge-warning';
-                        $keterangan = 'Sakit' . $alasanText;
+                        $keterangan = 'Sakit'.$alasanText;
                     } elseif ($dispenJamIni->jenis_absen === 'I') {
                         $status = 'Izin';
                         $statusLabel = 'Izin';
                         $badgeClass = 'badge-info';
-                        $keterangan = 'Izin' . $alasanText;
+                        $keterangan = 'Izin'.$alasanText;
                     }
                     if ($jurnal) {
                         $materi = $jurnal->materi ?? 'Pembelajaran Harian';
@@ -267,7 +268,7 @@ class AbsensiController extends Controller
                         $status = 'Terlambat';
                         $statusLabel = 'Masuk Terlambat';
                         $badgeClass = 'badge-warning';
-                        $keterangan = 'Masuk Terlambat' . ($keterlambatanHariIni->alasan ? ': ' . $keterlambatanHariIni->alasan : '');
+                        $keterangan = 'Masuk Terlambat'.($keterlambatanHariIni->alasan ? ': '.$keterlambatanHariIni->alasan : '');
                     } else {
                         // Guru pada jam ini BELUM / TIDAK mengisi jurnal atau mengabsen
                         $status = $isSelesai ? 'Belum Diabsen' : 'Menunggu';

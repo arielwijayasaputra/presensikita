@@ -18,6 +18,7 @@ use App\Models\Pengaturan;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
 use App\Services\AbsensiService;
+use App\Services\WhatsAppService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -232,12 +233,16 @@ class DashboardController extends Controller
                 ->get()
                 ->keyBy('id_siswa');
 
-            $dispenHariIniClass = DispenSiswa::whereHas('siswa', fn($q) => $q->where('id_kelas', $waliKelasId))
+            $dispenHariIniClass = DispenSiswa::whereHas('siswa', fn ($q) => $q->where('id_kelas', $waliKelasId))
                 ->whereDate('tanggal_dispen', $waliTanggalHariIni)
                 ->get()
                 ->keyBy('id_siswa');
 
-            $hadirCount = 0; $sakitCount = 0; $izinCount = 0; $alpaCount = 0; $dispenCount = 0;
+            $hadirCount = 0;
+            $sakitCount = 0;
+            $izinCount = 0;
+            $alpaCount = 0;
+            $dispenCount = 0;
 
             $waliAbsensiHariIniList = $waliSiswaList->map(function ($s) use ($tidakHadirHariIni, $dispenHariIniClass, &$hadirCount, &$sakitCount, &$izinCount, &$alpaCount, &$dispenCount) {
                 $th = $tidakHadirHariIni->get($s->id_siswa);
@@ -254,11 +259,17 @@ class DashboardController extends Controller
                     $ket = $th->keterangan ?? '';
                 }
 
-                if ($status === 'H') $hadirCount++;
-                elseif ($status === 'S') $sakitCount++;
-                elseif ($status === 'I') $izinCount++;
-                elseif ($status === 'A') $alpaCount++;
-                elseif ($status === 'D') $dispenCount++;
+                if ($status === 'H') {
+                    $hadirCount++;
+                } elseif ($status === 'S') {
+                    $sakitCount++;
+                } elseif ($status === 'I') {
+                    $izinCount++;
+                } elseif ($status === 'A') {
+                    $alpaCount++;
+                } elseif ($status === 'D') {
+                    $dispenCount++;
+                }
 
                 return [
                     'id_siswa' => $s->id_siswa,
@@ -331,6 +342,7 @@ class DashboardController extends Controller
 
                 $j->jurnal = $jurnal;
                 $j->status_pembelajaran = $statusPembelajaran;
+
                 return $j;
             });
 
@@ -360,8 +372,8 @@ class DashboardController extends Controller
                 ->get();
 
             $waliTotalTerlambatPerSiswa = KeterlambatanSiswa::whereHas('siswa', function ($q) use ($waliKelasId) {
-                    $q->where('id_kelas', $waliKelasId);
-                })
+                $q->where('id_kelas', $waliKelasId);
+            })
                 ->where('status', 'diizinkan')
                 ->when($waliTglMulaiAbsen, fn ($q) => $q->whereDate('tanggal', '>=', $waliTglMulaiAbsen))
                 ->when($waliTglSelesaiAbsen, fn ($q) => $q->whereDate('tanggal', '<=', $waliTglSelesaiAbsen))
@@ -374,6 +386,7 @@ class DashboardController extends Controller
 
             $waliSiswaTerlambatSummary = $waliSiswaList->map(function ($siswa) use ($keterlambatanBySiswa) {
                 $items = $keterlambatanBySiswa->get($siswa->id_siswa, collect());
+
                 return [
                     'id_siswa' => $siswa->id_siswa,
                     'nisn' => $siswa->nisn ?: '-',
@@ -383,8 +396,8 @@ class DashboardController extends Controller
                     'riwayat' => $items->map(function ($item) {
                         return [
                             'tanggal' => date('d-m-Y', strtotime($item->tanggal)),
-                            'jam_masuk' => substr($item->jam_masuk, 0, 5) . ' WIB',
-                            'jam_ke' => 'Jam ke-' . $item->jam_ke,
+                            'jam_masuk' => substr($item->jam_masuk, 0, 5).' WIB',
+                            'jam_ke' => 'Jam ke-'.$item->jam_ke,
                             'alasan' => $item->alasan ?: '-',
                         ];
                     })->values()->toArray(),
@@ -440,7 +453,7 @@ class DashboardController extends Controller
         $waNomorWakaKesiswaan = Pengaturan::get('wa_nomor_waka_kesiswaan', '');
         $waNomorWakaSdm = Pengaturan::get('wa_nomor_waka_sdm', '');
         $waNomorKepsek = Pengaturan::get('wa_nomor_kepsek', '');
-        $waBotStatus = \App\Services\WhatsAppService::checkBotStatus();
+        $waBotStatus = WhatsAppService::checkBotStatus();
 
         return view('struktural.dashboard', compact(
             'guru',

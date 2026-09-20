@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Guru;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreAbsensiRequest;
 use App\Models\DispenSiswa;
 use App\Models\Guru;
 use App\Models\Hari;
@@ -16,7 +17,10 @@ use App\Models\Siswa;
 use App\Models\TahunAjaran;
 use App\Services\AbsensiService;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -25,7 +29,7 @@ class AbsensiController extends Controller
 {
     public function __construct(protected AbsensiService $absensiService) {}
 
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
         $kelases = Kelas::orderBy('nama_kelas')->get();
@@ -86,32 +90,14 @@ class AbsensiController extends Controller
         $activeJadwalItem = null;
 
         foreach ($jadwalMengajarHariIni->groupBy('id_kelas') as $kId => $jadwalGroup) {
-            $blocks = [];
-            $currentBlock = [];
-            $prevJamKe = null;
-            foreach ($jadwalGroup->sortBy('jam_ke') as $j) {
-                if ($prevJamKe === null || $j->jam_ke === $prevJamKe + 1) {
-                    $currentBlock[] = $j;
-                } else {
-                    if (! empty($currentBlock)) {
-                        $blocks[] = $currentBlock;
-                    }
-                    $currentBlock = [$j];
-                }
-                $prevJamKe = $j->jam_ke;
-            }
-            if (! empty($currentBlock)) {
-                $blocks[] = $currentBlock;
-            }
+            $blocks = $this->groupContiguousBlocks($jadwalGroup->sortBy('jam_ke'));
 
             $isActiveClass = false;
             foreach ($blocks as $block) {
-                $bStart = collect($block)->min('jam_mulai');
-                $bEnd = collect($block)->max('jam_selesai');
-                if ($currentTime >= $bStart && $currentTime <= $bEnd) {
+                if ($this->isBlockActiveAt($block, $currentTime)) {
                     $isActiveClass = true;
                     if (! $activeJadwalItem) {
-                        $activeJadwalItem = collect($block)->first(fn ($x) => $currentTime >= $x->jam_mulai && $currentTime <= $x->jam_selesai) ?? $block[0];
+                        $activeJadwalItem = $this->firstActiveJadwal($block, $currentTime);
                     }
                     break;
                 }
@@ -121,10 +107,7 @@ class AbsensiController extends Controller
                 $activeKelasIds[] = (int) $kId;
             }
 
-            $jadwalPerKelasMap[$kId] = $jadwalGroup->map(function ($j) {
-                $jamKe = $j->jam_ke >= 100 ? $j->jam_ke - 100 : $j->jam_ke;
-                return 'Jam ke-' . $jamKe . ' (' . substr($j->jam_mulai, 0, 5) . ' - ' . substr($j->jam_selesai, 0, 5) . ')';
-            })->join(', ');
+            $jadwalPerKelasMap[$kId] = $this->formatJadwalLabels($jadwalGroup);
         }
 
         $jadwalGuruAktif = $activeJadwalItem ? collect([$activeJadwalItem]) : collect();
@@ -132,7 +115,7 @@ class AbsensiController extends Controller
 
         $preferredKelasId = count($activeKelasIds) > 0 ? $activeKelasIds[0] : $kelases->first()?->id_kelas;
         $selectedKelasId = $request->get('kelas_id', $preferredKelasId);
-        $selectedKelas = $kelases->firstWhere('id_kelas', $selectedKelasId) ?? Kelas::find($selectedKelasId) ?? $kelases->first() ?? (object)['id_kelas' => 0, 'nama_kelas' => '-'];
+        $selectedKelas = $kelases->firstWhere('id_kelas', $selectedKelasId) ?? Kelas::find($selectedKelasId) ?? $kelases->first() ?? (object) ['id_kelas' => 0, 'nama_kelas' => '-'];
         $isKelasAktif = in_array((int) $selectedKelas->id_kelas, $activeKelasIds);
         $canInputJurnal = $isKelasAktif;
 
@@ -263,7 +246,7 @@ class AbsensiController extends Controller
         ));
     }
 
-    public function getSiswa($id_kelas)
+    public function getSiswa($id_kelas): JsonResponse
     {
         $siswa = Siswa::where('id_kelas', $id_kelas)
             ->where('is_aktif', 1)
@@ -276,7 +259,7 @@ class AbsensiController extends Controller
         ]);
     }
 
-    public function jadwalAktif()
+    public function jadwalAktif(): JsonResponse
     {
         $guruId = session('auth_guru_id') ?? Guru::first()?->id_guru;
         $hariMap = Hari::getActiveDays()->pluck('nama_hari', 'nama_inggris')->toArray();
@@ -305,32 +288,14 @@ class AbsensiController extends Controller
         $activeJadwalItem = null;
 
         foreach ($allJadwalGuruHariIni->groupBy('id_kelas') as $kId => $jadwalGroup) {
-            $blocks = [];
-            $currentBlock = [];
-            $prevJamKe = null;
-            foreach ($jadwalGroup->sortBy('jam_ke') as $j) {
-                if ($prevJamKe === null || $j->jam_ke === $prevJamKe + 1) {
-                    $currentBlock[] = $j;
-                } else {
-                    if (! empty($currentBlock)) {
-                        $blocks[] = $currentBlock;
-                    }
-                    $currentBlock = [$j];
-                }
-                $prevJamKe = $j->jam_ke;
-            }
-            if (! empty($currentBlock)) {
-                $blocks[] = $currentBlock;
-            }
+            $blocks = $this->groupContiguousBlocks($jadwalGroup->sortBy('jam_ke'));
 
             $isActiveClass = false;
             foreach ($blocks as $block) {
-                $bStart = collect($block)->min('jam_mulai');
-                $bEnd = collect($block)->max('jam_selesai');
-                if ($currentTime >= $bStart && $currentTime <= $bEnd) {
+                if ($this->isBlockActiveAt($block, $currentTime)) {
                     $isActiveClass = true;
                     if (! $activeJadwalItem) {
-                        $activeJadwalItem = collect($block)->first(fn ($x) => $currentTime >= $x->jam_mulai && $currentTime <= $x->jam_selesai) ?? $block[0];
+                        $activeJadwalItem = $this->firstActiveJadwal($block, $currentTime);
                     }
                     break;
                 }
@@ -340,10 +305,7 @@ class AbsensiController extends Controller
                 $activeKelasIds[] = (int) $kId;
             }
 
-            $jadwalPerKelasMap[$kId] = $jadwalGroup->map(function ($j) {
-                $jamKe = $j->jam_ke >= 100 ? $j->jam_ke - 100 : $j->jam_ke;
-                return 'Jam ke-' . $jamKe . ' (' . substr($j->jam_mulai, 0, 5) . ' - ' . substr($j->jam_selesai, 0, 5) . ')';
-            })->join(', ');
+            $jadwalPerKelasMap[$kId] = $this->formatJadwalLabels($jadwalGroup);
         }
 
         $kelasHariIni = $allJadwalGuruHariIni->map(fn ($j) => [
@@ -366,7 +328,7 @@ class AbsensiController extends Controller
         ]);
     }
 
-    public function jamPelajaranSekarang()
+    public function jamPelajaranSekarang(): JsonResponse
     {
         $sekarang = now()->format('H:i:s');
         $hariIni = now()->format('l');
@@ -402,7 +364,7 @@ class AbsensiController extends Controller
             ->get(['hari', 'jam_ke', 'jam_mulai', 'jam_selesai'])
             ->map(fn ($item) => [
                 'hari' => $item->hari,
-                'jam_ke' => $item->jam_ke >= 100 ? $item->jam_ke - 100 : $item->jam_ke,
+                'jam_ke' => self::normalizeJamKe((int) $item->jam_ke),
                 'jam_mulai' => $item->jam_mulai,
                 'jam_selesai' => $item->jam_selesai,
             ])
@@ -411,7 +373,7 @@ class AbsensiController extends Controller
         return response()->json([
             'status' => 'success',
             'jam' => $jam ? [
-                'jam_ke' => $jam->jam_ke >= 100 ? $jam->jam_ke - 100 : $jam->jam_ke,
+                'jam_ke' => self::normalizeJamKe((int) $jam->jam_ke),
                 'jam_mulai' => $jam->jam_mulai,
                 'jam_selesai' => $jam->jam_selesai,
             ] : null,
@@ -443,7 +405,7 @@ class AbsensiController extends Controller
         ]);
     }
 
-    public function cekAbsensi(Request $request)
+    public function cekAbsensi(Request $request): JsonResponse
     {
         $kelasId = (int) $request->get('kelas_id');
         $tanggal = $request->get('tanggal', date('Y-m-d'));
@@ -539,12 +501,12 @@ class AbsensiController extends Controller
                 $wSelesai = $dp->waktu_masuk ? $dp->waktu_masuk->format('H:i:s') : '23:59:59';
                 if ($nowTime >= $wMulai && $nowTime < $wSelesai) {
                     $status = $dp->jenis_absen ?? 'D';
-                    $keterangan = strtoupper($status) . ($dp->alasan ? ': ' . $dp->alasan : '');
+                    $keterangan = strtoupper($status).($dp->alasan ? ': '.$dp->alasan : '');
                 }
             } elseif (! $th && $kt) {
                 if ($normalizedCurrentJamKe < $kt->jam_ke) {
                     $status = 'T';
-                    $keterangan = 'Masuk Terlambat' . ($kt->alasan ? ': ' . $kt->alasan : '');
+                    $keterangan = 'Masuk Terlambat'.($kt->alasan ? ': '.$kt->alasan : '');
                 } else {
                     $status = 'H';
                 }
@@ -574,14 +536,8 @@ class AbsensiController extends Controller
         ]);
     }
 
-    public function simpanAbsensi(Request $request)
+    public function simpanAbsensi(StoreAbsensiRequest $request): JsonResponse
     {
-        $request->validate([
-            'id_kelas' => 'required|integer|exists:kelas,id_kelas',
-            'tanggal' => 'required|date|date_format:Y-m-d',
-            'absensi' => 'required|array',
-        ]);
-
         DB::beginTransaction();
         try {
             $jumlahHadir = 0;
@@ -641,24 +597,7 @@ class AbsensiController extends Controller
             });
 
             // Kelompokkan jadwal menjadi blok-blok jam yang berurutan (kontigu)
-            $blocks = [];
-            $currentBlock = [];
-            $prevJamKe = null;
-
-            foreach ($jadwalGuruHariIni as $j) {
-                if ($prevJamKe === null || $j->jam_ke === $prevJamKe + 1) {
-                    $currentBlock[] = $j;
-                } else {
-                    if (! empty($currentBlock)) {
-                        $blocks[] = $currentBlock;
-                    }
-                    $currentBlock = [$j];
-                }
-                $prevJamKe = $j->jam_ke;
-            }
-            if (! empty($currentBlock)) {
-                $blocks[] = $currentBlock;
-            }
+            $blocks = $this->groupContiguousBlocks($jadwalGuruHariIni);
 
             // Tentukan target block: jika ada jadwal aktif saat ini, ambil blok yang memuat jadwal aktif tersebut.
             $targetBlock = null;
@@ -672,9 +611,7 @@ class AbsensiController extends Controller
             } else {
                 // Periksa apakah waktu saat ini berada dalam rentang keseluruhan salah satu blok jam mengajar kelas ini
                 foreach ($blocks as $block) {
-                    $bStart = collect($block)->min('jam_mulai');
-                    $bEnd = collect($block)->max('jam_selesai');
-                    if ($currentTime >= $bStart && $currentTime <= $bEnd) {
+                    if ($this->isBlockActiveAt($block, $currentTime)) {
                         $targetBlock = $block;
                         break;
                     }
@@ -688,14 +625,11 @@ class AbsensiController extends Controller
 
                 if ($isRealtimeMode && ! $izinEdit && ! app()->runningUnitTests()) {
                     DB::rollBack();
-                    $jadwalInfo = $jadwalGuruHariIni->map(function ($j) {
-                        $jamKe = $j->jam_ke >= 100 ? $j->jam_ke - 100 : $j->jam_ke;
-                        return 'Jam ke-' . $jamKe . ' (' . substr($j->jam_mulai, 0, 5) . ' - ' . substr($j->jam_selesai, 0, 5) . ')';
-                    })->join(', ');
+                    $jadwalInfo = $this->formatJadwalLabels($jadwalGuruHariIni);
 
                     return response()->json([
                         'status' => 'error',
-                        'message' => 'Anda hanya dapat mengisi jurnal dan absensi sesuai jam mengajar aktif Anda (' . $jadwalInfo . '). Saat ini di luar jam mengajar.',
+                        'message' => 'Anda hanya dapat mengisi jurnal dan absensi sesuai jam mengajar aktif Anda ('.$jadwalInfo.'). Saat ini di luar jam mengajar.',
                     ], 422);
                 }
 
@@ -716,9 +650,9 @@ class AbsensiController extends Controller
                     }
                     $decodedImage = base64_decode($base64Image);
                     if ($decodedImage !== false) {
-                        $filename = 'selfie_' . $idGuru . '_' . $kelasId . '_' . time() . '_' . Str::random(6) . '.' . $type;
-                        Storage::disk('public')->put('selfie-guru/' . $filename, $decodedImage);
-                        $fotoPath = 'selfie-guru/' . $filename;
+                        $filename = 'selfie_'.$idGuru.'_'.$kelasId.'_'.time().'_'.Str::random(6).'.'.$type;
+                        Storage::disk('public')->put('selfie-guru/'.$filename, $decodedImage);
+                        $fotoPath = 'selfie-guru/'.$filename;
                     }
                 }
             }
@@ -858,7 +792,7 @@ class AbsensiController extends Controller
         }
     }
 
-    public function getSiswaTerlambatHariIni(Request $request)
+    public function getSiswaTerlambatHariIni(Request $request): JsonResponse
     {
         $tanggal = $request->get('tanggal', now()->toDateString());
         $kelasId = $request->get('kelas_id');
@@ -868,7 +802,7 @@ class AbsensiController extends Controller
             ->whereDate('tanggal', $tanggal)
             ->where('status', 'diizinkan');
 
-        if (!empty($kelasId)) {
+        if (! empty($kelasId)) {
             $query->whereHas('siswa', function ($q) use ($kelasId) {
                 $q->where('id_kelas', $kelasId);
             });
@@ -940,33 +874,83 @@ class AbsensiController extends Controller
             ->get();
 
         foreach ($jadwals->groupBy('id_kelas') as $kelasId => $items) {
-            $blocks = [];
-            $currentBlock = [];
-            $prevJamKe = null;
-            foreach ($items->sortBy('jam_ke') as $j) {
-                if ($prevJamKe === null || $j->jam_ke === $prevJamKe + 1) {
-                    $currentBlock[] = $j;
-                } else {
-                    if (! empty($currentBlock)) {
-                        $blocks[] = $currentBlock;
-                    }
-                    $currentBlock = [$j];
-                }
-                $prevJamKe = $j->jam_ke;
-            }
-            if (! empty($currentBlock)) {
-                $blocks[] = $currentBlock;
-            }
+            $blocks = self::groupContiguousBlocks($items->sortBy('jam_ke'));
 
             foreach ($blocks as $block) {
-                $bStart = collect($block)->min('jam_mulai');
-                $bEnd = collect($block)->max('jam_selesai');
-                if ($currentTime >= $bStart && $currentTime <= $bEnd) {
+                if (self::isBlockActiveAt($block, $currentTime)) {
                     return (int) $kelasId;
                 }
             }
         }
 
         return null;
+    }
+
+    /**
+     * Kelompokkan daftar jadwal menjadi blok jam yang berurutan (kontigu).
+     * Input harus sudah terurut berdasarkan jam_ke.
+     *
+     * @param  Collection<int, object>  $jadwals
+     * @return array<int, array<int, object>>
+     */
+    private static function groupContiguousBlocks(Collection $jadwals): array
+    {
+        $blocks = [];
+        $currentBlock = [];
+        $prevJamKe = null;
+
+        foreach ($jadwals as $j) {
+            if ($prevJamKe === null || $j->jam_ke === $prevJamKe + 1) {
+                $currentBlock[] = $j;
+            } else {
+                if (! empty($currentBlock)) {
+                    $blocks[] = $currentBlock;
+                }
+                $currentBlock = [$j];
+            }
+            $prevJamKe = $j->jam_ke;
+        }
+        if (! empty($currentBlock)) {
+            $blocks[] = $currentBlock;
+        }
+
+        return $blocks;
+    }
+
+    /**
+     * @param  array<int, object>  $block
+     */
+    private static function isBlockActiveAt(array $block, string $currentTime): bool
+    {
+        $bStart = collect($block)->min('jam_mulai');
+        $bEnd = collect($block)->max('jam_selesai');
+
+        return $currentTime >= $bStart && $currentTime <= $bEnd;
+    }
+
+    /**
+     * @param  array<int, object>  $block
+     */
+    private static function firstActiveJadwal(array $block, string $currentTime): object
+    {
+        return collect($block)->first(fn ($x) => $currentTime >= $x->jam_mulai && $currentTime <= $x->jam_selesai) ?? $block[0];
+    }
+
+    private static function normalizeJamKe(int $jamKe): int
+    {
+        return $jamKe >= 100 ? $jamKe - 100 : $jamKe;
+    }
+
+    private static function formatJadwalLabel(object $jadwal): string
+    {
+        return 'Jam ke-'.self::normalizeJamKe((int) $jadwal->jam_ke).' ('.substr($jadwal->jam_mulai, 0, 5).' - '.substr($jadwal->jam_selesai, 0, 5).')';
+    }
+
+    /**
+     * @param  Collection<int, object>  $items
+     */
+    private static function formatJadwalLabels(Collection $items): string
+    {
+        return $items->map(fn ($j) => self::formatJadwalLabel($j))->join(', ');
     }
 }

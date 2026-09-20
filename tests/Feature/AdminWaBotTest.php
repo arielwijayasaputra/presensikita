@@ -3,8 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\AkunAdmin;
-use App\Models\Pengaturan;
-use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class AdminWaBotTest extends TestCase
@@ -13,7 +11,7 @@ class AdminWaBotTest extends TestCase
     {
         $admin = AkunAdmin::first() ?? AkunAdmin::create([
             'nama' => 'Admin Test',
-            'username' => 'admin_test_' . uniqid(),
+            'username' => 'admin_test_'.uniqid(),
             'password_hash' => bcrypt('password'),
         ]);
 
@@ -33,7 +31,7 @@ class AdminWaBotTest extends TestCase
     {
         $admin = AkunAdmin::first() ?? AkunAdmin::create([
             'nama' => 'Admin Test',
-            'username' => 'admin_test_' . uniqid(),
+            'username' => 'admin_test_'.uniqid(),
             'password_hash' => bcrypt('password'),
         ]);
 

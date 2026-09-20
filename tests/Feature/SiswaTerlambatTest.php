@@ -24,19 +24,19 @@ class SiswaTerlambatTest extends TestCase
 
         $uniq = uniqid();
         $guruPiket = Guru::create([
-            'nama_guru' => 'Guru Piket ' . $uniq,
-            'username' => 'piket_' . $uniq,
+            'nama_guru' => 'Guru Piket '.$uniq,
+            'username' => 'piket_'.$uniq,
             'password_hash' => bcrypt('password'),
-            'nip' => '8888' . rand(1000, 9999),
+            'nip' => '8888'.rand(1000, 9999),
             'is_aktif' => 1,
             'is_admin' => 0,
         ]);
 
         $guruKelas = Guru::create([
-            'nama_guru' => 'Guru Kelas ' . $uniq,
-            'username' => 'guru_' . $uniq,
+            'nama_guru' => 'Guru Kelas '.$uniq,
+            'username' => 'guru_'.$uniq,
             'password_hash' => bcrypt('password'),
-            'nip' => '7777' . rand(1000, 9999),
+            'nip' => '7777'.rand(1000, 9999),
             'is_aktif' => 1,
             'is_admin' => 0,
         ]);
@@ -48,7 +48,7 @@ class SiswaTerlambatTest extends TestCase
         ]);
 
         $kelas = Kelas::create([
-            'nama_kelas' => 'Kelas X RPL ' . $uniq,
+            'nama_kelas' => 'Kelas X RPL '.$uniq,
             'tingkat_kelas' => 'X',
             'jurusan' => 'RPL',
             'id_tahun_ajaran' => $tahunAjaran->id_tahun_ajaran,
@@ -56,13 +56,13 @@ class SiswaTerlambatTest extends TestCase
 
         $siswa = Siswa::create([
             'id_kelas' => $kelas->id_kelas,
-            'nama_siswa' => 'Budi Santoso ' . $uniq,
-            'nisn' => '9999' . rand(100000, 999999),
+            'nama_siswa' => 'Budi Santoso '.$uniq,
+            'nisn' => '9999'.rand(100000, 999999),
             'is_aktif' => 1,
         ]);
 
         $mapel = DB::table('mapel')->whereNull('deleted_at')->first();
-        $mapelId = $mapel ? $mapel->id_mapel : DB::table('mapel')->insertGetId(['kode_mapel' => 'MPL_' . $uniq, 'nama_mapel' => 'Pemrograman Web']);
+        $mapelId = $mapel ? $mapel->id_mapel : DB::table('mapel')->insertGetId(['kode_mapel' => 'MPL_'.$uniq, 'nama_mapel' => 'Pemrograman Web']);
 
         $jam1 = DB::table('jam_pelajaran')->where('hari', $hariIni)->where('jam_ke', 1)->whereNull('deleted_at')->first();
         $jam2 = DB::table('jam_pelajaran')->where('hari', $hariIni)->where('jam_ke', 2)->whereNull('deleted_at')->first();
@@ -199,10 +199,10 @@ class SiswaTerlambatTest extends TestCase
 
         // Verifikasi guru lain tidak menerima notifikasi kelas ini
         $guruLain = Guru::create([
-            'nama_guru' => 'Guru Lain ' . $uniq,
-            'username' => 'lain_' . $uniq,
+            'nama_guru' => 'Guru Lain '.$uniq,
+            'username' => 'lain_'.$uniq,
             'password_hash' => bcrypt('password'),
-            'nip' => '6666' . rand(1000, 9999),
+            'nip' => '6666'.rand(1000, 9999),
             'is_aktif' => 1,
             'is_admin' => 0,
         ]);
@@ -241,8 +241,8 @@ class SiswaTerlambatTest extends TestCase
                     'foto_surat_url',
                     'guru_piket',
                     'status',
-                ]
-            ]
+                ],
+            ],
         ]);
         $filteredData = collect($guruTerlambatResponse->json('data'))->where('id_siswa', $siswa->id_siswa);
         $this->assertNotEmpty($filteredData);
@@ -308,10 +308,10 @@ class SiswaTerlambatTest extends TestCase
 
         // Skenario 6: Wali Kelas melihat halaman Rekap Absensi Kelas dan melihat tabel siswa terlambat
         $waliKelas = Guru::create([
-            'nama_guru' => 'Wali Kelas ' . $uniq,
-            'username' => 'wali_' . $uniq,
+            'nama_guru' => 'Wali Kelas '.$uniq,
+            'username' => 'wali_'.$uniq,
             'password_hash' => bcrypt('password'),
-            'nip' => '5555' . rand(1000, 9999),
+            'nip' => '5555'.rand(1000, 9999),
             'is_aktif' => 1,
             'is_admin' => 0,
         ]);

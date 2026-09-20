@@ -15,8 +15,6 @@ class TahunAjaran extends Model
 
     public $timestamps = false;
 
-    const DELETED_AT = 'deleted_at';
-
     protected $fillable = [
         'tahun_ajaran', 'semester', 'is_aktif',
     ];

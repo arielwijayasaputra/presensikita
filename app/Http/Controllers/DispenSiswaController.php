@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreDispenSiswaRequest;
 use App\Models\DispenSiswa;
 use App\Models\Guru;
 use App\Models\Hari;
@@ -31,16 +32,10 @@ class DispenSiswaController extends Controller
         return $this->store($request);
     }
 
-    public function store(Request $request)
+    public function store(StoreDispenSiswaRequest $request)
     {
         abort_unless(session('auth_role') === 'guru_piket', 403);
-        $data = $request->validate([
-            'id_siswa' => ['required', 'integer', 'exists:siswa,id_siswa'],
-            'tanggal_dispen' => ['required', 'date'],
-            'jenis_absen' => ['required', 'in:S,I,D'],
-            'alasan' => ['nullable', 'string', 'max:2000'],
-            'foto_surat' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-        ]);
+        $data = $request->validated();
 
         $siswa = Siswa::where('id_siswa', $data['id_siswa'])->where('is_aktif', 1)->firstOrFail();
         $guruPiket = Guru::where('id_guru', session('auth_guru_id'))->where('is_aktif', 1)->firstOrFail();
@@ -48,9 +43,8 @@ class DispenSiswaController extends Controller
 
         try {
             $dispen = DB::transaction(function () use ($data, $siswa, $guruPiket, $fotoSurat) {
-                $nowTime   = now()->format('H:i:s');
-                $dayMap    = [1=>'Senin',2=>'Selasa',3=>'Rabu',4=>'Kamis',5=>'Jumat',6=>'Sabtu',7=>'Minggu'];
-                $hariIndo  = $dayMap[date('N', strtotime($data['tanggal_dispen']))] ?? 'Senin';
+                $nowTime = now()->format('H:i:s');
+                $hariIndo = Hari::getNamaHariFromDayOfWeek((int) date('N', strtotime($data['tanggal_dispen'])));
                 $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
 
                 // Cari jurnal yang sudah ada pada jam yang sedang berlangsung (jika ada)

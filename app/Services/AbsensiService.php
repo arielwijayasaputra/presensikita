@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Models\DispenSiswa;
 use App\Models\Hari;
 use App\Models\JurnalKelas;
 use App\Models\JurnalSiswaTidakHadir;
 use App\Models\Kelas;
+use App\Models\KeterlambatanSiswa;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
 use Carbon\Carbon;
@@ -427,17 +429,8 @@ class AbsensiService
             return;
         }
 
-        $dayNum = date('N', strtotime($tanggal));
-        $dayMap = [
-            1 => 'Senin',
-            2 => 'Selasa',
-            3 => 'Rabu',
-            4 => 'Kamis',
-            5 => 'Jumat',
-            6 => 'Sabtu',
-            7 => 'Minggu',
-        ];
-        $hariIndo = $dayMap[$dayNum] ?? 'Senin';
+        $dayNum = (int) date('N', strtotime($tanggal));
+        $hariIndo = Hari::getNamaHariFromDayOfWeek($dayNum);
 
         $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
 
@@ -474,11 +467,11 @@ class AbsensiService
         $isToday = ($tanggal === now()->toDateString());
         $nowTime = now()->format('H:i:s');
 
-        $dispenList = \App\Models\DispenSiswa::whereIn('id_siswa', $allSiswa->pluck('id_siswa'))
+        $dispenList = DispenSiswa::whereIn('id_siswa', $allSiswa->pluck('id_siswa'))
             ->whereDate('tanggal_dispen', $tanggal)
             ->get();
 
-        $keterlambatanList = \App\Models\KeterlambatanSiswa::whereIn('id_siswa', $allSiswa->pluck('id_siswa'))
+        $keterlambatanList = KeterlambatanSiswa::whereIn('id_siswa', $allSiswa->pluck('id_siswa'))
             ->whereDate('tanggal', $tanggal)
             ->where('status', 'diizinkan')
             ->get();
@@ -543,7 +536,7 @@ class AbsensiService
                         $st = $d->jenis_absen ?? 'D';
                         JurnalSiswaTidakHadir::updateOrCreate(
                             ['id_jurnal' => $jurnal->id_jurnal, 'id_siswa' => $d->id_siswa],
-                            ['status' => $st, 'keterangan' => strtoupper($st) . ($d->alasan ? ': ' . $d->alasan : '')]
+                            ['status' => $st, 'keterangan' => strtoupper($st).($d->alasan ? ': '.$d->alasan : '')]
                         );
                     }
                 }
@@ -558,7 +551,7 @@ class AbsensiService
                         if ($th && $th->status === 'A') {
                             $th->update([
                                 'status' => 'T',
-                                'keterangan' => 'Masuk Terlambat' . ($k->alasan ? ': ' . $k->alasan : ''),
+                                'keterangan' => 'Masuk Terlambat'.($k->alasan ? ': '.$k->alasan : ''),
                             ]);
                         }
                     } else {

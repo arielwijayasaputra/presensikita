@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreJurusanRequest;
+use App\Http\Requests\Admin\UpdateJurusanRequest;
 use App\Models\Jurusan;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Mengelola data jurusan di sekolah.
@@ -19,18 +20,8 @@ class JurusanController extends Controller
      *
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(StoreJurusanRequest $request)
     {
-        $request->validate([
-            'kode_jurusan' => 'required|string|max:20|unique:jurusan,kode_jurusan',
-            'nama_jurusan' => 'required|string|max:100',
-            'deskripsi' => 'nullable|string|max:500',
-        ], [
-            'kode_jurusan.required' => 'Kode jurusan wajib diisi.',
-            'kode_jurusan.unique' => 'Kode jurusan sudah digunakan.',
-            'nama_jurusan.required' => 'Nama jurusan wajib diisi.',
-        ]);
-
         $jurusan = Jurusan::create([
             'kode_jurusan' => strtoupper(trim($request->kode_jurusan)),
             'nama_jurusan' => trim($request->nama_jurusan),
@@ -50,19 +41,9 @@ class JurusanController extends Controller
      *
      * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(UpdateJurusanRequest $request, $id)
     {
         $jurusan = Jurusan::findOrFail($id);
-
-        $request->validate([
-            'kode_jurusan' => 'required|string|max:20|unique:jurusan,kode_jurusan,'.$jurusan->id_jurusan.',id_jurusan',
-            'nama_jurusan' => 'required|string|max:100',
-            'deskripsi' => 'nullable|string|max:500',
-        ], [
-            'kode_jurusan.required' => 'Kode jurusan wajib diisi.',
-            'kode_jurusan.unique' => 'Kode jurusan sudah digunakan.',
-            'nama_jurusan.required' => 'Nama jurusan wajib diisi.',
-        ]);
 
         $oldKode = $jurusan->kode_jurusan;
         $newKode = strtoupper(trim($request->kode_jurusan));

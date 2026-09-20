@@ -5,8 +5,10 @@ namespace App\Services;
 use App\Models\DispenSiswa;
 use App\Models\IzinGuru;
 use App\Models\Pengaturan;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 
 class WhatsAppService
 {
@@ -257,9 +259,9 @@ class WhatsAppService
         // Hapus juga file auth secara lokal jika ada
         $botDir = base_path('whatsapp-bot');
         $authDir = $botDir.DIRECTORY_SEPARATOR.'auth_info_baileys';
-        if (\Illuminate\Support\Facades\File::exists($authDir)) {
+        if (File::exists($authDir)) {
             try {
-                \Illuminate\Support\Facades\File::deleteDirectory($authDir);
+                File::deleteDirectory($authDir);
             } catch (\Throwable $th) {
                 // Abaikan
             }
@@ -356,7 +358,7 @@ class WhatsAppService
         $namaPiket = $dispen->guruPiket?->nama_guru ?? 'Guru Piket';
 
         $pesan = "🔔 *NOTIFIKASI {$namaSekolah}*\n"
-            ."*PERMINTAAN PERSETUJUAN ".strtoupper($jenis)." SISWA*\n\n"
+            .'*PERMINTAAN PERSETUJUAN '.strtoupper($jenis)." SISWA*\n\n"
             ."Yth. *Bapak/Ibu Waka Kesiswaan*,\n"
             ."Terdapat permohonan surat baru yang diajukan oleh Guru Piket:\n\n"
             ."• *Nama Siswa:* {$namaSiswa}\n"
@@ -367,7 +369,7 @@ class WhatsAppService
             ."• *Guru Piket:* {$namaPiket}\n\n"
             ."Silakan buka link persetujuan di bawah ini:\n\n"
             ."{$linkWaka}\n\n"
-            ."_Pesan otomatis dari Sistem PresensiKita._";
+            .'_Pesan otomatis dari Sistem PresensiKita._';
 
         $hasilKirim = ! empty($nomorWaka) ? static::kirimPesan($nomorWaka, $pesan) : ['success' => false, 'error' => 'Nomor WA Waka Kesiswaan belum diatur.'];
 
@@ -407,7 +409,7 @@ class WhatsAppService
             ."• *Guru Piket:* {$namaPiket}\n\n"
             ."Silakan buka link persetujuan di bawah ini:\n\n"
             ."{$linkKepsek}\n\n"
-            ."_Pesan otomatis dari Sistem PresensiKita._";
+            .'_Pesan otomatis dari Sistem PresensiKita._';
 
         // Pesan untuk Waka SDM
         $pesanWaka = "🔔 *NOTIFIKASI {$namaSekolah}*\n"
@@ -420,7 +422,7 @@ class WhatsAppService
             ."• *Guru Piket:* {$namaPiket}\n\n"
             ."Silakan buka link persetujuan di bawah ini:\n\n"
             ."{$linkWaka}\n\n"
-            ."_Pesan otomatis dari Sistem PresensiKita._";
+            .'_Pesan otomatis dari Sistem PresensiKita._';
 
         $hasilKepsek = ! empty($nomorKepsek)
             ? static::kirimPesan($nomorKepsek, $pesanKepsek)
@@ -467,14 +469,14 @@ class WhatsAppService
     public static function generateLanSignedRoute(string $name, $expiration, array $parameters = []): string
     {
         // 1. Generate signature sebagai relative URL agar validasi signature kebal terhadap perbedaan domain/protocol
-        $relativeSignedUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute($name, $expiration, $parameters, false);
+        $relativeSignedUrl = URL::temporarySignedRoute($name, $expiration, $parameters, false);
 
         // 2. Tentukan Base URL publik (Cloudflare Tunnel / Ngrok / Custom Domain / IP LAN)
         $baseUrl = '';
         $customPublicUrl = trim(Pengaturan::get('wa_public_url', ''));
         if (! empty($customPublicUrl)) {
             if (! str_starts_with($customPublicUrl, 'http://') && ! str_starts_with($customPublicUrl, 'https://')) {
-                $customPublicUrl = 'https://' . $customPublicUrl;
+                $customPublicUrl = 'https://'.$customPublicUrl;
             }
             $baseUrl = rtrim($customPublicUrl, '/');
         } else {
@@ -489,7 +491,8 @@ class WhatsAppService
                         $baseUrl = "{$scheme}://{$host}{$portStr}";
                     }
                 }
-            } catch (\Throwable $e) {}
+            } catch (\Throwable $e) {
+            }
 
             if (empty($baseUrl)) {
                 $lanIp = gethostbyname(gethostname());
@@ -503,6 +506,6 @@ class WhatsAppService
             }
         }
 
-        return rtrim($baseUrl, '/') . '/' . ltrim($relativeSignedUrl, '/');
+        return rtrim($baseUrl, '/').'/'.ltrim($relativeSignedUrl, '/');
     }
 }

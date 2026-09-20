@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreKelasRequest;
+use App\Http\Requests\Admin\UpdateKelasRequest;
 use App\Models\Guru;
 use App\Models\Kelas;
 use App\Models\TahunAjaran;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Mengelola data kelas di sekolah.
@@ -19,14 +20,8 @@ class KelasController extends Controller
      *
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(StoreKelasRequest $request)
     {
-        $request->validate([
-            'nama_kelas' => 'required',
-            'tingkat_kelas' => 'required',
-            'jurusan' => 'required',
-        ]);
-
         $tahun = TahunAjaran::first()?->id_tahun_ajaran ?? 1;
 
         $kelas = Kelas::create([
@@ -53,12 +48,8 @@ class KelasController extends Controller
      *
      * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(UpdateKelasRequest $request, $id)
     {
-        $request->validate([
-            'nama_kelas' => 'required',
-        ]);
-
         $kelas = Kelas::findOrFail($id);
 
         $waliId = $request->has('id_wali_kelas') && $request->id_wali_kelas !== '' && $request->id_wali_kelas !== null

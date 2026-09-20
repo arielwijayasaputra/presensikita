@@ -18,6 +18,7 @@ use App\Models\Role;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
 use App\Services\AbsensiService;
+use App\Services\WhatsAppService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -223,7 +224,7 @@ class DashboardController extends Controller
             ->get();
 
         $totalJadwalAktif = $allJadwal->count();
-        $totalJadwalTanpaGuru = $allJadwal->whereNull('id_guru')->filter(fn ($item) => !Mapel::isUpacaraName($item->nama_mapel))->count();
+        $totalJadwalTanpaGuru = $allJadwal->whereNull('id_guru')->filter(fn ($item) => ! Mapel::isUpacaraName($item->nama_mapel))->count();
 
         // ── Peringatan data belum lengkap (dashboard) ──
         // 1) Kelas yang belum memiliki wali kelas (kosong atau guru-nya sudah dihapus)
@@ -320,7 +321,7 @@ class DashboardController extends Controller
         $waNomorWakaKesiswaan = Pengaturan::get('wa_nomor_waka_kesiswaan', '');
         $waNomorWakaSdm = Pengaturan::get('wa_nomor_waka_sdm', '');
         $waNomorKepsek = Pengaturan::get('wa_nomor_kepsek', '');
-        $waBotStatus = \App\Services\WhatsAppService::checkBotStatus();
+        $waBotStatus = WhatsAppService::checkBotStatus();
 
         // ── Naik Kelas data ──
         $allKelasForNk = Kelas::withCount('siswa')

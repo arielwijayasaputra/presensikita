@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePublicLaporanRequest;
 use App\Models\Laporan;
 use App\Models\Role;
 use App\Models\StatusLaporan;
@@ -34,20 +35,8 @@ class LaporanMasukController extends Controller
      *
      * @return JsonResponse|RedirectResponse
      */
-    public function storePublic(Request $request)
+    public function storePublic(StorePublicLaporanRequest $request)
     {
-        $request->validate([
-            'role_pelapor' => 'required|string|max:50',
-            'nama_pelapor' => 'required|string|max:100',
-            'judul' => 'required|string|max:150',
-            'isi_laporan' => 'required|string',
-        ], [
-            'role_pelapor.required' => 'Pilih peran/role Anda terlebih dahulu.',
-            'nama_pelapor.required' => 'Nama pelapor wajib diisi.',
-            'judul.required' => 'Judul laporan wajib diisi.',
-            'isi_laporan.required' => 'Isi laporan wajib diisi.',
-        ]);
-
         $laporan = Laporan::create([
             'role_pelapor' => $request->role_pelapor,
             'nama_pelapor' => $request->nama_pelapor,

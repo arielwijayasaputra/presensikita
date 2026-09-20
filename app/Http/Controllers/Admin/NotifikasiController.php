@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Guru\AbsensiController;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ class NotifikasiController extends Controller
             });
         } elseif ($guruId) {
             $isGuru = session('auth_role') === 'guru';
-            $activeKelasId = $request->get('kelas_id') ?: ($isGuru ? \App\Http\Controllers\Guru\AbsensiController::getActiveKelasIdForGuru((int) $guruId) : null);
+            $activeKelasId = $request->get('kelas_id') ?: ($isGuru ? AbsensiController::getActiveKelasIdForGuru((int) $guruId) : null);
 
             $query->where(function ($q) use ($guruId, $isGuru, $activeKelasId) {
                 $q->where(function ($sub) {
@@ -48,7 +49,7 @@ class NotifikasiController extends Controller
                         if ($activeKelasId) {
                             $sub->where(function ($sub2) use ($activeKelasId) {
                                 $sub2->whereNull('id_kelas')
-                                     ->orWhere('id_kelas', $activeKelasId);
+                                    ->orWhere('id_kelas', $activeKelasId);
                             });
                         } else {
                             $sub->whereNull('id_kelas');

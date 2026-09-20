@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreIzinGuruRequest;
 use App\Models\Guru;
 use App\Models\Hari;
 use App\Models\IzinGuru;
@@ -43,14 +44,9 @@ class IzinGuruController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreIzinGuruRequest $request)
     {
-        $data = $request->validate([
-            'id_guru' => ['nullable', 'integer', 'exists:guru,id_guru'],
-            'tanggal_izin' => ['required', 'date'],
-            'alasan' => ['required', 'string', 'max:2000'],
-            'foto_surat' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-        ]);
+        $data = $request->validated();
 
         $guruPiketId = session('auth_guru_id');
         $guruPiket = Guru::where('id_guru', $guruPiketId)

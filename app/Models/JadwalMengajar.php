@@ -15,8 +15,6 @@ class JadwalMengajar extends Model
 
     public $timestamps = false;
 
-    const DELETED_AT = 'deleted_at';
-
     protected $fillable = [
         'id_guru',
         'id_mapel',

@@ -9,7 +9,6 @@ use App\Models\JurnalSiswaTidakHadir;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
-use App\Services\AbsensiService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -24,27 +23,27 @@ class AbsensiPerJamTest extends TestCase
 
         $uniq = uniqid();
         $guru = Guru::create([
-            'nama_guru' => 'Guru Test ' . $uniq,
-            'username' => 'guru_' . $uniq,
+            'nama_guru' => 'Guru Test '.$uniq,
+            'username' => 'guru_'.$uniq,
             'password_hash' => bcrypt('password'),
-            'nip' => '9999' . rand(1000, 9999),
-            'is_aktif' => 1
+            'nip' => '9999'.rand(1000, 9999),
+            'is_aktif' => 1,
         ]);
         $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::create(['tahun_ajaran' => '2026/2027', 'semester' => 'Ganjil', 'is_aktif' => 1]);
 
         // Buat kelas khusus test agar terisolasi dari soft-deleted data
         $kelas = Kelas::create([
-            'nama_kelas' => 'Kelas Test ' . uniqid(),
+            'nama_kelas' => 'Kelas Test '.uniqid(),
             'tingkat_kelas' => 'X',
             'jurusan' => 'RPL',
             'id_tahun_ajaran' => $tahunAjaran->id_tahun_ajaran,
         ]);
 
-        $siswa1 = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa Hadir Jam1', 'nisn' => '999999' . rand(1000, 9999), 'is_aktif' => 1]);
-        $siswa2 = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa Sakit Jam1', 'nisn' => '999999' . rand(1000, 9999), 'is_aktif' => 1]);
+        $siswa1 = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa Hadir Jam1', 'nisn' => '999999'.rand(1000, 9999), 'is_aktif' => 1]);
+        $siswa2 = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa Sakit Jam1', 'nisn' => '999999'.rand(1000, 9999), 'is_aktif' => 1]);
 
         $mapel = DB::table('mapel')->whereNull('deleted_at')->first();
-        if (!$mapel) {
+        if (! $mapel) {
             $mapelId = DB::table('mapel')->insertGetId(['kode_mapel' => 'TEST', 'nama_mapel' => 'Mapel Test']);
         } else {
             $mapelId = $mapel->id_mapel;
@@ -55,8 +54,8 @@ class AbsensiPerJamTest extends TestCase
         $jam2 = DB::table('jam_pelajaran')->where('hari', $hariIni)->where('jam_ke', 2)->whereNull('deleted_at')->first();
         $jam3 = DB::table('jam_pelajaran')->where('hari', $hariIni)->where('jam_ke', 3)->whereNull('deleted_at')->first();
 
-        if (!$jam1 || !$jam2 || !$jam3) {
-            $this->markTestSkipped('Data jam_pelajaran untuk hari ' . $hariIni . ' tidak lengkap.');
+        if (! $jam1 || ! $jam2 || ! $jam3) {
+            $this->markTestSkipped('Data jam_pelajaran untuk hari '.$hariIni.' tidak lengkap.');
         }
 
         $jadwal1Id = DB::table('jadwal_mengajar')->insertGetId([
@@ -94,7 +93,7 @@ class AbsensiPerJamTest extends TestCase
                 'status_kehadiran_guru' => 'Hadir',
                 'materi' => 'Materi Jam 1',
                 'jumlah_hadir' => 1,
-                'waktu_input' => Carbon::parse($today . ' 07:15:00'),
+                'waktu_input' => Carbon::parse($today.' 07:15:00'),
             ]
         );
         JurnalSiswaTidakHadir::withTrashed()->where('id_jurnal', $jurnal1->id_jurnal)->forceDelete();
@@ -113,7 +112,7 @@ class AbsensiPerJamTest extends TestCase
                 'status_kehadiran_guru' => 'Hadir',
                 'materi' => 'Materi Jam 3',
                 'jumlah_hadir' => 0,
-                'waktu_input' => Carbon::parse($today . ' 08:35:00'),
+                'waktu_input' => Carbon::parse($today.' 08:35:00'),
             ]
         );
         JurnalSiswaTidakHadir::withTrashed()->where('id_jurnal', $jurnal3->id_jurnal)->forceDelete();
@@ -207,32 +206,32 @@ class AbsensiPerJamTest extends TestCase
 
         $uniq = uniqid();
         $guru1 = Guru::create([
-            'nama_guru' => 'Guru Satu ' . $uniq,
-            'username' => 'guru1_' . $uniq,
+            'nama_guru' => 'Guru Satu '.$uniq,
+            'username' => 'guru1_'.$uniq,
             'password_hash' => bcrypt('password'),
-            'nip' => '8888' . rand(1000, 9999),
+            'nip' => '8888'.rand(1000, 9999),
             'is_aktif' => 1,
         ]);
 
         $guru2 = Guru::create([
-            'nama_guru' => 'Guru Dua ' . $uniq,
-            'username' => 'guru2_' . $uniq,
+            'nama_guru' => 'Guru Dua '.$uniq,
+            'username' => 'guru2_'.$uniq,
             'password_hash' => bcrypt('password'),
-            'nip' => '7777' . rand(1000, 9999),
+            'nip' => '7777'.rand(1000, 9999),
             'is_aktif' => 1,
         ]);
 
         $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::create(['tahun_ajaran' => '2026/2027', 'semester' => 'Ganjil', 'is_aktif' => 1]);
 
         $kelas = Kelas::create([
-            'nama_kelas' => 'Kelas Multi ' . uniqid(),
+            'nama_kelas' => 'Kelas Multi '.uniqid(),
             'tingkat_kelas' => 'XI',
             'jurusan' => 'RPL',
             'id_tahun_ajaran' => $tahunAjaran->id_tahun_ajaran,
         ]);
 
-        $siswa1 = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa 1 ' . $uniq, 'nisn' => '888888' . rand(1000, 9999), 'is_aktif' => 1]);
-        $siswa2 = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa 2 ' . $uniq, 'nisn' => '777777' . rand(1000, 9999), 'is_aktif' => 1]);
+        $siswa1 = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa 1 '.$uniq, 'nisn' => '888888'.rand(1000, 9999), 'is_aktif' => 1]);
+        $siswa2 = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa 2 '.$uniq, 'nisn' => '777777'.rand(1000, 9999), 'is_aktif' => 1]);
 
         $mapel = DB::table('mapel')->whereNull('deleted_at')->first();
         $mapelId = $mapel ? $mapel->id_mapel : DB::table('mapel')->insertGetId(['kode_mapel' => 'T2', 'nama_mapel' => 'Mapel 2']);
@@ -241,8 +240,8 @@ class AbsensiPerJamTest extends TestCase
         $jam2 = DB::table('jam_pelajaran')->where('hari', $hariIni)->where('jam_ke', 2)->whereNull('deleted_at')->first();
         $jam3 = DB::table('jam_pelajaran')->where('hari', $hariIni)->where('jam_ke', 3)->whereNull('deleted_at')->first();
 
-        if (!$jam1 || !$jam2 || !$jam3) {
-            $this->markTestSkipped('Data jam_pelajaran untuk hari ' . $hariIni . ' tidak lengkap.');
+        if (! $jam1 || ! $jam2 || ! $jam3) {
+            $this->markTestSkipped('Data jam_pelajaran untuk hari '.$hariIni.' tidak lengkap.');
         }
 
         // Guru 1 mengajar Jam 1 & Jam 2 (blok berurutan)
@@ -359,22 +358,22 @@ class AbsensiPerJamTest extends TestCase
 
         $uniq = uniqid();
         $guru = Guru::create([
-            'nama_guru' => 'Guru Blok ' . $uniq,
-            'username' => 'guru_blok_' . $uniq,
+            'nama_guru' => 'Guru Blok '.$uniq,
+            'username' => 'guru_blok_'.$uniq,
             'password_hash' => bcrypt('password'),
-            'nip' => '6666' . rand(1000, 9999),
+            'nip' => '6666'.rand(1000, 9999),
             'is_aktif' => 1,
         ]);
         $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::create(['tahun_ajaran' => '2026/2027', 'semester' => 'Ganjil', 'is_aktif' => 1]);
 
         $kelas = Kelas::create([
-            'nama_kelas' => 'Kelas Jam 4 Test ' . uniqid(),
+            'nama_kelas' => 'Kelas Jam 4 Test '.uniqid(),
             'tingkat_kelas' => 'XII',
             'jurusan' => 'RPL',
             'id_tahun_ajaran' => $tahunAjaran->id_tahun_ajaran,
         ]);
 
-        $siswa = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa Alpha Jam3', 'nisn' => '666666' . rand(1000, 9999), 'is_aktif' => 1]);
+        $siswa = Siswa::create(['id_kelas' => $kelas->id_kelas, 'nama_siswa' => 'Siswa Alpha Jam3', 'nisn' => '666666'.rand(1000, 9999), 'is_aktif' => 1]);
 
         $mapel = DB::table('mapel')->whereNull('deleted_at')->first();
         $mapelId = $mapel ? $mapel->id_mapel : DB::table('mapel')->insertGetId(['kode_mapel' => 'T3', 'nama_mapel' => 'Mapel 3']);

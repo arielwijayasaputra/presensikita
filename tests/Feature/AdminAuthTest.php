@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\AkunAdmin;
-use App\Models\Guru;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 

@@ -15,8 +15,6 @@ class JurnalKelas extends Model
 
     public $timestamps = false;
 
-    const DELETED_AT = 'deleted_at';
-
     protected $fillable = [
         'id_jadwal', 'id_guru', 'tanggal', 'status_kehadiran_guru', 'foto_selfie', 'materi', 'jumlah_hadir', 'waktu_input',
     ];

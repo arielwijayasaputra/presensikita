@@ -6,6 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Hari extends Model
 {
+    /** Nama hari Indonesia berdasarkan ISO-8601 numeric (1=Senin..7=Minggu). */
+    private const HARI_INDO_BY_ISO = [
+        1 => 'Senin',
+        2 => 'Selasa',
+        3 => 'Rabu',
+        4 => 'Kamis',
+        5 => 'Jumat',
+        6 => 'Sabtu',
+        7 => 'Minggu',
+    ];
+
     protected $table = 'hari';
 
     protected $primaryKey = 'id_hari';
@@ -20,12 +31,9 @@ class Hari extends Model
         'is_aktif',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'is_aktif' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'is_aktif' => 'boolean',
+    ];
 
     /**
      * Get all active days ordered by urutan.
@@ -67,6 +75,15 @@ class Hari extends Model
         $day = static::where('urutan', $dayOfWeekIso)->first();
 
         return $day?->nama_hari;
+    }
+
+    /**
+     * Get Indonesian day name from ISO-8601 numeric day (1=Mon..7=Sun)
+     * using a fixed hardcoded map (tidak bergantung pada isi tabel).
+     */
+    public static function getNamaHariFromDayOfWeek(int $dayOfWeekIso): string
+    {
+        return self::HARI_INDO_BY_ISO[$dayOfWeekIso] ?? 'Senin';
     }
 
     /**

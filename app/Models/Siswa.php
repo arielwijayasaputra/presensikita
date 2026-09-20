@@ -15,8 +15,6 @@ class Siswa extends Model
 
     public $timestamps = false;
 
-    const DELETED_AT = 'deleted_at';
-
     protected $fillable = [
         'nisn', 'nama_siswa', 'jenis_kelamin', 'id_kelas', 'is_aktif', 'no_hp_ortu',
     ];

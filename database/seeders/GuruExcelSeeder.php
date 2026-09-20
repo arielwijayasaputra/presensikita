@@ -13,8 +13,9 @@ class GuruExcelSeeder extends Seeder
     {
         $filePath = base_path('Data_Guru_SMKN1_Boyolangu_2026-2027.xlsx');
 
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             $this->command->error("File tidak ditemukan: $filePath");
+
             return;
         }
 
@@ -25,7 +26,7 @@ class GuruExcelSeeder extends Seeder
 
         // 2. Hapus seluruh data di tabel guru
         DB::table('guru')->truncate();
-        $this->command->warn("Tabel guru telah di-truncate...");
+        $this->command->warn('Tabel guru telah di-truncate...');
 
         // Load Excel
         $spreadsheet = IOFactory::load($filePath);
@@ -37,12 +38,12 @@ class GuruExcelSeeder extends Seeder
         $waliKelasUpdated = 0;
 
         for ($row = 2; $row <= $highestRow; $row++) {
-            $noVal      = $sheet->getCell('A' . $row)->getValue();
-            $idGuru     = is_numeric($noVal) ? (int) $noVal : ($row - 1);
-            $nip        = trim((string) $sheet->getCell('B' . $row)->getValue());
-            $namaGuru   = trim((string) $sheet->getCell('C' . $row)->getValue());
-            $peranExcel = trim((string) $sheet->getCell('D' . $row)->getValue());
-            $kelasExcel = trim((string) $sheet->getCell('E' . $row)->getValue());
+            $noVal = $sheet->getCell('A'.$row)->getValue();
+            $idGuru = is_numeric($noVal) ? (int) $noVal : ($row - 1);
+            $nip = trim((string) $sheet->getCell('B'.$row)->getValue());
+            $namaGuru = trim((string) $sheet->getCell('C'.$row)->getValue());
+            $peranExcel = trim((string) $sheet->getCell('D'.$row)->getValue());
+            $kelasExcel = trim((string) $sheet->getCell('E'.$row)->getValue());
 
             if (empty($namaGuru)) {
                 continue;
@@ -64,7 +65,7 @@ class GuruExcelSeeder extends Seeder
                 $usernameBase = 'guru';
             }
 
-            if (!isset($usernameCount[$usernameBase])) {
+            if (! isset($usernameCount[$usernameBase])) {
                 $usernameCount[$usernameBase] = 0;
             }
             $usernameCount[$usernameBase]++;
@@ -72,30 +73,30 @@ class GuruExcelSeeder extends Seeder
             if ($usernameCount[$usernameBase] === 1) {
                 $username = $usernameBase;
             } else {
-                $username = $usernameBase . $usernameCount[$usernameBase];
+                $username = $usernameBase.$usernameCount[$usernameBase];
             }
 
             // Password: nama depan + 123
-            $password = $usernameBase . '123';
+            $password = $usernameBase.'123';
             $passwordHash = Hash::make($password);
 
             DB::table('guru')->insert([
-                'id_guru'       => $idGuru,
-                'nip'           => $nip,
-                'nama_guru'     => $namaGuru,
-                'Peran'         => $peran,
-                'foto_profil'   => null,
-                'no_hp'         => null,
-                'username'      => $username,
+                'id_guru' => $idGuru,
+                'nip' => $nip,
+                'nama_guru' => $namaGuru,
+                'Peran' => $peran,
+                'foto_profil' => null,
+                'no_hp' => null,
+                'username' => $username,
                 'password_hash' => $passwordHash,
-                'is_admin'      => 0,
-                'is_aktif'      => 1,
-                'created_at'    => now(),
-                'deleted_at'    => null,
+                'is_admin' => 0,
+                'is_aktif' => 1,
+                'created_at' => now(),
+                'deleted_at' => null,
             ]);
 
             // Jika ada kelas di Excel, update id_wali_kelas di tabel kelas
-            if (!empty($kelasExcel) && $kelasExcel !== '-') {
+            if (! empty($kelasExcel) && $kelasExcel !== '-') {
                 $namaKelasNormalized = str_replace('-', ' ', $kelasExcel);
                 $updated = DB::table('kelas')
                     ->where('nama_kelas', $namaKelasNormalized)
@@ -113,18 +114,18 @@ class GuruExcelSeeder extends Seeder
 
         // Reset Auto Increment ke max(id_guru) + 1
         $maxId = DB::table('guru')->max('id_guru') ?? 1;
-        DB::statement("ALTER TABLE guru AUTO_INCREMENT = " . ($maxId + 1));
+        DB::statement('ALTER TABLE guru AUTO_INCREMENT = '.($maxId + 1));
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->command->newLine();
-        $this->command->info("==========================================");
-        $this->command->info("Selesai!");
+        $this->command->info('==========================================');
+        $this->command->info('Selesai!');
         $this->command->info("Guru diinsert  : $inserted (ID 1 - $maxId)");
         $this->command->info("Wali kelas set : $waliKelasUpdated kelas");
         $total = DB::table('guru')->count();
         $this->command->info("Total guru di DB : $total");
-        $this->command->info("==========================================");
+        $this->command->info('==========================================');
     }
 
     private function mapPeran(string $peranExcel, string $namaGuru): string
@@ -144,6 +145,7 @@ class GuruExcelSeeder extends Seeder
             if (str_contains($lower, 'sdm') || str_contains($lower, 'pengembangan sdm')) {
                 return 'Waka SDM';
             }
+
             return 'Waka';
         }
 
@@ -166,7 +168,7 @@ class GuruExcelSeeder extends Seeder
 
         foreach ($parts as $part) {
             $cleanPart = trim($part);
-            if (!in_array(strtolower($cleanPart), $titles) && strlen($cleanPart) > 1) {
+            if (! in_array(strtolower($cleanPart), $titles) && strlen($cleanPart) > 1) {
                 return $cleanPart;
             }
         }

@@ -2,9 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\AkunAdmin;
-use App\Models\JamPelajaran;
-use App\Models\Pengaturan;
 use Tests\TestCase;
 
 class JamPelajaranSekarangTest extends TestCase

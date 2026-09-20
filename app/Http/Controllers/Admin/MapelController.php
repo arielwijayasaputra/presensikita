@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreMapelRequest;
+use App\Http\Requests\Admin\UpdateMapelRequest;
 use App\Models\Mapel;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Mengelola data mata pelajaran.
@@ -17,14 +18,8 @@ class MapelController extends Controller
      *
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(StoreMapelRequest $request)
     {
-        $request->validate([
-            'nama_mapel' => 'required|string|max:100',
-            'kode_mapel' => 'nullable|string|max:20|unique:mapel,kode_mapel',
-            'kelompok' => 'nullable|string|in:A,B,C',
-        ]);
-
         $mapel = Mapel::create([
             'kode_mapel' => $request->kode_mapel ?: null,
             'nama_mapel' => $request->nama_mapel,
@@ -43,15 +38,9 @@ class MapelController extends Controller
      *
      * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(UpdateMapelRequest $request, $id)
     {
         $mapel = Mapel::findOrFail($id);
-
-        $request->validate([
-            'nama_mapel' => 'required|string|max:100',
-            'kode_mapel' => 'nullable|string|max:20|unique:mapel,kode_mapel,'.$mapel->id_mapel.',id_mapel',
-            'kelompok' => 'nullable|string|in:A,B,C',
-        ]);
 
         $mapel->update([
             'kode_mapel' => $request->kode_mapel ?: null,

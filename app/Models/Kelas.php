@@ -15,8 +15,6 @@ class Kelas extends Model
 
     public $timestamps = false;
 
-    const DELETED_AT = 'deleted_at';
-
     protected $fillable = [
         'nama_kelas', 'tingkat_kelas', 'jurusan', 'id_tahun_ajaran', 'id_wali_kelas',
     ];

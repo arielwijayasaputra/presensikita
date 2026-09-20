@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreKeterlambatanSiswaRequest;
 use App\Models\Guru;
 use App\Models\Hari;
 use App\Models\JurnalKelas;
@@ -9,7 +10,6 @@ use App\Models\JurnalSiswaTidakHadir;
 use App\Models\KeterlambatanSiswa;
 use App\Models\Siswa;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -22,18 +22,11 @@ class KeterlambatanSiswaController extends Controller
         return redirect()->to(route('gurupiket.index').'#siswa-terlambat');
     }
 
-    public function store(Request $request)
+    public function store(StoreKeterlambatanSiswaRequest $request)
     {
         abort_unless(session('auth_role') === 'guru_piket', 403);
 
-        $data = $request->validate([
-            'id_siswa' => ['required', 'integer', 'exists:siswa,id_siswa'],
-            'tanggal' => ['required', 'date'],
-            'jam_masuk' => ['required', 'string'],
-            'jam_ke' => ['required', 'integer', 'min:1', 'max:20'],
-            'alasan' => ['nullable', 'string', 'max:2000'],
-            'foto_surat' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-        ]);
+        $data = $request->validated();
 
         // Format jam masuk to H:i:s
         if (strlen($data['jam_masuk']) === 5) {
@@ -75,7 +68,7 @@ class KeterlambatanSiswaController extends Controller
                     ->where('jadwal_mengajar.hari', $namaHari)
                     ->where(function ($q) use ($jamKeMasuk) {
                         $q->where('jam_pelajaran.jam_ke', $jamKeMasuk)
-                          ->orWhere('jam_pelajaran.jam_ke', $jamKeMasuk + 100);
+                            ->orWhere('jam_pelajaran.jam_ke', $jamKeMasuk + 100);
                     })
                     ->whereNull('jadwal_mengajar.deleted_at')
                     ->whereNull('jam_pelajaran.deleted_at')
@@ -86,8 +79,8 @@ class KeterlambatanSiswaController extends Controller
                     ->values()
                     ->toArray();
 
-                $judulNotif = 'Siswa Terlambat: ' . $siswa->nama_siswa . ' (' . ($siswa->kelas->nama_kelas ?? '-') . ')';
-                $pesanNotif = 'Siswa ' . $siswa->nama_siswa . ' terlambat (datang jam ' . substr($data['jam_masuk'], 0, 5) . ', mulai masuk jam ke-' . $data['jam_ke'] . '). Alasan: ' . ($data['alasan'] ?: 'Tanpa keterangan') . '. Diizinkan oleh: ' . $guruPiket->nama_guru . '.';
+                $judulNotif = 'Siswa Terlambat: '.$siswa->nama_siswa.' ('.($siswa->kelas->nama_kelas ?? '-').')';
+                $pesanNotif = 'Siswa '.$siswa->nama_siswa.' terlambat (datang jam '.substr($data['jam_masuk'], 0, 5).', mulai masuk jam ke-'.$data['jam_ke'].'). Alasan: '.($data['alasan'] ?: 'Tanpa keterangan').'. Diizinkan oleh: '.$guruPiket->nama_guru.'.';
 
                 // Kirim notifikasi sistem khusus ke wali kelas dan guru pengajar saat itu
                 foreach ($guruPengajarSaatItuIds as $gId) {
@@ -124,7 +117,7 @@ class KeterlambatanSiswaController extends Controller
                             ->where('id_siswa', $siswa->id_siswa)
                             ->first();
 
-                        $keteranganTerlambat = 'Masuk Terlambat' . ($data['alasan'] ? ': ' . $data['alasan'] : '');
+                        $keteranganTerlambat = 'Masuk Terlambat'.($data['alasan'] ? ': '.$data['alasan'] : '');
 
                         if ($th) {
                             if ($th->status === 'A') {

@@ -7,7 +7,6 @@
         @include('struktural.pages.dispen-siswa')
         @include('struktural.pages.absensi-siswa')
         @include('struktural.pages.siswa-terlambat')
-        @include('struktural.pages.pengaturan-wa')
     @endif
     @if(session('auth_role') === 'satpam')
         @include('struktural.pages.satpam')

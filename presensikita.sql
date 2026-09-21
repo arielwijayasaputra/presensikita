@@ -48,7 +48,7 @@ CREATE TABLE `akun_admin` (
 
 LOCK TABLES `akun_admin` WRITE;
 /*!40000 ALTER TABLE `akun_admin` DISABLE KEYS */;
-INSERT INTO `akun_admin` VALUES (1,'Administrator','admin','$2y$04$J8f5wOMjy9mhG1xZc36Nlun70WaAf2wBmoPYcOtnUABcwOJxz8yCu','$2y$04$J8f5wOMjy9mhG1xZc36Nlun70WaAf2wBmoPYcOtnUABcwOJxz8yCu',NULL,NULL,NULL,NULL,NULL,1,'2026-09-01 04:35:19','2026-09-20 13:36:06',NULL);
+INSERT INTO `akun_admin` VALUES (1,'Administrator','admin','$2y$04$JFI7KX8hwPaOFj2jcglNCOx7tFK.UaktLPaCvGOyDoTjF/1e16USC','$2y$04$JFI7KX8hwPaOFj2jcglNCOx7tFK.UaktLPaCvGOyDoTjF/1e16USC',NULL,NULL,NULL,NULL,NULL,1,'2026-09-01 04:35:19','2026-09-21 04:10:52',NULL);
 /*!40000 ALTER TABLE `akun_admin` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -81,7 +81,7 @@ CREATE TABLE `akun_satpam` (
 
 LOCK TABLES `akun_satpam` WRITE;
 /*!40000 ALTER TABLE `akun_satpam` DISABLE KEYS */;
-INSERT INTO `akun_satpam` VALUES (1,'Satpam','satpam','$2y$04$1GJyYl8g495/HCc5sJjO3.zvWbwThSkAue9kV.9f8ORGq0q6pDBFm',NULL,NULL,1,'2026-09-01 18:52:45','2026-09-20 13:36:14',NULL);
+INSERT INTO `akun_satpam` VALUES (1,'Satpam','satpam','$2y$04$YPGbib0rG4cZFoy3c47iHuAqyAWlHSYi.JPylAC2GasRXnVl5YJTu',NULL,NULL,1,'2026-09-01 18:52:45','2026-09-21 04:10:56',NULL);
 /*!40000 ALTER TABLE `akun_satpam` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -223,7 +223,7 @@ CREATE TABLE `guru` (
   PRIMARY KEY (`id_guru`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `nip` (`nip`)
-) ENGINE=InnoDB AUTO_INCREMENT=465 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=483 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -364,7 +364,7 @@ CREATE TABLE `jadwal_mengajar` (
   CONSTRAINT `jadwal_mengajar_ibfk_3` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`),
   CONSTRAINT `jadwal_mengajar_ibfk_4` FOREIGN KEY (`id_jam`) REFERENCES `jam_pelajaran` (`id_jam`),
   CONSTRAINT `jadwal_mengajar_ibfk_5` FOREIGN KEY (`id_tahun_ajaran`) REFERENCES `tahun_ajaran` (`id_tahun_ajaran`)
-) ENGINE=InnoDB AUTO_INCREMENT=12147 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12180 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -392,7 +392,7 @@ CREATE TABLE `jam_pelajaran` (
   `jam_selesai` time NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id_jam`)
-) ENGINE=InnoDB AUTO_INCREMENT=164 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=168 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -401,7 +401,7 @@ CREATE TABLE `jam_pelajaran` (
 
 LOCK TABLES `jam_pelajaran` WRITE;
 /*!40000 ALTER TABLE `jam_pelajaran` DISABLE KEYS */;
-INSERT INTO `jam_pelajaran` VALUES (1,1,'Senin','07:00:00','07:40:00',NULL),(2,2,'Senin','07:40:00','08:20:00',NULL),(3,3,'Senin','08:20:00','09:00:00',NULL),(4,4,'Senin','09:00:00','09:40:00',NULL),(5,5,'Senin','10:00:00','10:35:00',NULL),(6,6,'Senin','10:35:00','11:10:00',NULL),(7,7,'Senin','11:10:00','11:45:00',NULL),(8,8,'Senin','13:15:00','13:50:00',NULL),(9,9,'Senin','13:50:00','14:25:00',NULL),(10,10,'Senin','14:25:00','15:00:00',NULL),(11,101,'Jumat','07:00:00','07:30:00',NULL),(12,102,'Jumat','07:30:00','08:00:00',NULL),(13,103,'Jumat','08:00:00','08:30:00',NULL),(14,104,'Jumat','08:30:00','09:00:00',NULL),(15,105,'Jumat','09:00:00','09:30:00',NULL),(16,106,'Jumat','09:50:00','10:20:00',NULL),(17,107,'Jumat','10:20:00','10:50:00',NULL),(18,108,'Jumat','10:50:00','11:20:00',NULL),(19,109,'Jumat','13:00:00','13:30:00',NULL),(20,110,'Jumat','13:30:00','14:00:00',NULL),(21,111,'Jumat','14:00:00','14:30:00',NULL),(22,112,'Jumat','14:30:00','15:00:00',NULL),(23,113,'Jumat','15:00:00','15:30:00',NULL),(24,1,'Selasa','07:00:00','07:40:00',NULL),(25,2,'Selasa','07:40:00','08:20:00',NULL),(26,3,'Selasa','08:20:00','09:00:00',NULL),(27,4,'Selasa','09:00:00','09:40:00',NULL),(28,5,'Selasa','10:00:00','10:35:00',NULL),(29,6,'Selasa','10:35:00','11:10:00',NULL),(30,7,'Selasa','11:10:00','11:45:00',NULL),(31,8,'Selasa','13:15:00','13:50:00',NULL),(32,9,'Selasa','13:50:00','14:25:00',NULL),(33,10,'Selasa','14:25:00','15:00:00',NULL),(34,1,'Rabu','07:00:00','07:40:00',NULL),(35,2,'Rabu','07:40:00','08:20:00',NULL),(36,3,'Rabu','08:20:00','09:00:00',NULL),(37,4,'Rabu','09:00:00','09:40:00',NULL),(38,5,'Rabu','10:00:00','10:35:00',NULL),(39,6,'Rabu','10:35:00','11:10:00',NULL),(40,7,'Rabu','11:10:00','11:45:00',NULL),(41,8,'Rabu','13:15:00','13:50:00',NULL),(42,9,'Rabu','13:50:00','14:25:00',NULL),(43,10,'Rabu','14:25:00','15:00:00',NULL),(44,1,'Kamis','07:00:00','07:40:00',NULL),(45,2,'Kamis','07:40:00','08:20:00',NULL),(46,3,'Kamis','08:20:00','09:00:00',NULL),(47,4,'Kamis','09:00:00','09:40:00',NULL),(48,5,'Kamis','10:00:00','10:35:00',NULL),(49,6,'Kamis','10:35:00','11:10:00',NULL),(50,7,'Kamis','11:10:00','11:45:00',NULL),(51,8,'Kamis','13:15:00','13:50:00',NULL),(52,9,'Kamis','13:50:00','14:25:00',NULL),(53,10,'Kamis','14:25:00','15:00:00',NULL),(54,901,'Selasa','07:00:00','07:45:00',NULL),(55,902,'Selasa','07:45:00','08:30:00',NULL),(56,903,'Selasa','08:30:00','09:15:00',NULL),(57,904,'Selasa','23:00:00','23:45:00',NULL),(58,901,'Selasa','07:00:00','07:45:00',NULL),(59,902,'Selasa','07:45:00','08:30:00',NULL),(60,903,'Selasa','08:30:00','09:15:00',NULL),(61,904,'Selasa','23:00:00','23:45:00',NULL),(62,901,'Selasa','07:00:00','07:45:00',NULL),(63,902,'Selasa','07:45:00','08:30:00',NULL),(64,903,'Selasa','08:30:00','09:15:00',NULL),(65,904,'Selasa','23:00:00','23:45:00',NULL),(66,901,'Selasa','07:00:00','07:45:00',NULL),(67,902,'Selasa','07:45:00','08:30:00',NULL),(68,903,'Selasa','08:30:00','09:15:00',NULL),(69,904,'Selasa','23:00:00','23:45:00',NULL),(70,901,'Selasa','07:00:00','07:45:00',NULL),(71,902,'Selasa','07:45:00','08:30:00',NULL),(72,903,'Selasa','08:30:00','09:15:00',NULL),(73,904,'Selasa','23:00:00','23:45:00',NULL),(74,901,'Selasa','07:00:00','07:45:00',NULL),(75,902,'Selasa','07:45:00','08:30:00',NULL),(76,903,'Selasa','08:30:00','09:15:00',NULL),(77,904,'Selasa','23:00:00','23:45:00',NULL),(78,901,'Selasa','07:00:00','07:45:00',NULL),(79,902,'Selasa','07:45:00','08:30:00',NULL),(80,903,'Selasa','08:30:00','09:15:00',NULL),(81,904,'Selasa','23:00:00','23:45:00',NULL),(82,901,'Selasa','07:00:00','07:45:00',NULL),(83,902,'Selasa','07:45:00','08:30:00',NULL),(84,903,'Selasa','08:30:00','09:15:00',NULL),(85,904,'Selasa','23:00:00','23:45:00',NULL),(86,901,'Selasa','07:00:00','07:45:00',NULL),(87,902,'Selasa','07:45:00','08:30:00',NULL),(88,903,'Selasa','08:30:00','09:15:00',NULL),(89,904,'Selasa','23:00:00','23:45:00',NULL),(90,901,'Selasa','07:00:00','07:45:00',NULL),(91,902,'Selasa','07:45:00','08:30:00',NULL),(92,903,'Selasa','08:30:00','09:15:00',NULL),(93,904,'Selasa','23:00:00','23:45:00',NULL),(94,901,'Selasa','07:00:00','07:45:00',NULL),(95,902,'Selasa','07:45:00','08:30:00',NULL),(96,903,'Selasa','08:30:00','09:15:00',NULL),(97,904,'Selasa','23:00:00','23:45:00',NULL),(98,901,'Selasa','07:00:00','07:45:00',NULL),(99,902,'Selasa','07:45:00','08:30:00',NULL),(100,903,'Selasa','08:30:00','09:15:00',NULL),(101,904,'Selasa','23:00:00','23:45:00',NULL),(102,901,'Selasa','07:00:00','07:45:00',NULL),(103,902,'Selasa','07:45:00','08:30:00',NULL),(104,903,'Selasa','08:30:00','09:15:00',NULL),(105,904,'Selasa','23:00:00','23:45:00',NULL),(106,901,'Selasa','07:00:00','07:45:00',NULL),(107,902,'Selasa','07:45:00','08:30:00',NULL),(108,903,'Selasa','08:30:00','09:15:00',NULL),(109,904,'Selasa','23:00:00','23:45:00',NULL),(110,901,'Selasa','07:00:00','07:45:00',NULL),(111,902,'Selasa','07:45:00','08:30:00',NULL),(112,903,'Selasa','08:30:00','09:15:00',NULL),(113,904,'Selasa','23:00:00','23:45:00',NULL),(114,901,'Selasa','07:00:00','07:45:00',NULL),(115,902,'Selasa','07:45:00','08:30:00',NULL),(116,903,'Selasa','08:30:00','09:15:00',NULL),(117,904,'Selasa','23:00:00','23:45:00',NULL),(118,901,'Selasa','07:00:00','07:45:00',NULL),(119,902,'Selasa','07:45:00','08:30:00',NULL),(120,903,'Selasa','08:30:00','09:15:00',NULL),(121,904,'Selasa','23:00:00','23:45:00',NULL),(122,901,'Selasa','07:00:00','07:45:00',NULL),(123,902,'Selasa','07:45:00','08:30:00',NULL),(124,903,'Selasa','08:30:00','09:15:00',NULL),(125,904,'Selasa','23:00:00','23:45:00',NULL),(126,901,'Selasa','07:00:00','07:45:00',NULL),(127,902,'Selasa','07:45:00','08:30:00',NULL),(128,903,'Selasa','08:30:00','09:15:00',NULL),(129,904,'Selasa','23:00:00','23:45:00',NULL),(130,901,'Minggu','07:00:00','07:45:00',NULL),(131,902,'Minggu','07:45:00','08:30:00',NULL),(132,903,'Minggu','08:30:00','09:15:00',NULL),(133,904,'Minggu','23:00:00','23:45:00',NULL),(134,1,'Minggu','07:00:00','07:40:00',NULL),(135,2,'Minggu','07:45:00','08:30:00',NULL),(136,901,'Minggu','07:00:00','07:45:00',NULL),(137,902,'Minggu','07:45:00','08:30:00',NULL),(138,903,'Minggu','08:30:00','09:15:00',NULL),(139,904,'Minggu','23:00:00','23:45:00',NULL),(140,901,'Minggu','07:00:00','07:45:00',NULL),(141,902,'Minggu','07:45:00','08:30:00',NULL),(142,903,'Minggu','08:30:00','09:15:00',NULL),(143,904,'Minggu','23:00:00','23:45:00',NULL),(144,901,'Minggu','07:00:00','07:45:00',NULL),(145,902,'Minggu','07:45:00','08:30:00',NULL),(146,903,'Minggu','08:30:00','09:15:00',NULL),(147,904,'Minggu','23:00:00','23:45:00',NULL),(148,901,'Minggu','07:00:00','07:45:00',NULL),(149,902,'Minggu','07:45:00','08:30:00',NULL),(150,903,'Minggu','08:30:00','09:15:00',NULL),(151,904,'Minggu','23:00:00','23:45:00',NULL),(152,901,'Minggu','07:00:00','07:45:00',NULL),(153,902,'Minggu','07:45:00','08:30:00',NULL),(154,903,'Minggu','08:30:00','09:15:00',NULL),(155,904,'Minggu','23:00:00','23:45:00',NULL),(156,901,'Minggu','07:00:00','07:45:00',NULL),(157,902,'Minggu','07:45:00','08:30:00',NULL),(158,903,'Minggu','08:30:00','09:15:00',NULL),(159,904,'Minggu','23:00:00','23:45:00',NULL),(160,901,'Minggu','07:00:00','07:45:00',NULL),(161,902,'Minggu','07:45:00','08:30:00',NULL),(162,903,'Minggu','08:30:00','09:15:00',NULL),(163,904,'Minggu','23:00:00','23:45:00',NULL);
+INSERT INTO `jam_pelajaran` VALUES (1,1,'Senin','07:00:00','07:40:00',NULL),(2,2,'Senin','07:40:00','08:20:00',NULL),(3,3,'Senin','08:20:00','09:00:00',NULL),(4,4,'Senin','09:00:00','09:40:00',NULL),(5,5,'Senin','10:00:00','10:35:00',NULL),(6,6,'Senin','10:35:00','11:10:00',NULL),(7,7,'Senin','11:10:00','11:45:00',NULL),(8,8,'Senin','13:15:00','13:50:00',NULL),(9,9,'Senin','13:50:00','14:25:00',NULL),(10,10,'Senin','14:25:00','15:00:00',NULL),(11,101,'Jumat','07:00:00','07:30:00',NULL),(12,102,'Jumat','07:30:00','08:00:00',NULL),(13,103,'Jumat','08:00:00','08:30:00',NULL),(14,104,'Jumat','08:30:00','09:00:00',NULL),(15,105,'Jumat','09:00:00','09:30:00',NULL),(16,106,'Jumat','09:50:00','10:20:00',NULL),(17,107,'Jumat','10:20:00','10:50:00',NULL),(18,108,'Jumat','10:50:00','11:20:00',NULL),(19,109,'Jumat','13:00:00','13:30:00',NULL),(20,110,'Jumat','13:30:00','14:00:00',NULL),(21,111,'Jumat','14:00:00','14:30:00',NULL),(22,112,'Jumat','14:30:00','15:00:00',NULL),(23,113,'Jumat','15:00:00','15:30:00',NULL),(24,1,'Selasa','07:00:00','07:40:00',NULL),(25,2,'Selasa','07:40:00','08:20:00',NULL),(26,3,'Selasa','08:20:00','09:00:00',NULL),(27,4,'Selasa','09:00:00','09:40:00',NULL),(28,5,'Selasa','10:00:00','10:35:00',NULL),(29,6,'Selasa','10:35:00','11:10:00',NULL),(30,7,'Selasa','11:10:00','11:45:00',NULL),(31,8,'Selasa','13:15:00','13:50:00',NULL),(32,9,'Selasa','13:50:00','14:25:00',NULL),(33,10,'Selasa','14:25:00','15:00:00',NULL),(34,1,'Rabu','07:00:00','07:40:00',NULL),(35,2,'Rabu','07:40:00','08:20:00',NULL),(36,3,'Rabu','08:20:00','09:00:00',NULL),(37,4,'Rabu','09:00:00','09:40:00',NULL),(38,5,'Rabu','10:00:00','10:35:00',NULL),(39,6,'Rabu','10:35:00','11:10:00',NULL),(40,7,'Rabu','11:10:00','11:45:00',NULL),(41,8,'Rabu','13:15:00','13:50:00',NULL),(42,9,'Rabu','13:50:00','14:25:00',NULL),(43,10,'Rabu','14:25:00','15:00:00',NULL),(44,1,'Kamis','07:00:00','07:40:00',NULL),(45,2,'Kamis','07:40:00','08:20:00',NULL),(46,3,'Kamis','08:20:00','09:00:00',NULL),(47,4,'Kamis','09:00:00','09:40:00',NULL),(48,5,'Kamis','10:00:00','10:35:00',NULL),(49,6,'Kamis','10:35:00','11:10:00',NULL),(50,7,'Kamis','11:10:00','11:45:00',NULL),(51,8,'Kamis','13:15:00','13:50:00',NULL),(52,9,'Kamis','13:50:00','14:25:00',NULL),(53,10,'Kamis','14:25:00','15:00:00',NULL),(54,901,'Selasa','07:00:00','07:45:00',NULL),(55,902,'Selasa','07:45:00','08:30:00',NULL),(56,903,'Selasa','08:30:00','09:15:00',NULL),(57,904,'Selasa','23:00:00','23:45:00',NULL),(58,901,'Selasa','07:00:00','07:45:00',NULL),(59,902,'Selasa','07:45:00','08:30:00',NULL),(60,903,'Selasa','08:30:00','09:15:00',NULL),(61,904,'Selasa','23:00:00','23:45:00',NULL),(62,901,'Selasa','07:00:00','07:45:00',NULL),(63,902,'Selasa','07:45:00','08:30:00',NULL),(64,903,'Selasa','08:30:00','09:15:00',NULL),(65,904,'Selasa','23:00:00','23:45:00',NULL),(66,901,'Selasa','07:00:00','07:45:00',NULL),(67,902,'Selasa','07:45:00','08:30:00',NULL),(68,903,'Selasa','08:30:00','09:15:00',NULL),(69,904,'Selasa','23:00:00','23:45:00',NULL),(70,901,'Selasa','07:00:00','07:45:00',NULL),(71,902,'Selasa','07:45:00','08:30:00',NULL),(72,903,'Selasa','08:30:00','09:15:00',NULL),(73,904,'Selasa','23:00:00','23:45:00',NULL),(74,901,'Selasa','07:00:00','07:45:00',NULL),(75,902,'Selasa','07:45:00','08:30:00',NULL),(76,903,'Selasa','08:30:00','09:15:00',NULL),(77,904,'Selasa','23:00:00','23:45:00',NULL),(78,901,'Selasa','07:00:00','07:45:00',NULL),(79,902,'Selasa','07:45:00','08:30:00',NULL),(80,903,'Selasa','08:30:00','09:15:00',NULL),(81,904,'Selasa','23:00:00','23:45:00',NULL),(82,901,'Selasa','07:00:00','07:45:00',NULL),(83,902,'Selasa','07:45:00','08:30:00',NULL),(84,903,'Selasa','08:30:00','09:15:00',NULL),(85,904,'Selasa','23:00:00','23:45:00',NULL),(86,901,'Selasa','07:00:00','07:45:00',NULL),(87,902,'Selasa','07:45:00','08:30:00',NULL),(88,903,'Selasa','08:30:00','09:15:00',NULL),(89,904,'Selasa','23:00:00','23:45:00',NULL),(90,901,'Selasa','07:00:00','07:45:00',NULL),(91,902,'Selasa','07:45:00','08:30:00',NULL),(92,903,'Selasa','08:30:00','09:15:00',NULL),(93,904,'Selasa','23:00:00','23:45:00',NULL),(94,901,'Selasa','07:00:00','07:45:00',NULL),(95,902,'Selasa','07:45:00','08:30:00',NULL),(96,903,'Selasa','08:30:00','09:15:00',NULL),(97,904,'Selasa','23:00:00','23:45:00',NULL),(98,901,'Selasa','07:00:00','07:45:00',NULL),(99,902,'Selasa','07:45:00','08:30:00',NULL),(100,903,'Selasa','08:30:00','09:15:00',NULL),(101,904,'Selasa','23:00:00','23:45:00',NULL),(102,901,'Selasa','07:00:00','07:45:00',NULL),(103,902,'Selasa','07:45:00','08:30:00',NULL),(104,903,'Selasa','08:30:00','09:15:00',NULL),(105,904,'Selasa','23:00:00','23:45:00',NULL),(106,901,'Selasa','07:00:00','07:45:00',NULL),(107,902,'Selasa','07:45:00','08:30:00',NULL),(108,903,'Selasa','08:30:00','09:15:00',NULL),(109,904,'Selasa','23:00:00','23:45:00',NULL),(110,901,'Selasa','07:00:00','07:45:00',NULL),(111,902,'Selasa','07:45:00','08:30:00',NULL),(112,903,'Selasa','08:30:00','09:15:00',NULL),(113,904,'Selasa','23:00:00','23:45:00',NULL),(114,901,'Selasa','07:00:00','07:45:00',NULL),(115,902,'Selasa','07:45:00','08:30:00',NULL),(116,903,'Selasa','08:30:00','09:15:00',NULL),(117,904,'Selasa','23:00:00','23:45:00',NULL),(118,901,'Selasa','07:00:00','07:45:00',NULL),(119,902,'Selasa','07:45:00','08:30:00',NULL),(120,903,'Selasa','08:30:00','09:15:00',NULL),(121,904,'Selasa','23:00:00','23:45:00',NULL),(122,901,'Selasa','07:00:00','07:45:00',NULL),(123,902,'Selasa','07:45:00','08:30:00',NULL),(124,903,'Selasa','08:30:00','09:15:00',NULL),(125,904,'Selasa','23:00:00','23:45:00',NULL),(126,901,'Selasa','07:00:00','07:45:00',NULL),(127,902,'Selasa','07:45:00','08:30:00',NULL),(128,903,'Selasa','08:30:00','09:15:00',NULL),(129,904,'Selasa','23:00:00','23:45:00',NULL),(130,901,'Minggu','07:00:00','07:45:00',NULL),(131,902,'Minggu','07:45:00','08:30:00',NULL),(132,903,'Minggu','08:30:00','09:15:00',NULL),(133,904,'Minggu','23:00:00','23:45:00',NULL),(134,1,'Minggu','07:00:00','07:40:00',NULL),(135,2,'Minggu','07:45:00','08:30:00',NULL),(136,901,'Minggu','07:00:00','07:45:00',NULL),(137,902,'Minggu','07:45:00','08:30:00',NULL),(138,903,'Minggu','08:30:00','09:15:00',NULL),(139,904,'Minggu','23:00:00','23:45:00',NULL),(140,901,'Minggu','07:00:00','07:45:00',NULL),(141,902,'Minggu','07:45:00','08:30:00',NULL),(142,903,'Minggu','08:30:00','09:15:00',NULL),(143,904,'Minggu','23:00:00','23:45:00',NULL),(144,901,'Minggu','07:00:00','07:45:00',NULL),(145,902,'Minggu','07:45:00','08:30:00',NULL),(146,903,'Minggu','08:30:00','09:15:00',NULL),(147,904,'Minggu','23:00:00','23:45:00',NULL),(148,901,'Minggu','07:00:00','07:45:00',NULL),(149,902,'Minggu','07:45:00','08:30:00',NULL),(150,903,'Minggu','08:30:00','09:15:00',NULL),(151,904,'Minggu','23:00:00','23:45:00',NULL),(152,901,'Minggu','07:00:00','07:45:00',NULL),(153,902,'Minggu','07:45:00','08:30:00',NULL),(154,903,'Minggu','08:30:00','09:15:00',NULL),(155,904,'Minggu','23:00:00','23:45:00',NULL),(156,901,'Minggu','07:00:00','07:45:00',NULL),(157,902,'Minggu','07:45:00','08:30:00',NULL),(158,903,'Minggu','08:30:00','09:15:00',NULL),(159,904,'Minggu','23:00:00','23:45:00',NULL),(160,901,'Minggu','07:00:00','07:45:00',NULL),(161,902,'Minggu','07:45:00','08:30:00',NULL),(162,903,'Minggu','08:30:00','09:15:00',NULL),(163,904,'Minggu','23:00:00','23:45:00',NULL),(164,901,'Senin','07:00:00','07:45:00',NULL),(165,902,'Senin','07:45:00','08:30:00',NULL),(166,903,'Senin','08:30:00','09:15:00',NULL),(167,904,'Senin','23:00:00','23:45:00',NULL);
 /*!40000 ALTER TABLE `jam_pelajaran` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -426,7 +426,7 @@ CREATE TABLE `jurnal_kelas` (
   PRIMARY KEY (`id_jurnal`),
   UNIQUE KEY `uq_jadwal_tanggal` (`id_jadwal`,`tanggal`),
   CONSTRAINT `jurnal_kelas_ibfk_1` FOREIGN KEY (`id_jadwal`) REFERENCES `jadwal_mengajar` (`id_jadwal`)
-) ENGINE=InnoDB AUTO_INCREMENT=400 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=417 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -458,7 +458,7 @@ CREATE TABLE `jurnal_siswa_tidak_hadir` (
   KEY `id_siswa` (`id_siswa`),
   CONSTRAINT `jurnal_siswa_tidak_hadir_ibfk_1` FOREIGN KEY (`id_jurnal`) REFERENCES `jurnal_kelas` (`id_jurnal`) ON DELETE CASCADE,
   CONSTRAINT `jurnal_siswa_tidak_hadir_ibfk_2` FOREIGN KEY (`id_siswa`) REFERENCES `siswa` (`id_siswa`)
-) ENGINE=InnoDB AUTO_INCREMENT=336 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=351 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -574,7 +574,7 @@ CREATE TABLE `kelas` (
   KEY `fk_kelas_wali` (`id_wali_kelas`),
   CONSTRAINT `fk_kelas_wali` FOREIGN KEY (`id_wali_kelas`) REFERENCES `guru` (`id_guru`) ON DELETE SET NULL,
   CONSTRAINT `kelas_ibfk_1` FOREIGN KEY (`id_tahun_ajaran`) REFERENCES `tahun_ajaran` (`id_tahun_ajaran`)
-) ENGINE=InnoDB AUTO_INCREMENT=365 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=383 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -614,7 +614,7 @@ CREATE TABLE `keterlambatan_siswa` (
   KEY `keterlambatan_siswa_tanggal_id_siswa_index` (`tanggal`,`id_siswa`),
   CONSTRAINT `keterlambatan_siswa_id_guru_piket_foreign` FOREIGN KEY (`id_guru_piket`) REFERENCES `guru` (`id_guru`) ON DELETE SET NULL,
   CONSTRAINT `keterlambatan_siswa_id_siswa_foreign` FOREIGN KEY (`id_siswa`) REFERENCES `siswa` (`id_siswa`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -732,7 +732,7 @@ CREATE TABLE `notifikasi` (
   PRIMARY KEY (`id`),
   KEY `notifikasi_id_guru_index` (`id_guru`),
   KEY `notifikasi_id_kelas_index` (`id_kelas`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -851,7 +851,7 @@ CREATE TABLE `siswa` (
   UNIQUE KEY `nisn` (`nisn`),
   KEY `id_kelas` (`id_kelas`),
   CONSTRAINT `siswa_ibfk_1` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`)
-) ENGINE=InnoDB AUTO_INCREMENT=3754 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3764 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -956,4 +956,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-09-21 10:56:35
+-- Dump completed on 2026-09-21 11:11:24

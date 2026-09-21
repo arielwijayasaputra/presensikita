@@ -234,6 +234,8 @@ function loadSiswaByKelas(idKelas){
         .then(res => res.json())
         .then(res => {
             if(res.status === 'success') {
+                const searchInput = root ? qs('.search-input, .filter-input', root) : null;
+                if (searchInput) searchInput.value = '';
                 currentSiswaList = res.data;
                 renderTable(currentSiswaList);
                 muatAbsensiTersimpan();
@@ -759,6 +761,9 @@ function renderTable(data){
         const nisn = s.nisn || '-';
         const nama = s.nama_siswa;
         const r=document.createElement('tr');
+        r.dataset.siswaId = id;
+        r.dataset.nama = (nama || '').toLowerCase();
+        r.dataset.nisn = (nisn || '').toLowerCase();
         r.innerHTML=`
             <td style="color:#94a3b8;font-weight:600">${idx+1}</td>
             <td style="font-family:monospace;font-size:13px;color:#64748b">${nisn}</td>
@@ -777,6 +782,8 @@ function renderTable(data){
             const card=document.createElement('div');
             card.className='absensi-card';
             card.dataset.siswaId=id;
+            card.dataset.nama = (nama || '').toLowerCase();
+            card.dataset.nisn = (nisn || '').toLowerCase();
             const stBtn=(v,label)=>`
                 <button type="button" class="absensi-status-btn ${v==='H'?'selected':''}" data-status="${v}" data-sid="${id}" ${isGuruDisabled ? 'style="pointer-events:none;opacity:.6;"' : ''} onclick="pickAbsensiStatus(this)">${label}<input type="radio" name="st-${id}" value="${v}" ${v==='H'?'checked':''} ${isGuruDisabled ? 'disabled' : ''} onchange="updateRekap()"></button>`;
             card.innerHTML=`
@@ -854,9 +861,42 @@ function tandaiSemua(v){
 }
 
 function filterSiswa(q){
-    q=q.toLowerCase();
-    const filtered = currentSiswaList.filter(s=>s.nama_siswa.toLowerCase().includes(q)||(s.nisn && s.nisn.includes(q)));
-    renderTable(filtered);
+    q = (q || '').trim().toLowerCase();
+    const root = absensiRoot();
+    const tbody = root ? qs('#siswa-tbody', root) : document.getElementById('siswa-tbody');
+    if(!tbody) return;
+
+    const rows = tbody.querySelectorAll('tr[data-siswa-id]');
+    const cards = tbody.querySelectorAll('.absensi-card[data-siswa-id]');
+    let matchCount = 0;
+
+    rows.forEach(row => {
+        const nama = row.dataset.nama || '';
+        const nisn = row.dataset.nisn || '';
+        const isMatch = !q || nama.includes(q) || nisn.includes(q);
+        row.style.display = isMatch ? '' : 'none';
+        if (isMatch) matchCount++;
+    });
+
+    cards.forEach(card => {
+        const nama = card.dataset.nama || '';
+        const nisn = card.dataset.nisn || '';
+        const isMatch = !q || nama.includes(q) || nisn.includes(q);
+        card.style.display = isMatch ? '' : 'none';
+    });
+
+    let emptyRow = tbody.querySelector('.search-empty-row');
+    if (matchCount === 0 && rows.length > 0) {
+        if (!emptyRow) {
+            emptyRow = document.createElement('tr');
+            emptyRow.className = 'search-empty-row';
+            emptyRow.innerHTML = '<td colspan="9" style="text-align:center;padding:24px;color:#94a3b8;font-style:italic">Tidak ada siswa yang cocok dengan pencarian.</td>';
+            tbody.appendChild(emptyRow);
+        }
+        emptyRow.style.display = '';
+    } else if (emptyRow) {
+        emptyRow.style.display = 'none';
+    }
 }
 
 function submitAbsensi(){

@@ -164,7 +164,7 @@
                 <p style="font-size:12px;color:#64748b;margin-top:2px">Tandai status kehadiran setiap siswa di bawah ini</p>
             </div>
             <div class="tandai-row">
-                <input type="text" class="form-input search-input" placeholder="Cari nama siswa..." onkeyup="filterSiswa(this.value)" style="width:220px">
+                <input type="text" class="form-input search-input" placeholder="Cari nama siswa..." onkeyup="filterSiswa(this.value)" oninput="filterSiswa(this.value)" style="width:220px">
                 <button class="btn-tandai green" onclick="tandaiSemua('H')" {{ !$canInputJurnal ? 'disabled' : '' }}>Tandai Semua Hadir</button>
             </div>
         </div>

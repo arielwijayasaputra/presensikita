@@ -25,35 +25,51 @@
 
 ## ⚡ Sekilas Sistem
 
-**PresensiKita** adalah platform presensi dan jurnal mengajar digital berbasis web untuk **SMKN 1 Boyolangu**, menggantikan jurnal kertas manual dengan pencatatan kehadiran *real-time*, alur izin digital, dan rekapitulasi otomatis.
+**PresensiKita** adalah platform presensi dan jurnal mengajar digital berbasis web untuk **SMKN 1 Boyolangu**, menggantikan proses manual dengan pencatatan kehadiran *real-time*, alur izin digital, notifikasi WhatsApp otomatis, dan rekapitulasi multi-level.
+
+Tahun Ajaran aktif: **2026/2027 Ganjil** · **151 Guru** · **2.596 Siswa** · **90 Kelas** · **10 Jurusan**
 
 ---
 
 ## 🚀 Fitur Utama
 
-| Fitur | Penjelasan Singkat |
+| Fitur | Penjelasan |
 |---|---|
-| 📋 **Presensi & Jurnal Kelas** | Guru mengisi kehadiran siswa (Hadir, Sakit, Izin, Alpa) dan materi KBM sesuai jam mengajar aktif. |
-| ⚡ **Izin Guru (Signed URL)** | Pengajuan izin online dengan bukti foto/surat; persetujuan pimpinan cukup 1-klik via link aman tanpa login. |
-| 🛡️ **Dispensasi Siswa & Satpam** | Siswa izin keluar sekolah tervalidasi di pos gerbang; Satpam mencatat jam presisi keluar & masuk. |
-| 📊 **Rekapitulasi & Export CSV** | Hitung persentase kehadiran per kelas/guru otomatis serta download laporan rekap format CSV/Excel. |
-| 📂 **Data Master & Kenaikan Kelas** | Import data massal via Excel, penataan jadwal fleksibel, serta wizard kenaikan kelas & alumni otomatis. |
-| 👨‍👩‍👧 **Portal Ortu & Pengaduan** | Orang tua memantau kehadiran anak via NISN; masyarakat umum dapat mengirim laporan aduan tanpa login. |
+| 📋 **Absensi & Jurnal KBM** | Guru mengisi kehadiran siswa (Hadir, Sakit, Izin, Alpa) dan materi KBM sesuai jam mengajar aktif. Mendukung mode "Hadir Semua" dengan pencarian nama untuk koreksi individual. |
+| ⏰ **Deteksi Jam Aktif Otomatis** | Sistem mencocokkan jadwal guru dengan jam pelajaran hari ini secara real-time; guru hanya dapat mengisi jurnal pada jam mengajar yang sedang berlangsung. |
+| 📢 **Notifikasi WhatsApp** | Bot WhatsApp otomatis mengirim notifikasi izin guru ke Kepsek, Waka Kesiswaan, dan Waka SDM melalui gateway WhatsApp yang terintegrasi. Notifikasi dalam aplikasi otomatis hilang setelah 1×24 jam. |
+| ⚡ **Izin Guru (Signed URL)** | Guru mengajukan izin mengajar online dengan bukti foto/surat; persetujuan Waka/Kepsek cukup 1-klik via link aman tanpa perlu login. |
+| 🛡️ **Dispensasi Siswa** | Guru Piket menerbitkan surat dispensasi siswa; persetujuan digital dikirim ke wali siswa. Satpam mencatat jam keluar dan masuk siswa secara presisi. |
+| 🕐 **Keterlambatan Siswa** | Guru Piket mencatat siswa terlambat beserta alasan; riwayat tersimpan dan dapat ditinjau. |
+| 📊 **Rekap & Export** | Wali Kelas mengunduh rekap absensi & jurnal per kelas (CSV/Excel). Waka SDM mengunduh rekap kehadiran seluruh guru. |
+| 📂 **Data Master** | CRUD lengkap: Guru, Siswa, Kelas, Jurusan, Mata Pelajaran, Jadwal Mengajar. Import massal via file Excel/CSV. |
+| 🗓️ **Jadwal Mengajar** | Import jadwal dari CSV, tugaskan guru per slot, edit manual, atau hapus semua dan unggah ulang. Mendukung alih jadwal dan pengosongan jadwal guru. |
+| 🔔 **Jam Pelajaran Fleksibel** | Admin mengatur waktu mulai/selesai tiap jam pelajaran (Senin–Kamis dan Jumat terpisah), termasuk jam istirahat, berlaku ke semua hari sekaligus. |
+| 🎓 **Kenaikan Kelas & Alumni** | Wizard kenaikan kelas dengan preview sebelum dieksekusi; siswa kelas XII otomatis dipindahkan ke daftar alumni. |
+| 👪 **Portal Orang Tua** | Orang tua memantau riwayat kehadiran anak cukup dengan memasukkan NISN, tanpa perlu akun. |
+| 📣 **Laporan Pengaduan Publik** | Masyarakat umum dapat mengirim laporan/aduan ke sekolah tanpa login; Admin mengelola status setiap laporan. |
+| ⚙️ **Pengaturan Sekolah** | Admin mengatur nama sekolah, NPSN, kontak, batas waktu pengisian jurnal, izin edit jurnal, serta konfigurasi WhatsApp Bot Gateway (endpoint, nomor bot, QR scan, status koneksi). |
 
 ---
 
 ## 👥 8 Role Pengguna
 
-| Role | Login Guard | Wewenang & Tanggung Jawab |
+| Role | Guard / Akses | Halaman & Kemampuan Utama |
 |---|:---:|---|
-| **Admin** | `akun_admin` | Kelola master data (siswa, guru, kelas, mapel, jadwal), kenaikan kelas, dan aduan publik |
-| **Guru** | `guru` | Isi absensi & jurnal KBM pada jam aktif hari ini, ajukan permohonan izin mengajar |
-| **Wali Kelas** | `guru` | Pantau kehadiran siswa kelas binaan dan unduh rekap absensi / jurnal (CSV) |
-| **Guru Piket** | `guru` | Pantau ketertiban harian sekolah, terbitkan surat dispen siswa & input izin darurat |
-| **Waka & Kepsek** | `guru` | Pantau rekapitulasi sekolah, grafik tren kehadiran, dan persetujuan izin resmi |
-| **Waka SDM** | `guru` | Evaluasi kedisiplinan guru dan download rekap kehadiran pengajar (CSV) |
-| **Satpam** | `akun_satpam` | Validasi gerbang: catat jam keluar dan jam masuk siswa pemegang surat dispensasi |
-| **Orang Tua** | `siswa` *(NISN)* | Cek riwayat kehadiran anak secara transparan tanpa perlu kata sandi |
+| **Admin** | `akun_admin` | Dashboard rekap sekolah · CRUD Guru, Siswa, Kelas, Jurusan, Mapel · Import Excel/CSV · Jadwal Mengajar · Jam Pelajaran · Guru Piket · Kenaikan Kelas · Alumni · Laporan Masuk · Pengaturan sekolah & WhatsApp Bot · Riwayat absensi |
+| **Guru** | `guru` | Isi absensi & jurnal KBM jam aktif · Ajukan izin mengajar dengan bukti · Lihat siswa terlambat hari ini · Ubah profil |
+| **Wali Kelas** | `guru` | Pantau absensi harian kelas binaan · Jurnal harian & rekap 1 tahun · Export rekap absensi & jurnal (CSV) · Simpan absensi harian |
+| **Guru Piket** | `guru` | Terbitkan surat dispensasi siswa · Catat siswa terlambat · Input izin guru darurat · Absensi siswa harian |
+| **Waka / Kepsek** | `guru` | Dashboard rekap sekolah · Setujui atau tolak izin guru via signed link · Pantau grafik kehadiran |
+| **Waka SDM** | `guru` | Evaluasi kedisiplinan guru · Export rekap kehadiran pengajar (CSV) · Pengaturan WhatsApp Bot |
+| **Satpam** | `akun_satpam` | Validasi gerbang: catat jam keluar & jam masuk siswa pemegang surat dispensasi · Riwayat dispensasi harian |
+| **Orang Tua** | NISN *(tanpa akun)* | Cek riwayat kehadiran anak secara transparan langsung via NISN |
+
+---
+
+## 🏫 10 Jurusan SMKN 1 Boyolangu
+
+> Akuntansi dan Keuangan Lembaga · Animasi · Bisnis Digital · Desain Komunikasi Visual · Manajemen Perkantoran · Produksi dan Siaran Program Televisi · Rekayasa Perangkat Lunak · Teknik Komputer dan Informatika · Teknik Komputer dan Jaringan · Usaha Layanan Wisata
 
 ---
 
@@ -105,10 +121,11 @@ composer run dev
 | `php artisan migrate:fresh --seed` | Reset database dan seeding data awal |
 | `php artisan db:seed --class=GuruExcelSeeder` | Import ulang data guru dari file Excel |
 | `php artisan optimize:clear` | Membersihkan semua cache konfigurasi, route, dan view |
+| `php artisan test` | Menjalankan seluruh test suite (40 test, 257 assertions) |
 | `vendor/bin/pint` | Memformat kode secara otomatis sesuai standar PSR-12 |
 
 ---
 
 <p align="center">
-  <sub>PresensiKita • <b>SMKN 1 Boyolangu</b></sub>
+  <sub>PresensiKita • <b>SMKN 1 Boyolangu</b> • Tahun Ajaran 2026/2027</sub>
 </p>

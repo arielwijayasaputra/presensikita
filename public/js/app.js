@@ -3218,18 +3218,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
 window.showSelfiePopup = function(url, title) {
     Swal.fire({
-        title: title || 'Foto Selfie Mengajar',
-        imageUrl: url,
-        imageAlt: 'Foto Selfie Mengajar',
-        imageWidth: 420,
-        imageHeight: 'auto',
+        title: 'Foto Selfie Mengajar',
+        html: `
+            ${title ? `<div style="font-size:13.5px;font-weight:600;color:#64748b;margin-top:-6px;margin-bottom:14px">${title}</div>` : ''}
+            <div style="border-radius:12px;overflow:hidden;background:#f1f5f9;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;min-height:220px;position:relative">
+                <img src="${url}" 
+                     alt="Foto Selfie Mengajar" 
+                     style="width:100%;max-height:420px;object-fit:cover;display:block;border-radius:11px" 
+                     onerror="this.parentElement.innerHTML='<div style=\\'padding:36px 20px;color:#ef4444;font-size:13px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:8px\\'><svg width=\\'28\\' height=\\'28\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2\\'><circle cx=\\'12\\' cy=\\'12\\' r=\\'10\\'/><line x1=\\'12\\' y1=\\'8\\' x2=\\'12\\' y2=\\'12\\'/><line x1=\\'12\\' y1=\\'16\\' x2=\\'12.01\\' y2=\\'16\\'/></svg>Foto selfie tidak ditemukan atau gagal dimuat.</div>'">
+            </div>
+            <div style="margin-top:14px;display:flex;justify-content:center;gap:8px">
+                <a href="${url}" target="_blank" rel="noopener" class="custom-swal-confirm" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:8px 16px;border-radius:8px;background:#2563eb;color:#ffffff">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    Buka Ukuran Penuh
+                </a>
+            </div>
+        `,
         showCloseButton: true,
-        confirmButtonText: 'Tutup',
+        showConfirmButton: false,
         customClass: {
-            popup: 'custom-swal-popup',
-            confirmButton: 'custom-swal-confirm'
+            popup: 'custom-swal-popup'
         },
-        buttonsStyling: false
+        width: 480
     });
 };
+
 

@@ -27,8 +27,6 @@
 
 **PresensiKita** adalah platform presensi dan jurnal mengajar digital berbasis web untuk **SMKN 1 Boyolangu**, menggantikan proses manual dengan pencatatan kehadiran *real-time*, alur izin digital, notifikasi WhatsApp otomatis, dan rekapitulasi multi-level.
 
-Tahun Ajaran aktif: **2026/2027 Ganjil** · **151 Guru** · **2.596 Siswa** · **90 Kelas** · **10 Jurusan**
-
 ---
 
 ## 🚀 Fitur Utama

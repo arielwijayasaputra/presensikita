@@ -28,17 +28,17 @@
                 <button type="submit" class="btn-primary" style="font-size:12px; padding:5px 12px; border-radius:6px; background:#3b82f6">Tampilkan</button>
             </form>
 
-            <!-- Ekspor CSV -->
-            <a href="{{ route('walikelas.export-absensi', ['tgl_mulai' => $waliTglMulaiAbsen, 'tgl_selesai' => $waliTglSelesaiAbsen]) }}" class="btn-primary" style="display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:10px; font-size:12.5px; font-weight:700; background:linear-gradient(135deg, #059669, #10b981); text-decoration:none">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                <span>Ekspor CSV Absensi</span>
+            <!-- Ekspor PDF -->
+            <a href="{{ route('walikelas.export-absensi-pdf', ['tgl_mulai' => $waliTglMulaiAbsen, 'tgl_selesai' => $waliTglSelesaiAbsen]) }}" class="btn-primary" style="display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:10px; font-size:12.5px; font-weight:700; background:linear-gradient(135deg, #1e293b, #334155); text-decoration:none">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <span>Ekspor PDF</span>
             </a>
 
-            <!-- Cetak Laporan -->
-            <button type="button" onclick="window.print()" class="btn-secondary" style="display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:10px; font-size:12.5px; font-weight:700; border:1px solid #cbd5e1">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-                <span>Cetak Rekap</span>
-            </button>
+            <!-- Ekspor CSV -->
+            <a href="{{ route('walikelas.export-absensi', ['tgl_mulai' => $waliTglMulaiAbsen, 'tgl_selesai' => $waliTglSelesaiAbsen]) }}" class="btn-secondary" style="display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:10px; font-size:12.5px; font-weight:700; border:1px solid #cbd5e1; text-decoration:none">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Ekspor CSV</span>
+            </a>
         </div>
     </div>
 

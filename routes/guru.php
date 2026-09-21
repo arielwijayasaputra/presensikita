@@ -21,6 +21,8 @@ Route::middleware('auth.guru')->group(function () {
 
     // Laporan (dapat diakses admin maupun guru)
     Route::get('/laporan/data', [LaporanController::class, 'getData'])->name('laporan.data');
+    Route::get('/laporan/export-pdf', [LaporanController::class, 'exportPdf'])->name('laporan.export-pdf');
+    Route::get('/riwayat/export-pdf', [\App\Http\Controllers\Admin\DashboardController::class, 'exportRiwayatPdf'])->name('riwayat.export-pdf');
 
     // Notifikasi (dapat diakses semua guru & admin)
     Route::get('/admin/notifikasi', [NotifikasiController::class, 'index'])->name('notifikasi.index');

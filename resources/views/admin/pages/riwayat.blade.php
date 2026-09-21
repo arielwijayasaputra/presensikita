@@ -86,9 +86,9 @@
             </div>
 
             {{-- Export Rekap Button --}}
-            <button type="button" onclick="window.print()" class="btn-primary" style="border-radius:12px;padding:10px 20px;font-size:13.5px;font-weight:700;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;box-shadow:0 4px 12px rgba(10,25,47,0.25)">
+            <button type="button" onclick="exportRiwayatPdf()" class="btn-primary" style="border-radius:12px;padding:10px 20px;font-size:13.5px;font-weight:700;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;box-shadow:0 4px 12px rgba(10,25,47,0.25)">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Export Rekap
+                Export Rekap PDF
             </button>
         </div>
     </div>

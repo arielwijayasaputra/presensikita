@@ -436,4 +436,115 @@ class DashboardController extends Controller
             'laporanMasukStats', 'roles'
         ));
     }
+
+    /**
+     * Mengekspor riwayat & jurnal presensi ke PDF standar.
+     */
+    public function exportRiwayatPdf(Request $request)
+    {
+        $kelasId = $request->get('kelas_id');
+        $bulan = (int) $request->get('bulan', date('n'));
+        $tahun = (int) $request->get('tahun', date('Y'));
+
+        $query = DB::table('jurnal_kelas')
+            ->leftJoin('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
+            ->leftJoin('kelas', 'jadwal_mengajar.id_kelas', '=', 'kelas.id_kelas')
+            ->leftJoin('mapel', 'jadwal_mengajar.id_mapel', '=', 'mapel.id_mapel')
+            ->leftJoin('guru', 'jadwal_mengajar.id_guru', '=', 'guru.id_guru')
+            ->whereNull('jurnal_kelas.deleted_at')
+            ->whereNull('jadwal_mengajar.deleted_at')
+            ->select(
+                'jurnal_kelas.*',
+                'kelas.nama_kelas',
+                'jadwal_mengajar.id_kelas',
+                'mapel.nama_mapel',
+                'guru.nama_guru'
+            );
+
+        if (!empty($kelasId)) {
+            $query->where('jadwal_mengajar.id_kelas', $kelasId);
+        }
+        if (!empty($bulan)) {
+            $query->whereMonth('jurnal_kelas.tanggal', $bulan);
+        }
+        if (!empty($tahun)) {
+            $query->whereYear('jurnal_kelas.tanggal', $tahun);
+        }
+
+        $riwayatList = $query->orderByDesc('jurnal_kelas.tanggal')
+            ->orderByDesc('jurnal_kelas.waktu_input')
+            ->get();
+
+        foreach ($riwayatList as $r) {
+            $thCounts = DB::table('jurnal_siswa_tidak_hadir')
+                ->where('id_jurnal', $r->id_jurnal)
+                ->selectRaw("
+                    SUM(CASE WHEN status = 'S' THEN 1 ELSE 0 END) as total_sakit,
+                    SUM(CASE WHEN status = 'I' THEN 1 ELSE 0 END) as total_izin,
+                    SUM(CASE WHEN status = 'D' THEN 1 ELSE 0 END) as total_dispen,
+                    SUM(CASE WHEN status = 'A' THEN 1 ELSE 0 END) as total_alpa
+                ")
+                ->first();
+
+            $r->jumlah_sakit = (int) ($thCounts->total_sakit ?? 0);
+            $r->jumlah_izin = (int) ($thCounts->total_izin ?? 0);
+            $r->jumlah_dispen = (int) ($thCounts->total_dispen ?? 0);
+            $r->jumlah_alpa = (int) ($thCounts->total_alpa ?? 0);
+            $r->total_siswa = (int) $r->jumlah_hadir + $r->jumlah_sakit + $r->jumlah_izin + $r->jumlah_dispen + $r->jumlah_alpa;
+            $r->persentase = $r->total_siswa > 0 ? round(($r->jumlah_hadir / $r->total_siswa) * 100) : 100;
+        }
+
+        $selectedKelas = !empty($kelasId) ? Kelas::find($kelasId) : null;
+        $namaKelas = $selectedKelas ? $selectedKelas->nama_kelas : 'Semua Kelas';
+
+        $monthsMap = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
+        ];
+        $namaBulan = $monthsMap[$bulan] ?? 'Bulan ' . $bulan;
+
+        $totalHadir = (int) $riwayatList->sum('jumlah_hadir');
+        $totalSakit = (int) $riwayatList->sum('jumlah_sakit');
+        $totalIzin = (int) $riwayatList->sum('jumlah_izin');
+        $totalDispen = (int) $riwayatList->sum('jumlah_dispen');
+        $totalAlpa = (int) $riwayatList->sum('jumlah_alpa');
+        $totalAll = $totalHadir + $totalSakit + $totalIzin + $totalDispen + $totalAlpa;
+        $overallPct = $totalAll > 0 ? round(($totalHadir / $totalAll) * 100, 1) : 100;
+
+        $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
+        $waliKelas = $selectedKelas && $selectedKelas->id_wali_kelas ? Guru::find($selectedKelas->id_wali_kelas) : null;
+        $kepalaSekolahNama = Pengaturan::get('kepsek', 'Drs. H. Mulyono, M.Pd.');
+
+        $data = [
+            'namaKelas' => $namaKelas,
+            'namaBulan' => $namaBulan,
+            'tahun' => $tahun,
+            'riwayatList' => $riwayatList,
+            'totalHadir' => $totalHadir,
+            'totalSakit' => $totalSakit,
+            'totalIzin' => $totalIzin,
+            'totalDispen' => $totalDispen,
+            'totalAlpa' => $totalAlpa,
+            'overallPct' => $overallPct,
+            'tahunAjaran' => $tahunAjaran,
+            'waliKelasNama' => $waliKelas?->nama_guru,
+            'waliKelasNip' => $waliKelas?->nip,
+            'kepalaSekolahNama' => $kepalaSekolahNama ?: 'Drs. H. Mulyono, M.Pd.',
+            'kepalaSekolahNip' => '19680512 199412 1 002',
+        ];
+
+        $namaFileKelas = str_replace(' ', '_', $namaKelas);
+        $filename = "Riwayat_Jurnal_Presensi_{$namaFileKelas}_{$namaBulan}_{$tahun}.pdf";
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('exports.pdf.riwayat_jurnal', $data)
+            ->setPaper('a4', 'portrait')
+            ->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'sans-serif',
+            ]);
+
+        return $pdf->download($filename);
+    }
 }

@@ -632,7 +632,51 @@ class DashboardController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
+    public function exportRekapGuruPdf(Request $request)
+    {
+        abort_unless(session('auth_role') === 'waka_sdm', 403);
+
+        $bulan = (int) $request->get('bulan', date('n'));
+        $tahun = (int) $request->get('tahun', date('Y'));
+        $monthsMap = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
+        ];
+        $namaBulan = $monthsMap[$bulan] ?? 'Bulan_'.$bulan;
+
+        $rekap = $this->buildRekapBulananGuru($bulan, $tahun);
+        $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
+        $kepalaSekolahNama = Pengaturan::get('kepsek', 'Drs. H. Mulyono, M.Pd.');
+        $wakaUser = AkunWakaSdm::find(session('auth_waka_sdm_id')) ?? AkunWakaSdm::first();
+
+        $data = [
+            'namaBulan' => $namaBulan,
+            'bulan' => $bulan,
+            'tahun' => $tahun,
+            'rekap' => $rekap,
+            'tahunAjaran' => $tahunAjaran,
+            'kepalaSekolahNama' => $kepalaSekolahNama ?: 'Drs. H. Mulyono, M.Pd.',
+            'kepalaSekolahNip' => '19680512 199412 1 002',
+            'wakaSdmNama' => $wakaUser?->nama_waka_sdm ?? 'Waka SDM',
+            'wakaSdmNip' => $wakaUser?->nip ?? '-',
+        ];
+
+        $filename = "Rekap_Kehadiran_Guru_{$namaBulan}_{$tahun}.pdf";
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('exports.pdf.waka_sdm_rekap_guru', $data)
+            ->setPaper('a4', 'portrait')
+            ->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'sans-serif',
+            ]);
+
+        return $pdf->download($filename);
+    }
+
     public function exportRekapKelasWali(Request $request)
+
     {
         abort_unless(session('auth_role') === 'walikelas', 403);
 
@@ -954,5 +998,286 @@ class DashboardController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    public function exportRekapKelasWaliPdf(Request $request)
+    {
+        abort_unless(session('auth_role') === 'walikelas', 403);
+
+        $kelasId = session('auth_kelas_id');
+        if (! $kelasId) {
+            $guruId = session('auth_guru_id');
+            $kelasObj = Kelas::where('id_wali_kelas', $guruId)->first();
+            $kelasId = $kelasObj?->id_kelas;
+        }
+
+        abort_unless($kelasId, 404, 'Kelas tidak ditemukan.');
+
+        $kelas = Kelas::find($kelasId);
+        $bulan = (int) $request->get('bulan', date('n'));
+        $tahun = (int) $request->get('tahun', date('Y'));
+
+        $monthsMap = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
+        ];
+        $namaBulan = $monthsMap[$bulan] ?? 'Bulan_'.$bulan;
+
+        $rekap = $this->absensiService->buildAbsensiRekap($kelasId, $bulan, $tahun);
+        $waliKelas = $kelas->id_wali_kelas ? Guru::find($kelas->id_wali_kelas) : Guru::find(session('auth_guru_id'));
+        $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
+        $kepalaSekolahNama = Pengaturan::get('kepsek', 'Drs. H. Mulyono, M.Pd.');
+
+        $data = [
+            'namaKelas' => $kelas->nama_kelas,
+            'namaBulan' => $namaBulan,
+            'bulan' => $bulan,
+            'tahun' => $tahun,
+            'tahunAjaran' => $tahunAjaran,
+            'waliKelasNama' => $waliKelas?->nama_guru ?? '-',
+            'waliKelasNip' => $waliKelas?->nip ?? '-',
+            'kepalaSekolahNama' => $kepalaSekolahNama ?: 'Drs. H. Mulyono, M.Pd.',
+            'kepalaSekolahNip' => '19680512 199412 1 002',
+            'totalSiswa' => $rekap['total_siswa'] ?? count($rekap['siswa'] ?? []),
+            'totalHadir' => $rekap['hadir'] ?? 0,
+            'totalSakit' => $rekap['sakit'] ?? 0,
+            'totalIzin' => $rekap['izin'] ?? 0,
+            'totalDispen' => $rekap['dispen'] ?? 0,
+            'totalAlpa' => $rekap['alpa'] ?? 0,
+            'siswaList' => $rekap['siswa'] ?? [],
+        ];
+
+        $namaFileKelas = str_replace(' ', '_', $kelas->nama_kelas);
+        $filename = "Rekap_Absensi_{$namaFileKelas}_{$namaBulan}_{$tahun}.pdf";
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('exports.pdf.laporan_absensi', $data)
+            ->setPaper('a4', 'portrait')
+            ->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'sans-serif',
+            ]);
+
+        return $pdf->download($filename);
+    }
+
+    public function exportRekapAbsensiWaliPdf(Request $request)
+    {
+        abort_unless(session('auth_role') === 'walikelas', 403);
+
+        $kelasId = session('auth_kelas_id');
+        if (! $kelasId) {
+            $guruId = session('auth_guru_id');
+            $kelasObj = Kelas::where('id_wali_kelas', $guruId)->first();
+            $kelasId = $kelasObj?->id_kelas;
+        }
+
+        abort_unless($kelasId, 404, 'Kelas tidak ditemukan.');
+
+        $kelas = Kelas::find($kelasId);
+        $tglMulai = $request->get('tgl_mulai', date('Y-m-01'));
+        $tglSelesai = $request->get('tgl_selesai', date('Y-m-d'));
+
+        $rekap = $this->absensiService->buildAbsensiRekapRange($kelasId, $tglMulai, $tglSelesai, true);
+        $waliKelas = $kelas->id_wali_kelas ? Guru::find($kelas->id_wali_kelas) : Guru::find(session('auth_guru_id'));
+        $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
+        $kepalaSekolahNama = Pengaturan::get('kepsek', 'Drs. H. Mulyono, M.Pd.');
+
+        $data = [
+            'namaKelas' => $kelas->nama_kelas,
+            'tglMulai' => $tglMulai,
+            'tglSelesai' => $tglSelesai,
+            'rekap' => $rekap,
+            'tahunAjaran' => $tahunAjaran,
+            'waliKelasNama' => $waliKelas?->nama_guru ?? '-',
+            'waliKelasNip' => $waliKelas?->nip ?? '-',
+            'kepalaSekolahNama' => $kepalaSekolahNama ?: 'Drs. H. Mulyono, M.Pd.',
+            'kepalaSekolahNip' => '19680512 199412 1 002',
+        ];
+
+        $namaFileKelas = str_replace(' ', '_', $kelas->nama_kelas);
+        $filename = "Rekap_Absensi_{$namaFileKelas}_{$tglMulai}_sd_{$tglSelesai}.pdf";
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('exports.pdf.wali_rekap_absensi_range', $data)
+            ->setPaper('a4', 'portrait')
+            ->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'sans-serif',
+            ]);
+
+        return $pdf->download($filename);
+    }
+
+    public function exportRekapJurnalWaliPdf(Request $request)
+    {
+        abort_unless(session('auth_role') === 'walikelas', 403);
+
+        $kelasId = session('auth_kelas_id');
+        if (! $kelasId) {
+            $guruId = session('auth_guru_id');
+            $kelasObj = Kelas::where('id_wali_kelas', $guruId)->first();
+            $kelasId = $kelasObj?->id_kelas;
+        }
+
+        abort_unless($kelasId, 404, 'Kelas tidak ditemukan.');
+
+        $kelas = Kelas::find($kelasId);
+        $tglMulai = $request->get('jurnal_tgl_mulai', date('Y-01-01'));
+        $tglSelesai = $request->get('jurnal_tgl_selesai', date('Y-m-d'));
+
+        $jurnals = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
+            ->join('guru', 'jurnal_kelas.id_guru', '=', 'guru.id_guru')
+            ->join('mapel', 'jadwal_mengajar.id_mapel', '=', 'mapel.id_mapel')
+            ->where('jadwal_mengajar.id_kelas', $kelasId)
+            ->whereBetween('jurnal_kelas.tanggal', [$tglMulai, $tglSelesai])
+            ->orderByDesc('jurnal_kelas.tanggal')
+            ->orderByDesc('jurnal_kelas.waktu_input')
+            ->orderByDesc('jurnal_kelas.id_jurnal')
+            ->select('jurnal_kelas.*', 'guru.nama_guru', 'mapel.nama_mapel', 'jadwal_mengajar.id_mapel')
+            ->get()
+            ->unique(function ($item) {
+                return $item->tanggal . '_' . $item->id_guru . '_' . $item->id_mapel;
+            })
+            ->values();
+
+        $waliKelas = $kelas->id_wali_kelas ? Guru::find($kelas->id_wali_kelas) : Guru::find(session('auth_guru_id'));
+        $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
+        $kepalaSekolahNama = Pengaturan::get('kepsek', 'Drs. H. Mulyono, M.Pd.');
+
+        $data = [
+            'namaKelas' => $kelas->nama_kelas,
+            'tglMulai' => $tglMulai,
+            'tglSelesai' => $tglSelesai,
+            'jurnals' => $jurnals,
+            'tahunAjaran' => $tahunAjaran,
+            'waliKelasNama' => $waliKelas?->nama_guru ?? '-',
+            'waliKelasNip' => $waliKelas?->nip ?? '-',
+            'kepalaSekolahNama' => $kepalaSekolahNama ?: 'Drs. H. Mulyono, M.Pd.',
+            'kepalaSekolahNip' => '19680512 199412 1 002',
+        ];
+
+        $namaFileKelas = str_replace(' ', '_', $kelas->nama_kelas);
+        $filename = "Rekap_Jurnal_{$namaFileKelas}_{$tglMulai}_sd_{$tglSelesai}.pdf";
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('exports.pdf.wali_rekap_jurnal_range', $data)
+            ->setPaper('a4', 'portrait')
+            ->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'sans-serif',
+            ]);
+
+        return $pdf->download($filename);
+    }
+
+    public function exportRekap1TahunWali(Request $request)
+    {
+        abort_unless(session('auth_role') === 'walikelas', 403);
+
+        $kelasId = session('auth_kelas_id');
+        if (! $kelasId) {
+            $guruId = session('auth_guru_id');
+            $kelasObj = Kelas::where('id_wali_kelas', $guruId)->first();
+            $kelasId = $kelasObj?->id_kelas;
+        }
+
+        abort_unless($kelasId, 404, 'Kelas tidak ditemukan.');
+
+        $kelas = Kelas::find($kelasId);
+        $tahun = (int) $request->get('tahun', date('Y'));
+        $tglMulai = "{$tahun}-07-01";
+        $tglSelesai = ($tahun + 1)."-06-30";
+
+        $rekap = $this->absensiService->buildAbsensiRekapRange($kelasId, $tglMulai, $tglSelesai, true);
+
+        $namaKelas = str_replace(' ', '_', $kelas->nama_kelas ?? 'Kelas');
+        $filename = "rekap_1tahun_{$namaKelas}_{$tahun}_".($tahun + 1).".csv";
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ];
+
+        $callback = function () use ($rekap, $kelas, $tahun) {
+            $file = fopen('php://output', 'w');
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            fputcsv($file, ['REKAPITULASI PRESENSI 1 TAHUN AJARAN KELAS '.strtoupper($kelas->nama_kelas)]);
+            fputcsv($file, ["Tahun Ajaran: {$tahun}/".($tahun + 1)]);
+            fputcsv($file, []);
+
+            fputcsv($file, [
+                'No', 'NISN', 'Nama Siswa', 'Jenis Kelamin',
+                'Hadir (H)', 'Sakit (S)', 'Izin (I)', 'Alpa (A)',
+                'Persentase Kehadiran (%)', 'Keterangan'
+            ]);
+
+            foreach ($rekap['siswa'] ?? [] as $idx => $row) {
+                fputcsv($file, [
+                    $idx + 1,
+                    $row['nisn'] ?? '-',
+                    $row['nama_siswa'] ?? '-',
+                    $row['jenis_kelamin'] ?? '-',
+                    $row['hadir'] ?? 0,
+                    $row['sakit'] ?? 0,
+                    $row['izin'] ?? 0,
+                    $row['alpa'] ?? 0,
+                    ($row['persentase'] ?? 0).'%',
+                    $row['keterangan'] ?? '-',
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function exportRekap1TahunWaliPdf(Request $request)
+    {
+        abort_unless(session('auth_role') === 'walikelas', 403);
+
+        $kelasId = session('auth_kelas_id');
+        if (! $kelasId) {
+            $guruId = session('auth_guru_id');
+            $kelasObj = Kelas::where('id_wali_kelas', $guruId)->first();
+            $kelasId = $kelasObj?->id_kelas;
+        }
+
+        abort_unless($kelasId, 404, 'Kelas tidak ditemukan.');
+
+        $kelas = Kelas::find($kelasId);
+        $tahun = (int) $request->get('tahun', date('Y'));
+        $tglMulai = "{$tahun}-07-01";
+        $tglSelesai = ($tahun + 1)."-06-30";
+
+        $rekap = $this->absensiService->buildAbsensiRekapRange($kelasId, $tglMulai, $tglSelesai, true);
+        $waliKelas = $kelas->id_wali_kelas ? Guru::find($kelas->id_wali_kelas) : Guru::find(session('auth_guru_id'));
+        $kepalaSekolahNama = Pengaturan::get('kepsek', 'Drs. H. Mulyono, M.Pd.');
+
+        $data = [
+            'namaKelas' => $kelas->nama_kelas,
+            'tahun' => $tahun,
+            'rekap' => $rekap,
+            'waliKelasNama' => $waliKelas?->nama_guru ?? '-',
+            'waliKelasNip' => $waliKelas?->nip ?? '-',
+            'kepalaSekolahNama' => $kepalaSekolahNama ?: 'Drs. H. Mulyono, M.Pd.',
+            'kepalaSekolahNip' => '19680512 199412 1 002',
+        ];
+
+        $namaFileKelas = str_replace(' ', '_', $kelas->nama_kelas);
+        $filename = "Rekap_Presensi_1Tahun_{$namaFileKelas}_{$tahun}_".($tahun + 1).".pdf";
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('exports.pdf.wali_rekap_1tahun', $data)
+            ->setPaper('a4', 'portrait')
+            ->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'sans-serif',
+            ]);
+
+        return $pdf->download($filename);
     }
 }

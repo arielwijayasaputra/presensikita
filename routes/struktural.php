@@ -14,11 +14,17 @@ Route::middleware('auth.struktural')->group(function () {
     Route::get('/guru-piket', [DashboardController::class, 'index'])->name('gurupiket.index');
     Route::get('/wali-kelas', [DashboardController::class, 'index'])->name('walikelas.index');
     Route::get('/wali-kelas/export-rekap', [DashboardController::class, 'exportRekapKelasWali'])->name('walikelas.export');
+    Route::get('/wali-kelas/export-rekap-pdf', [DashboardController::class, 'exportRekapKelasWaliPdf'])->name('walikelas.export-pdf');
     Route::get('/wali-kelas/export-rekap-absensi', [DashboardController::class, 'exportRekapAbsensiWali'])->name('walikelas.export-absensi');
+    Route::get('/wali-kelas/export-rekap-absensi-pdf', [DashboardController::class, 'exportRekapAbsensiWaliPdf'])->name('walikelas.export-absensi-pdf');
     Route::get('/wali-kelas/export-rekap-jurnal', [DashboardController::class, 'exportRekapJurnalWali'])->name('walikelas.export-jurnal');
+    Route::get('/wali-kelas/export-rekap-jurnal-pdf', [DashboardController::class, 'exportRekapJurnalWaliPdf'])->name('walikelas.export-jurnal-pdf');
+    Route::get('/wali-kelas/export-1tahun', [DashboardController::class, 'exportRekap1TahunWali'])->name('walikelas.export-1tahun');
+    Route::get('/wali-kelas/export-1tahun-pdf', [DashboardController::class, 'exportRekap1TahunWaliPdf'])->name('walikelas.export-1tahun-pdf');
     Route::post('/wali-kelas/simpan-absensi-harian', [DashboardController::class, 'simpanAbsensiHarianWali'])->name('walikelas.simpan-absensi');
     Route::get('/waka-sdm', [DashboardController::class, 'index'])->name('wakasdm.index');
     Route::get('/waka-sdm/export-rekap', [DashboardController::class, 'exportRekapGuru'])->name('wakasdm.export');
+    Route::get('/waka-sdm/export-rekap-pdf', [DashboardController::class, 'exportRekapGuruPdf'])->name('wakasdm.export-pdf');
 
     Route::post('/struktural/profil/update', [PengaturanController::class, 'updateProfil'])->name('struktural.profil.update');
     Route::post('/guru-piket/izin-guru', [IzinGuruController::class, 'store'])->name('izin-guru.store');

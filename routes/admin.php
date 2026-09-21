@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\JadwalMengajarController;
 use App\Http\Controllers\Admin\JamPelajaranController;
 use App\Http\Controllers\Admin\JurusanController;
 use App\Http\Controllers\Admin\KelasController;
+use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\LaporanMasukController;
 use App\Http\Controllers\Admin\MapelController;
 use App\Http\Controllers\Admin\NaikKelasController;
@@ -19,6 +20,8 @@ Route::middleware('auth.admin')->group(function () {
 
     // Dashboard
     Route::get('/admin', [DashboardController::class, 'index'])->name('admin.index');
+    Route::get('/admin/laporan/export-pdf', [LaporanController::class, 'exportPdf'])->name('admin.laporan.export-pdf');
+    Route::get('/admin/riwayat/export-pdf', [DashboardController::class, 'exportRiwayatPdf'])->name('admin.riwayat.export-pdf');
 
     // CRUD Siswa
     Route::post('/siswa/tambah', [SiswaController::class, 'store'])->name('siswa.tambah');

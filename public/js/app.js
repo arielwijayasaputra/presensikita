@@ -2185,6 +2185,39 @@ function tampilkanLaporan() {
         });
 }
 
+function exportLaporanPdf() {
+    const kelasId = document.getElementById('laporan-kelas')?.value || '';
+    const bulan = document.getElementById('laporan-bulan')?.value || '';
+    const dataFilter = document.getElementById('laporan-data')?.value || 'semua';
+    const tahun = new Date().getFullYear();
+
+    const params = new URLSearchParams({
+        kelas_id: kelasId,
+        bulan: bulan,
+        tahun: String(tahun),
+        data: dataFilter
+    });
+
+    window.location.href = `/laporan/export-pdf?${params.toString()}`;
+}
+
+function exportRiwayatPdf() {
+    const bulanSelect = document.getElementById('riwayat-filter-bulan');
+    const kelasSelect = document.getElementById('riwayat-filter-kelas');
+
+    const bulan = bulanSelect ? parseInt(bulanSelect.value, 10) : '';
+    const kelas = kelasSelect?.value || '';
+    const tahun = new Date().getFullYear();
+
+    const params = new URLSearchParams({
+        kelas_id: kelas,
+        bulan: String(bulan),
+        tahun: String(tahun)
+    });
+
+    window.location.href = `/riwayat/export-pdf?${params.toString()}`;
+}
+
 function initLaporanPagination() {
     const pag = document.getElementById('laporan-pagination');
     if (!pag) return;

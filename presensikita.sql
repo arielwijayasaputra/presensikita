@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 21, 2026 at 07:52 AM
+-- Generation Time: Sep 21, 2026 at 01:43 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -49,7 +49,7 @@ CREATE TABLE `akun_admin` (
 --
 
 INSERT INTO `akun_admin` (`id_admin`, `nama`, `username`, `password`, `password_hash`, `no_tlp`, `no_hp`, `foto_profil`, `update_pw_at`, `update_usn_at`, `is_aktif`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Administrator', 'admin', '$2y$04$CNPbMXUCuV.x2c4omSK4R.T6/bZwoD4lgBs.yGgqn.lMDqgLU7gw6', '$2y$04$CNPbMXUCuV.x2c4omSK4R.T6/bZwoD4lgBs.yGgqn.lMDqgLU7gw6', NULL, NULL, NULL, NULL, NULL, 1, '2026-09-01 04:35:19', '2026-09-21 05:46:30', NULL);
+(1, 'Administrator', 'admin', '$2y$04$tlX.RrCvv6AOGRHG76ow..xRh1mpUNhke58Hoz3oIT3e3OcvdBhLe', '$2y$04$tlX.RrCvv6AOGRHG76ow..xRh1mpUNhke58Hoz3oIT3e3OcvdBhLe', NULL, NULL, NULL, NULL, NULL, 1, '2026-09-01 04:35:19', '2026-09-21 11:39:29', NULL);
 
 -- --------------------------------------------------------
 
@@ -75,7 +75,7 @@ CREATE TABLE `akun_satpam` (
 --
 
 INSERT INTO `akun_satpam` (`id_satpam`, `nama`, `username`, `password_hash`, `no_hp`, `foto_profil`, `is_aktif`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Satpam', 'satpam', '$2y$04$E4l4V/I.jwXTuG6AlN2XiOZ42b984GzkUs3miFshSwcNvvqr1f/OK', NULL, NULL, 1, '2026-09-01 18:52:45', '2026-09-21 05:46:34', NULL);
+(1, 'Satpam', 'satpam', '$2y$04$Ib10EDHSnh/KSf/vg..84Op0GSbJtQ6tsBq.V6SZW6PiQRSO45HW6', NULL, NULL, 1, '2026-09-01 18:52:45', '2026-09-21 11:39:36', NULL);
 
 -- --------------------------------------------------------
 
@@ -320,30 +320,7 @@ INSERT INTO `guru` (`id_guru`, `nip`, `nama_guru`, `Peran`, `foto_profil`, `id_m
 (125, NULL, 'Abdul Rohman, S.Pd', 'Wali Kelas', NULL, NULL, NULL, 'abdul', '$2y$12$C9eRz.szFIuSSKB0SCJxCe4uX/KLT3m8FCFQzGuBBjU7L/0q0a.wq', 0, 1, '2026-09-01 17:57:40', NULL),
 (126, NULL, 'Rizki Putri Wulandari, S.Pd', 'Guru', NULL, NULL, NULL, 'rizki', '$2y$12$B3NSGjVrEsqDCrCDAhifBug5.MphnJR9srQkyjLs.2IV.at2MOvbW', 0, 1, '2026-09-01 17:57:40', NULL),
 (127, NULL, 'Pdt. Juklianus Steven Immanuel Bahihi, S.Pdk., M.Pd', 'Guru', NULL, NULL, NULL, 'juklianus', '$2y$12$z/4TXu/QQPe0knAkUCqw6uTWsWW4H/cNqskCZtujcPez84DJJolpq', 0, 1, '2026-09-01 17:57:40', NULL),
-(128, NULL, 'Sukamto, S.Ag', 'Guru', NULL, NULL, NULL, 'sukamto', '$2y$12$/.yJl.SHGaQTjZT4xn2VZeiQFMD.DulHpf5FY8poeot6ZQeD83gKW', 0, 1, '2026-09-01 17:57:41', NULL),
-(541, '99991320', 'Guru Test 6ab0c27a78a15', 'Guru', NULL, NULL, NULL, 'guru_6ab0c27a78a15', '$2y$04$e.SQD5VTYuWcbrlJVlDd1e4xIdmyYp3IAsxtUtciCKtSch.dua4vq', 0, 1, '2026-09-21 05:36:58', NULL),
-(542, '88882526', 'Guru Satu 6ab0c27a9994d', 'Guru', NULL, NULL, NULL, 'guru1_6ab0c27a9994d', '$2y$04$78nFrwqGF6MFuu3c6pUmzeZbcO6YVgoKSzYGJ4JDofD5RQUy9n0ke', 0, 1, '2026-09-21 05:36:58', NULL),
-(543, '77778961', 'Guru Dua 6ab0c27a9994d', 'Guru', NULL, NULL, NULL, 'guru2_6ab0c27a9994d', '$2y$04$c4qQy3NkLhgBCiE0h7R4NuORR3kquTjsREwTm9OHDF0dL0qRYmqQe', 0, 1, '2026-09-21 05:36:58', NULL),
-(544, '66661711', 'Guru Blok 6ab0c27aaabaf', 'Guru', NULL, NULL, NULL, 'guru_blok_6ab0c27aaabaf', '$2y$04$kADwI.IB.5kl8ehfi2WUyuecK1gpQG7hBpl9.qupiWcnnIAXZD1uS', 0, 1, '2026-09-21 05:36:58', '2026-09-21 05:36:58'),
-(548, NULL, 'Muto\'atul Khosi\'ah Import Test, S.Pd', 'Guru', NULL, NULL, NULL, 'mutoatul_import_test', '$2y$04$SVvk7YMhTaGZE0e1RBSVj.NS8LnySlIQtPREFrzREPXyncaO5DSGa', 0, 1, '2026-09-21 05:37:02', NULL),
-(549, NULL, 'Guru ID Import Test, S.Pd', 'Guru', NULL, NULL, NULL, 'idguru_import_test', '$2y$04$Kswr4UqNw5du3pSHSphFfuvU0bZtQxQ44HeDq2eviIfL9voFnYnpa', 0, 1, '2026-09-21 05:37:02', NULL),
-(550, '198803122010011001', 'Guru NIP Import Test, S.Pd', 'Guru', NULL, NULL, NULL, 'nip_import_test', '$2y$04$oexffX4y7/C8cP/EZh1PP.U6tA1nK43RHBWBBOO8UtZNjUa3KHZ6K', 0, 1, '2026-09-21 05:37:02', NULL),
-(551, NULL, 'Guru Upacara Test, S.Pd', 'Guru', NULL, NULL, NULL, 'guru_upacara_test', '$2y$04$5UpknPjHDxF.kDZ7BHV/muOpi8u4V8FDsrCo47ACYPvYoIFzEv4JK', 0, 1, '2026-09-21 05:37:02', NULL),
-(552, NULL, 'Guru Store Test, S.Pd', 'Guru', NULL, NULL, NULL, 'guru_store_test', '$2y$04$EtnIR3RfVxU/ExhBzkBxkuMAWek38RjCB0iBvgDZHYgm/8DSkbTS6', 0, 1, '2026-09-21 05:37:02', NULL),
-(553, NULL, 'Guru Update Test, S.Pd', 'Guru', NULL, NULL, NULL, 'guru_update_test', '$2y$04$x7GSbdaVuvW4mWmmR68MuuXlSVbTm7g99JIwGacsRMWmHwHyT5bmS', 0, 1, '2026-09-21 05:37:02', NULL),
-(554, NULL, 'Guru Tugaskan Test, S.Pd', 'Guru', NULL, NULL, NULL, 'guru_tugaskan_test', '$2y$04$hgHwEeIrMiGZd/sa1cgW/OxJ4EF90xA6MohiLWvZbsC1fDkRSerOq', 0, 1, '2026-09-21 05:37:02', NULL),
-(555, '88888460', 'Guru Piket 6ab0c27faf6e5', 'Guru', NULL, NULL, NULL, 'piket_6ab0c27faf6e5', '$2y$04$ww/E0T5riqTB7SbhkCl2zOLOg6bzsS6YpUITYI9c1aUzcke.63u/.', 0, 1, '2026-09-21 05:37:03', NULL),
-(556, '77777270', 'Guru Kelas 6ab0c27faf6e5', 'Guru', NULL, NULL, NULL, 'guru_6ab0c27faf6e5', '$2y$04$USltG/YsNy31ALe3YKBU4eBeJpXW4ee8VT2HrdfAuzIcyftXmtZbG', 0, 1, '2026-09-21 05:37:03', NULL),
-(557, '66664135', 'Guru Lain 6ab0c27faf6e5', 'Guru', NULL, NULL, NULL, 'lain_6ab0c27faf6e5', '$2y$04$DC/G8qQcCb/h7M9QWIsi1uK2wh1pn0NrYPSVOTiNMBinUa9DUfNzy', 0, 1, '2026-09-21 05:37:03', NULL),
-(558, '55552844', 'Wali Kelas 6ab0c27faf6e5', 'Guru', NULL, NULL, NULL, 'wali_6ab0c27faf6e5', '$2y$04$Thjn7/vJIVJlf8PbWYfavuIZoAB0fmd3v.GCx1j0iAO5J/meJoJBq', 0, 1, '2026-09-21 05:37:03', NULL),
-(559, '99993800', 'Guru Test 6ab0c4b5c65cf', 'Guru', NULL, NULL, NULL, 'guru_6ab0c4b5c65cf', '$2y$04$rWW8BZn8TTg.pSxG0nMYSOn3CbvPqhvCWra3LlpIIJy5ZxspQhx5u', 0, 1, '2026-09-21 05:46:29', NULL),
-(560, '88885905', 'Guru Satu 6ab0c4b5ed431', 'Guru', NULL, NULL, NULL, 'guru1_6ab0c4b5ed431', '$2y$04$k.pZCjg1e01gxiM1W2.2O.G/goughqe/sUZGBB/rRHKeyQNMYETkC', 0, 1, '2026-09-21 05:46:29', NULL),
-(561, '77775298', 'Guru Dua 6ab0c4b5ed431', 'Guru', NULL, NULL, NULL, 'guru2_6ab0c4b5ed431', '$2y$04$wDjsjdo3bbmtN9B4jf.wd.5xSZOuHJM61/ORYl7hNz22uMs1w/JPK', 0, 1, '2026-09-21 05:46:29', NULL),
-(562, '66663480', 'Guru Blok 6ab0c4b60d23f', 'Guru', NULL, NULL, NULL, 'guru_blok_6ab0c4b60d23f', '$2y$04$HiiWx.1nrVpDhy/YOcGQCeIuy588te3wTABfsxHOjHpK9zPZy4LFy', 0, 1, '2026-09-21 05:46:30', '2026-09-21 05:46:30'),
-(566, '88886662', 'Guru Piket 6ab0c4baf31ab', 'Guru', NULL, NULL, NULL, 'piket_6ab0c4baf31ab', '$2y$04$NiYvD9DTDly/Z3p2cwIT8uNENj71QbnJnndR9VvvfRHDUBTZRa6aa', 0, 1, '2026-09-21 05:46:34', NULL),
-(567, '77776121', 'Guru Kelas 6ab0c4baf31ab', 'Guru', NULL, NULL, NULL, 'guru_6ab0c4baf31ab', '$2y$04$aIfdhvPDPZJZRhrtPM6oBeNxLYHSqjpxlpS4nuFhAHMq2QeQSXkNG', 0, 1, '2026-09-21 05:46:34', NULL),
-(568, '66669971', 'Guru Lain 6ab0c4baf31ab', 'Guru', NULL, NULL, NULL, 'lain_6ab0c4baf31ab', '$2y$04$0jKzfPRSLOuDI7bElvPShOXzWAGGO2jZJEky/0g19COQtAcF4izXi', 0, 1, '2026-09-21 05:46:35', NULL),
-(569, '55556310', 'Wali Kelas 6ab0c4baf31ab', 'Guru', NULL, NULL, NULL, 'wali_6ab0c4baf31ab', '$2y$04$ohB1pc7/1tbEx1jSsjm4YucpqRG2ER6d.FI9yqSzl3bJvV2/kFbrO', 0, 1, '2026-09-21 05:46:35', NULL);
+(128, NULL, 'Sukamto, S.Ag', 'Guru', NULL, NULL, NULL, 'sukamto', '$2y$12$/.yJl.SHGaQTjZT4xn2VZeiQFMD.DulHpf5FY8poeot6ZQeD83gKW', 0, 1, '2026-09-01 17:57:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -2989,41 +2966,7 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 (11641, 120, 43, 40, 44, 'Kamis', 1, NULL),
 (11642, 120, 43, 40, 45, 'Kamis', 1, NULL),
 (11643, 58, 44, 30, 27, 'Selasa', 1, NULL),
-(11644, 112, 44, 30, 15, 'Jumat', 1, NULL),
-(12282, 541, 1, 435, 1, 'Senin', 1, NULL),
-(12283, 541, 1, 435, 2, 'Senin', 1, NULL),
-(12284, 541, 1, 435, 3, 'Senin', 1, NULL),
-(12285, 542, 1, 436, 1, 'Senin', 1, NULL),
-(12286, 542, 1, 436, 2, 'Senin', 1, NULL),
-(12287, 543, 1, 436, 3, 'Senin', 1, NULL),
-(12297, 548, 2, 442, 1, 'Senin', 1, NULL),
-(12298, 548, 2, 442, 2, 'Senin', 1, NULL),
-(12299, 548, 2, 442, 3, 'Senin', 1, NULL),
-(12300, 548, 47, 442, 11, 'Jumat', 1, NULL),
-(12301, 548, 2, 442, 12, 'Jumat', 1, NULL),
-(12302, 548, 2, 442, 13, 'Jumat', 1, NULL);
-INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `id_jam`, `hari`, `id_tahun_ajaran`, `deleted_at`) VALUES
-(12303, 548, 2, 442, 14, 'Jumat', 1, NULL),
-(12304, NULL, 2, 443, 2, 'Senin', 1, NULL),
-(12305, 549, 2, 444, 4, 'Senin', 1, NULL),
-(12306, 550, 2, 445, 5, 'Senin', 1, NULL),
-(12307, NULL, 46, 447, 1, 'Senin', 1, NULL),
-(12308, NULL, 46, 448, 1, 'Senin', 1, NULL),
-(12309, NULL, 46, 449, 1, 'Senin', 1, NULL),
-(12310, NULL, 46, 450, 1, 'Senin', 1, NULL),
-(12311, NULL, 46, 451, 1, 'Senin', 1, NULL),
-(12312, 556, 1, 452, 1, 'Senin', 1, NULL),
-(12313, 556, 1, 452, 2, 'Senin', 1, NULL),
-(12314, 556, 1, 452, 3, 'Senin', 1, NULL),
-(12315, 559, 1, 453, 1, 'Senin', 1, NULL),
-(12316, 559, 1, 453, 2, 'Senin', 1, NULL),
-(12317, 559, 1, 453, 3, 'Senin', 1, NULL),
-(12318, 560, 1, 454, 1, 'Senin', 1, NULL),
-(12319, 560, 1, 454, 2, 'Senin', 1, NULL),
-(12320, 561, 1, 454, 3, 'Senin', 1, NULL),
-(12330, 567, 1, 460, 1, 'Senin', 1, NULL),
-(12331, 567, 1, 460, 2, 'Senin', 1, NULL),
-(12332, 567, 1, 460, 3, 'Senin', 1, NULL);
+(11644, 112, 44, 30, 15, 'Jumat', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -3141,25 +3084,7 @@ INSERT INTO `jurnal_kelas` (`id_jurnal`, `id_jadwal`, `id_guru`, `tanggal`, `sta
 (123, 2034, 86, '2026-09-15', 'Hadir', 'selfie-guru/selfie_86_42_1789432404_IhB0Fk.jpeg', 'Pembelajaran Harian', 31, '2026-09-15 00:33:30', NULL),
 (124, 2035, 86, '2026-09-15', 'Hadir', 'selfie-guru/selfie_86_42_1789432404_IhB0Fk.jpeg', 'Pembelajaran Harian', 30, '2026-09-15 02:31:21', NULL),
 (398, 2036, 83, '2026-09-15', 'Hadir', 'selfie-guru/selfie_83_42_1789442698_gzah2t.jpeg', 'Pembelajaran Harian', 30, '2026-09-15 03:24:58', NULL),
-(399, 11453, 69, '2026-09-17', 'Hadir', 'selfie-guru/selfie_69_42_1789611316_7fo24n.jpeg', 'Pembelajaran Harian', 31, '2026-09-17 02:15:16', NULL),
-(478, 12282, 541, '2026-09-21', 'Hadir', NULL, 'Materi Jam 1', 1, '2026-09-21 00:15:00', NULL),
-(479, 12284, 541, '2026-09-21', 'Hadir', NULL, 'Materi Jam 3', 0, '2026-09-21 01:35:00', NULL),
-(480, 12283, 541, '2026-09-21', 'Hadir', NULL, 'Materi Jam 3', 2, '2026-09-21 05:36:58', NULL),
-(481, 12285, 542, '2026-09-21', 'Hadir', 'selfie-guru/selfie_542_436_1789969018_u0wxKz.png', 'Materi Sesi Guru 1', 1, '2026-09-21 05:36:58', NULL),
-(482, 12286, 542, '2026-09-21', 'Hadir', 'selfie-guru/selfie_542_436_1789969018_u0wxKz.png', 'Materi Sesi Guru 1', 1, '2026-09-21 05:36:58', NULL),
-(483, 12287, 543, '2026-09-21', 'Hadir', 'selfie-guru/selfie_543_436_1789969018_nUI27w.png', 'Materi Sesi Guru 2', 2, '2026-09-21 05:36:58', NULL),
-(490, 12312, 556, '2026-09-21', 'Hadir', NULL, 'Materi Jam 1', 0, '2026-09-21 05:37:03', NULL),
-(491, 12313, 556, '2026-09-21', 'Hadir', NULL, 'Materi Jam 2', 1, '2026-09-21 05:37:03', NULL),
-(492, 12314, 556, '2026-09-21', 'Hadir', NULL, 'Materi Jam 1', 1, '2026-09-21 05:37:03', NULL),
-(493, 12315, 559, '2026-09-21', 'Hadir', NULL, 'Materi Jam 1', 1, '2026-09-21 00:15:00', NULL),
-(494, 12317, 559, '2026-09-21', 'Hadir', NULL, 'Materi Jam 3', 0, '2026-09-21 01:35:00', NULL),
-(495, 12316, 559, '2026-09-21', 'Hadir', NULL, 'Materi Jam 3', 2, '2026-09-21 05:46:29', NULL),
-(496, 12318, 560, '2026-09-21', 'Hadir', 'selfie-guru/selfie_560_454_1789969589_H3PUlF.png', 'Materi Sesi Guru 1', 1, '2026-09-21 05:46:30', NULL),
-(497, 12319, 560, '2026-09-21', 'Hadir', 'selfie-guru/selfie_560_454_1789969589_H3PUlF.png', 'Materi Sesi Guru 1', 1, '2026-09-21 05:46:30', NULL),
-(498, 12320, 561, '2026-09-21', 'Hadir', 'selfie-guru/selfie_561_454_1789969590_g0oiYM.png', 'Materi Sesi Guru 2', 2, '2026-09-21 05:46:30', NULL),
-(505, 12330, 567, '2026-09-21', 'Hadir', NULL, 'Materi Jam 1', 0, '2026-09-21 05:46:35', NULL),
-(506, 12331, 567, '2026-09-21', 'Hadir', NULL, 'Materi Jam 2', 1, '2026-09-21 05:46:35', NULL),
-(507, 12332, 567, '2026-09-21', 'Hadir', NULL, 'Materi Jam 1', 1, '2026-09-21 05:46:35', NULL);
+(399, 11453, 69, '2026-09-17', 'Hadir', 'selfie-guru/selfie_69_42_1789611316_7fo24n.jpeg', 'Pembelajaran Harian', 31, '2026-09-17 02:15:16', NULL);
 
 -- --------------------------------------------------------
 
@@ -3193,19 +3118,7 @@ INSERT INTO `jurnal_siswa_tidak_hadir` (`id_absen`, `id_jurnal`, `id_siswa`, `st
 (276, 123, 1734, 'T', 'Masuk Terlambat: Ban bocor', NULL),
 (332, 398, 1735, 'A', NULL, NULL),
 (333, 398, 1736, 'A', NULL, NULL),
-(335, 399, 1735, 'A', NULL, NULL),
-(397, 478, 3805, 'S', 'Sakit Demam', NULL),
-(398, 479, 3804, 'A', 'Tidak Mengikuti Pelajaran', NULL),
-(399, 479, 3805, 'S', 'Sakit Demam', NULL),
-(400, 481, 3807, 'S', 'Sakit Kepala', NULL),
-(401, 482, 3807, 'S', 'Sakit Kepala', NULL),
-(406, 490, 3813, 'T', 'Masuk Terlambat: Macet parah karena pohon tumbang', NULL),
-(408, 493, 3815, 'S', 'Sakit Demam', NULL),
-(409, 494, 3814, 'A', 'Tidak Mengikuti Pelajaran', NULL),
-(410, 494, 3815, 'S', 'Sakit Demam', NULL),
-(411, 496, 3817, 'S', 'Sakit Kepala', NULL),
-(412, 497, 3817, 'S', 'Sakit Kepala', NULL),
-(417, 505, 3823, 'T', 'Masuk Terlambat: Macet parah karena pohon tumbang', NULL);
+(335, 399, 1735, 'A', NULL, NULL);
 
 --
 -- Triggers `jurnal_siswa_tidak_hadir`
@@ -3366,25 +3279,7 @@ INSERT INTO `kelas` (`id_kelas`, `nama_kelas`, `tingkat_kelas`, `jurusan`, `id_t
 (69, 'XII TKI 2', 'XII', 'TKI', 1, 20, NULL),
 (70, 'XII TKJ 1', 'XII', 'TKJ', 1, 44, NULL),
 (71, 'XII TKJ 2', 'XII', 'TKJ', 1, 111, NULL),
-(72, 'XII ULW', 'XII', 'ULW', 1, 94, NULL),
-(435, 'Kelas Test 6ab0c27a7b499', 'X', 'RPL', 1, NULL, NULL),
-(436, 'Kelas Multi 6ab0c27a9b576', 'XI', 'RPL', 1, NULL, NULL),
-(437, 'Kelas Jam 4 Test 6ab0c27aabbad', 'XII', 'RPL', 1, NULL, '2026-09-21 05:36:58'),
-(442, 'X TKI Import Test', 'X', 'TKI', 1, NULL, NULL),
-(443, 'X TKI Header Typo Test', 'X', 'TKI', 1, NULL, NULL),
-(444, 'X TKI ID Guru Test', 'X', 'TKI', 1, NULL, NULL),
-(445, 'X TKI NIP Test', 'X', 'TKI', 1, NULL, NULL),
-(446, 'X TKI Unmatched Test', 'X', 'TKI', 1, NULL, NULL),
-(447, 'X Test Upacara Import', 'X', 'TKI', 1, NULL, NULL),
-(448, 'X Test Upacara Store', 'X', 'TKI', 1, NULL, NULL),
-(449, 'X Test Upacara Update', 'X', 'TKI', 1, NULL, NULL),
-(450, 'X Test Upacara Tugaskan', 'X', 'TKI', 1, NULL, NULL),
-(451, 'X Test Upacara Display', 'X', 'TKI', 1, NULL, NULL),
-(452, 'Kelas X RPL 6ab0c27faf6e5', 'X', 'RPL', 1, 558, NULL),
-(453, 'Kelas Test 6ab0c4b5c931e', 'X', 'RPL', 1, NULL, NULL),
-(454, 'Kelas Multi 6ab0c4b5eed31', 'XI', 'RPL', 1, NULL, NULL),
-(455, 'Kelas Jam 4 Test 6ab0c4b60e095', 'XII', 'RPL', 1, NULL, '2026-09-21 05:46:30'),
-(460, 'Kelas X RPL 6ab0c4baf31ab', 'X', 'RPL', 1, 569, NULL);
+(72, 'XII ULW', 'XII', 'ULW', 1, 94, NULL);
 
 -- --------------------------------------------------------
 
@@ -3415,9 +3310,7 @@ CREATE TABLE `keterlambatan_siswa` (
 INSERT INTO `keterlambatan_siswa` (`id_keterlambatan`, `id_siswa`, `id_guru_piket`, `tanggal`, `jam_masuk`, `jam_ke`, `alasan`, `foto_surat`, `status`, `disetujui_pada`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (5, 1742, 125, '2026-09-15', '08:58:00', 3, NULL, NULL, 'diizinkan', '2026-09-15 01:59:25', '2026-09-15 01:59:25', '2026-09-15 01:59:25', NULL),
 (16, 1734, 125, '2026-09-15', '09:31:00', 4, 'Ban bocor', NULL, 'diizinkan', '2026-09-15 02:31:58', '2026-09-15 02:31:58', '2026-09-15 02:31:58', NULL),
-(22, 1734, 125, '2026-09-17', '09:16:00', 4, 'Sibuk', NULL, 'diizinkan', '2026-09-17 02:16:28', '2026-09-17 02:16:28', '2026-09-17 02:16:28', NULL),
-(28, 3813, 555, '2026-09-21', '07:45:00', 2, 'Macet parah karena pohon tumbang', NULL, 'diizinkan', '2026-09-21 05:37:03', '2026-09-21 05:37:03', '2026-09-21 05:37:03', '2026-09-21 05:37:03'),
-(29, 3823, 566, '2026-09-21', '07:45:00', 2, 'Macet parah karena pohon tumbang', NULL, 'diizinkan', '2026-09-21 05:46:35', '2026-09-21 05:46:35', '2026-09-21 05:46:35', '2026-09-21 05:46:35');
+(22, 1734, 125, '2026-09-17', '09:16:00', 4, 'Sibuk', NULL, 'diizinkan', '2026-09-17 02:16:28', '2026-09-17 02:16:28', '2026-09-17 02:16:28', NULL);
 
 -- --------------------------------------------------------
 
@@ -3613,9 +3506,7 @@ INSERT INTO `notifikasi` (`id`, `id_guru`, `id_kelas`, `judul`, `pesan`, `tipe`,
 (16, 102, 42, 'Siswa Terlambat: ABID RIZKY NATANULLOH (XI RPL 1)', 'Siswa ABID RIZKY NATANULLOH terlambat (datang jam 09:31, mulai masuk jam ke-4). Alasan: Ban bocor. Diizinkan oleh: Abdul Rohman, S.Pd.', 'warning', 0, '2026-09-15 02:31:58', NULL),
 (17, NULL, 42, 'Siswa Terlambat: ABID RIZKY NATANULLOH (XI RPL 1)', 'Siswa ABID RIZKY NATANULLOH terlambat (datang jam 09:31, mulai masuk jam ke-4). Alasan: Ban bocor. Diizinkan oleh: Abdul Rohman, S.Pd.', 'warning', 1, '2026-09-15 02:31:58', NULL),
 (28, 69, 42, 'Siswa Terlambat: ABID RIZKY NATANULLOH (XI RPL 1)', 'Siswa ABID RIZKY NATANULLOH terlambat (datang jam 09:16, mulai masuk jam ke-4). Alasan: Sibuk. Diizinkan oleh: Abdul Rohman, S.Pd.', 'warning', 0, '2026-09-17 02:16:28', NULL),
-(29, 87, 42, 'Siswa Terlambat: ABID RIZKY NATANULLOH (XI RPL 1)', 'Siswa ABID RIZKY NATANULLOH terlambat (datang jam 09:16, mulai masuk jam ke-4). Alasan: Sibuk. Diizinkan oleh: Abdul Rohman, S.Pd.', 'warning', 0, '2026-09-17 02:16:28', NULL),
-(45, 556, 452, 'Siswa Terlambat: Budi Santoso 6ab0c27faf6e5 (Kelas X RPL 6ab0c27faf6e5)', 'Siswa Budi Santoso 6ab0c27faf6e5 terlambat (datang jam 07:45, mulai masuk jam ke-2). Alasan: Macet parah karena pohon tumbang. Diizinkan oleh: Guru Piket 6ab0c27faf6e5.', 'warning', 0, '2026-09-21 05:37:03', NULL),
-(48, 567, 460, 'Siswa Terlambat: Budi Santoso 6ab0c4baf31ab (Kelas X RPL 6ab0c4baf31ab)', 'Siswa Budi Santoso 6ab0c4baf31ab terlambat (datang jam 07:45, mulai masuk jam ke-2). Alasan: Macet parah karena pohon tumbang. Diizinkan oleh: Guru Piket 6ab0c4baf31ab.', 'warning', 0, '2026-09-21 05:46:35', NULL);
+(29, 87, 42, 'Siswa Terlambat: ABID RIZKY NATANULLOH (XI RPL 1)', 'Siswa ABID RIZKY NATANULLOH terlambat (datang jam 09:16, mulai masuk jam ke-4). Alasan: Sibuk. Diizinkan oleh: Abdul Rohman, S.Pd.', 'warning', 0, '2026-09-17 02:16:28', NULL);
 
 -- --------------------------------------------------------
 
@@ -6308,19 +6199,7 @@ INSERT INTO `siswa` (`id_siswa`, `nisn`, `nama_siswa`, `jenis_kelamin`, `id_kela
 (3371, '0101774753', 'WITA DWI SAPUTRI', 'P', 6, 1, NULL),
 (3372, '0102634116', 'YOSUA RIO IRDIYANTO', 'L', 6, 1, NULL),
 (3373, '0106790976', 'ZAIDAN RIZKY PRATAMA', 'L', 6, 1, NULL),
-(3374, '0119412423', 'ZHAKI ZHAKARIA JORDAN', 'L', 6, 1, NULL),
-(3804, '9999996499', 'Siswa Hadir Jam1', 'L', 435, 1, NULL),
-(3805, '9999999491', 'Siswa Sakit Jam1', 'L', 435, 1, NULL),
-(3806, '8888882537', 'Siswa 1 6ab0c27a9994d', 'L', 436, 1, NULL),
-(3807, '7777779433', 'Siswa 2 6ab0c27a9994d', 'L', 436, 1, NULL),
-(3808, '6666666799', 'Siswa Alpha Jam3', 'L', 437, 1, '2026-09-21 05:36:58'),
-(3813, '9999102266', 'Budi Santoso 6ab0c27faf6e5', 'L', 452, 1, NULL),
-(3814, '9999992354', 'Siswa Hadir Jam1', 'L', 453, 1, NULL),
-(3815, '9999996988', 'Siswa Sakit Jam1', 'L', 453, 1, NULL),
-(3816, '8888885359', 'Siswa 1 6ab0c4b5ed431', 'L', 454, 1, NULL),
-(3817, '7777771646', 'Siswa 2 6ab0c4b5ed431', 'L', 454, 1, NULL),
-(3818, '6666663125', 'Siswa Alpha Jam3', 'L', 455, 1, '2026-09-21 05:46:30'),
-(3823, '9999904509', 'Budi Santoso 6ab0c4baf31ab', 'L', 460, 1, NULL);
+(3374, '0119412423', 'ZHAKI ZHAKARIA JORDAN', 'L', 6, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -6635,7 +6514,7 @@ ALTER TABLE `dispen_siswa`
 -- AUTO_INCREMENT for table `guru`
 --
 ALTER TABLE `guru`
-  MODIFY `id_guru` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=570;
+  MODIFY `id_guru` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=625;
 
 --
 -- AUTO_INCREMENT for table `guru_piket`
@@ -6653,25 +6532,25 @@ ALTER TABLE `izin_guru`
 -- AUTO_INCREMENT for table `jadwal_mengajar`
 --
 ALTER TABLE `jadwal_mengajar`
-  MODIFY `id_jadwal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12333;
+  MODIFY `id_jadwal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12423;
 
 --
 -- AUTO_INCREMENT for table `jam_pelajaran`
 --
 ALTER TABLE `jam_pelajaran`
-  MODIFY `id_jam` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=192;
+  MODIFY `id_jam` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=212;
 
 --
 -- AUTO_INCREMENT for table `jurnal_kelas`
 --
 ALTER TABLE `jurnal_kelas`
-  MODIFY `id_jurnal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=508;
+  MODIFY `id_jurnal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=585;
 
 --
 -- AUTO_INCREMENT for table `jurnal_siswa_tidak_hadir`
 --
 ALTER TABLE `jurnal_siswa_tidak_hadir`
-  MODIFY `id_absen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=419;
+  MODIFY `id_absen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=478;
 
 --
 -- AUTO_INCREMENT for table `jurusan`
@@ -6683,13 +6562,13 @@ ALTER TABLE `jurusan`
 -- AUTO_INCREMENT for table `kelas`
 --
 ALTER TABLE `kelas`
-  MODIFY `id_kelas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=461;
+  MODIFY `id_kelas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=501;
 
 --
 -- AUTO_INCREMENT for table `keterlambatan_siswa`
 --
 ALTER TABLE `keterlambatan_siswa`
-  MODIFY `id_keterlambatan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id_keterlambatan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `laporan`
@@ -6713,7 +6592,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `notifikasi`
 --
 ALTER TABLE `notifikasi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `pengumuman`
@@ -6731,7 +6610,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `siswa`
 --
 ALTER TABLE `siswa`
-  MODIFY `id_siswa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3824;
+  MODIFY `id_siswa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3874;
 
 --
 -- AUTO_INCREMENT for table `tahun_ajaran`

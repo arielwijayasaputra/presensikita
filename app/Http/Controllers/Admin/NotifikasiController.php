@@ -24,7 +24,10 @@ class NotifikasiController extends Controller
         $guruId = session('auth_guru_id');
         $isAdmin = (session('auth_is_admin') == 1) || (session('auth_role') === 'admin');
 
-        $query = DB::table('notifikasi');
+        // Hanya tampilkan notifikasi aktif dalam 1 hari terakhir (24 jam)
+        $query = DB::table('notifikasi')
+            ->whereNull('deleted_at')
+            ->where('created_at', '>=', Carbon::now()->subDay());
 
         if ($isAdmin) {
             // Admin melihat notifikasi yang ditujukan untuk admin (id_guru NULL) atau notifikasi miliknya

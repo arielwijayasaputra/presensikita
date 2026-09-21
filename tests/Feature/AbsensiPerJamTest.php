@@ -405,63 +405,75 @@ class AbsensiPerJamTest extends TestCase
             'jam_selesai' => '23:45:00',
         ]);
 
-        $j1 = DB::table('jadwal_mengajar')->insertGetId([
-            'id_guru' => $guru->id_guru, 'id_mapel' => $mapelId, 'id_kelas' => $kelas->id_kelas, 'id_jam' => $jam1Id, 'hari' => $hariIni, 'id_tahun_ajaran' => $tahunAjaran->id_tahun_ajaran,
-        ]);
-        $j2 = DB::table('jadwal_mengajar')->insertGetId([
-            'id_guru' => $guru->id_guru, 'id_mapel' => $mapelId, 'id_kelas' => $kelas->id_kelas, 'id_jam' => $jam2Id, 'hari' => $hariIni, 'id_tahun_ajaran' => $tahunAjaran->id_tahun_ajaran,
-        ]);
-        $j3 = DB::table('jadwal_mengajar')->insertGetId([
-            'id_guru' => $guru->id_guru, 'id_mapel' => $mapelId, 'id_kelas' => $kelas->id_kelas, 'id_jam' => $jam3Id, 'hari' => $hariIni, 'id_tahun_ajaran' => $tahunAjaran->id_tahun_ajaran,
-        ]);
-        $j4 = DB::table('jadwal_mengajar')->insertGetId([
-            'id_guru' => $guru->id_guru, 'id_mapel' => $mapelId, 'id_kelas' => $kelas->id_kelas, 'id_jam' => $jam4Id, 'hari' => $hariIni, 'id_tahun_ajaran' => $tahunAjaran->id_tahun_ajaran,
-        ]);
+        try {
+            $j1 = DB::table('jadwal_mengajar')->insertGetId([
+                'id_guru' => $guru->id_guru, 'id_mapel' => $mapelId, 'id_kelas' => $kelas->id_kelas, 'id_jam' => $jam1Id, 'hari' => $hariIni, 'id_tahun_ajaran' => $tahunAjaran->id_tahun_ajaran,
+            ]);
+            $j2 = DB::table('jadwal_mengajar')->insertGetId([
+                'id_guru' => $guru->id_guru, 'id_mapel' => $mapelId, 'id_kelas' => $kelas->id_kelas, 'id_jam' => $jam2Id, 'hari' => $hariIni, 'id_tahun_ajaran' => $tahunAjaran->id_tahun_ajaran,
+            ]);
+            $j3 = DB::table('jadwal_mengajar')->insertGetId([
+                'id_guru' => $guru->id_guru, 'id_mapel' => $mapelId, 'id_kelas' => $kelas->id_kelas, 'id_jam' => $jam3Id, 'hari' => $hariIni, 'id_tahun_ajaran' => $tahunAjaran->id_tahun_ajaran,
+            ]);
+            $j4 = DB::table('jadwal_mengajar')->insertGetId([
+                'id_guru' => $guru->id_guru, 'id_mapel' => $mapelId, 'id_kelas' => $kelas->id_kelas, 'id_jam' => $jam4Id, 'hari' => $hariIni, 'id_tahun_ajaran' => $tahunAjaran->id_tahun_ajaran,
+            ]);
 
-        // 1. Simpan Jurnal Jam 1: Siswa Hadir
-        $jurnal1 = JurnalKelas::create([
-            'id_jadwal' => $j1, 'tanggal' => $today, 'id_guru' => $guru->id_guru, 'status_kehadiran_guru' => 'Hadir', 'materi' => 'Materi Jam 1', 'jumlah_hadir' => 1, 'waktu_input' => now(),
-        ]);
+            // 1. Simpan Jurnal Jam 1: Siswa Hadir
+            $jurnal1 = JurnalKelas::create([
+                'id_jadwal' => $j1, 'tanggal' => $today, 'id_guru' => $guru->id_guru, 'status_kehadiran_guru' => 'Hadir', 'materi' => 'Materi Jam 1', 'jumlah_hadir' => 1, 'waktu_input' => now(),
+            ]);
 
-        // 2. Simpan Jurnal Jam 2: Siswa Hadir
-        $jurnal2 = JurnalKelas::create([
-            'id_jadwal' => $j2, 'tanggal' => $today, 'id_guru' => $guru->id_guru, 'status_kehadiran_guru' => 'Hadir', 'materi' => 'Materi Jam 2', 'jumlah_hadir' => 1, 'waktu_input' => now(),
-        ]);
+            // 2. Simpan Jurnal Jam 2: Siswa Hadir
+            $jurnal2 = JurnalKelas::create([
+                'id_jadwal' => $j2, 'tanggal' => $today, 'id_guru' => $guru->id_guru, 'status_kehadiran_guru' => 'Hadir', 'materi' => 'Materi Jam 2', 'jumlah_hadir' => 1, 'waktu_input' => now(),
+            ]);
 
-        // 3. Simpan Jurnal Jam 3: Siswa Alpa di Jam 3
-        $jurnal3 = JurnalKelas::create([
-            'id_jadwal' => $j3, 'tanggal' => $today, 'id_guru' => $guru->id_guru, 'status_kehadiran_guru' => 'Hadir', 'materi' => 'Materi Jam 3', 'jumlah_hadir' => 0, 'waktu_input' => now(),
-        ]);
-        JurnalSiswaTidakHadir::create([
-            'id_jurnal' => $jurnal3->id_jurnal, 'id_siswa' => $siswa->id_siswa, 'status' => 'A', 'keterangan' => 'Bolos di Jam 3',
-        ]);
+            // 3. Simpan Jurnal Jam 3: Siswa Alpa di Jam 3
+            $jurnal3 = JurnalKelas::create([
+                'id_jadwal' => $j3, 'tanggal' => $today, 'id_guru' => $guru->id_guru, 'status_kehadiran_guru' => 'Hadir', 'materi' => 'Materi Jam 3', 'jumlah_hadir' => 0, 'waktu_input' => now(),
+            ]);
+            JurnalSiswaTidakHadir::create([
+                'id_jurnal' => $jurnal3->id_jurnal, 'id_siswa' => $siswa->id_siswa, 'status' => 'A', 'keterangan' => 'Bolos di Jam 3',
+            ]);
 
-        // 4. Cek Portal Orang Tua
-        $response = $this->withSession([
-            'auth_siswa_id' => $siswa->id_siswa,
-            'auth_nisn' => $siswa->nisn,
-            'auth_nama_siswa' => $siswa->nama_siswa,
-            'auth_role' => 'orangtua',
-        ])->get(route('orangtua.index', ['tanggal' => $today]));
+            // 4. Cek Portal Orang Tua
+            $response = $this->withSession([
+                'auth_siswa_id' => $siswa->id_siswa,
+                'auth_nisn' => $siswa->nisn,
+                'auth_nama_siswa' => $siswa->nama_siswa,
+                'auth_role' => 'orangtua',
+            ])->get(route('orangtua.index', ['tanggal' => $today]));
 
-        $response->assertStatus(200);
-        $presensiPerJam = $response->viewData('presensiPerJam');
+            $response->assertStatus(200);
+            $presensiPerJam = $response->viewData('presensiPerJam');
 
-        $p1 = collect($presensiPerJam)->firstWhere('jam_ke', 901);
-        $p2 = collect($presensiPerJam)->firstWhere('jam_ke', 902);
-        $p3 = collect($presensiPerJam)->firstWhere('jam_ke', 903);
-        $p4 = collect($presensiPerJam)->firstWhere('jam_ke', 904);
+            $p1 = collect($presensiPerJam)->firstWhere('jam_ke', 901);
+            $p2 = collect($presensiPerJam)->firstWhere('jam_ke', 902);
+            $p3 = collect($presensiPerJam)->firstWhere('jam_ke', 903);
+            $p4 = collect($presensiPerJam)->firstWhere('jam_ke', 904);
 
-        // Jam 1 & Jam 2 harus tetap Hadir
-        $this->assertEquals('Hadir', $p1['status'], 'Jam 1 harus tetap Hadir.');
-        $this->assertEquals('Hadir', $p2['status'], 'Jam 2 harus tetap Hadir.');
+            // Jam 1 & Jam 2 harus tetap Hadir
+            $this->assertEquals('Hadir', $p1['status'], 'Jam 1 harus tetap Hadir.');
+            $this->assertEquals('Hadir', $p2['status'], 'Jam 2 harus tetap Hadir.');
 
-        // Jam 3 harus Alpa
-        $this->assertEquals('Alpa', $p3['status'], 'Jam 3 harus Alpa.');
+            // Jam 3 harus Alpa
+            $this->assertEquals('Alpa', $p3['status'], 'Jam 3 harus Alpa.');
 
-        // Jam 4 yang belum tiba (pukul 23:00) harus Menunggu / Menunggu Jam
-        $this->assertEquals('Menunggu', $p4['status'], 'Jam 4 belum mulai harus berstatus Menunggu.');
-        $this->assertEquals('Menunggu Jam', $p4['status_label'], 'Jam 4 belum mulai harus berlabel Menunggu Jam.');
-        $this->assertEquals('upcoming', $p4['session_state']);
+            // Jam 4 yang belum tiba (pukul 23:00) harus Menunggu / Menunggu Jam
+            $this->assertEquals('Menunggu', $p4['status'], 'Jam 4 belum mulai harus berstatus Menunggu.');
+            $this->assertEquals('Menunggu Jam', $p4['status_label'], 'Jam 4 belum mulai harus berlabel Menunggu Jam.');
+            $this->assertEquals('upcoming', $p4['session_state']);
+        } finally {
+            DB::table('jurnal_siswa_tidak_hadir')->where('id_siswa', $siswa->id_siswa)->delete();
+            if (isset($jurnal1)) DB::table('jurnal_kelas')->where('id_jurnal', $jurnal1->id_jurnal)->delete();
+            if (isset($jurnal2)) DB::table('jurnal_kelas')->where('id_jurnal', $jurnal2->id_jurnal)->delete();
+            if (isset($jurnal3)) DB::table('jurnal_kelas')->where('id_jurnal', $jurnal3->id_jurnal)->delete();
+            if (isset($j1)) DB::table('jadwal_mengajar')->whereIn('id_jadwal', [$j1, $j2, $j3, $j4])->delete();
+            DB::table('jam_pelajaran')->whereIn('id_jam', [$jam1Id, $jam2Id, $jam3Id, $jam4Id])->delete();
+            $siswa->delete();
+            $kelas->delete();
+            $guru->delete();
+        }
     }
 }

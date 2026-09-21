@@ -135,7 +135,6 @@ class JadwalImportTest extends TestCase
             'hari' => 'Jumat',
             'id_jam' => $jumatJam1->id_jam,
             'id_kelas' => $kelas->id_kelas,
-            'id_guru' => null,
         ]);
 
         // Jam ke-2, 3, 4 Jumat (Bahasa Inggris -> jam_ke 102, 103, 104)

@@ -422,12 +422,18 @@ class DashboardController extends Controller
 
             $waliRekapJurnalList = $jurnalQ->orderByDesc('jurnal_kelas.tanggal')
                 ->orderByDesc('jurnal_kelas.waktu_input')
+                ->orderByDesc('jurnal_kelas.id_jurnal')
                 ->select(
                     'jurnal_kelas.*',
                     'guru.nama_guru',
-                    'mapel.nama_mapel'
+                    'mapel.nama_mapel',
+                    'jadwal_mengajar.id_mapel'
                 )
-                ->get();
+                ->get()
+                ->unique(function ($item) {
+                    return $item->tanggal . '_' . $item->id_guru . '_' . $item->id_mapel;
+                })
+                ->values();
         } else {
             $waliTanggalHariIni = now()->toDateString();
             $waliAbsensiHariIniList = collect();
@@ -896,8 +902,13 @@ class DashboardController extends Controller
             ->whereBetween('jurnal_kelas.tanggal', [$tglMulai, $tglSelesai])
             ->orderByDesc('jurnal_kelas.tanggal')
             ->orderByDesc('jurnal_kelas.waktu_input')
-            ->select('jurnal_kelas.*', 'guru.nama_guru', 'mapel.nama_mapel')
-            ->get();
+            ->orderByDesc('jurnal_kelas.id_jurnal')
+            ->select('jurnal_kelas.*', 'guru.nama_guru', 'mapel.nama_mapel', 'jadwal_mengajar.id_mapel')
+            ->get()
+            ->unique(function ($item) {
+                return $item->tanggal . '_' . $item->id_guru . '_' . $item->id_mapel;
+            })
+            ->values();
 
         $namaKelas = str_replace(' ', '_', $kelas->nama_kelas ?? 'Kelas');
         $filename = "rekap_jurnal_{$namaKelas}_{$tglMulai}_sd_{$tglSelesai}.csv";

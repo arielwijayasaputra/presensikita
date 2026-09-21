@@ -134,13 +134,18 @@ class AbsensiController extends Controller
         $totalKelas = $totalKelasHariIni;
         $totalSiswa = $totalSiswaHariIni;
 
-        $riwayatJurnal = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
+        $rawRiwayatJurnal = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
             ->join('kelas', 'jadwal_mengajar.id_kelas', '=', 'kelas.id_kelas')
             ->where('jurnal_kelas.id_guru', $guru->id_guru)
             ->orderByDesc('jurnal_kelas.tanggal')
             ->orderByDesc('jurnal_kelas.waktu_input')
-            ->select('jurnal_kelas.*', 'kelas.nama_kelas')
+            ->orderByDesc('jurnal_kelas.id_jurnal')
+            ->select('jurnal_kelas.*', 'kelas.nama_kelas', 'jadwal_mengajar.id_kelas')
             ->get();
+
+        $riwayatJurnal = $rawRiwayatJurnal->unique(function ($item) {
+            return $item->tanggal . '_' . $item->id_kelas;
+        })->values();
 
         $izinGuruTerbaru = IzinGuru::where('id_guru', $guru->id_guru)
             ->latest()
@@ -167,9 +172,8 @@ class AbsensiController extends Controller
             });
 
         // Tren 7 hari terakhir
-        $tidakHadir7Hari = JurnalSiswaTidakHadir::join('jurnal_kelas', 'jurnal_siswa_tidak_hadir.id_jurnal', '=', 'jurnal_kelas.id_jurnal')
-            ->join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
-            ->where('jurnal_kelas.id_guru', $guru->id_guru)
+        $tidakHadir7Hari = JurnalSiswaTidakHadir::whereIn('jurnal_siswa_tidak_hadir.id_jurnal', $riwayatJurnal->pluck('id_jurnal'))
+            ->join('jurnal_kelas', 'jurnal_siswa_tidak_hadir.id_jurnal', '=', 'jurnal_kelas.id_jurnal')
             ->whereBetween('jurnal_kelas.tanggal', [date('Y-m-d', strtotime('-6 days')), date('Y-m-d')])
             ->get(['jurnal_kelas.tanggal', 'jurnal_siswa_tidak_hadir.status']);
 

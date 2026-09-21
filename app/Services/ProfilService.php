@@ -292,13 +292,12 @@ class ProfilService
             }
 
             $request->validate([
-                'nama_guru' => 'required|string|max:100',
+                'nama_guru' => 'nullable|string|max:100',
                 'username' => 'required|string|max:50|unique:guru,username,'.$guru->id_guru.',id_guru',
                 'no_hp' => 'nullable|string|max:20',
                 'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
                 'new_password' => 'nullable|string|min:4',
             ], [
-                'nama_guru.required' => 'Nama lengkap wajib diisi.',
                 'username.required' => 'Username wajib diisi.',
                 'username.unique' => 'Username ini sudah digunakan oleh akun lain.',
                 'foto.image' => 'File harus berupa gambar.',
@@ -307,7 +306,6 @@ class ProfilService
             ]);
 
             $updateData = [
-                'nama_guru' => trim($request->nama_guru),
                 'username' => trim($request->username),
                 'no_hp' => trim($request->no_hp),
             ];

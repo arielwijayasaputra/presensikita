@@ -56,7 +56,7 @@
                     <!-- Nama Lengkap -->
                     <div>
                         <label style="font-size:12.5px;font-weight:700;color:#334155">Nama Lengkap &amp; Gelar</label>
-                        <input type="text" class="filter-input" id="input-prof-nama" value="{{ $guru->nama_guru ?? '' }}" required style="width:100%;margin-top:6px;padding:10px 14px">
+                        <input type="text" class="filter-input" id="input-prof-nama" value="{{ $guru->nama_guru ?? '' }}" readonly style="width:100%;margin-top:6px;padding:10px 14px;background:#f8fafc;color:#64748b;cursor:not-allowed">
                     </div>
 
                     <!-- Username & No HP -->

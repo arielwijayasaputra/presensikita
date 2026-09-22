@@ -24,7 +24,7 @@
     --blue-light: #dbeafe;
     --red-light: #fee2e2;
     --header-bg: #ffffff;
-    --sidebar-bg: linear-gradient(160deg, #1a3a6e 0%, #1e4080 50%, #1a3368 100%);
+    --sidebar-bg: linear-gradient(175deg, #0d1b3e 0%, #132752 45%, #0a1631 100%);
     --radius: 12px;
     --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
     --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
@@ -52,7 +52,7 @@
     --purple-light: rgba(168, 85, 247, 0.18);
     --orange-light: rgba(249, 115, 22, 0.18);
     --header-bg: #121a2d;
-    --sidebar-bg: linear-gradient(160deg, #090e17 0%, #0f1c36 50%, #090e17 100%);
+    --sidebar-bg: linear-gradient(175deg, #080d1a 0%, #0d1527 50%, #060912 100%);
     --shadow: 0 1px 4px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.25);
     --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.5);
     --input-bg: #0f172a;

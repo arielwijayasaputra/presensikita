@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Kelas;
 use App\Services\AbsensiService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -112,7 +113,7 @@ class LaporanController extends Controller
         $namaFileKelas = str_replace(' ', '_', $kelas->nama_kelas);
         $filename = "Laporan_Presensi_{$namaFileKelas}_{$namaBulan}_{$tahun}.pdf";
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('exports.pdf.laporan_absensi', $data)
+        $pdf = Pdf::loadView('exports.pdf.laporan_absensi', $data)
             ->setPaper('a4', 'portrait')
             ->setOptions([
                 'isHtml5ParserEnabled' => true,

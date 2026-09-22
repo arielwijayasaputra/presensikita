@@ -1027,3 +1027,136 @@ html.theme-transitioning *::after {
     border-color: rgba(255, 255, 255, 0.1) !important;
     color: #64748b !important;
 }
+
+/* ==========================================================================
+   #4 — Segmented Status Pill Buttons (Dark Mode)
+   ========================================================================== */
+
+/* Unchecked states — dark-tinted backgrounds */
+[data-theme="dark"] .status-pill-h span { background: rgba(34, 197, 94, 0.12); color: #4ade80; border-color: rgba(34, 197, 94, 0.3); }
+[data-theme="dark"] .status-pill-s span { background: rgba(245, 158, 11, 0.12); color: #fbbf24; border-color: rgba(245, 158, 11, 0.3); }
+[data-theme="dark"] .status-pill-i span { background: rgba(59, 130, 246, 0.12); color: #60a5fa; border-color: rgba(59, 130, 246, 0.3); }
+[data-theme="dark"] .status-pill-d span { background: rgba(139, 92, 246, 0.12); color: #a78bfa; border-color: rgba(139, 92, 246, 0.3); }
+[data-theme="dark"] .status-pill-a span { background: rgba(239, 68, 68, 0.12); color: #f87171; border-color: rgba(239, 68, 68, 0.3); }
+
+/* Checked states — keep the solid gradient fills, adjust glow */
+[data-theme="dark"] .status-pill-h input:checked + span {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #fff; border-color: #15803d;
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.5);
+}
+[data-theme="dark"] .status-pill-s input:checked + span {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff; border-color: #b45309;
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.5);
+}
+[data-theme="dark"] .status-pill-i input:checked + span {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #fff; border-color: #1d4ed8;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.5);
+}
+[data-theme="dark"] .status-pill-d input:checked + span {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: #fff; border-color: #6d28d9;
+    box-shadow: 0 4px 16px rgba(139, 92, 246, 0.5);
+}
+[data-theme="dark"] .status-pill-a input:checked + span {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #fff; border-color: #b91c1c;
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.5);
+}
+
+/* Hover dark glow */
+[data-theme="dark"] .status-pill-h:not(.is-admin):hover span { box-shadow: 0 6px 18px rgba(34, 197, 94, 0.35); }
+[data-theme="dark"] .status-pill-s:not(.is-admin):hover span { box-shadow: 0 6px 18px rgba(245, 158, 11, 0.35); }
+[data-theme="dark"] .status-pill-i:not(.is-admin):hover span { box-shadow: 0 6px 18px rgba(59, 130, 246, 0.35); }
+[data-theme="dark"] .status-pill-d:not(.is-admin):hover span { box-shadow: 0 6px 18px rgba(139, 92, 246, 0.35); }
+[data-theme="dark"] .status-pill-a:not(.is-admin):hover span { box-shadow: 0 6px 18px rgba(239, 68, 68, 0.35); }
+
+/* ==========================================================================
+   #4 — Wali Kelas Segmented Radio Buttons (Dark Mode)
+   ========================================================================== */
+[data-theme="dark"] #table-wali-harian td label:has(input[value="H"]) {
+    background: rgba(34, 197, 94, 0.12) !important; color: #4ade80 !important; border-color: rgba(34, 197, 94, 0.3) !important;
+}
+[data-theme="dark"] #table-wali-harian td label:has(input[value="S"]) {
+    background: rgba(245, 158, 11, 0.12) !important; color: #fbbf24 !important; border-color: rgba(245, 158, 11, 0.3) !important;
+}
+[data-theme="dark"] #table-wali-harian td label:has(input[value="I"]) {
+    background: rgba(59, 130, 246, 0.12) !important; color: #60a5fa !important; border-color: rgba(59, 130, 246, 0.3) !important;
+}
+[data-theme="dark"] #table-wali-harian td label:has(input[value="D"]) {
+    background: rgba(6, 182, 212, 0.12) !important; color: #22d3ee !important; border-color: rgba(6, 182, 212, 0.3) !important;
+}
+[data-theme="dark"] #table-wali-harian td label:has(input[value="A"]) {
+    background: rgba(239, 68, 68, 0.12) !important; color: #f87171 !important; border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+/* Checked dark */
+[data-theme="dark"] #table-wali-harian td label:has(input[value="H"]:checked) {
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    color: #fff !important; box-shadow: 0 4px 16px rgba(34, 197, 94, 0.5);
+}
+[data-theme="dark"] #table-wali-harian td label:has(input[value="S"]:checked) {
+    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+    color: #fff !important; box-shadow: 0 4px 16px rgba(245, 158, 11, 0.5);
+}
+[data-theme="dark"] #table-wali-harian td label:has(input[value="I"]:checked) {
+    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+    color: #fff !important; box-shadow: 0 4px 16px rgba(59, 130, 246, 0.5);
+}
+[data-theme="dark"] #table-wali-harian td label:has(input[value="D"]:checked) {
+    background: linear-gradient(135deg, #06b6d4, #0891b2) !important;
+    color: #fff !important; box-shadow: 0 4px 16px rgba(6, 182, 212, 0.5);
+}
+[data-theme="dark"] #table-wali-harian td label:has(input[value="A"]:checked) {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    color: #fff !important; box-shadow: 0 4px 16px rgba(239, 68, 68, 0.5);
+}
+
+/* ==========================================================================
+   #4 — Enhanced Bulk Action Button (Dark Mode)
+   ========================================================================== */
+[data-theme="dark"] .btn-tandai.green {
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.4) !important;
+}
+[data-theme="dark"] .btn-tandai.green:hover {
+    box-shadow: 0 8px 26px rgba(34, 197, 94, 0.55) !important;
+}
+
+[data-theme="dark"] #page-wali-absensi-harian .card-header .btn-secondary[onclick*="tandaiSemuaWali"] {
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.4) !important;
+}
+[data-theme="dark"] #page-wali-absensi-harian .card-header .btn-secondary[onclick*="tandaiSemuaWali"]:hover {
+    box-shadow: 0 8px 26px rgba(34, 197, 94, 0.55) !important;
+}
+
+/* ==========================================================================
+   #5 — SweetAlert2 Modal Dark Mode Enhancements
+   ========================================================================== */
+[data-theme="dark"] .swal2-container.swal2-shown {
+    background: rgba(0, 0, 0, 0.6) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+}
+
+[data-theme="dark"] .swal2-popup.modal-wide-siswa thead tr {
+    background: #111a2d !important;
+    border-bottom-color: #263654 !important;
+}
+[data-theme="dark"] .modal-siswa-row td {
+    border-bottom-color: #263654 !important;
+    color: #cbd5e1 !important;
+}
+[data-theme="dark"] .modal-siswa-row td:nth-child(3) {
+    color: #f8fafc !important;
+}
+[data-theme="dark"] .modal-siswa-row:hover {
+    background: rgba(255, 255, 255, 0.04) !important;
+}

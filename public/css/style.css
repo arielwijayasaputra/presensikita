@@ -898,29 +898,150 @@ body { font-family: 'Inter', sans-serif; background: var(--body-bg); color: var(
 .page-subtitle { font-size: 12.5px; color: var(--text-secondary); margin-top: 2px; }
 .breadcrumb { display: none !important; }
 .breadcrumb span { color: var(--text-primary); font-weight: 600; }
-.filter-bar { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 16px 20px; display: flex; align-items: flex-end; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
-.filter-group label { display: block; font-size: 11.5px; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px; }
-.filter-select, .filter-input { border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 13px; color: var(--text-primary); background: #fff; outline: none; font-family: inherit; transition: border-color 0.2s; }
-.filter-select:focus, .filter-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
-.filter-input { width: 220px; }
-.filter-hint { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 99px; font-size: 12px; font-weight: 600; margin-left: auto; white-space: nowrap; align-self: flex-end; height: 38px; }
-.filter-hint-info { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.filter-bar {
+    background: var(--card-bg);
+    border-radius: var(--radius, 14px);
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    transition: all 0.2s ease;
+}
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+.filter-group label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.filter-select, .filter-input, .search-input {
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    padding: 8.5px 13px;
+    font-size: 13px;
+    color: var(--text-primary);
+    background: var(--input-bg, #ffffff);
+    outline: none;
+    font-family: inherit;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+.filter-select:focus, .filter-input:focus, .search-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3.5px rgba(59, 130, 246, 0.15);
+    background: var(--input-bg, #ffffff);
+}
+.filter-input, .search-input {
+    min-width: 210px;
+}
+.filter-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: auto;
+    white-space: nowrap;
+    align-self: flex-end;
+    height: 38px;
+}
+.filter-hint-info {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.1);
+}
 .filter-hint svg { flex-shrink: 0; }
-.tandai-row { display: flex; align-items: center; gap: 8px; margin-left: auto; flex-wrap: wrap; }
-.tandai-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
-.btn-tandai { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 7px; font-size: 12.5px; font-weight: 600; cursor: pointer; border: 1.5px solid; transition: all 0.2s; font-family: inherit; }
-.btn-tandai.green { background: var(--green-light); border-color: #86efac; color: #16a34a; }
-.btn-tandai.yellow { background: var(--yellow-light); border-color: #fcd34d; color: #d97706; }
-.btn-tandai.blue { background: var(--blue-light); border-color: #93c5fd; color: #2563eb; }
-.btn-tandai.red { background: var(--red-light); border-color: #fca5a5; color: #dc2626; }
-.btn-tandai:hover { opacity: 0.82; transform: translateY(-1px); }
-.table-card { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
-table { width: 100%; border-collapse: collapse; }
-thead tr { background: #f8fafc; border-bottom: 2px solid var(--border); }
-th { padding: 12px 16px; text-align: left; font-size: 11.5px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
-td { padding: 13px 16px; font-size: 13.5px; color: var(--text-primary); border-bottom: 1px solid #f1f5f9; }
-tr:last-child td { border-bottom: none; }
-tbody tr:hover { background: #fafbfc; }
+.tandai-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    flex-wrap: wrap;
+}
+.tandai-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+.btn-tandai {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 13px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1.5px solid;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+}
+.btn-tandai.green { background: #dcfce7; border-color: #86efac; color: #15803d; }
+.btn-tandai.yellow { background: #fef3c7; border-color: #fde68a; color: #b45309; }
+.btn-tandai.blue { background: #dbeafe; border-color: #bfdbfe; color: #1d4ed8; }
+.btn-tandai.red { background: #fee2e2; border-color: #fecaca; color: #b91c1c; }
+.btn-tandai:hover {
+    transform: translateY(-1.5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+.btn-tandai:active { transform: translateY(0); }
+
+/* Table Card & Data Table */
+.table-card {
+    background: var(--card-bg);
+    border-radius: var(--radius, 14px);
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+table, .data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+thead tr {
+    background: #f8fafc;
+    border-bottom: 2px solid var(--border);
+}
+th {
+    padding: 13px 16px;
+    text-align: left;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    user-select: none;
+}
+td {
+    padding: 13px 16px;
+    font-size: 13.5px;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-subtle, #f1f5f9);
+    transition: background-color 0.15s ease;
+}
+tr:last-child td {
+    border-bottom: none;
+}
+tbody tr {
+    transition: background-color 0.15s ease;
+}
+tbody tr:hover {
+    background: rgba(241, 245, 249, 0.6);
+}
 .td-status { text-align: center; }
 .radio-wrapper { display: flex; justify-content: center; }
 input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
@@ -930,25 +1051,56 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
 .status-dot-c.yellow { background: var(--yellow); }
 .status-dot-c.blue { background: var(--blue); }
 .status-dot-c.red { background: var(--red); }
-.table-footer { background: #f8fafc; border-top: 2px solid var(--border); padding: 14px 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+.table-footer {
+    background: #f8fafc;
+    border-top: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
 .rekap-label { font-size: 13px; font-weight: 700; color: var(--text-primary); }
-.rekap-item { display: flex; align-items: center; gap: 7px; padding: 5px 12px; border-radius: 7px; font-size: 12.5px; font-weight: 600; }
-.rekap-item.green { background: var(--green-light); color: #16a34a; }
-.rekap-item.yellow { background: var(--yellow-light); color: #d97706; }
-.rekap-item.blue { background: var(--blue-light); color: #2563eb; }
-.rekap-item.purple { background: var(--purple-light); color: #7c3aed; }
-.rekap-item.red { background: var(--red-light); color: #dc2626; }
+.rekap-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    border: 1px solid transparent;
+}
+.rekap-item.green { background: var(--green-light); color: #16a34a; border-color: rgba(34, 197, 94, 0.2); }
+.rekap-item.yellow { background: var(--yellow-light); color: #d97706; border-color: rgba(245, 158, 11, 0.2); }
+.rekap-item.blue { background: var(--blue-light); color: #2563eb; border-color: rgba(59, 130, 246, 0.2); }
+.rekap-item.purple { background: var(--purple-light); color: #7c3aed; border-color: rgba(124, 58, 237, 0.2); }
+.rekap-item.red { background: var(--red-light); color: #dc2626; border-color: rgba(239, 68, 68, 0.2); }
+
 .save-btn, .btn-primary { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; border: none; padding: 10px 20px; border-radius: 10px; font-size: 13.5px; font-weight: 700; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(37,99,235,0.35); transition: all 0.2s; text-decoration: none; }
 .save-btn:hover, .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(37,99,235,0.45); }
 .btn-warning { background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff; border: none; outline: none; padding: 10px 20px; border-radius: 10px; font-size: 13.5px; font-weight: 700; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(245,158,11,0.35); transition: all 0.2s; text-decoration: none; }
 .btn-warning:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(245,158,11,0.45); }
-.badge { padding: 4px 10px; border-radius: 99px; font-size: 11.5px; font-weight: 600; display: inline-block; }
-.badge-success { background: var(--green-light); color: #15803d; }
-.badge-warning { background: var(--yellow-light); color: #b45309; }
-.badge-info { background: var(--blue-light); color: #1d4ed8; }
-.badge-danger { background: var(--red-light); color: #b91c1c; }
-.btn-secondary { background: #fff; color: #1e293b; border: 1px solid var(--border); padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
-.btn-secondary:hover { background: #f8fafc; border-color: #cbd5e1; }
+
+/* Badges */
+.badge {
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 11.5px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1.3;
+    border: 1px solid transparent;
+}
+.badge-success { background: #dcfce7; color: #15803d; border-color: rgba(34, 197, 94, 0.25); }
+.badge-warning { background: #fef3c7; color: #b45309; border-color: rgba(245, 158, 11, 0.25); }
+.badge-info { background: #dbeafe; color: #1d4ed8; border-color: rgba(59, 130, 246, 0.25); }
+.badge-danger { background: #fee2e2; color: #b91c1c; border-color: rgba(239, 68, 68, 0.25); }
+.btn-secondary { background: #fff; color: #1e293b; border: 1.5px solid var(--border); padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+.btn-secondary:hover { background: #f8fafc; border-color: #cbd5e1; transform: translateY(-1px); }
 .stat-icon.cyan { background: #e0f2fe; color: #0284c7; }
 
 /* Laporan / Rekap layout */
@@ -1065,10 +1217,16 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     border-radius: 24px !important;
     padding: 32px 28px 28px !important;
     font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
-    max-width: 460px !important;
+    max-width: 480px;
     background: #ffffff !important;
     box-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(0, 0, 0, 0.04) !important;
     border: 1px solid #edf2f7 !important;
+}
+.swal2-popup.modal-wide-siswa,
+.swal2-popup.swal2-modal-wide {
+    max-width: 860px !important;
+    width: 860px !important;
+    padding: 28px 30px 24px !important;
 }
 .swal2-title {
     font-size: 20px !important;
@@ -3238,5 +3396,380 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     }
     [data-theme="dark"] #page-siswa-terlambat tbody tr td:nth-child(8) {
         border-top-color: #1e3a5f !important;
+    }
+}
+
+/* ==========================================================================
+   #4 — Segmented Status Pill Buttons (Guru Table — Desktop)
+   Interactive [H] [S] [I] [A] [D] with instant color transition
+   ========================================================================== */
+.status-pill-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+}
+.status-pill-btn input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    margin: 0;
+}
+.status-pill-btn span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    border: 2px solid transparent;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    user-select: none;
+    position: relative;
+}
+
+/* Unchecked default states — soft tinted backgrounds */
+.status-pill-h span { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+.status-pill-s span { background: #fffbeb; color: #b45309; border-color: #fde68a; }
+.status-pill-i span { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+.status-pill-d span { background: #f5f3ff; color: #7c3aed; border-color: #ddd6fe; }
+.status-pill-a span { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+
+/* Hover — lift and glow */
+.status-pill-btn:not(.is-admin):hover span {
+    transform: translateY(-2px) scale(1.08);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+.status-pill-h:not(.is-admin):hover span { border-color: #22c55e; box-shadow: 0 6px 16px rgba(34, 197, 94, 0.25); }
+.status-pill-s:not(.is-admin):hover span { border-color: #f59e0b; box-shadow: 0 6px 16px rgba(245, 158, 11, 0.25); }
+.status-pill-i:not(.is-admin):hover span { border-color: #3b82f6; box-shadow: 0 6px 16px rgba(59, 130, 246, 0.25); }
+.status-pill-d:not(.is-admin):hover span { border-color: #7c3aed; box-shadow: 0 6px 16px rgba(124, 58, 237, 0.25); }
+.status-pill-a:not(.is-admin):hover span { border-color: #ef4444; box-shadow: 0 6px 16px rgba(239, 68, 68, 0.25); }
+
+/* Checked / Active states — solid fill with glow */
+.status-pill-h input:checked + span {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #ffffff; border-color: #15803d;
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.45);
+    transform: scale(1.05);
+}
+.status-pill-s input:checked + span {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #ffffff; border-color: #b45309;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.45);
+    transform: scale(1.05);
+}
+.status-pill-i input:checked + span {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #ffffff; border-color: #1d4ed8;
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.45);
+    transform: scale(1.05);
+}
+.status-pill-d input:checked + span {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: #ffffff; border-color: #6d28d9;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.45);
+    transform: scale(1.05);
+}
+.status-pill-a input:checked + span {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #ffffff; border-color: #b91c1c;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.45);
+    transform: scale(1.05);
+}
+
+/* Active click feedback */
+.status-pill-btn:not(.is-admin):active span {
+    transform: scale(0.92) !important;
+    transition-duration: 0.1s;
+}
+
+/* Admin (read-only) state */
+.status-pill-btn.is-admin {
+    pointer-events: none;
+    cursor: default;
+}
+.status-pill-btn.is-admin span {
+    opacity: 0.65;
+}
+
+/* ==========================================================================
+   #4 — Wali Kelas Segmented Radio Buttons (CSS-only, no blade changes)
+   Uses :has() to style existing <label> wrappers around radio inputs
+   ========================================================================== */
+#table-wali-harian td label:has(input[type="radio"]) {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 36px !important;
+    height: 36px !important;
+    border-radius: 10px !important;
+    font-size: 12.5px !important;
+    font-weight: 800 !important;
+    gap: 0 !important;
+    padding: 0 8px !important;
+    border: 2px solid transparent !important;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    user-select: none;
+    cursor: pointer;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+}
+#table-wali-harian td label:has(input[type="radio"]) input[type="radio"] {
+    position: absolute !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    pointer-events: none !important;
+    margin: 0 !important;
+}
+
+/* Unchecked default states */
+#table-wali-harian td label:has(input[value="H"]) {
+    background: #f0fdf4 !important; color: #15803d !important; border-color: #bbf7d0 !important;
+}
+#table-wali-harian td label:has(input[value="S"]) {
+    background: #fffbeb !important; color: #b45309 !important; border-color: #fde68a !important;
+}
+#table-wali-harian td label:has(input[value="I"]) {
+    background: #eff6ff !important; color: #1d4ed8 !important; border-color: #bfdbfe !important;
+}
+#table-wali-harian td label:has(input[value="D"]) {
+    background: #f0fdfa !important; color: #0e7490 !important; border-color: #a5f3fc !important;
+}
+#table-wali-harian td label:has(input[value="A"]) {
+    background: #fef2f2 !important; color: #b91c1c !important; border-color: #fecaca !important;
+}
+
+/* Hover */
+#table-wali-harian td label:has(input[type="radio"]):hover {
+    transform: translateY(-2px) scale(1.08);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Checked / Active states — solid fill with glow */
+#table-wali-harian td label:has(input[value="H"]:checked) {
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    color: #fff !important; border-color: #15803d !important;
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.45);
+    transform: scale(1.05);
+}
+#table-wali-harian td label:has(input[value="S"]:checked) {
+    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+    color: #fff !important; border-color: #b45309 !important;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.45);
+    transform: scale(1.05);
+}
+#table-wali-harian td label:has(input[value="I"]:checked) {
+    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+    color: #fff !important; border-color: #1d4ed8 !important;
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.45);
+    transform: scale(1.05);
+}
+#table-wali-harian td label:has(input[value="D"]:checked) {
+    background: linear-gradient(135deg, #06b6d4, #0891b2) !important;
+    color: #fff !important; border-color: #0e7490 !important;
+    box-shadow: 0 4px 14px rgba(6, 182, 212, 0.45);
+    transform: scale(1.05);
+}
+#table-wali-harian td label:has(input[value="A"]:checked) {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    color: #fff !important; border-color: #b91c1c !important;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.45);
+    transform: scale(1.05);
+}
+
+/* Active press feedback */
+#table-wali-harian td label:has(input[type="radio"]):active {
+    transform: scale(0.92) !important;
+    transition-duration: 0.1s;
+}
+
+/* ==========================================================================
+   #4 — Enhanced Bulk Action Button "Tandai Semua Hadir"
+   More prominent with gradient, glow, and a checkmark icon via ::before
+   ========================================================================== */
+.btn-tandai.green {
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 9px 20px !important;
+    border-radius: 10px !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.38) !important;
+    letter-spacing: 0.01em;
+    position: relative;
+    overflow: hidden;
+}
+.btn-tandai.green::before {
+    content: '✓ ';
+    font-weight: 900;
+    font-size: 13px;
+}
+.btn-tandai.green:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(34, 197, 94, 0.5) !important;
+}
+.btn-tandai.green:active {
+    transform: translateY(0) scale(0.97) !important;
+}
+/* Glow ring animation */
+.btn-tandai.green::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(34,197,94,0.5), transparent, rgba(34,197,94,0.3));
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.3s ease;
+}
+.btn-tandai.green:hover::after {
+    opacity: 1;
+}
+
+/* Also enhance the wali kelas "Set Semua Hadir" button within the card-header */
+#page-wali-absensi-harian .card-header .btn-secondary[onclick*="tandaiSemuaWali"] {
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 8px 16px !important;
+    border-radius: 10px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35) !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+#page-wali-absensi-harian .card-header .btn-secondary[onclick*="tandaiSemuaWali"]:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 22px rgba(34, 197, 94, 0.5) !important;
+}
+
+/* ==========================================================================
+   #5 — Modern SweetAlert2 Modal & Pop-up Enhancements
+   Backdrop blur, smooth entrance animation, polished buttons
+   ========================================================================== */
+
+/* Smooth entrance animation */
+@keyframes swalPopIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.85) translateY(20px);
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1.02) translateY(-2px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+@keyframes swalBackdropIn {
+    from { opacity: 0; backdrop-filter: blur(0px); }
+    to   { opacity: 1; backdrop-filter: blur(8px); }
+}
+
+/* Enhanced container backdrop */
+.swal2-container.swal2-shown {
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    background: rgba(15, 23, 42, 0.5) !important;
+    animation: swalBackdropIn 0.3s ease-out forwards;
+}
+
+/* Enhanced popup with animation */
+.swal2-popup.swal2-show {
+    animation: swalPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+/* Polished confirm button */
+.swal2-confirm,
+.swal2-styled.swal2-confirm {
+    border-radius: 12px !important;
+    padding: 12px 28px !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    letter-spacing: 0.01em !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 6px 18px rgba(26, 50, 104, 0.35) !important;
+}
+.swal2-confirm:hover,
+.swal2-styled.swal2-confirm:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 10px 28px rgba(26, 50, 104, 0.45) !important;
+}
+.swal2-confirm:active,
+.swal2-styled.swal2-confirm:active {
+    transform: translateY(0) scale(0.97) !important;
+}
+
+/* Polished cancel button */
+.swal2-cancel,
+.swal2-styled.swal2-cancel {
+    border-radius: 12px !important;
+    padding: 12px 22px !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    transition: all 0.2s ease !important;
+}
+.swal2-cancel:hover,
+.swal2-styled.swal2-cancel:hover {
+    transform: translateY(-1px) !important;
+}
+
+/* Enhanced actions spacing */
+.swal2-actions {
+    gap: 14px !important;
+    margin-top: 24px !important;
+    padding: 0 8px !important;
+}
+
+/* Icon entrance animation */
+.swal2-icon.swal2-show {
+    animation: none !important;
+}
+.swal2-popup.swal2-show .swal2-icon {
+    animation: swalIconPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both !important;
+}
+@keyframes swalIconPop {
+    0% { opacity: 0; transform: scale(0.5) rotate(-15deg); }
+    100% { opacity: 1; transform: scale(0.9) rotate(0deg); }
+}
+
+/* Smoother title and text appearance */
+.swal2-popup.swal2-show .swal2-title {
+    animation: swalTextSlide 0.35s ease-out 0.1s both;
+}
+.swal2-popup.swal2-show .swal2-html-container {
+    animation: swalTextSlide 0.35s ease-out 0.18s both;
+}
+@keyframes swalTextSlide {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile responsive for status pills */
+@media (max-width: 768px) {
+    .status-pill-btn span {
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+        font-size: 11.5px;
+    }
+    #table-wali-harian td label:has(input[type="radio"]) {
+        min-width: 32px !important;
+        height: 32px !important;
+        border-radius: 9px !important;
+        font-size: 11px !important;
+        padding: 0 6px !important;
     }
 }

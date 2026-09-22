@@ -414,19 +414,58 @@ function startSelfieCamera() {
 }
 window.startSelfieCamera = startSelfieCamera;
 
-function triggerNativeCameraCapture() {
+function triggerNativeCameraCapture(errorDetail) {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (window.innerWidth <= 768 && navigator.maxTouchPoints > 0);
     const root = absensiRoot();
     const nativeInput = root ? qs('#native-camera-input', root) : document.getElementById('native-camera-input');
-    if (nativeInput) {
-        nativeInput.click();
-    } else {
-        Swal.fire({
-            icon: 'error',
-            title: 'Kamera Tidak Tersedia',
-            text: 'Perangkat atau browser tidak mendukung pembukaan kamera.',
-            confirmButtonColor: '#1a3268'
-        });
+
+    // Jika di HP / perangkat mobile, langsung buka kamera perangkat via native capture
+    if (isMobile) {
+        if (nativeInput) {
+            nativeInput.click();
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Kamera Tidak Tersedia',
+                text: 'Perangkat atau browser tidak mendukung pembukaan kamera.',
+                confirmButtonColor: '#1a3268'
+            });
+        }
+        return;
     }
+
+    // Jika di Laptop / Desktop dan WebRTC tidak bisa diakses (misal karena HTTP non-SSL)
+    const isHttp = window.location.protocol === 'http:' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+    
+    let htmlContent = `
+        <div style="text-align:left;font-size:13px;color:#475569;line-height:1.6">
+            <p style="margin-bottom:10px">Kamera langsung di browser laptop memerlukan koneksi <strong>HTTPS (SSL)</strong> atau <strong>localhost</strong> agar diizinkan oleh sistem keamanan browser.</p>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;margin-bottom:12px">
+                <strong style="color:#1e293b;display:block;margin-bottom:6px">💡 Cara mengaktifkan kamera di laptop:</strong>
+                <ul style="margin:0;padding-left:18px;color:#64748b;font-size:12.5px">
+                    <li><strong>Laragon SSL:</strong> Klik kanan ikon Laragon di taskbar &rarr; <em>Apache &rarr; SSL &rarr; Enabled</em>, lalu buka <a href="https://${window.location.host}" target="_blank" style="color:#2563eb;font-weight:600">https://${window.location.host}</a></li>
+                    <li><strong>Akses Localhost:</strong> Buka via <code>http://localhost/...</code></li>
+                    <li><strong>Izin Chrome:</strong> Buka <code>chrome://flags/#unsafely-treat-insecure-origin-as-secure</code> dan masukkan <code>${window.location.origin}</code></li>
+                </ul>
+            </div>
+            <p style="margin:0;font-size:12px;color:#94a3b8">Anda juga dapat mengunggah file foto selfie yang sudah ada dari laptop melalui tombol di bawah.</p>
+        </div>
+    `;
+
+    Swal.fire({
+        icon: 'info',
+        title: 'Akses Kamera di Laptop',
+        html: htmlContent,
+        showCancelButton: true,
+        confirmButtonText: 'Pilih File Foto Selfie',
+        cancelButtonText: 'Tutup',
+        confirmButtonColor: '#2563eb',
+        cancelButtonColor: '#64748b'
+    }).then((result) => {
+        if (result.isConfirmed && nativeInput) {
+            nativeInput.click();
+        }
+    });
 }
 
 function handleNativeCameraCapture(input) {
@@ -802,11 +841,11 @@ function renderTable(data){
             <td style="color:#94a3b8;font-weight:600">${idx+1}</td>
             <td style="font-family:monospace;font-size:13px;color:#64748b">${nisn}</td>
             <td style="font-weight:600">${nama}</td>
-            <td class="td-status"><div class="radio-wrapper"><input type="radio" name="st-${id}" value="H" checked ${radioAttr} style="accent-color:#22c55e;${isAdmin ? 'pointer-events:none;cursor:default;' : ''}"></div></td>
-            <td class="td-status"><div class="radio-wrapper"><input type="radio" name="st-${id}" value="S" ${radioAttr} style="accent-color:#f59e0b;${isAdmin ? 'pointer-events:none;cursor:default;' : ''}"></div></td>
-            <td class="td-status"><div class="radio-wrapper"><input type="radio" name="st-${id}" value="I" ${radioAttr} style="accent-color:#3b82f6;${isAdmin ? 'pointer-events:none;cursor:default;' : ''}"></div></td>
-            <td class="td-status"><div class="radio-wrapper"><input type="radio" name="st-${id}" value="D" ${radioAttr} style="accent-color:#7c3aed;${isAdmin ? 'pointer-events:none;cursor:default;' : ''}"></div></td>
-            <td class="td-status"><div class="radio-wrapper"><input type="radio" name="st-${id}" value="A" ${radioAttr} style="accent-color:#ef4444;${isAdmin ? 'pointer-events:none;cursor:default;' : ''}"></div></td>
+            <td class="td-status"><label class="status-pill-btn status-pill-h${isAdmin ? ' is-admin' : ''}"><input type="radio" name="st-${id}" value="H" checked ${radioAttr}><span>H</span></label></td>
+            <td class="td-status"><label class="status-pill-btn status-pill-s${isAdmin ? ' is-admin' : ''}"><input type="radio" name="st-${id}" value="S" ${radioAttr}><span>S</span></label></td>
+            <td class="td-status"><label class="status-pill-btn status-pill-i${isAdmin ? ' is-admin' : ''}"><input type="radio" name="st-${id}" value="I" ${radioAttr}><span>I</span></label></td>
+            <td class="td-status"><label class="status-pill-btn status-pill-d${isAdmin ? ' is-admin' : ''}"><input type="radio" name="st-${id}" value="D" ${radioAttr}><span>D</span></label></td>
+            <td class="td-status"><label class="status-pill-btn status-pill-a${isAdmin ? ' is-admin' : ''}"><input type="radio" name="st-${id}" value="A" ${radioAttr}><span>A</span></label></td>
             <td><input type="text" id="ket-${id}" ${ketAttr}${isAdmin || isGuruDisabled ? '' : ` oninput="mirrorKetGuru(this, '${id}')"`}></td>
         `;
         tbody.appendChild(r);

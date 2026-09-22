@@ -31,6 +31,7 @@ Route::middleware('auth.admin')->group(function () {
     Route::delete('/siswa/{id}', [SiswaController::class, 'destroy'])->name('siswa.hapus');
 
     // CRUD Kelas
+    Route::get('/kelas/{id}/siswa', [KelasController::class, 'getSiswa'])->name('kelas.siswa');
     Route::post('/kelas/tambah', [KelasController::class, 'store'])->name('kelas.tambah');
     Route::post('/kelas/{id}/update', [KelasController::class, 'update'])->name('kelas.update');
     Route::delete('/kelas/{id}', [KelasController::class, 'destroy'])->name('kelas.hapus');

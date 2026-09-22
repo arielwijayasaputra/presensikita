@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\StoreKelasRequest;
 use App\Http\Requests\Admin\UpdateKelasRequest;
 use App\Models\Guru;
 use App\Models\Kelas;
+use App\Models\Siswa;
 use App\Models\TahunAjaran;
 use Illuminate\Http\JsonResponse;
 
@@ -87,6 +88,26 @@ class KelasController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Data kelas berhasil dihapus!',
+        ]);
+    }
+
+    /**
+     * Mengambil daftar siswa dalam kelas tertentu untuk pop-up.
+     *
+     * @return JsonResponse
+     */
+    public function getSiswa($id): JsonResponse
+    {
+        $kelas = Kelas::with('waliKelas')->findOrFail($id);
+        $siswa = Siswa::where('id_kelas', $id)
+            ->where('is_aktif', 1)
+            ->orderBy('nama_siswa')
+            ->get(['id_siswa', 'nisn', 'nama_siswa', 'jenis_kelamin']);
+
+        return response()->json([
+            'status' => 'success',
+            'kelas' => $kelas,
+            'data' => $siswa,
         ]);
     }
 }

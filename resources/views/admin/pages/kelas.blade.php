@@ -207,7 +207,13 @@
                         {{ $k->waliKelas->nama_guru ?? '-' }}
                     </td>
                     <td style="text-align:center;font-weight:600;color:#1e293b">
-                        {{ $k->siswa_count }} Siswa
+                        <button type="button"
+                            onclick="lihatSiswaKelasModal({{ $k->id_kelas }}, '{{ htmlspecialchars($k->nama_kelas, ENT_QUOTES) }}', '{{ htmlspecialchars($k->waliKelas->nama_guru ?? '-', ENT_QUOTES) }}')"
+                            style="background:#f1f5f9;border:1px solid #e2e8f0;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;color:#334155;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all 0.2s"
+                            title="Klik untuk melihat daftar siswa">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            <span>{{ $k->siswa_count }} Siswa</span>
+                        </button>
                     </td>
                     <td style="text-align:center">
                         <span class="badge badge-success">Aktif</span>
@@ -215,17 +221,26 @@
                     <td style="text-align:center">
                         <div style="display:inline-flex;align-items:center;gap:6px">
                             <button
-                                onclick="editKelasModal({{ $k->id_kelas }}, '{{ htmlspecialchars($k->nama_kelas) }}', '{{ $k->tingkat_kelas }}', '{{ htmlspecialchars($k->jurusan ?? '') }}', {{ $k->id_wali_kelas ?? 'null' }})"
+                                onclick="lihatSiswaKelasModal({{ $k->id_kelas }}, '{{ htmlspecialchars($k->nama_kelas, ENT_QUOTES) }}', '{{ htmlspecialchars($k->waliKelas->nama_guru ?? '-', ENT_QUOTES) }}')"
+                                style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;border-radius:8px;cursor:pointer;transition:all 0.2s;"
+                                title="Lihat Daftar Siswa">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="13" r="3"/></svg>
+                            </button>
+                            <button
+                                onclick="editKelasModal({{ $k->id_kelas }}, '{{ htmlspecialchars($k->nama_kelas, ENT_QUOTES) }}', '{{ $k->tingkat_kelas }}', '{{ htmlspecialchars($k->jurusan ?? '', ENT_QUOTES) }}', {{ $k->id_wali_kelas ?? 'null' }})"
                                 style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:#eff6ff;border:1px solid #bfdbfe;color:#2563eb;border-radius:8px;cursor:pointer;transition:all 0.2s;"
                                 title="Edit">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                             </button>
                             <button
-                                onclick="hapusKelas({{ $k->id_kelas }}, '{{ htmlspecialchars($k->nama_kelas) }}')"
+                                onclick="hapusKelas({{ $k->id_kelas }}, '{{ htmlspecialchars($k->nama_kelas, ENT_QUOTES) }}')"
                                 style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:#fff1f2;border:1px solid #fecdd3;color:#e11d48;border-radius:8px;cursor:pointer;transition:all 0.2s;"
                                 title="Hapus">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                             </button>
+                        </div>
+                    </td>
+                </tr>
                 @endforeach
                 <tr id="kelas-empty-state" style="display:none">
                     <td colspan="9" style="text-align:center;padding:40px;color:#94a3b8">
@@ -511,5 +526,151 @@ function editKelasModal(id, nama, tingkat, jurusan, idWali){
             .catch(err => Swal.fire('Gagal', err.message || 'Terjadi kesalahan sistem.', 'error'));
         }
     });
+}
+
+function lihatSiswaKelasModal(id, namaKelas, waliKelas) {
+    Swal.fire({
+        title: 'Memuat Data Siswa...',
+        html: `<div style="padding:24px;text-align:center"><div class="swal2-loading" style="display:inline-block"></div><p style="margin-top:12px;color:#64748b;font-size:13.5px">Mengambil daftar siswa kelas <strong>${namaKelas}</strong>...</p></div>`,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+            fetch(`/kelas/${id}/siswa`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                }
+            })
+            .then(res => res.json())
+            .then(res => {
+                if(res.status !== 'success') {
+                    throw new Error(res.message || 'Gagal memuat data siswa');
+                }
+                const siswaList = res.data || [];
+                const total = siswaList.length;
+                const totalL = siswaList.filter(s => (s.jenis_kelamin || '').toUpperCase() === 'L').length;
+                const totalP = siswaList.filter(s => (s.jenis_kelamin || '').toUpperCase() === 'P').length;
+
+                let rowsHtml = '';
+                if(total === 0) {
+                    rowsHtml = `<tr><td colspan="4" style="text-align:center;padding:48px 16px;color:#94a3b8;font-style:italic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" style="margin:0 auto 10px;display:block"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span style="font-size:13.5px">Belum ada siswa yang terdaftar aktif di kelas <strong>${namaKelas}</strong>.</span></td></tr>`;
+                } else {
+                    siswaList.forEach((s, idx) => {
+                        const jkBadge = s.jenis_kelamin === 'L'
+                            ? `<span style="display:inline-flex;align-items:center;gap:5px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap"><span style="width:6px;height:6px;background:#2563eb;border-radius:50%"></span>Laki-laki (L)</span>`
+                            : (s.jenis_kelamin === 'P'
+                                ? `<span style="display:inline-flex;align-items:center;gap:5px;background:#fdf2f8;color:#be185d;border:1px solid #fbcfe8;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap"><span style="width:6px;height:6px;background:#db2777;border-radius:50%"></span>Perempuan (P)</span>`
+                                : `<span style="color:#94a3b8">-</span>`);
+
+                        rowsHtml += `
+                            <tr class="modal-siswa-row" data-search="${(s.nama_siswa + ' ' + (s.nisn || '')).toLowerCase()}" style="transition:background-color 0.15s ease">
+                                <td style="color:#94a3b8;font-weight:700;font-size:12.5px;text-align:center;padding:12px 14px;border-bottom:1px solid #f1f5f9;white-space:nowrap">${idx + 1}</td>
+                                <td style="font-family:monospace;font-size:13px;font-weight:600;color:#475569;padding:12px 14px;border-bottom:1px solid #f1f5f9;white-space:nowrap">${s.nisn || '<span style="color:#cbd5e1">-</span>'}</td>
+                                <td style="font-weight:700;color:#0f172a;font-size:13.5px;padding:12px 16px;border-bottom:1px solid #f1f5f9;text-align:left">${s.nama_siswa}</td>
+                                <td style="text-align:center;padding:12px 14px;border-bottom:1px solid #f1f5f9;white-space:nowrap">${jkBadge}</td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                Swal.fire({
+                    title: `Daftar Siswa — ${namaKelas}`,
+                    customClass: {
+                        popup: 'custom-swal-popup modal-wide-siswa',
+                        title: 'custom-swal-title',
+                        confirmButton: 'custom-swal-confirm'
+                    },
+                    width: '840px',
+                    html: `
+                        <div style="text-align:left;margin-bottom:16px">
+                            <!-- Info Bar & Badges -->
+                            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:12px 16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:14px">
+                                <div style="display:flex;align-items:center;gap:8px">
+                                    <div style="width:34px;height:34px;background:#eff6ff;color:#2563eb;border-radius:9px;display:flex;align-items:center;justify-content:center">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                    </div>
+                                    <div>
+                                        <div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.04em">Wali Kelas</div>
+                                        <div style="font-size:13px;font-weight:700;color:#1e293b">${waliKelas || '-'}</div>
+                                    </div>
+                                </div>
+                                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                                    <span style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #cbd5e1;color:#1e293b;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:800;box-shadow:0 1px 2px rgba(0,0,0,0.04)">
+                                        <span style="width:7px;height:7px;background:#3b82f6;border-radius:50%"></span>
+                                        Total: ${total} Siswa
+                                    </span>
+                                    <span style="display:inline-flex;align-items:center;gap:6px;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:800">
+                                        L: ${totalL}
+                                    </span>
+                                    <span style="display:inline-flex;align-items:center;gap:6px;background:#fdf2f8;border:1px solid #fbcfe8;color:#be185d;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:800">
+                                        P: ${totalP}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Search Input -->
+                            ${total > 0 ? `
+                            <div style="position:relative;margin-bottom:12px">
+                                <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                <input type="text" id="modal-cari-siswa" placeholder="Cari berdasarkan nama lengkap atau NISN..." oninput="filterModalSiswaList(this.value)" style="width:100%;padding:9px 12px 9px 36px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:13px;outline:none;box-sizing:border-box;background:#fff;transition:border-color 0.2s, box-shadow 0.2s;">
+                            </div>
+                            ` : ''}
+                        </div>
+
+                        <!-- Data Table Container -->
+                        <div style="max-height:380px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:12px;background:#ffffff;box-shadow:0 1px 3px rgba(0,0,0,0.03)">
+                            <table style="width:100%;border-collapse:collapse;table-layout:auto">
+                                <thead>
+                                    <tr style="background:#f8fafc;border-bottom:2px solid #e2e8f0;position:sticky;top:0;z-index:2">
+                                        <th style="width:50px;text-align:center;padding:11px 14px;font-size:11.5px;color:#64748b;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;white-space:nowrap">No</th>
+                                        <th style="width:150px;text-align:left;padding:11px 14px;font-size:11.5px;color:#64748b;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;white-space:nowrap">NISN</th>
+                                        <th style="text-align:left;padding:11px 16px;font-size:11.5px;color:#64748b;font-weight:800;text-transform:uppercase;letter-spacing:0.04em">Nama Lengkap Siswa</th>
+                                        <th style="width:160px;text-align:center;padding:11px 14px;font-size:11.5px;color:#64748b;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;white-space:nowrap">Jenis Kelamin</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="modal-siswa-tbody">
+                                    ${rowsHtml}
+                                </tbody>
+                            </table>
+                        </div>
+                    `,
+                    confirmButtonText: 'Tutup',
+                    confirmButtonColor: '#2563eb'
+                });
+            })
+            .catch(err => {
+                Swal.fire('Gagal', err.message || 'Gagal memuat data siswa.', 'error');
+            });
+        }
+    });
+}
+
+function filterModalSiswaList(q) {
+    q = (q || '').toLowerCase().trim();
+    const rows = document.querySelectorAll('.modal-siswa-row');
+    let matchCount = 0;
+    rows.forEach(r => {
+        const hay = r.dataset.search || '';
+        const isMatch = (!q || hay.includes(q));
+        r.style.display = isMatch ? '' : 'none';
+        if(isMatch) matchCount++;
+    });
+
+    const tbody = document.getElementById('modal-siswa-tbody');
+    if(tbody) {
+        let emptySearch = tbody.querySelector('.modal-search-empty');
+        if(matchCount === 0 && rows.length > 0) {
+            if(!emptySearch) {
+                emptySearch = document.createElement('tr');
+                emptySearch.className = 'modal-search-empty';
+                emptySearch.innerHTML = '<td colspan="4" style="text-align:center;padding:30px;color:#94a3b8;font-style:italic">Tidak ada siswa yang cocok dengan kata kunci pencarian.</td>';
+                tbody.appendChild(emptySearch);
+            }
+            emptySearch.style.display = '';
+        } else if(emptySearch) {
+            emptySearch.style.display = 'none';
+        }
+    }
 }
 </script>

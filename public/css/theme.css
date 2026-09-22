@@ -531,6 +531,7 @@ html.theme-transitioning *::after {
 [data-theme="dark"] div[style*="background:#ede9fe"],
 [data-theme="dark"] div[style*="background: #ede9fe"],
 [data-theme="dark"] .stat-icon.purple,
+[data-theme="dark"] .stat-icon.dispen,
 [data-theme="dark"] .activity-icon.purple {
     background: rgba(168, 85, 247, 0.18) !important;
     color: #c084fc !important;

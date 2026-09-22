@@ -76,6 +76,7 @@ function showPage(page){
         history.replaceState(null, '', '#' + page);
     }
     closeSidebarMobile();
+    closeUserDropdown();
 }
 
 function reloadCurrentPage(){
@@ -117,6 +118,39 @@ function toggleSidebar(){
         setSidebarOverlay(false);
     }
 }
+
+/* ── User Profile Dropdown ───────────────────────────── */
+function toggleUserDropdown(e) {
+    if (e) e.stopPropagation();
+    const wrap = document.getElementById('user-profile-wrap');
+    if (!wrap) return;
+    const isOpen = wrap.classList.contains('open');
+    wrap.classList.toggle('open', !isOpen);
+    const btn = document.getElementById('user-profile-btn');
+    if (btn) btn.setAttribute('aria-expanded', (!isOpen).toString());
+}
+
+function closeUserDropdown() {
+    const wrap = document.getElementById('user-profile-wrap');
+    if (wrap && wrap.classList.contains('open')) {
+        wrap.classList.remove('open');
+        const btn = document.getElementById('user-profile-btn');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+    }
+}
+
+document.addEventListener('click', function(e) {
+    const wrap = document.getElementById('user-profile-wrap');
+    if (wrap && !wrap.contains(e.target)) {
+        closeUserDropdown();
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeUserDropdown();
+    }
+});
 
 function absensiRoot(){
     const ids = ['absensi-harian','jurnal-absensi','absensi'];

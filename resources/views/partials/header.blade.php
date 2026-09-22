@@ -11,9 +11,9 @@
         <div>
             <div class="school-name" id="header-school-name">{{ $namaSekolah ?? 'SMKN 1 Boyolangu' }}</div>
             <div class="school-year">
-                Tahun Ajaran
+                <span>Tahun Ajaran</span>
                 <span id="header-school-year">{{ $tahunAjaran->tahun_ajaran ?? '' }}</span>
-                (<span id="header-semester">{{ $tahunAjaran->semester ?? '' }}</span>)
+                <span>({{ $tahunAjaran->semester ?? '' }})</span>
                 <span class="status-dot"></span>
             </div>
         </div>
@@ -81,7 +81,7 @@
         }
     }
 @endphp
-<span id="header-date">{{ $tanggalFormatted }}</span>
+            <span id="header-date">{{ $tanggalFormatted }}</span>
         </div>
 
         {{-- Jam real-time mengikuti waktu lokal perangkat --}}
@@ -123,27 +123,79 @@
             <span class="notif-badge" id="notif-badge-count" style="display:none">0</span>
         </button>
 
-        {{-- Profil Pengguna --}}
-        <div class="user-profile" onclick="showPage('profil')" title="Buka Profil Pengguna" style="cursor:pointer">
-            <div class="header-user-avatar" id="avatar-display" style="width:36px;height:36px;border-radius:50%;overflow:hidden;position:relative">
-                @if(!empty($guru->foto_profil) && file_exists(public_path($guru->foto_profil)))
-                    <img class="user-avatar-img" src="{{ asset($guru->foto_profil) }}"
-                         alt="{{ $guru->nama_guru ?? 'User' }}"
-                         style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
-                    <span class="header-avatar-initials user-avatar-fallback" style="display:none">{{ strtoupper(substr($guru->nama_guru ?? 'AD', 0, 2)) }}</span>
-                @else
-                    <img class="user-avatar-img" src="" alt="User" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;">
-                    <span class="header-avatar-initials user-avatar-fallback">{{ strtoupper(substr($guru->nama_guru ?? 'AD', 0, 2)) }}</span>
-                @endif
+        {{-- Profil Pengguna Dropdown --}}
+        <div class="user-profile-wrap" id="user-profile-wrap">
+            <div class="user-profile" id="user-profile-btn" onclick="toggleUserDropdown(event)" title="Menu Profil Pengguna" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false">
+                <div class="header-user-avatar" id="avatar-display">
+                    @if(!empty($guru->foto_profil) && file_exists(public_path($guru->foto_profil)))
+                        <img class="user-avatar-img" src="{{ asset($guru->foto_profil) }}"
+                             alt="{{ $guru->nama_guru ?? 'User' }}"
+                             style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                        <span class="header-avatar-initials user-avatar-fallback" style="display:none">{{ strtoupper(substr($guru->nama_guru ?? 'AD', 0, 2)) }}</span>
+                    @else
+                        <img class="user-avatar-img" src="" alt="User" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                        <span class="header-avatar-initials user-avatar-fallback">{{ strtoupper(substr($guru->nama_guru ?? 'AD', 0, 2)) }}</span>
+                    @endif
+                </div>
+                <div class="user-info-text">
+                    <div class="user-name" id="username-display">{{ $guru->nama_guru ?? 'Administrator' }}</div>
+                    <div class="user-role">{{ ($guru->is_admin ?? false) ? 'Administrator' : ($guru->Peran ?? 'Guru') }}</div>
+                </div>
+                {{-- Chevron --}}
+                <svg class="user-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
             </div>
-            <div>
-                <div class="user-name" id="username-display">{{ $guru->nama_guru ?? 'Administrator' }}</div>
-                <div class="user-role">{{ ($guru->is_admin ?? false) ? 'Administrator' : ($guru->Peran ?? 'Guru') }}</div>
+
+            {{-- Floating Dropdown Card --}}
+            <div class="user-dropdown-menu" id="user-dropdown-menu">
+                <div class="user-dropdown-header">
+                    <div class="dropdown-avatar">
+                        @if(!empty($guru->foto_profil) && file_exists(public_path($guru->foto_profil)))
+                            <img src="{{ asset($guru->foto_profil) }}" alt="{{ $guru->nama_guru ?? 'User' }}">
+                        @else
+                            <span>{{ strtoupper(substr($guru->nama_guru ?? 'AD', 0, 2)) }}</span>
+                        @endif
+                    </div>
+                    <div class="dropdown-user-details">
+                        <div class="dropdown-user-name">{{ $guru->nama_guru ?? 'Administrator' }}</div>
+                        <div class="dropdown-user-role-badge">
+                            <span class="role-dot"></span>
+                            {{ ($guru->is_admin ?? false) ? 'Administrator' : ($guru->Peran ?? 'Guru') }}
+                        </div>
+                    </div>
+                </div>
+                <div class="user-dropdown-divider"></div>
+                <div class="user-dropdown-body">
+                    <a class="user-dropdown-item" href="javascript:void(0)" onclick="closeUserDropdown(); showPage('profil');">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <span>Profil Pengguna</span>
+                    </a>
+                    @if(session('auth_role') === 'admin')
+                    <a class="user-dropdown-item" href="javascript:void(0)" onclick="closeUserDropdown(); showPage('pengaturan');">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        <span>Pengaturan Sistem</span>
+                    </a>
+                    @endif
+                </div>
+                <div class="user-dropdown-divider"></div>
+                <div class="user-dropdown-footer">
+                    <button type="button" class="user-dropdown-logout" onclick="closeUserDropdown(); confirmKeluar('logout-form-sidebar');">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                        <span>Keluar Akun</span>
+                    </button>
+                </div>
             </div>
-            {{-- Chevron --}}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:#94a3b8;flex-shrink:0;margin-left:2px">
-                <polyline points="6 9 12 15 18 9"/>
-            </svg>
         </div>
 
     </div>

@@ -162,47 +162,47 @@ class AbsensiController extends Controller
             $keterangan = '-';
             $badgeClass = 'badge-success';
 
-            // Jika jam belum dimulai (akan datang hari ini), status adalah "Menunggu Jam"
-            if ($isUpcoming) {
+            // Cek apakah jam pelajaran ini bertepatan dengan dispen siswa
+            $dispenJamIni = $dispenHariIniList->first(function ($d) use ($j) {
+                $wMulai = $d->waktu_keluar
+                    ? $d->waktu_keluar->format('H:i:s')
+                    : ($d->created_at ? $d->created_at->format('H:i:s') : '00:00:00');
+                $wSelesai = $d->waktu_masuk
+                    ? $d->waktu_masuk->format('H:i:s')
+                    : '23:59:59';
+
+                return $j->jam_selesai > $wMulai && $j->jam_mulai < $wSelesai;
+            });
+
+            // Cari jurnal yang persis untuk id_jadwal ini
+            $jurnal = JurnalKelas::where('id_jadwal', $j->id_jadwal)
+                ->whereDate('tanggal', $tanggal)
+                ->first();
+
+            // Jika belum ada jurnal langsung untuk jam ini, cari jurnal terakhir pada sesi mapel yang sama hari ini hingga jam ini
+            if (! $jurnal) {
+                $jurnal = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
+                    ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
+                    ->whereNull('jurnal_kelas.deleted_at')
+                    ->whereNull('jadwal_mengajar.deleted_at')
+                    ->where('jadwal_mengajar.id_kelas', $siswa->id_kelas)
+                    ->where('jadwal_mengajar.id_mapel', $j->id_mapel ?? null)
+                    ->where('jadwal_mengajar.hari', $hariIndo)
+                    ->whereDate('jurnal_kelas.tanggal', $tanggal)
+                    ->where('jam_pelajaran.jam_ke', '<=', $j->jam_ke)
+                    ->orderByDesc('jam_pelajaran.jam_ke')
+                    ->select('jurnal_kelas.*')
+                    ->first();
+            }
+
+            // Jika jam belum dimulai (akan datang hari ini) DAN belum ada jurnal, status adalah "Menunggu Jam"
+            if ($isUpcoming && ! $jurnal && ! $dispenJamIni) {
                 $status = 'Menunggu';
                 $statusLabel = 'Menunggu Jam';
                 $badgeClass = 'badge-secondary';
                 $materi = '-';
                 $keterangan = '-';
             } else {
-                // Cek apakah jam pelajaran ini bertepatan dengan dispen siswa
-                $dispenJamIni = $dispenHariIniList->first(function ($d) use ($j) {
-                    $wMulai = $d->waktu_keluar
-                        ? $d->waktu_keluar->format('H:i:s')
-                        : ($d->created_at ? $d->created_at->format('H:i:s') : '00:00:00');
-                    $wSelesai = $d->waktu_masuk
-                        ? $d->waktu_masuk->format('H:i:s')
-                        : '23:59:59';
-
-                    return $j->jam_selesai > $wMulai && $j->jam_mulai < $wSelesai;
-                });
-
-                // Cari jurnal yang persis untuk id_jadwal ini
-                $jurnal = JurnalKelas::where('id_jadwal', $j->id_jadwal)
-                    ->whereDate('tanggal', $tanggal)
-                    ->first();
-
-                // Jika belum ada jurnal langsung untuk jam ini, cari jurnal terakhir pada sesi mapel yang sama hari ini hingga jam ini
-                if (! $jurnal) {
-                    $jurnal = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
-                        ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
-                        ->whereNull('jurnal_kelas.deleted_at')
-                        ->whereNull('jadwal_mengajar.deleted_at')
-                        ->where('jadwal_mengajar.id_kelas', $siswa->id_kelas)
-                        ->where('jadwal_mengajar.id_mapel', $j->id_mapel ?? null)
-                        ->where('jadwal_mengajar.hari', $hariIndo)
-                        ->whereDate('jurnal_kelas.tanggal', $tanggal)
-                        ->where('jam_pelajaran.jam_ke', '<=', $j->jam_ke)
-                        ->orderByDesc('jam_pelajaran.jam_ke')
-                        ->select('jurnal_kelas.*')
-                        ->first();
-                }
-
                 if ($dispenJamIni) {
                     // Jam ini bertepatan saat siswa mengambil dispen / izin / sakit piket
                     $alasanText = $dispenJamIni->alasan ? ': '.$dispenJamIni->alasan : '';
@@ -290,7 +290,7 @@ class AbsensiController extends Controller
                 $sessionLabel = 'Akan Datang';
             }
 
-            if ($isUpcoming) {
+            if ($status === 'Menunggu') {
                 $statHarian['Menunggu']++;
             } elseif (isset($statHarian[$status])) {
                 $statHarian[$status]++;

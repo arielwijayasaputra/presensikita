@@ -87,12 +87,12 @@ class Hari extends Model
     }
 
     /**
-     * Get all active weekday names (Mon-Fri) for jadwal.
+     * Get all active weekday names (Mon-Sat) for jadwal.
      */
     public static function getWeekdayNames(): array
     {
         return static::where('is_aktif', 1)
-            ->where('urutan', '<=', 5)
+            ->where('urutan', '<=', 6)
             ->orderBy('urutan')
             ->pluck('nama_hari')
             ->toArray();

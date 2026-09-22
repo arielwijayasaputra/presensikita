@@ -39,7 +39,7 @@ class JadwalMengajarController extends Controller
     public function guruTersedia(Request $request)
     {
         $request->validate([
-            'hari' => ['required', 'in:Senin,Selasa,Rabu,Kamis,Jumat'],
+            'hari' => ['required', 'in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu'],
             'id_jam' => ['required', 'integer'],
             'id_jadwal' => ['nullable', 'integer'],
         ]);
@@ -184,7 +184,7 @@ class JadwalMengajarController extends Controller
             'id_mapel' => ['required', 'integer', 'exists:mapel,id_mapel'],
             'id_kelas' => ['required', 'integer', 'exists:kelas,id_kelas'],
             'id_jam' => ['required', 'integer', 'exists:jam_pelajaran,id_jam'],
-            'hari' => ['required', 'in:Senin,Selasa,Rabu,Kamis,Jumat'],
+            'hari' => ['required', 'in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu'],
         ]);
 
         if ($isUpacara) {
@@ -214,7 +214,7 @@ class JadwalMengajarController extends Controller
             'id_mapel' => ['required', 'integer', 'exists:mapel,id_mapel'],
             'id_kelas' => ['required', 'integer', 'exists:kelas,id_kelas'],
             'id_jam' => ['required', 'integer', 'exists:jam_pelajaran,id_jam'],
-            'hari' => ['required', 'in:Senin,Selasa,Rabu,Kamis,Jumat'],
+            'hari' => ['required', 'in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu'],
             'id_tahun_ajaran' => ['required', 'integer', 'exists:tahun_ajaran,id_tahun_ajaran'],
         ]);
 

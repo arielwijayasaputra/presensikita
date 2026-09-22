@@ -220,7 +220,7 @@ class JadwalImportService
             $jamRaw = trim((string) ($row['jam_ke'] ?? ''));
 
             if (! in_array($hari, Hari::getWeekdayNames(), true)) {
-                $skipped[] = 'Baris '.($line + 1).': hari "'.($row['hari'] ?? '').'" tidak valid (gunakan Senin s.d. Jumat).';
+                $skipped[] = 'Baris '.($line + 1).': hari "'.($row['hari'] ?? '').'" tidak valid (gunakan Senin s.d. Sabtu).';
 
                 continue;
             }

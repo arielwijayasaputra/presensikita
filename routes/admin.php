@@ -61,9 +61,13 @@ Route::middleware('auth.admin')->group(function () {
     // Penugasan Guru Piket harian
     Route::post('/guru-piket/update', [GuruPiketController::class, 'update'])->name('guru-piket.update');
     Route::post('/guru-piket/update-bulk', [GuruPiketController::class, 'updateBulk'])->name('guru-piket.update-bulk');
+    Route::post('/jam-pelajaran/tambah', [JamPelajaranController::class, 'store'])->name('jam-pelajaran.tambah');
     Route::post('/jam-pelajaran/update', [JamPelajaranController::class, 'update'])->name('jam-pelajaran.update');
     Route::post('/jam-pelajaran/{id}/update', [JamPelajaranController::class, 'updateSingle'])->name('jam-pelajaran.update-single');
+    Route::delete('/jam-pelajaran/{id}', [JamPelajaranController::class, 'destroy'])->name('jam-pelajaran.hapus');
+    Route::delete('/jam-pelajaran/hari/{hari}', [JamPelajaranController::class, 'destroyDay'])->name('jam-pelajaran.hapus-hari');
     Route::post('/jam-pelajaran/istirahat/{hari}/{nomor}', [JamPelajaranController::class, 'updateIstirahat'])->name('jam-pelajaran.update-istirahat');
+    Route::delete('/jam-pelajaran/istirahat/{hari}/{nomor}', [JamPelajaranController::class, 'destroyIstirahat'])->name('jam-pelajaran.hapus-istirahat');
     Route::get('/jadwal/guru-tersedia', [JadwalMengajarController::class, 'guruTersedia'])->name('jadwal.guru-tersedia');
     Route::post('/jadwal/{id}/tugaskan-guru', [JadwalMengajarController::class, 'tugaskanGuru'])->name('jadwal.tugaskan-guru');
     Route::post('/jadwal/import', [JadwalMengajarController::class, 'import'])->name('jadwal.import');

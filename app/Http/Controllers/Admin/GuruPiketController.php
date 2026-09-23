@@ -58,27 +58,28 @@ class GuruPiketController extends Controller
     public function updateBulk(Request $request)
     {
         $raw = $request->input('assignments', []);
-        $filtered = [];
-        foreach ($raw as $tanggal => $guruList) {
-            $clean = array_values(array_filter((array) $guruList, fn ($v) => $v !== '' && $v !== null));
-            if (! empty($clean)) {
-                $filtered[$tanggal] = $clean;
-            }
+        if (! is_array($raw) || empty($raw)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Tidak ada data penugasan yang dikirim.',
+            ], 422);
         }
-        $request->merge(['assignments' => $filtered]);
 
-        $data = $request->validate([
-            'assignments' => ['required', 'array'],
-            'assignments.*' => ['nullable', 'array'],
-            'assignments.*.*' => ['integer', 'exists:guru,id_guru'],
-        ]);
-
-        // Check for duplicate guru per day
-        foreach ($data['assignments'] as $tanggal => $guruList) {
-            if (count($guruList) !== count(array_unique($guruList))) {
+        // Validate date format and duplicate teachers per day
+        foreach ($raw as $tanggal => $guruList) {
+            if (! preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) $tanggal)) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => "Guru tidak boleh dobel di hari yang sama (tanggal $tanggal).",
+                    'message' => "Format tanggal tidak valid: $tanggal.",
+                ], 422);
+            }
+
+            $clean = array_values(array_filter((array) $guruList, fn ($v) => $v !== '' && $v !== null));
+            if (count($clean) !== count(array_unique($clean))) {
+                $formattedDate = date('d-m-Y', strtotime((string) $tanggal));
+                return response()->json([
+                    'status' => 'error',
+                    'message' => "Guru tidak boleh dipilih ganda di hari yang sama ($formattedDate).",
                 ], 422);
             }
         }
@@ -89,14 +90,12 @@ class GuruPiketController extends Controller
             ->all();
 
         $totalAssigned = 0;
+        $totalDaysSaved = 0;
 
-        DB::transaction(function () use ($data, $guruIds, &$totalAssigned) {
-            foreach ($data['assignments'] as $tanggal => $guruList) {
-                if (! preg_match('/^\d{4}-\d{2}-\d{2}$/', $tanggal)) {
-                    continue;
-                }
-
-                $validGurus = array_intersect($guruList ?? [], $guruIds);
+        DB::transaction(function () use ($raw, $guruIds, &$totalAssigned, &$totalDaysSaved) {
+            foreach ($raw as $tanggal => $guruList) {
+                $clean = array_values(array_filter((array) $guruList, fn ($v) => $v !== '' && $v !== null));
+                $validGurus = array_intersect($clean, $guruIds);
 
                 GuruPiket::withTrashed()->whereDate('tanggal', $tanggal)->forceDelete();
 
@@ -107,12 +106,16 @@ class GuruPiketController extends Controller
                     ]);
                     $totalAssigned++;
                 }
+
+                if (! empty($validGurus)) {
+                    $totalDaysSaved++;
+                }
             }
         });
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Penugasan guru piket berhasil disimpan untuk '.count($data['assignments']).' hari ('.$totalAssigned.' penugasan total).',
+            'message' => "Penugasan guru piket 1 bulan berhasil disimpan ($totalDaysSaved hari aktif, total $totalAssigned penugasan guru).",
         ]);
     }
 }

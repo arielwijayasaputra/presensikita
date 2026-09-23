@@ -1,82 +1,206 @@
+@php
+    $monthsIndo = [
+        1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+        5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+        9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+    ];
+    $currentPiketMonthName = $monthsIndo[$piketBulan] ?? 'Bulan ' . $piketBulan;
+    $totalDaysCount = 0;
+    foreach($guruPiketWeeks as $w) {
+        $totalDaysCount += count($w['days']);
+    }
+@endphp
+
 <div class="page-content page-anim" id="page-guru-piket" style="display:none">
     <div class="page-header" style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
         <div>
-            <div class="page-title" style="font-size:22px;font-weight:800;margin-top:2px">Guru Piket</div>
-            <div class="page-subtitle">Tentukan 4 guru piket untuk 2 minggu ke depan (Senin–Jumat).</div>
+            <div class="page-title" style="font-size:22px;font-weight:800;margin-top:2px">Guru Piket 1 Bulan</div>
+            <div class="page-subtitle">Atur penugasan 6 guru piket (Sesi 1: 07.00–11.00 &amp; Sesi 2: 11.00–Pulang) untuk 1 bulan penuh (Senin–Jumat) periode <strong>{{ $currentPiketMonthName }} {{ $piketTahun }}</strong>.</div>
         </div>
         <div>
             <button type="button" class="btn-primary" onclick="bukaModalPengaturanWaPiket()" style="display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:9px;font-size:13px;font-weight:600;background:#059669;border-color:#059669">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                Pengaturan No WA Bot Notifikasi
+                Pengaturan WA Bot
             </button>
         </div>
     </div>
 
-    <div class="card" style="padding:22px 24px;max-width:1100px">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid #f1f5f9">
-            <div style="width:42px;height:42px;background:#fff7ed;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#ea580c;flex-shrink:0">
-                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 16 11 18 15 14"/></svg>
+    {{-- Filter Bulan & Toolbar --}}
+    <div class="card" style="padding:14px 18px;margin-bottom:20px;max-width:1200px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+            {{-- Pilihan Dropdown Bulan, Tahun & Minggu --}}
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <div style="display:inline-flex;align-items:center;gap:6px;background:#f8fafc;border:1px solid #cbd5e1;padding:4px 10px;border-radius:9px">
+                    <select id="select-piket-bulan" class="filter-select" onchange="ubahBulanPiket(this.value, document.getElementById('select-piket-tahun').value)" style="border:none;background:transparent;font-weight:700;font-size:13.5px;color:#0f172a;padding:4px 6px;cursor:pointer">
+                        @foreach($monthsIndo as $mNum => $mLabel)
+                            <option value="{{ $mNum }}" {{ $piketBulan == $mNum ? 'selected' : '' }}>{{ $mLabel }}</option>
+                        @endforeach
+                    </select>
+                    <select id="select-piket-tahun" class="filter-select" onchange="ubahBulanPiket(document.getElementById('select-piket-bulan').value, this.value)" style="border:none;background:transparent;font-weight:700;font-size:13.5px;color:#0f172a;padding:4px 6px;cursor:pointer">
+                        @for($y = (int)date('Y') - 1; $y <= (int)date('Y') + 3; $y++)
+                            <option value="{{ $y }}" {{ $piketTahun == $y ? 'selected' : '' }}>{{ $y }}</option>
+                        @endfor
+                    </select>
+                </div>
+
+                {{-- Filter Pilihan Minggu --}}
+                <div style="display:inline-flex;align-items:center;gap:6px;background:#f8fafc;border:1px solid #cbd5e1;padding:4px 10px;border-radius:9px">
+                    <select id="select-piket-minggu" class="filter-select" onchange="filterMingguPiket(this.value)" style="border:none;background:transparent;font-weight:700;font-size:13.5px;color:#0f172a;padding:4px 6px;cursor:pointer">
+                        <option value="all">Semua Minggu (1 Bulan Penuh)</option>
+                        @foreach($guruPiketWeeks as $w)
+                            <option value="{{ $w['week_num'] }}">Minggu {{ $w['week_num'] }} ({{ \Carbon\Carbon::parse($w['days'][0]['tanggal'])->format('d M') }} – {{ \Carbon\Carbon::parse(end($w['days'])['tanggal'])->format('d M') }})</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <span style="font-size:12px;color:#64748b;background:#f1f5f9;padding:6px 12px;border-radius:20px;font-weight:600">
+                    📅 {{ $totalDaysCount }} Hari Kerja · {{ count($allGuruPiket) }} Guru Tersedia
+                </span>
             </div>
+
+            {{-- Tombol Kosongkan --}}
             <div>
-                <h3 style="font-size:15.5px;font-weight:700;color:#1e293b">Penugasan 2 Minggu</h3>
-                <div style="font-size:12px;color:#64748b">Ketik nama guru pada tiap slot untuk mencari &amp; memilih guru piket.</div>
+                <button type="button" class="btn-secondary" onclick="kosongkanSemuaSlotPiket()" style="font-size:12px;padding:7px 14px;border-radius:8px;color:#dc2626;border-color:#fecaca;background:#fef2f2;display:inline-flex;align-items:center;gap:6px;font-weight:600">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    <span id="btn-kosongkan-text">Kosongkan Bulan Ini</span>
+                </button>
             </div>
         </div>
+    </div>
 
+    {{-- Main Form Kalender 1 Bulan --}}
+    <div class="card" style="padding:22px 24px;max-width:1200px">
         <form id="guru-piket-form" onsubmit="simpanGuruPiketBulk(event)">
             @csrf
 
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;justify-content:flex-end">
-                <span style="font-size:12px;color:#64748b">{{ count($allGuruPiket) }} guru tersedia — klik slot lalu ketik untuk mencari</span>
-            </div>
-
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(480px,1fr));gap:16px;margin-bottom:20px">
-                @foreach($guruPiketDates as $idx => $day)
-                    @if($idx == 5)
-                        <div style="grid-column:1/-1;border-top:2px solid #e2e8f0;margin:4px 0 8px"></div>
-                    @endif
-                    <div style="border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;background:#fafbfc">
-                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #f1f5f9">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                            <span style="font-size:13px;font-weight:700;color:#1e293b">{{ $day['hari'] }}</span>
-                            <span style="font-size:11.5px;color:#64748b">{{ \Carbon\Carbon::parse($day['tanggal'])->format('d M Y') }}</span>
+            <div style="display:grid;gap:28px;margin-bottom:24px">
+                @forelse($guruPiketWeeks as $wIdx => $week)
+                    <div class="gp-week-block" data-week-index="{{ $wIdx + 1 }}" style="border:1px solid #e2e8f0;border-radius:14px;padding:18px 20px;background:#ffffff;box-shadow:0 2px 6px rgba(0,0,0,0.02)">
+                        {{-- Header Minggu --}}
+                        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1.5px dashed #e2e8f0">
+                            <div style="display:flex;align-items:center;gap:10px">
+                                <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#fff7ed;color:#ea580c;border-radius:8px;font-weight:800;font-size:13px;border:1px solid #ffedd5">
+                                    {{ $week['week_num'] }}
+                                </span>
+                                <div>
+                                    <h4 style="font-size:15px;font-weight:800;color:#0f172a;margin:0">Minggu ke-{{ $week['week_num'] }}</h4>
+                                    <div style="font-size:11.5px;color:#64748b">{{ $week['label'] }}</div>
+                                </div>
+                            </div>
                         </div>
-                        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
-                            @for($slot = 0; $slot < 4; $slot++)
-                                @php($selectedId = $guruPiketAssignments[$day['tanggal']][$slot] ?? '')
-                                <div class="gp-sd" data-slot>
-                                    <input type="hidden" name="assignments[{{ $day['tanggal'] }}][]" value="{{ $selectedId }}">
-                                    <label style="font-size:11px;color:#94a3b8;display:block;margin-bottom:3px">Guru {{ $slot + 1 }}</label>
-                                    <button type="button" class="gp-sd-trigger filter-input" style="padding:7px 8px;font-size:12.5px;" data-trigger>
-                                        <span class="gp-sd-value {{ $selectedId === '' ? 'empty' : '' }}">{{ $selectedId !== '' && isset($guruNameMap[$selectedId]) ? $guruNameMap[$selectedId] : '— Pilih Guru —' }}</span>
-                                        @if($selectedId !== '')
-                                            <span class="gp-sd-clear" role="button" tabindex="-1" data-clear>
-                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+
+                        {{-- Grid Hari dalam Minggu Ini --}}
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:16px">
+                            @foreach($week['days'] as $day)
+                                @php($isToday = ($day['is_today'] ?? false))
+                                <div class="gp-day-card" data-date="{{ $day['tanggal'] }}" data-hari-iso="{{ $day['hari_iso'] }}" style="border:1.5px solid {{ $isToday ? '#f97316' : '#e2e8f0' }};border-radius:12px;padding:14px;background:{{ $isToday ? '#fffaf5' : '#fafbfc' }};position:relative;box-shadow:{{ $isToday ? '0 4px 14px rgba(249,115,22,0.12)' : 'none' }}">
+                                    {{-- Header Hari --}}
+                                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid {{ $isToday ? '#fed7aa' : '#f1f5f9' }}">
+                                        <div style="display:flex;align-items:center;gap:7px">
+                                            <span style="font-size:13.5px;font-weight:800;color:{{ $isToday ? '#ea580c' : '#1e293b' }}">{{ $day['hari'] }}</span>
+                                            <span style="font-size:12px;color:#64748b;font-weight:600">{{ \Carbon\Carbon::parse($day['tanggal'])->format('d M Y') }}</span>
+                                            @if($isToday)
+                                                <span style="background:#ea580c;color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;text-transform:uppercase;letter-spacing:0.5px">Hari Ini</span>
+                                            @endif
+                                        </div>
+                                        <button type="button" onclick="kosongkanHari('{{ $day['tanggal'] }}')" title="Kosongkan hari ini" style="border:none;background:transparent;cursor:pointer;color:#94a3b8;padding:2px;display:flex;align-items:center;border-radius:4px" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#94a3b8'">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                        </button>
+                                    </div>
+
+                                    {{-- Sesi 1: 07.00 - 11.00 (3 Guru) --}}
+                                    <div style="margin-bottom:12px;background:#ffffff;border:1px solid {{ $isToday ? '#fed7aa' : '#e2e8f0' }};border-radius:10px;padding:10px">
+                                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                                            <span style="font-size:11.5px;font-weight:700;color:#0369a1;background:#e0f2fe;padding:2px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:5px">
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                                Sesi 1 (07.00 – 11.00)
                                             </span>
-                                        @endif
-                                        <svg class="gp-sd-caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-                                    </button>
-                                    <div class="gp-sd-panel" data-panel>
-                                        <input type="text" class="gp-sd-search" placeholder="Cari nama guru..." data-search>
-                                        <div class="gp-sd-list" data-list>
-                                            @foreach($allGuruPiket as $g)
-                                                <button type="button" class="gp-sd-option" data-value="{{ $g->id_guru }}" data-search-text="{{ strtolower($g->nama_guru . ' ' . $g->username) }}" data-guru-name="{{ $g->nama_guru }}">
-                                                    {{ $g->nama_guru }}
-                                                </button>
-                                            @endforeach
+                                            <span style="font-size:10.5px;color:#64748b;font-weight:600">3 Guru</span>
+                                        </div>
+                                        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+                                            @for($slot = 0; $slot < 3; $slot++)
+                                                @php($selectedId = $guruPiketAssignments[$day['tanggal']][$slot] ?? '')
+                                                <div class="gp-sd" data-slot data-slot-index="{{ $slot }}">
+                                                    <input type="hidden" name="assignments[{{ $day['tanggal'] }}][]" value="{{ $selectedId }}">
+                                                    <label style="font-size:10px;color:#64748b;display:block;margin-bottom:2px;font-weight:600">Guru {{ $slot + 1 }}</label>
+                                                    <button type="button" class="gp-sd-trigger filter-input" style="padding:5px 6px;font-size:11.5px;" data-trigger>
+                                                        <span class="gp-sd-value {{ $selectedId === '' ? 'empty' : '' }}">{{ $selectedId !== '' && isset($guruNameMap[$selectedId]) ? $guruNameMap[$selectedId] : '— Pilih —' }}</span>
+                                                        @if($selectedId !== '')
+                                                            <span class="gp-sd-clear" role="button" tabindex="-1" data-clear>
+                                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                                            </span>
+                                                        @endif
+                                                        <svg class="gp-sd-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                                                    </button>
+                                                    <div class="gp-sd-panel" data-panel>
+                                                        <input type="text" class="gp-sd-search" placeholder="Cari nama guru..." data-search>
+                                                        <div class="gp-sd-list" data-list>
+                                                            @foreach($allGuruPiket as $g)
+                                                                <button type="button" class="gp-sd-option" data-value="{{ $g->id_guru }}" data-search-text="{{ strtolower($g->nama_guru . ' ' . $g->username) }}" data-guru-name="{{ $g->nama_guru }}">
+                                                                    {{ $g->nama_guru }}
+                                                                </button>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endfor
+                                        </div>
+                                    </div>
+
+                                    {{-- Sesi 2: 11.00 - Pulang (3 Guru) --}}
+                                    <div style="background:#ffffff;border:1px solid {{ $isToday ? '#fed7aa' : '#e2e8f0' }};border-radius:10px;padding:10px">
+                                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                                            <span style="font-size:11.5px;font-weight:700;color:#c2410c;background:#ffedd5;padding:2px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:5px">
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                                Sesi 2 (11.00 – Pulang)
+                                            </span>
+                                            <span style="font-size:10.5px;color:#64748b;font-weight:600">3 Guru</span>
+                                        </div>
+                                        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+                                            @for($slot = 3; $slot < 6; $slot++)
+                                                @php($selectedId = $guruPiketAssignments[$day['tanggal']][$slot] ?? '')
+                                                <div class="gp-sd" data-slot data-slot-index="{{ $slot }}">
+                                                    <input type="hidden" name="assignments[{{ $day['tanggal'] }}][]" value="{{ $selectedId }}">
+                                                    <label style="font-size:10px;color:#64748b;display:block;margin-bottom:2px;font-weight:600">Guru {{ $slot + 1 }}</label>
+                                                    <button type="button" class="gp-sd-trigger filter-input" style="padding:5px 6px;font-size:11.5px;" data-trigger>
+                                                        <span class="gp-sd-value {{ $selectedId === '' ? 'empty' : '' }}">{{ $selectedId !== '' && isset($guruNameMap[$selectedId]) ? $guruNameMap[$selectedId] : '— Pilih —' }}</span>
+                                                        @if($selectedId !== '')
+                                                            <span class="gp-sd-clear" role="button" tabindex="-1" data-clear>
+                                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                                            </span>
+                                                        @endif
+                                                        <svg class="gp-sd-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                                                    </button>
+                                                    <div class="gp-sd-panel" data-panel>
+                                                        <input type="text" class="gp-sd-search" placeholder="Cari nama guru..." data-search>
+                                                        <div class="gp-sd-list" data-list>
+                                                            @foreach($allGuruPiket as $g)
+                                                                <button type="button" class="gp-sd-option" data-value="{{ $g->id_guru }}" data-search-text="{{ strtolower($g->nama_guru . ' ' . $g->username) }}" data-guru-name="{{ $g->nama_guru }}">
+                                                                    {{ $g->nama_guru }}
+                                                                </button>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endfor
                                         </div>
                                     </div>
                                 </div>
-                            @endfor
+                            @endforeach
                         </div>
                     </div>
-                @endforeach
+                @empty
+                    <div style="text-align:center;padding:40px;color:#64748b;background:#f8fafc;border-radius:12px;border:1px dashed #cbd5e1">
+                        Tidak ada hari kerja pada bulan dan tahun yang dipilih.
+                    </div>
+                @endforelse
             </div>
 
-            <div style="display:flex;justify-content:flex-end;padding-top:8px">
-                <button type="submit" form="guru-piket-form" class="btn-primary" style="padding:10px 28px;border-radius:10px;font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#f97316,#ea580c);border:none;box-shadow:0 4px 12px rgba(234,88,12,0.35)">
+            {{-- Footer Simpan --}}
+            <div style="display:flex;justify-content:flex-end;align-items:center;gap:12px;padding-top:16px;border-top:1px solid #e2e8f0">
+                <button type="submit" class="btn-primary" style="padding:11px 32px;border-radius:10px;font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#f97316,#ea580c);border:none;box-shadow:0 4px 14px rgba(234,88,12,0.35)">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                    Simpan Penugasan
+                    Simpan Penugasan ({{ $currentPiketMonthName }} {{ $piketTahun }})
                 </button>
             </div>
         </form>
@@ -613,9 +737,74 @@ function simpanGuruPiketBulk(event) {
     }).catch(error => Swal.fire({icon: 'error', title: 'Gagal', text: error.message, confirmButtonColor: '#dc2626'}));
 }
 
+function ubahBulanPiket(bulan, tahun) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('piket_bulan', bulan);
+    url.searchParams.set('piket_tahun', tahun);
+    url.hash = 'guru-piket';
+    window.location.href = url.toString();
+}
+
+function filterMingguPiket(weekVal) {
+    const weekBlocks = document.querySelectorAll('#guru-piket-form .gp-week-block');
+    weekBlocks.forEach(block => {
+        if (weekVal === 'all' || block.dataset.weekIndex === String(weekVal)) {
+            block.style.display = '';
+        } else {
+            block.style.display = 'none';
+        }
+    });
+
+    const btnKosongkanText = document.getElementById('btn-kosongkan-text');
+    if (btnKosongkanText) {
+        btnKosongkanText.textContent = weekVal === 'all' ? 'Kosongkan Bulan Ini' : 'Kosongkan Minggu ' + weekVal;
+    }
+}
+
+function kosongkanSemuaSlotPiket() {
+    const selectedWeek = document.getElementById('select-piket-minggu')?.value || 'all';
+    const isSingleWeek = selectedWeek !== 'all';
+    const confirmTitle = isSingleWeek ? 'Kosongkan Slot Minggu ' + selectedWeek + '?' : 'Kosongkan Semua Slot Bulan Ini?';
+    const confirmText = isSingleWeek ? 'Semua pilihan guru piket pada Minggu ' + selectedWeek + ' akan dikosongkan.' : 'Seluruh pilihan guru piket di bulan ini pada formulir akan dikosongkan.';
+
+    Swal.fire({
+        title: confirmTitle,
+        text: confirmText,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Ya, Kosongkan',
+        cancelButtonText: 'Batal'
+    }).then(res => {
+        if (res.isConfirmed) {
+            const selector = isSingleWeek 
+                ? '#guru-piket-form .gp-week-block[data-week-index="' + selectedWeek + '"] .gp-sd'
+                : '#guru-piket-form .gp-sd';
+            document.querySelectorAll(selector).forEach(sd => {
+                if (window.gpSetValue) window.gpSetValue(sd, '', '');
+            });
+            Swal.fire({
+                icon: 'info',
+                title: 'Dikosongkan',
+                text: 'Slot guru piket telah dikosongkan. Klik "Simpan Penugasan" di bawah untuk menyimpan perubahan ini ke database.',
+                timer: 2200,
+                showConfirmButton: false
+            });
+        }
+    });
+}
+
+function kosongkanHari(tanggal) {
+    const card = document.querySelector('#guru-piket-form .gp-day-card[data-date="' + tanggal + '"]');
+    if (!card) return;
+    card.querySelectorAll('.gp-sd').forEach(sd => {
+        if (window.gpSetValue) window.gpSetValue(sd, '', '');
+    });
+}
+
 (function () {
     const form = document.getElementById('guru-piket-form');
-    const root = form || document;
 
     function closeAll(except) {
         document.querySelectorAll('.gp-sd.open').forEach(sd => {
@@ -626,7 +815,6 @@ function simpanGuruPiketBulk(event) {
 
     function openSlot(sd) {
         const search = sd.querySelector('[data-search]');
-        const panel = sd.querySelector('[data-panel]');
         sd.classList.add('open');
         if (search) { search.value = ''; filterOptions(sd, ''); }
         requestAnimationFrame(() => { if (search) search.focus(); });
@@ -639,7 +827,6 @@ function simpanGuruPiketBulk(event) {
     function setValue(sd, value, guruName) {
         const hidden = sd.querySelector('input[type="hidden"]');
         const valueEl = sd.querySelector('.gp-sd-value');
-        const clearBtn = sd.querySelector('[data-clear]');
         if (hidden) hidden.value = value || '';
         if (valueEl) {
             valueEl.textContent = value ? guruName : '— Pilih Guru —';
@@ -647,23 +834,31 @@ function simpanGuruPiketBulk(event) {
         }
         let clear = sd.querySelector('.gp-sd-clear');
         if (!clear && value) {
-            // reinsert clear button before caret if missing
             const caret = sd.querySelector('.gp-sd-caret');
             const btn = document.createElement('span');
             btn.className = 'gp-sd-clear';
             btn.setAttribute('role', 'button');
             btn.setAttribute('tabindex', '-1');
             btn.setAttribute('data-clear', '');
-            btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+            btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
             if (caret) caret.parentNode.insertBefore(btn, caret);
             clear = btn;
         }
         if (clear) clear.style.display = value ? '' : 'none';
+
+        // Update selected option style
+        sd.querySelectorAll('.gp-sd-option').forEach(o => {
+            o.classList.toggle('selected', value && o.dataset.value == value);
+        });
     }
+
+    // Expose globally for clear functions
+    window.gpSetValue = setValue;
 
     function filterOptions(sd, keyword) {
         const normalized = keyword.trim().toLowerCase();
         const list = sd.querySelector('[data-list]');
+        if (!list) return;
         let empty = true;
         list.querySelectorAll('.gp-sd-option').forEach(opt => {
             const match = opt.dataset.searchText.includes(normalized);
@@ -685,7 +880,7 @@ function simpanGuruPiketBulk(event) {
     }
 
     // Open on trigger click
-    root.addEventListener('click', e => {
+    document.addEventListener('click', e => {
         const trigger = e.target.closest('[data-trigger]');
         if (trigger) {
             const sd = trigger.closest('.gp-sd');
@@ -694,7 +889,7 @@ function simpanGuruPiketBulk(event) {
             if (!wasOpen) openSlot(sd);
             return;
         }
-        // Ignore clicks inside panel (handled separately)
+        // Ignore clicks inside panel search
         if (e.target.closest('.gp-sd-panel')) return;
         // Clear button
         const clearBtn = e.target.closest('[data-clear]');
@@ -709,21 +904,19 @@ function simpanGuruPiketBulk(event) {
         if (!e.target.closest('.gp-sd')) closeAll();
     });
 
-    // Option selection (delegated, works for dynamically appended too)
-    root.addEventListener('click', e => {
+    // Option selection
+    document.addEventListener('click', e => {
         const opt = e.target.closest('.gp-sd-option');
         if (!opt) return;
         const sd = opt.closest('.gp-sd');
         const value = opt.dataset.value;
         const guruName = opt.dataset.guruName;
         setValue(sd, value, guruName);
-        // highlight selected
-        sd.querySelectorAll('.gp-sd-option').forEach(o => o.classList.toggle('selected', o === opt));
         closeSlot(sd);
     });
 
     // Search input
-    root.addEventListener('input', e => {
+    document.addEventListener('input', e => {
         const search = e.target.closest('[data-search]');
         if (search) {
             const sd = search.closest('.gp-sd');
@@ -732,8 +925,10 @@ function simpanGuruPiketBulk(event) {
     });
 
     // Keyboard navigation (Escape to close)
-    root.addEventListener('keydown', e => {
-        if (e.key === 'Escape') closeAll();
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+            closeAll();
+        }
     });
 
     // Mark existing selections as selected on load

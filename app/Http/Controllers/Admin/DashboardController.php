@@ -147,31 +147,78 @@ class DashboardController extends Controller
             ->orderBy('nama_guru')
             ->get();
         $allAdmin = AkunAdmin::where('is_aktif', 1)->orderBy('nama')->get();
+        $piketBulan = (int) $request->get('piket_bulan', date('n'));
+        $piketTahun = (int) $request->get('piket_tahun', date('Y'));
+        if ($piketBulan < 1 || $piketBulan > 12) {
+            $piketBulan = (int) date('n');
+        }
+        if ($piketTahun < 2020 || $piketTahun > 2035) {
+            $piketTahun = (int) date('Y');
+        }
+
         $allGuruPiket = Guru::where('is_admin', 0)
             ->where('is_aktif', 1)
             ->orderBy('nama_guru')
             ->get();
+        $guruNameMap = $allGuruPiket->pluck('nama_guru', 'id_guru')->toArray();
+
+        $firstDayOfMonth = Carbon::createFromDate($piketTahun, $piketBulan, 1)->startOfDay();
+        $lastDayOfMonth = $firstDayOfMonth->copy()->endOfMonth()->startOfDay();
 
         $guruPiketDates = collect();
+        $guruPiketWeeks = [];
         $guruPiketAssignments = [];
-        $guruNameMap = $allGuruPiket->pluck('nama_guru', 'id_guru')->toArray();
-        $hariNames = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
-        $startDate = now()->startOfWeek(Carbon::MONDAY);
+        $hariNames = [
+            1 => 'Senin',
+            2 => 'Selasa',
+            3 => 'Rabu',
+            4 => 'Kamis',
+            5 => 'Jumat',
+        ];
 
-        GuruPiket::whereDate('tanggal', '<', now()->toDateString())->delete();
-        for ($week = 0; $week < 2; $week++) {
-            for ($day = 0; $day < 5; $day++) {
-                $date = $startDate->copy()->addWeeks($week)->addDays($day);
-                $dateStr = $date->toDateString();
-                $guruPiketDates->push([
-                    'hari' => $hariNames[$day],
+        $existingPiket = GuruPiket::whereBetween('tanggal', [$firstDayOfMonth->toDateString(), $lastDayOfMonth->toDateString()])
+            ->get()
+            ->groupBy(fn ($item) => $item->tanggal instanceof Carbon ? $item->tanggal->toDateString() : substr((string) $item->tanggal, 0, 10));
+
+        $currentDate = $firstDayOfMonth->copy();
+        $currentWeekNumber = 1;
+        $currentWeekDays = [];
+
+        while ($currentDate->lte($lastDayOfMonth)) {
+            $dayOfWeek = $currentDate->dayOfWeekIso; // 1 (Senin) .. 7 (Minggu)
+            if ($dayOfWeek <= 5) { // Hanya Senin - Jumat
+                $dateStr = $currentDate->toDateString();
+                $assignedIds = isset($existingPiket[$dateStr]) ? $existingPiket[$dateStr]->pluck('id_guru')->all() : [];
+                $guruPiketAssignments[$dateStr] = $assignedIds;
+
+                $dayInfo = [
+                    'hari' => $hariNames[$dayOfWeek],
+                    'hari_iso' => $dayOfWeek,
                     'tanggal' => $dateStr,
-                    'label' => $hariNames[$day].', '.$date->format('d M Y'),
-                ]);
-                $guruPiketAssignments[$dateStr] = GuruPiket::whereDate('tanggal', $dateStr)
-                    ->pluck('id_guru')
-                    ->all();
+                    'label' => $hariNames[$dayOfWeek].', '.$currentDate->format('d M Y'),
+                    'is_today' => $dateStr === now()->toDateString(),
+                    'is_past' => $currentDate->lt(now()->startOfDay()),
+                ];
+
+                $guruPiketDates->push($dayInfo);
+                $currentWeekDays[] = $dayInfo;
             }
+
+            if ($dayOfWeek === 5 || $currentDate->isSameDay($lastDayOfMonth)) {
+                if (! empty($currentWeekDays)) {
+                    $firstDateInWeek = $currentWeekDays[0]['tanggal'];
+                    $lastDateInWeek = end($currentWeekDays)['tanggal'];
+                    $guruPiketWeeks[] = [
+                        'week_num' => $currentWeekNumber,
+                        'label' => 'Minggu ' . $currentWeekNumber . ' (' . Carbon::parse($firstDateInWeek)->format('d M') . ' – ' . Carbon::parse($lastDateInWeek)->format('d M Y') . ')',
+                        'days' => $currentWeekDays,
+                    ];
+                    $currentWeekNumber++;
+                    $currentWeekDays = [];
+                }
+            }
+
+            $currentDate->addDay();
         }
 
         $allMapel = Mapel::withCount('jadwal')
@@ -404,8 +451,11 @@ class DashboardController extends Controller
             'allAdmin',
             'allGuruPiket',
             'guruPiketDates',
+            'guruPiketWeeks',
             'guruPiketAssignments',
             'guruNameMap',
+            'piketBulan',
+            'piketTahun',
             'allMapel',
             'allJurusan',
             'allJamPelajaran',

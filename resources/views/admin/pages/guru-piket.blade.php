@@ -11,6 +11,176 @@
     }
 @endphp
 
+<style>
+.gp-day-card {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 14px;
+    background: #fafbfc;
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    transition: all 0.2s ease;
+}
+.gp-day-card.is-today {
+    border-color: #f97316;
+    background: #fffaf5;
+    box-shadow: 0 4px 14px rgba(249,115,22,0.12);
+}
+.gp-session-box {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+.gp-sd {
+    position: relative;
+    min-width: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+.gp-sd-trigger {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 4px !important;
+    padding: 6px 8px !important;
+    font-size: 11.5px !important;
+    font-weight: 500 !important;
+    color: #1e293b !important;
+    background: #ffffff !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    text-align: left !important;
+    outline: none !important;
+    transition: all 0.15s ease !important;
+    height: 34px !important;
+}
+.gp-sd-trigger:hover {
+    border-color: #94a3b8 !important;
+    background: #f8fafc !important;
+}
+.gp-sd.open .gp-sd-trigger {
+    border-color: #ea580c !important;
+    box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15) !important;
+    background: #ffffff !important;
+}
+.gp-sd-value {
+    flex: 1 !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    font-size: 11.5px !important;
+    line-height: 1.2 !important;
+}
+.gp-sd-value.empty {
+    color: #94a3b8 !important;
+    font-weight: 400 !important;
+}
+.gp-sd-panel {
+    position: absolute !important;
+    top: calc(100% + 4px) !important;
+    left: 0 !important;
+    min-width: 190px !important;
+    max-width: 250px !important;
+    z-index: 80 !important;
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 10px !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.18), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden !important;
+    display: none;
+}
+.gp-sd.open .gp-sd-panel {
+    display: block !important;
+}
+.gp-sd[data-slot-index="2"] .gp-sd-panel,
+.gp-sd[data-slot-index="5"] .gp-sd-panel {
+    left: auto !important;
+    right: 0 !important;
+}
+.gp-sd-search {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    border: none !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    padding: 8px 10px !important;
+    font-size: 12px !important;
+    outline: none !important;
+}
+.gp-sd-list {
+    max-height: 180px !important;
+    overflow-y: auto !important;
+}
+.gp-sd-option {
+    display: block !important;
+    width: 100% !important;
+    text-align: left !important;
+    border: none !important;
+    background: #ffffff !important;
+    padding: 7px 10px !important;
+    font-size: 12px !important;
+    color: #334155 !important;
+    cursor: pointer !important;
+    border-bottom: 1px solid #f8fafc !important;
+    white-space: normal !important;
+    line-height: 1.35 !important;
+}
+.gp-sd-option:hover {
+    background: #f1f5f9 !important;
+}
+.gp-sd-option.selected {
+    background: #fff7ed !important;
+    color: #c2410c !important;
+    font-weight: 700 !important;
+}
+[data-theme="dark"] .gp-day-card {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+}
+[data-theme="dark"] .gp-session-box {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+[data-theme="dark"] .gp-sd-trigger {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+    color: #f1f5f9 !important;
+}
+[data-theme="dark"] .gp-sd-trigger:hover {
+    background: #1e293b !important;
+}
+[data-theme="dark"] .gp-sd-panel {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+[data-theme="dark"] .gp-sd-search {
+    background: #0f172a !important;
+    border-bottom-color: #334155 !important;
+    color: #f8fafc !important;
+}
+[data-theme="dark"] .gp-sd-option {
+    background: #1e293b !important;
+    border-bottom-color: #334155 !important;
+    color: #cbd5e1 !important;
+}
+[data-theme="dark"] .gp-sd-option:hover {
+    background: #334155 !important;
+}
+[data-theme="dark"] .gp-sd-option.selected {
+    background: #7c2d12 !important;
+    color: #ffedd5 !important;
+}
+</style>
+
 <div class="page-content page-anim" id="page-guru-piket" style="display:none">
     <div class="page-header" style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
         <div>
@@ -93,7 +263,7 @@
                         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:16px">
                             @foreach($week['days'] as $day)
                                 @php($isToday = ($day['is_today'] ?? false))
-                                <div class="gp-day-card" data-date="{{ $day['tanggal'] }}" data-hari-iso="{{ $day['hari_iso'] }}" style="border:1.5px solid {{ $isToday ? '#f97316' : '#e2e8f0' }};border-radius:12px;padding:14px;background:{{ $isToday ? '#fffaf5' : '#fafbfc' }};position:relative;box-shadow:{{ $isToday ? '0 4px 14px rgba(249,115,22,0.12)' : 'none' }}">
+                                <div class="gp-day-card {{ $isToday ? 'is-today' : '' }}" data-date="{{ $day['tanggal'] }}" data-hari-iso="{{ $day['hari_iso'] }}">
                                     {{-- Header Hari --}}
                                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid {{ $isToday ? '#fed7aa' : '#f1f5f9' }}">
                                         <div style="display:flex;align-items:center;gap:7px">
@@ -109,9 +279,9 @@
                                     </div>
 
                                     {{-- Sesi 1: 07.00 - 11.00 (3 Guru) --}}
-                                    <div style="margin-bottom:12px;background:#ffffff;border:1px solid {{ $isToday ? '#fed7aa' : '#e2e8f0' }};border-radius:10px;padding:10px">
+                                    <div class="gp-session-box" style="margin-bottom:12px;border-color:{{ $isToday ? '#fed7aa' : '#e2e8f0' }}">
                                         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-                                            <span style="font-size:11.5px;font-weight:700;color:#0369a1;background:#e0f2fe;padding:2px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:5px">
+                                            <span style="font-size:11px;font-weight:700;color:#0369a1;background:#e0f2fe;padding:2.5px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:5px">
                                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                                                 Sesi 1 (07.00 – 11.00)
                                             </span>
@@ -123,7 +293,7 @@
                                                 <div class="gp-sd" data-slot data-slot-index="{{ $slot }}">
                                                     <input type="hidden" name="assignments[{{ $day['tanggal'] }}][]" value="{{ $selectedId }}">
                                                     <label style="font-size:10px;color:#64748b;display:block;margin-bottom:2px;font-weight:600">Guru {{ $slot + 1 }}</label>
-                                                    <button type="button" class="gp-sd-trigger filter-input" style="padding:5px 6px;font-size:11.5px;" data-trigger>
+                                                    <button type="button" class="gp-sd-trigger" data-trigger>
                                                         <span class="gp-sd-value {{ $selectedId === '' ? 'empty' : '' }}">{{ $selectedId !== '' && isset($guruNameMap[$selectedId]) ? $guruNameMap[$selectedId] : '— Pilih —' }}</span>
                                                         @if($selectedId !== '')
                                                             <span class="gp-sd-clear" role="button" tabindex="-1" data-clear>
@@ -148,9 +318,9 @@
                                     </div>
 
                                     {{-- Sesi 2: 11.00 - Pulang (3 Guru) --}}
-                                    <div style="background:#ffffff;border:1px solid {{ $isToday ? '#fed7aa' : '#e2e8f0' }};border-radius:10px;padding:10px">
+                                    <div class="gp-session-box" style="border-color:{{ $isToday ? '#fed7aa' : '#e2e8f0' }}">
                                         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-                                            <span style="font-size:11.5px;font-weight:700;color:#c2410c;background:#ffedd5;padding:2px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:5px">
+                                            <span style="font-size:11px;font-weight:700;color:#c2410c;background:#ffedd5;padding:2.5px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:5px">
                                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                                                 Sesi 2 (11.00 – Pulang)
                                             </span>
@@ -162,7 +332,7 @@
                                                 <div class="gp-sd" data-slot data-slot-index="{{ $slot }}">
                                                     <input type="hidden" name="assignments[{{ $day['tanggal'] }}][]" value="{{ $selectedId }}">
                                                     <label style="font-size:10px;color:#64748b;display:block;margin-bottom:2px;font-weight:600">Guru {{ $slot + 1 }}</label>
-                                                    <button type="button" class="gp-sd-trigger filter-input" style="padding:5px 6px;font-size:11.5px;" data-trigger>
+                                                    <button type="button" class="gp-sd-trigger" data-trigger>
                                                         <span class="gp-sd-value {{ $selectedId === '' ? 'empty' : '' }}">{{ $selectedId !== '' && isset($guruNameMap[$selectedId]) ? $guruNameMap[$selectedId] : '— Pilih —' }}</span>
                                                         @if($selectedId !== '')
                                                             <span class="gp-sd-clear" role="button" tabindex="-1" data-clear>

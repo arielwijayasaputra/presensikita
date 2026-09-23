@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 22, 2026 at 03:34 AM
+-- Generation Time: Sep 23, 2026 at 02:25 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -3195,7 +3195,14 @@ INSERT INTO `jurnal_kelas` (`id_jurnal`, `id_jadwal`, `id_guru`, `tanggal`, `sta
 (653, 12534, 686, '2026-09-22', 'Hadir', 'selfie-guru/selfie_686_546_1790040462_fF1pA7.png', 'Materi Sesi Guru 2', 2, '2026-09-22 01:27:42', NULL),
 (660, 12544, 692, '2026-09-22', 'Hadir', NULL, 'Materi Jam 1', 0, '2026-09-22 01:27:47', NULL),
 (661, 12545, 692, '2026-09-22', 'Hadir', NULL, 'Materi Jam 2', 1, '2026-09-22 01:27:47', NULL),
-(662, 12546, 692, '2026-09-22', 'Hadir', NULL, 'Materi Jam 1', 1, '2026-09-22 01:27:47', NULL);
+(662, 12546, 692, '2026-09-22', 'Hadir', NULL, 'Materi Jam 1', 1, '2026-09-22 01:27:47', NULL),
+(663, 2034, 86, '2026-09-22', 'Hadir', 'selfie-guru/selfie_86_42_1790037664_nJpi5r.jpeg', 'Pembelajaran Harian', 31, '2026-09-22 02:10:48', NULL),
+(664, 2035, 86, '2026-09-22', 'Hadir', 'selfie-guru/selfie_86_42_1790037664_nJpi5r.jpeg', 'Pembelajaran Harian', 31, '2026-09-22 02:10:48', NULL),
+(665, 2036, 83, '2026-09-22', 'Hadir', 'selfie-guru/selfie_83_42_1790050509_ZfxnN0.jpeg', 'Pembelajaran Harian', 31, '2026-09-22 04:15:09', NULL),
+(666, 2037, 83, '2026-09-22', 'Hadir', 'selfie-guru/selfie_83_42_1790050509_ZfxnN0.jpeg', 'Pembelajaran Harian', 31, '2026-09-22 04:15:09', NULL),
+(667, 2039, 102, '2026-09-22', 'Hadir', 'selfie-guru/selfie_102_42_1790057127_0V0HxS.jpeg', 'Pembelajaran Harian', 31, '2026-09-22 06:05:27', NULL),
+(668, 2038, 83, '2026-09-22', 'Hadir', NULL, 'Pembelajaran Harian', 32, '2026-09-22 06:05:27', NULL),
+(669, 2042, 83, '2026-09-23', 'Hadir', 'selfie-guru/selfie_83_42_1790122494_LkummA.jpeg', 'Pembelajaran Harian', 32, '2026-09-23 00:15:07', NULL);
 
 -- --------------------------------------------------------
 
@@ -3249,7 +3256,12 @@ INSERT INTO `jurnal_siswa_tidak_hadir` (`id_absen`, `id_jurnal`, `id_siswa`, `st
 (529, 649, 3917, 'S', 'Sakit Demam', NULL),
 (530, 651, 3919, 'S', 'Sakit Kepala', NULL),
 (531, 652, 3919, 'S', 'Sakit Kepala', NULL),
-(536, 660, 3925, 'T', 'Masuk Terlambat: Macet parah karena pohon tumbang', NULL);
+(536, 660, 3925, 'T', 'Masuk Terlambat: Macet parah karena pohon tumbang', NULL),
+(538, 663, 1747, 'S', NULL, NULL),
+(539, 664, 1747, 'S', NULL, NULL),
+(540, 665, 1747, 'S', NULL, NULL),
+(541, 666, 1747, 'S', NULL, NULL),
+(542, 667, 1747, 'S', NULL, NULL);
 
 --
 -- Triggers `jurnal_siswa_tidak_hadir`
@@ -6730,13 +6742,13 @@ ALTER TABLE `jam_pelajaran`
 -- AUTO_INCREMENT for table `jurnal_kelas`
 --
 ALTER TABLE `jurnal_kelas`
-  MODIFY `id_jurnal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=663;
+  MODIFY `id_jurnal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=670;
 
 --
 -- AUTO_INCREMENT for table `jurnal_siswa_tidak_hadir`
 --
 ALTER TABLE `jurnal_siswa_tidak_hadir`
-  MODIFY `id_absen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=538;
+  MODIFY `id_absen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=543;
 
 --
 -- AUTO_INCREMENT for table `jurusan`

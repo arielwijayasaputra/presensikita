@@ -107,10 +107,7 @@
             </div>
             <div style="margin-top:18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
                 <div style="font-size:12px;color:#94a3b8">Klik Ubah pada baris yang ingin disesuaikan.</div>
-                <div style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;color:#15803d;font-size:11.5px;font-weight:600">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    Jam Jumat dikelola di halaman Pengaturan Jumat
-                </div>
+
             </div>
         </div>
     </div>

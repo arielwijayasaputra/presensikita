@@ -360,6 +360,8 @@ class DashboardController extends Controller
         $istirahatJumat1Selesai = Pengaturan::get('jam_istirahat_jumat_1_selesai', '09:50');
         $istirahatJumat2Mulai = Pengaturan::get('jam_istirahat_jumat_2_mulai', '11:20');
         $istirahatJumat2Selesai = Pengaturan::get('jam_istirahat_jumat_2_selesai', '13:00');
+        $jadwalMajuSenin = (string) Pengaturan::get('jadwal_maju_senin', '0') === '1';
+        $jadwalMajuJumat = (string) Pengaturan::get('jadwal_maju_jumat', '0') === '1';
 
         $waGatewayAktif = Pengaturan::get('wa_gateway_aktif', '1');
         $waGatewayEndpoint = Pengaturan::get('wa_gateway_endpoint', 'http://127.0.0.1:3000/send-message');
@@ -478,6 +480,7 @@ class DashboardController extends Controller
             'izinEditJurnal',
             'istirahat1Mulai', 'istirahat1Selesai', 'istirahat2Mulai', 'istirahat2Selesai',
             'istirahatJumat1Mulai', 'istirahatJumat1Selesai', 'istirahatJumat2Mulai', 'istirahatJumat2Selesai',
+            'jadwalMajuSenin', 'jadwalMajuJumat',
             'waGatewayAktif', 'waGatewayEndpoint', 'waPublicUrl', 'waNomorBot', 'waNomorWakaKesiswaan', 'waNomorWakaSdm', 'waNomorKepsek', 'waBotStatus',
             'ringkasanNk',
             'alumniTahunan',

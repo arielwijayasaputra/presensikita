@@ -15,7 +15,7 @@
                     <button type="button" class="btn-secondary jam-day-tab" data-day="Rabu" onclick="pilihHariJam('Rabu', this)" style="border-radius:8px;padding:8px 12px;font-size:12px">Rabu</button>
                     <button type="button" class="btn-secondary jam-day-tab" data-day="Kamis" onclick="pilihHariJam('Kamis', this)" style="border-radius:8px;padding:8px 12px;font-size:12px">Kamis</button>
                     <button type="button" class="btn-secondary jam-day-tab" data-day="Jumat" onclick="pilihHariJam('Jumat', this)" style="border-radius:8px;padding:8px 12px;font-size:12px">Jumat</button>
-                    <button type="button" class="btn-secondary jam-day-tab" data-day="Sabtu" onclick="pilihHariJam('Sabtu', this)" style="border-radius:8px;padding:8px 12px;font-size:12px">Sabtu</button>
+
                 </div>
                 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
                     <button type="button" class="btn-primary" onclick="bukaModalTambahJam()" style="border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;display:inline-flex;align-items:center;gap:6px">
@@ -28,6 +28,57 @@
                     </button>
                 </div>
             </div>
+
+            <!-- Saklar Khusus Kemajuan Jadwal Hari Senin -->
+            <div id="kemajuan-jadwal-senin-banner" class="kemajuan-jadwal-card" style="margin-bottom:16px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+                <div style="display:flex;align-items:center;gap:12px;max-width:580px">
+                    <div class="kemajuan-icon-wrap" style="width:38px;height:38px;border-radius:10px;background:#eff6ff;color:#2563eb;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    </div>
+                    <div>
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <span style="font-size:13.5px;font-weight:700;color:#0f172a">Kemajuan Jadwal Hari Senin</span>
+                            <span id="badge-status-senin" class="status-badge {{ !empty($jadwalMajuSenin) ? 'badge-aktif' : 'badge-mati' }}">{{ !empty($jadwalMajuSenin) ? 'Aktif' : 'Nonaktif' }}</span>
+                        </div>
+                        <div style="font-size:12px;color:#64748b;margin-top:2px;line-height:1.4">
+                            <strong>Saat Aktif:</strong> Jam Upacara ditiadakan & jadwal mapel setelah upacara otomatis <em>maju</em> mengisi Jam ke-1.<br>
+                            <strong>Saat Nonaktif:</strong> Jadwal normal dengan upacara pada Jam ke-1.
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px">
+                    <label class="switch-toggle" style="position:relative;display:inline-block;width:48px;height:26px">
+                        <input type="checkbox" id="toggle-kemajuan-senin" {{ !empty($jadwalMajuSenin) ? 'checked' : '' }} onchange="toggleKemajuanJadwal('Senin', this.checked)">
+                        <span class="switch-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Saklar Khusus Kemajuan Jadwal Hari Jumat -->
+            <div id="kemajuan-jadwal-jumat-banner" class="kemajuan-jadwal-card" style="margin-bottom:16px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:14px 18px;display:none;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+                <div style="display:flex;align-items:center;gap:12px;max-width:580px">
+                    <div class="kemajuan-icon-wrap" style="width:38px;height:38px;border-radius:10px;background:#f0fdf4;color:#16a34a;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    </div>
+                    <div>
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <span style="font-size:13.5px;font-weight:700;color:#0f172a">Kemajuan Jadwal Hari Jumat</span>
+                            <span id="badge-status-jumat" class="status-badge {{ !empty($jadwalMajuJumat) ? 'badge-aktif' : 'badge-mati' }}">{{ !empty($jadwalMajuJumat) ? 'Aktif' : 'Nonaktif' }}</span>
+                        </div>
+                        <div style="font-size:12px;color:#64748b;margin-top:2px;line-height:1.4">
+                            <strong>Saat Aktif:</strong> Jam Pembiasaan ditiadakan & jadwal mapel setelah pembiasaan otomatis <em>maju</em> mengisi Jam ke-1 (101).<br>
+                            <strong>Saat Nonaktif:</strong> Jadwal normal dengan pembiasaan pada Jam ke-1 (101).
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px">
+                    <label class="switch-toggle" style="position:relative;display:inline-block;width:48px;height:26px">
+                        <input type="checkbox" id="toggle-kemajuan-jumat" {{ !empty($jadwalMajuJumat) ? 'checked' : '' }} onchange="toggleKemajuanJadwal('Jumat', this.checked)">
+                        <span class="switch-slider"></span>
+                    </label>
+                </div>
+            </div>
+
             <div style="overflow-x:auto">
                 <table class="data-table" style="min-width:520px">
                     <thead><tr><th>Jam Ke-</th><th>Mulai</th><th>Selesai</th><th>Aksi</th></tr></thead>
@@ -340,6 +391,98 @@
     border-color: #334155 !important;
     color: #cbd5e1 !important;
 }
+
+/* Switch toggle styles */
+.switch-toggle {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 26px;
+    cursor: pointer;
+}
+.switch-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+.switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #cbd5e1;
+    transition: .25s ease;
+    border-radius: 26px;
+}
+.switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .25s ease;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.switch-toggle input:checked + .switch-slider {
+    background-color: #2563eb;
+}
+.switch-toggle input:checked + .switch-slider:before {
+    transform: translateX(22px);
+}
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 6px;
+    line-height: 1.2;
+}
+.badge-aktif {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #86efac;
+}
+.badge-mati {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+}
+
+/* Dark theme support for Kemajuan Jadwal */
+[data-theme="dark"] .kemajuan-jadwal-card {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+[data-theme="dark"] .kemajuan-icon-wrap {
+    background: rgba(37,99,235,0.2) !important;
+    color: #60a5fa !important;
+}
+[data-theme="dark"] .kemajuan-jadwal-card span {
+    color: #f1f5f9 !important;
+}
+[data-theme="dark"] .kemajuan-jadwal-card div {
+    color: #94a3b8 !important;
+}
+[data-theme="dark"] .switch-slider {
+    background-color: #475569;
+}
+[data-theme="dark"] .switch-toggle input:checked + .switch-slider {
+    background-color: #3b82f6;
+}
+[data-theme="dark"] .badge-aktif {
+    background: rgba(22,163,74,0.2) !important;
+    color: #4ade80 !important;
+    border-color: rgba(34,197,94,0.3) !important;
+}
+[data-theme="dark"] .badge-mati {
+    background: #334155 !important;
+    color: #94a3b8 !important;
+    border-color: #475569 !important;
+}
 </style>
 
 <script>
@@ -386,7 +529,7 @@ async function ubahWaktuJam(type, idOrDay, nomorOrLabel, labelOrMulai, mulaiOrSe
             </div>
         `;
     } else {
-        const weekdays = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Sabtu'];
+        const weekdays = ['Senin', 'Selasa', 'Rabu', 'Kamis'];
         hariFieldHtml = `
             <div class="jam-popup-field" style="margin-bottom:0">
                 <div class="jam-days-header">
@@ -534,7 +677,7 @@ async function bukaModalTambahJam() {
     const isFriday = activeTabDay === 'Jumat';
     const calc = hitungNextJamUntukHari(activeTabDay);
 
-    const weekdays = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Sabtu'];
+    const weekdays = ['Senin', 'Selasa', 'Rabu', 'Kamis'];
 
     let hariSectionHtml = '';
     if (isFriday) {
@@ -625,7 +768,7 @@ async function bukaModalTambahJam() {
                     <div class="jam-popup-field">
                         <label for="popup-tambah-hari-istirahat">Terapkan ke</label>
                         <select id="popup-tambah-hari-istirahat" class="filter-select" style="width:100%;padding:10px 12px;border-radius:10px;font-size:13.5px">
-                            <option value="weekday" ${!isFriday ? 'selected' : ''}>Hari Biasa (Senin - Sabtu)</option>
+                            <option value="weekday" ${!isFriday ? 'selected' : ''}>Hari Biasa (Senin - Kamis)</option>
                             <option value="friday" ${isFriday ? 'selected' : ''}>Khusus Hari Jumat</option>
                         </select>
                     </div>
@@ -847,6 +990,52 @@ function hapusJamHariAktif() {
     });
 }
 
+async function toggleKemajuanJadwal(hari, isChecked) {
+    const badge = document.getElementById(`badge-status-${hari.toLowerCase()}`);
+    const checkbox = document.getElementById(`toggle-kemajuan-${hari.toLowerCase()}`);
+    
+    try {
+        const response = await fetch('/jam-pelajaran/kemajuan-jadwal', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                hari: hari,
+                status: isChecked ? 1 : 0
+            })
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || 'Gagal mengubah pengaturan kemajuan jadwal.');
+
+        if (badge) {
+            badge.textContent = isChecked ? 'Aktif' : 'Nonaktif';
+            badge.className = `status-badge ${isChecked ? 'badge-aktif' : 'badge-mati'}`;
+        }
+
+        Swal.fire({
+            icon: 'success',
+            title: isChecked ? `Kemajuan Jadwal ${hari} Aktif` : `Jadwal ${hari} Normal`,
+            text: data.message,
+            timer: 2000,
+            showConfirmButton: false,
+            toast: true,
+            position: 'top-end'
+        });
+    } catch (error) {
+        if (checkbox) checkbox.checked = !isChecked;
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal',
+            text: error.message,
+            confirmButtonColor: '#dc2626'
+        });
+    }
+}
+
 function pilihHariJam(day, button) {
     document.querySelectorAll('.jam-row').forEach(row => row.style.display = row.dataset.day === day || (day !== 'Jumat' && row.dataset.day === 'all-weekday') ? '' : 'none');
     document.querySelectorAll('.jam-day-tab').forEach(tab => {
@@ -857,6 +1046,12 @@ function pilihHariJam(day, button) {
     button.classList.add('active');
     button.classList.remove('btn-secondary');
     button.classList.add('btn-primary');
+
+    // Tampilkan saklar kemajuan jadwal sesuai tab hari yang aktif
+    const bannerSenin = document.getElementById('kemajuan-jadwal-senin-banner');
+    const bannerJumat = document.getElementById('kemajuan-jadwal-jumat-banner');
+    if (bannerSenin) bannerSenin.style.display = (day === 'Senin') ? 'flex' : 'none';
+    if (bannerJumat) bannerJumat.style.display = (day === 'Jumat') ? 'flex' : 'none';
 }
 
 document.addEventListener('DOMContentLoaded', () => {

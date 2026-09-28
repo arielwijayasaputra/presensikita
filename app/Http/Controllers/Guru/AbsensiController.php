@@ -16,6 +16,7 @@ use App\Models\Pengaturan;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
 use App\Services\AbsensiService;
+use App\Services\JadwalService;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -55,9 +56,11 @@ class AbsensiController extends Controller
             ->whereNull('mapel.deleted_at')
             ->where('jadwal_mengajar.id_guru', $guru->id_guru)
             ->where('jadwal_mengajar.hari', $hariIni)
-            ->select('jadwal_mengajar.id_jadwal', 'jadwal_mengajar.id_kelas', 'kelas.nama_kelas', 'mapel.nama_mapel', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
+            ->select('jadwal_mengajar.id_jadwal', 'jadwal_mengajar.id_kelas', 'kelas.nama_kelas', 'mapel.nama_mapel', 'jam_pelajaran.id_jam', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
             ->orderBy('jam_pelajaran.jam_ke')
             ->get();
+
+        $jadwalMengajarHariIni = JadwalService::applyJadwalMaju($jadwalMengajarHariIni, $hariIni);
 
         $jurnalHariIniMap = JurnalKelas::whereIn('id_jadwal', $jadwalMengajarHariIni->pluck('id_jadwal'))
             ->whereDate('tanggal', now()->toDateString())
@@ -280,9 +283,11 @@ class AbsensiController extends Controller
             ->whereNull('mapel.deleted_at')
             ->where('jadwal_mengajar.id_guru', $guruId)
             ->where('jadwal_mengajar.hari', $hariIni)
-            ->select('jadwal_mengajar.id_jadwal', 'jadwal_mengajar.id_kelas', 'kelas.nama_kelas', 'mapel.nama_mapel', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
+            ->select('jadwal_mengajar.id_jadwal', 'jadwal_mengajar.id_kelas', 'kelas.nama_kelas', 'mapel.nama_mapel', 'jam_pelajaran.id_jam', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
             ->orderBy('jam_pelajaran.jam_ke')
             ->get();
+
+        $allJadwalGuruHariIni = JadwalService::applyJadwalMaju($allJadwalGuruHariIni, $hariIni);
 
         $isRealtimeMode = Pengaturan::get('sistem_absensi', 'Absensi Realtime & Otomatis Rekap') === 'Absensi Realtime & Otomatis Rekap';
         $izinEdit = (string) Pengaturan::get('izin_edit_jurnal', '0') === '1';
@@ -429,9 +434,11 @@ class AbsensiController extends Controller
             ->where('jadwal_mengajar.id_guru', $guruId)
             ->where('jadwal_mengajar.id_kelas', $kelasId)
             ->where('jadwal_mengajar.hari', $hariIni)
-            ->select('jadwal_mengajar.id_jadwal', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
+            ->select('jadwal_mengajar.id_jadwal', 'jadwal_mengajar.id_kelas', 'jam_pelajaran.id_jam', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
             ->orderBy('jam_pelajaran.jam_ke')
             ->get();
+
+        $jadwalHariIni = JadwalService::applyJadwalMaju($jadwalHariIni, $hariIni);
 
         $jurnal = null;
         if ($jadwalHariIni->isNotEmpty()) {
@@ -585,9 +592,11 @@ class AbsensiController extends Controller
                 ->where('jadwal_mengajar.id_guru', $idGuru)
                 ->where('jadwal_mengajar.id_kelas', $kelasId)
                 ->where('jadwal_mengajar.hari', $hariIni)
-                ->select('jadwal_mengajar.id_jadwal', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
+                ->select('jadwal_mengajar.id_jadwal', 'jadwal_mengajar.id_kelas', 'jam_pelajaran.id_jam', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
                 ->orderBy('jam_pelajaran.jam_ke')
                 ->get();
+
+            $jadwalGuruHariIni = JadwalService::applyJadwalMaju($jadwalGuruHariIni, $hariIni);
 
             if ($jadwalGuruHariIni->isEmpty()) {
                 DB::rollBack();
@@ -873,9 +882,11 @@ class AbsensiController extends Controller
             ->where('jadwal_mengajar.hari', $todayName)
             ->whereNull('jadwal_mengajar.deleted_at')
             ->whereNull('jam_pelajaran.deleted_at')
-            ->select('jadwal_mengajar.id_kelas', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
+            ->select('jadwal_mengajar.id_kelas', 'jam_pelajaran.id_jam', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
             ->orderBy('jam_pelajaran.jam_ke')
             ->get();
+
+        $jadwals = JadwalService::applyJadwalMaju($jadwals, $todayName);
 
         foreach ($jadwals->groupBy('id_kelas') as $kelasId => $items) {
             $blocks = self::groupContiguousBlocks($items->sortBy('jam_ke'));

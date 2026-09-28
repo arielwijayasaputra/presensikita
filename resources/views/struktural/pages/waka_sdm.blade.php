@@ -97,7 +97,7 @@
                     @forelse($sdmJadwal as $item)
                         <tr>
                             <td><strong>Ke-{{ $item->jam_ke >= 100 ? $item->jam_ke - 100 : $item->jam_ke }}</strong></td>
-                            <td style="font-size:12.5px; color:#64748b">{{ $item->jam_mulai }} - {{ $item->jam_selesai }}</td>
+                            <td style="font-size:12.5px; color:#64748b">{{ substr($item->jam_mulai, 0, 5) }} - {{ substr($item->jam_selesai, 0, 5) }}</td>
                             <td><strong style="color:#0f172a">{{ $item->nama_guru }}</strong></td>
                             <td>{{ $item->nama_mapel }}</td>
                             <td><span class="badge badge-secondary" style="font-size:12px">{{ $item->nama_kelas }}</span></td>

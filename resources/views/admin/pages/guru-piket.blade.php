@@ -934,7 +934,7 @@ function bukaUploadCsvGuruPiketModal() {
                         • <em>Kolom Koordinator dan Piket Waka diabaikan secara otomatis.</em>
                     </div>
                 </div>
-                <div style="position:relative;border:2px dashed #93c5fd;border-radius:12px;padding:24px 16px;text-align:center;cursor:pointer;transition:all 0.2s;background:#f8fbff" id="piket-csv-dropzone"
+                <div style="position:relative;padding:24px 16px;transition:all 0.2s" class="drop-zone" id="piket-csv-dropzone"
                      onclick="document.getElementById('piket-csv-file-input').click()">
                     <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.7" style="margin:0 auto 8px;display:block"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                     <div style="font-size:13.5px;color:#1e293b;font-weight:700">Tarik file CSV/Excel ke sini</div>
@@ -960,14 +960,14 @@ function bukaUploadCsvGuruPiketModal() {
                 selectedFile = file;
                 filenameEl.textContent = '📄 ' + file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
                 filenameEl.style.display = 'block';
-                dropzone.style.borderColor = '#22c55e';
-                dropzone.style.background = '#f0fdf4';
+                dropzone.classList.remove('is-drag');
+                dropzone.classList.add('has-file');
                 confirmBtn.disabled = false;
             };
 
             fileInput.onchange = () => handleFile(fileInput.files[0]);
-            dropzone.ondragover = e => { e.preventDefault(); dropzone.style.borderColor = '#2563eb'; dropzone.style.background = '#eff6ff'; };
-            dropzone.ondragleave = () => { dropzone.style.borderColor = selectedFile ? '#22c55e' : '#93c5fd'; dropzone.style.background = selectedFile ? '#f0fdf4' : '#f8fbff'; };
+            dropzone.ondragover = e => { e.preventDefault(); dropzone.classList.add('is-drag'); dropzone.classList.remove('has-file'); };
+            dropzone.ondragleave = () => { dropzone.classList.remove('is-drag'); dropzone.classList.toggle('has-file', !!selectedFile); };
             dropzone.ondrop = e => { e.preventDefault(); handleFile(e.dataTransfer.files[0]); };
         },
         preConfirm: () => {

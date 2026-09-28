@@ -66,8 +66,8 @@
                             <span id="badge-status-jumat" class="status-badge {{ !empty($jadwalMajuJumat) ? 'badge-aktif' : 'badge-mati' }}">{{ !empty($jadwalMajuJumat) ? 'Aktif' : 'Nonaktif' }}</span>
                         </div>
                         <div style="font-size:12px;color:#64748b;margin-top:2px;line-height:1.4">
-                            <strong>Saat Aktif:</strong> Jam Pembiasaan ditiadakan & jadwal mapel setelah pembiasaan otomatis <em>maju</em> mengisi Jam ke-1 (101).<br>
-                            <strong>Saat Nonaktif:</strong> Jadwal normal dengan pembiasaan pada Jam ke-1 (101).
+                            <strong>Saat Aktif:</strong> Jam Pembiasaan ditiadakan & jadwal mapel setelah pembiasaan otomatis <em>maju</em> mengisi Jam ke-1.<br>
+                            <strong>Saat Nonaktif:</strong> Jadwal normal dengan pembiasaan pada Jam ke-1.
                         </div>
                     </div>
                 </div>

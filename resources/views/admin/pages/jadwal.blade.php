@@ -16,8 +16,7 @@
             <div style="font-size:30px;font-weight:800;color:#1d4ed8;margin-top:4px">{{ $totalJadwalAktif }}</div>
             <div style="font-size:12px;color:#64748b">Jadwal yang tampil dan digunakan</div>
         </div>
-        <button type="button" onclick="bukaModalJadwalKosong()" class="card" style="flex:1;min-width:220px;padding:18px 20px;border:0;border-left:5px solid #f59e0b;text-align:left;cursor:pointer;background:#fff">
-            <div style="font-size:12px;color:#64748b;font-weight:700;text-transform:uppercase">Belum Ada Guru</div>
+        <button type="button" onclick="bukaModalJadwalKosong()" class="card" style="flex:1;min-width:220px;padding:18px 20px;border:0;border-left:5px solid #f59e0b;text-align:left;cursor:pointer;background: var(--input-bg);;color:#64748b;font-weight:700;text-transform:uppercase">Belum Ada Guru</div>
             <div style="font-size:30px;font-weight:800;color:#b45309;margin-top:4px">{{ $totalJadwalTanpaGuru }}</div>
             <div style="font-size:12px;color:#64748b">Klik untuk melihat jadwal tanpa guru</div>
         </button>

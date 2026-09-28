@@ -29,7 +29,7 @@
         <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px" id="kelas-summary-grid">
 
             {{-- Total Kelas --}}
-            <div class="kelas-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)">
+            <div class="kelas-summary-card" style="background: var(--input-bg);;border:1px solid #e2e8f0;border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)">
                 <div style="width:46px;height:46px;background:#eff6ff;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                 </div>
@@ -42,7 +42,7 @@
 
             {{-- Total Siswa --}}
             @php $totalSiswaAll = $allKelas->sum('siswa_count'); @endphp
-            <div class="kelas-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)">
+            <div class="kelas-summary-card" style="background: var(--input-bg);;border:1px solid #e2e8f0;border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)">
                 <div style="width:46px;height:46px;background:#f0fdf4;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 </div>
@@ -55,7 +55,7 @@
 
             {{-- Total Wali Kelas --}}
             @php $totalWali = $allKelas->pluck('id_wali_kelas')->filter()->unique()->count(); @endphp
-            <div class="kelas-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)">
+            <div class="kelas-summary-card" style="background: var(--input-bg);;border:1px solid #e2e8f0;border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)">
                 <div style="width:46px;height:46px;background:#fffbeb;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </div>
@@ -67,7 +67,7 @@
             </div>
 
             {{-- Kelas Aktif --}}
-            <div class="kelas-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)">
+            <div class="kelas-summary-card" style="background: var(--input-bg);;border:1px solid #e2e8f0;border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)">
                 <div style="width:46px;height:46px;background:#f5f3ff;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 </div>
@@ -79,7 +79,7 @@
             </div>
 
             {{-- Kelas Nonaktif --}}
-            <div class="kelas-summary-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)">
+            <div class="kelas-summary-card" style="background: var(--input-bg);;border:1px solid #e2e8f0;border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)">
                 <div style="width:46px;height:46px;background:#fff1f2;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e11d48" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                 </div>
@@ -269,13 +269,13 @@
 #page-data-kelas tbody button:hover { opacity: 0.8; transform: scale(1.07); }
 .kelas-page-btn {
     min-width: 32px; height: 32px; padding: 0 8px;
-    border: 1px solid #e2e8f0; background: #fff; border-radius: 6px;
+    border: 1px solid #e2e8f0; background: var(--input-bg);; border-radius: 6px;
     font-size: 12.5px; font-weight: 600; color: #64748b; cursor: pointer;
     font-family: inherit; transition: all 0.15s;
     display: inline-flex; align-items: center; justify-content: center;
 }
 .kelas-page-btn:hover:not(:disabled) { background: #f1f5f9; color: #1e293b; }
-.kelas-page-btn.active { background: #1e293b; border-color: #1e293b; color: #fff; }
+.kelas-page-btn.active { background: #1e293b; border-color: #1e293b; color: inherit;; }
 .kelas-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 @media (max-width: 1100px) {
     #page-data-kelas [style*="grid-template-columns:repeat(5"] { grid-template-columns: repeat(3,1fr) !important; }
@@ -596,7 +596,7 @@ function lihatSiswaKelasModal(id, namaKelas, waliKelas) {
                                     </div>
                                 </div>
                                 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-                                    <span style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #cbd5e1;color:#1e293b;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:800;box-shadow:0 1px 2px rgba(0,0,0,0.04)">
+                                    <span style="display:inline-flex;align-items:center;gap:6px;background: var(--input-bg);;border:1px solid #cbd5e1;color:#1e293b;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:800;box-shadow:0 1px 2px rgba(0,0,0,0.04)">
                                         <span style="width:7px;height:7px;background:#3b82f6;border-radius:50%"></span>
                                         Total: ${total} Siswa
                                     </span>
@@ -613,7 +613,7 @@ function lihatSiswaKelasModal(id, namaKelas, waliKelas) {
                             ${total > 0 ? `
                             <div style="position:relative;margin-bottom:12px">
                                 <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                                <input type="text" id="modal-cari-siswa" placeholder="Cari berdasarkan nama lengkap atau NISN..." oninput="filterModalSiswaList(this.value)" style="width:100%;padding:9px 12px 9px 36px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:13px;outline:none;box-sizing:border-box;background:#fff;transition:border-color 0.2s, box-shadow 0.2s;">
+                                <input type="text" id="modal-cari-siswa" placeholder="Cari berdasarkan nama lengkap atau NISN..." oninput="filterModalSiswaList(this.value)" style="width:100%;padding:9px 12px 9px 36px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:13px;outline:none;box-sizing:border-box;background: var(--input-bg);;transition:border-color 0.2s, box-shadow 0.2s;">
                             </div>
                             ` : ''}
                         </div>

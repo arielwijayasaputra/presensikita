@@ -22,7 +22,7 @@
     {{-- ── Stat Cards Ringkasan ── --}}
     <div class="stat-cards" style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:22px">
         {{-- Total --}}
-        <div class="stat-card" style="background:#fff;border:1px solid #e2e8f0;border-radius:var(--radius);padding:16px;display:flex;align-items:center;gap:14px">
+        <div class="stat-card" style="background: var(--input-bg);;border:1px solid #e2e8f0;border-radius:var(--radius);padding:16px;display:flex;align-items:center;gap:14px">
             <div style="width:44px;height:44px;background:#f1f5f9;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#475569;flex-shrink:0">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             </div>
@@ -83,7 +83,7 @@
     </div>
 
     {{-- ── Filter & Search Bar ── --}}
-    <div class="card" style="background:#fff;border-radius:var(--radius);border:1px solid #e2e8f0;padding:16px 20px;margin-bottom:20px">
+    <div class="card" style="background: var(--input-bg);;border-radius:var(--radius);border:1px solid #e2e8f0;padding:16px 20px;margin-bottom:20px">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px">
             {{-- Status Tabs --}}
             <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
@@ -116,7 +116,7 @@
     </div>
 
     {{-- ── Main Table ── --}}
-    <div class="table-card" style="background:#fff;border-radius:var(--radius);border:1px solid #e2e8f0;overflow:hidden">
+    <div class="table-card" style="background: var(--input-bg);;border-radius:var(--radius);border:1px solid #e2e8f0;overflow:hidden">
         <table id="tabel-laporan-masuk" style="width:100%;border-collapse:collapse;text-align:left">
             <thead>
                 <tr style="background:#f8fafc;border-bottom:1px solid #e2e8f0">
@@ -313,7 +313,7 @@
                         <div style="font-size:12px;color:#64748b;margin-top:2px"><strong>Waktu:</strong> ${tanggal}</div>
                     </div>
                     <div style="font-weight:700;color:#1e293b;margin-bottom:4px">Rincian Laporan:</div>
-                    <div style="background:#fff;border:1px solid #cbd5e1;padding:12px;border-radius:10px;white-space:pre-wrap;max-height:260px;overflow-y:auto">${isi}</div>
+                    <div style="background: var(--input-bg);;border:1px solid #cbd5e1;padding:12px;border-radius:10px;white-space:pre-wrap;max-height:260px;overflow-y:auto">${isi}</div>
                 </div>
             `,
             confirmButtonText: 'Tutup',

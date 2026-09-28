@@ -46,7 +46,7 @@
         .left-hero {
             background: linear-gradient(155deg, #0a1628 0%, #102150 40%, #0f2a60 70%, #0a1e4f 100%);
             padding: 5% 6%;
-            color: #fff;
+            color: inherit;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -105,14 +105,14 @@
         .brand-header { display: flex; align-items: center; gap: 13px; margin-bottom: auto; }
         .brand-icon-box {
             width: 48px; height: 48px;
-            background: #fff;
+         background: var(--input-bg)fff;
             border: 1.5px solid rgba(255,255,255,0.35);
             border-radius: 14px;
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
             box-shadow: 0 4px 16px rgba(59,130,246,0.2);
         }
-        .brand-title { font-size: clamp(17px,2vw,22px); font-weight: 800; color: #fff; letter-spacing: -0.01em; }
+        .brand-title { font-size: clamp(17px,2vw,22px); font-weight: 80color: inheritfff; letter-spacing: -0.01em; }
         .brand-sub { font-size: clamp(10px,1.1vw,12.5px); color: rgba(255,255,255,0.5); margin-top: 2px; }
 
         /* Hero body */
@@ -143,7 +143,7 @@
             line-height: 1.2;
             letter-spacing: -0.02em;
             margin-bottom: 14px;
-            color: #fff;
+      color: inherit: #fff;
         }
         .hero-title .accent {
             background: linear-gradient(90deg, #60a5fa, #818cf8);
@@ -199,8 +199,7 @@
 
         .form-card {
             width: 100%;
-            max-width: 420px;
-            background: #fff;
+            max-width:background: var(--input-bg)    background: #fff;
             border-radius: 12px;
             padding: 36px 36px 32px;
             box-shadow: 0 4px 32px rgba(15,40,100,0.09), 0 1px 4px rgba(15,40,100,0.05);
@@ -233,7 +232,7 @@
         .role-arrow {
             width: 42px; height: 42px;
             border-radius: 10px;
-            border: 1.5px solid #cbd5e1;
+            border: 1.background: var(--input-bg)1;
             background: #fff;
             color: #4d6080;
             cursor: pointer;
@@ -286,13 +285,13 @@
             display: flex; align-items: center; justify-content: center;
             transition: all 0.25s;
         }
-        .role-card.active .role-card-icon-admin     { background: linear-gradient(135deg, #1d4ed8, #3b82f6); color: #fff; }
-        .role-card.active .role-card-icon-guru      { background: linear-gradient(135deg, #0e7490, #06b6d4); color: #fff; }
-        .role-card.active .role-card-icon-gurupiket { background: linear-gradient(135deg, #0891b2, #22d3ee); color: #fff; }
-        .role-card.active .role-card-icon-walikelas { background: linear-gradient(135deg, #059669, #34d399); color: #fff; }
-        .role-card.active .role-card-icon-satpam    { background: linear-gradient(135deg, #334155, #64748b); color: #fff; }
-        .role-card.active .role-card-icon-wakasdm   { background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff; }
-        .role-card.active .role-card-icon-wali      { background: linear-gradient(135deg, #7c3aed, #a78bfa); color: #fff; }
+        .role-card.active .role-card-icon-admin     { background: linear-gradient(135deg, #1d4ed8, #color: inheritlor: #fff; }
+        .role-card.active .role-card-icon-guru      { background: linear-gradient(135deg, #0e7490color: inherit color: #fff; }
+        .role-card.active .role-card-icon-gurupiket { background: linear-gradient(135deg, #089color: inherite); color: #fff; }
+        .role-card.active .role-card-icon-walikelas { background: linear-gradient(135deg, #color: inheritd399); color: #fff; }
+        .role-card.active .role-card-icon-satpam    { background: linear-gradient(135degcolor: inherit#64748b); color: #fff; }
+        .role-card.active .role-card-icon-wakasdm   { background: linear-gradient(135color: inherit6, #f59e0b); color: #fff; }
+        .role-card.active .role-card-icon-wali      { background: linear-gradient(color: inherit3aed, #a78bfa); color: #fff; }
         .role-card-name { font-size: 14px; font-weight: 700; color: #1a2a45; }
 
         .role-hint {
@@ -311,7 +310,7 @@
             min-width: 20px;
             height: 20px;
             padding: 0 4px;
-            border: 1px solid #d0d9ea;
+            border: background: var(--input-bg)a;
             border-radius: 6px;
             background: #fff;
             color: #4d6080;
@@ -368,7 +367,7 @@
             padding: 10px 14px 10px 42px;
             border: 1.5px solid #cbd5e1;
             border-radius: 10px;
-            font-size: clamp(12px,1.2vw,14px);
+            fbackground: var(--input-bg)12px,1.2vw,14px);
             color: #1a2a45;
             background: #fff;
             outline: none;
@@ -376,7 +375,7 @@
             transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
         }
         .form-input::placeholder { color: #94a3b8; }
-        .form-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.12); background: #fff; }
+        .fbackground: var(--input-bg){ border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.12); background: #fff; }
         .form-select {
             appearance: none;
             -webkit-appearance: none;
@@ -401,7 +400,7 @@
         .btn-submit {
             width: 100%;
             height: clamp(42px,4.5vw,50px);
-            border: none; border-radius: 10px;
+            border: none; borcolor: inherit 10px;
             color: #fff;
             font-size: clamp(13px,1.3vw,15px);
             font-weight: 700;
@@ -582,7 +581,7 @@
             border-radius: 50%;
             background: linear-gradient(160deg, #38bdf8, #1d4ed8);
             border: 2.5px solid rgba(255,255,255,0.9);
-            display: flex; align-items: center; justify-content: center;
+            display: flex; align-items: center; justcolor: inherit: center;
             color: #fff;
             box-shadow: 0 0 22px rgba(56,189,248,0.65), 0 6px 18px rgba(0,0,0,0.35);
             animation: counterOrbitSpin 18s linear infinite;
@@ -605,7 +604,7 @@
             margin-top: clamp(20px,3vw,34px);
             font-size: clamp(34px, 4.6vw, 58px);
             font-weight: 800;
-            letter-spacing: -0.02em;
+            lcolor: inheritng: -0.02em;
             color: #fff;
             text-shadow: 0 4px 30px rgba(59,130,246,0.55);
         }
@@ -627,8 +626,7 @@
             border-radius: 12px;
             padding: 7px 13px;
             display: flex;
-            align-items: center;
-            gap: 9px;
+            align-items: cencolor: inherit      gap: 9px;
             color: #fff;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.28), 0 0 16px rgba(16, 185, 129, 0.12);
             z-index: 5;
@@ -647,7 +645,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradiecolor: inherit#10b981, #059669);
             color: #fff;
             box-shadow: 0 3px 10px rgba(16, 185, 129, 0.4);
         }
@@ -656,8 +654,7 @@
             height: 15px;
         }
         .float-badge-title {
-            font-size: 11.5px;
-            font-weight: 700;
+            font-size: 11.5pcolor: inherit font-weight: 700;
             color: #ffffff;
             line-height: 1.2;
             display: flex;
@@ -701,7 +698,7 @@
         .form-input {
             height: 50px;
             border-radius: 12px;
-            border: 1.5px solid #e2e8f2;
+ background: var(--input-bg)r: 1.5px solid #e2e8f2;
             background: #f8fafd;
         }
         .form-input:focus { background: #fff; border-color: #2563eb; box-shadow: 0 0 0 4px rgba(37,99,235,0.10); }
@@ -977,7 +974,7 @@
             box-shadow: 0 8px 24px rgba(29, 78, 216, 0.6);
         }
 
-        [data-theme="dark"] .illus-title {
+        [dcolor: inheritk"] .illus-title {
             color: #ffffff;
             text-shadow: 0 4px 30px rgba(59, 130, 246, 0.65);
         }

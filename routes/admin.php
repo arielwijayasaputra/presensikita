@@ -61,6 +61,7 @@ Route::middleware('auth.admin')->group(function () {
     // Penugasan Guru Piket harian
     Route::post('/guru-piket/update', [GuruPiketController::class, 'update'])->name('guru-piket.update');
     Route::post('/guru-piket/update-bulk', [GuruPiketController::class, 'updateBulk'])->name('guru-piket.update-bulk');
+    Route::post('/guru-piket/import-csv', [GuruPiketController::class, 'importCsv'])->name('guru-piket.import');
     Route::post('/jam-pelajaran/tambah', [JamPelajaranController::class, 'store'])->name('jam-pelajaran.tambah');
     Route::post('/jam-pelajaran/update', [JamPelajaranController::class, 'update'])->name('jam-pelajaran.update');
     Route::post('/jam-pelajaran/{id}/update', [JamPelajaranController::class, 'updateSingle'])->name('jam-pelajaran.update-single');

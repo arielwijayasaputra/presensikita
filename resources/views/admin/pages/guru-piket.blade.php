@@ -187,7 +187,11 @@
             <div class="page-title" style="font-size:22px;font-weight:800;margin-top:2px">Guru Piket 1 Bulan</div>
             <div class="page-subtitle">Atur penugasan 6 guru piket (Sesi 1: 07.00–11.00 &amp; Sesi 2: 11.00–Pulang) untuk 1 bulan penuh (Senin–Jumat) periode <strong>{{ $currentPiketMonthName }} {{ $piketTahun }}</strong>.</div>
         </div>
-        <div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <button type="button" class="btn-primary" onclick="bukaUploadCsvGuruPiketModal()" style="display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:9px;font-size:13px;font-weight:600;background:var(--green,#22c55e);border-color:var(--green,#22c55e)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload CSV
+            </button>
             <button type="button" class="btn-primary" onclick="bukaModalPengaturanWaPiket()" style="display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:9px;font-size:13px;font-weight:600;background:#059669;border-color:#059669">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                 Pengaturan WA Bot
@@ -905,6 +909,139 @@ function simpanGuruPiketBulk(event) {
         await Swal.fire({icon: 'success', title: 'Tersimpan', text: result.message, confirmButtonColor: '#ea580c'});
         location.reload();
     }).catch(error => Swal.fire({icon: 'error', title: 'Gagal', text: error.message, confirmButtonColor: '#dc2626'}));
+}
+
+function bukaUploadCsvGuruPiketModal() {
+    let selectedFile = null;
+    Swal.fire({
+        title: 'Upload Jadwal Guru Piket',
+        customClass: {
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            confirmButton: 'custom-swal-confirm',
+            cancelButton: 'custom-swal-cancel'
+        },
+        buttonsStyling: false,
+        html: `
+            <div style="text-align:left;padding:4px 0">
+                <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px;margin-bottom:14px">
+                    <div style="font-size:13px;font-weight:700;color:#16a34a;margin-bottom:4px">Format File Jadwal Piket</div>
+                    <div style="font-size:12px;color:#334155;line-height:1.6">
+                        File CSV / Excel sesuai format <strong>jadwal guru piket.csv</strong>:<br>
+                        • <strong>Hari / Tanggal:</strong> Contoh <em>"Selasa, 1 September 2026"</em> atau format tanggal standar.<br>
+                        • <strong>Petugas Piket Pagi (1-3):</strong> Mengisi 3 guru untuk Sesi 1 (07.00–11.00).<br>
+                        • <strong>Petugas Piket Siang (1-3):</strong> Mengisi 3 guru untuk Sesi 2 (11.00–15.00).<br>
+                        • <em>Kolom Koordinator dan Piket Waka diabaikan secara otomatis.</em>
+                    </div>
+                </div>
+                <div style="position:relative;border:2px dashed #93c5fd;border-radius:12px;padding:24px 16px;text-align:center;cursor:pointer;transition:all 0.2s;background:#f8fbff" id="piket-csv-dropzone"
+                     onclick="document.getElementById('piket-csv-file-input').click()">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.7" style="margin:0 auto 8px;display:block"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <div style="font-size:13.5px;color:#1e293b;font-weight:700">Tarik file CSV/Excel ke sini</div>
+                    <div style="font-size:11.5px;color:#64748b;margin-top:4px">atau klik untuk memilih file (.csv, .xlsx, .xls)</div>
+                    <div id="piket-csv-filename" style="font-size:12.5px;color:#16a34a;font-weight:600;margin-top:10px;display:none"></div>
+                </div>
+                <input type="file" id="piket-csv-file-input" accept=".csv,.txt,.xlsx,.xls,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" style="display:none">
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px;vertical-align:-2px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Upload Sekarang',
+        cancelButtonText: 'Batal',
+        focusConfirm: false,
+        didOpen: () => {
+            const dropzone = document.getElementById('piket-csv-dropzone');
+            const fileInput = document.getElementById('piket-csv-file-input');
+            const filenameEl = document.getElementById('piket-csv-filename');
+            const confirmBtn = Swal.getConfirmButton();
+            confirmBtn.disabled = true;
+
+            const handleFile = file => {
+                if (!file) return;
+                selectedFile = file;
+                filenameEl.textContent = '📄 ' + file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+                filenameEl.style.display = 'block';
+                dropzone.style.borderColor = '#22c55e';
+                dropzone.style.background = '#f0fdf4';
+                confirmBtn.disabled = false;
+            };
+
+            fileInput.onchange = () => handleFile(fileInput.files[0]);
+            dropzone.ondragover = e => { e.preventDefault(); dropzone.style.borderColor = '#2563eb'; dropzone.style.background = '#eff6ff'; };
+            dropzone.ondragleave = () => { dropzone.style.borderColor = selectedFile ? '#22c55e' : '#93c5fd'; dropzone.style.background = selectedFile ? '#f0fdf4' : '#f8fbff'; };
+            dropzone.ondrop = e => { e.preventDefault(); handleFile(e.dataTransfer.files[0]); };
+        },
+        preConfirm: () => {
+            if (!selectedFile) {
+                Swal.showValidationMessage('Pilih file CSV atau Excel terlebih dahulu.');
+                return false;
+            }
+            return selectedFile;
+        }
+    }).then(result => {
+        if (result.isConfirmed && result.value) {
+            const formData = new FormData();
+            formData.append('file_csv', result.value);
+
+            Swal.fire({
+                title: 'Mengupload...',
+                html: '<div style="color:#64748b;font-size:13.5px">Sedang memproses dan menyimpan jadwal guru piket...</div>',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+                customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title' },
+                buttonsStyling: false,
+                didOpen: () => Swal.showLoading()
+            });
+
+            fetch(@json(route('guru-piket.import')), {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(async res => {
+                const data = await res.json();
+                if (!res.ok || data.status === 'error') throw new Error(data.message || 'Gagal mengimpor CSV guru piket.');
+                return data;
+            })
+            .then(data => {
+                let detailHtml = `<div style="text-align:left;font-size:13.5px;color:#475569;line-height:1.8">`;
+                detailHtml += `<div style="font-size:20px;font-weight:800;color:#16a34a;margin-bottom:4px">${data.total_days} Hari Aktif</div>`;
+                detailHtml += `<div>Total <strong>${data.total_assigned} penugasan guru piket</strong> berhasil diisi dan disimpan ke jadwal.</div>`;
+                if (data.skipped && data.skipped.length > 0) {
+                    detailHtml += `<div style="margin-top:10px;padding-top:10px;border-top:1px solid #e2e8f0">`;
+                    detailHtml += `<div style="font-weight:700;color:#e11d48;margin-bottom:4px">${data.skipped.length} catatan:</div>`;
+                    detailHtml += `<div style="max-height:110px;overflow-y:auto;font-size:11.5px;color:#64748b;background:#fff1f2;padding:6px 10px;border-radius:6px">`;
+                    data.skipped.forEach(e => { detailHtml += `<div style="margin-bottom:2px">• ${e}</div>`; });
+                    detailHtml += `</div></div>`;
+                }
+                detailHtml += `</div>`;
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Jadwal Berhasil Diimpor!',
+                    html: detailHtml,
+                    customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title', confirmButton: 'custom-swal-confirm' },
+                    buttonsStyling: false,
+                    confirmButtonText: 'Lihat Jadwal'
+                }).then(() => {
+                    const targetBulan = data.target_bulan || {{ $piketBulan }};
+                    const targetTahun = data.target_tahun || {{ $piketTahun }};
+                    ubahBulanPiket(targetBulan, targetTahun);
+                });
+            })
+            .catch(err => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Impor',
+                    text: err.message || 'Terjadi kesalahan sistem saat mengimpor file.',
+                    confirmButtonColor: '#dc2626'
+                });
+            });
+        }
+    });
 }
 
 function ubahBulanPiket(bulan, tahun) {

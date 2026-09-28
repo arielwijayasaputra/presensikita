@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Guru;
 use App\Models\GuruPiket;
+use App\Services\Import\GuruPiketImportService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,26 @@ use Illuminate\Support\Facades\DB;
  */
 class GuruPiketController extends Controller
 {
+    public function __construct(private GuruPiketImportService $guruPiketImportService) {}
+
+    /**
+     * Mengimpor data penugasan guru piket dari file CSV / Excel.
+     *
+     * @return JsonResponse
+     */
+    public function importCsv(Request $request)
+    {
+        $request->validate([
+            'file_csv' => ['required', 'file', 'max:25600', 'mimes:csv,txt,xlsx,xls'],
+        ], [
+            'file_csv.required' => 'File jadwal guru piket wajib dipilih.',
+            'file_csv.mimes' => 'Format file harus CSV, TXT, XLSX, atau XLS.',
+            'file_csv.max' => 'Ukuran file maksimal 25MB.',
+        ]);
+
+        return $this->guruPiketImportService->import($request->file('file_csv'));
+    }
+
     /**
      * Menyimpan penugasan guru piket untuk satu tanggal.
      *

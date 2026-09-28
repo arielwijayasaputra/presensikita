@@ -1160,3 +1160,35 @@ html.theme-transitioning *::after {
 [data-theme="dark"] .modal-siswa-row:hover {
     background: rgba(255, 255, 255, 0.04) !important;
 }
+
+/* ==========================================================================
+   #6 — Dark Mode Micro-Interactions & Shimmer
+   ========================================================================== */
+[data-theme="dark"] .skeleton-loading,
+[data-theme="dark"] .skeleton-box,
+[data-theme="dark"] .skeleton-bar,
+[data-theme="dark"] .skeleton-item,
+[data-theme="dark"] .skeleton-text,
+[data-theme="dark"] .skeleton-circle,
+[data-theme="dark"] .skeleton-pill {
+    background: linear-gradient(90deg, #151f32 25%, #263654 50%, #151f32 75%) !important;
+    background-size: 200% 100% !important;
+}
+
+[data-theme="dark"] .stat-card::after {
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.12) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+}
+
+[data-theme="dark"] .stat-card:hover {
+    box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.5), 0 0 24px -2px rgba(59, 130, 246, 0.22), 0 0 0 1px rgba(96, 165, 250, 0.4) !important;
+    border-color: rgba(96, 165, 250, 0.5) !important;
+}
+
+[data-theme="dark"] .stat-card::before {
+    background: linear-gradient(90deg, #3b82f6, #818cf8, #38bdf8) !important;
+}

@@ -51,12 +51,139 @@ function confirmKeluar(formId) {
     });
 }
 
+/* ── Micro-Interactions & Animated Counters ───────────────────── */
+function animateNumberCounters(container = document) {
+    if (!container) return;
+    const counterElements = container.querySelectorAll('.stat-value, .laporan-stat .stat-value, .class-pct-val, .stat-count-num, .pct-val, [data-counter]');
+
+    counterElements.forEach(el => {
+        if (el.dataset.animating === 'true') return;
+
+        const rawText = (el.dataset.targetValue || el.textContent || '').trim();
+        // Check if there's numeric content (e.g., "850", "1.250", "95%", "1,200", "0")
+        const match = rawText.match(/^([^\d]*)([\d.,]+)([^\d]*)$/);
+        if (!match) return; // Non-numeric text (like "-" or "Hadir") remains unchanged
+
+        const prefix = match[1] || '';
+        const numberStr = match[2];
+        const suffix = match[3] || '';
+
+        // Clean numeric string (handles "1.250" or "1,250")
+        const cleanNumber = parseFloat(numberStr.replace(/,/g, '').replace(/\.(?=\d{3})/g, ''));
+        if (isNaN(cleanNumber)) return;
+
+        // Store original target if not yet stored
+        if (!el.dataset.targetValue) {
+            el.dataset.targetValue = rawText;
+        }
+
+        if (cleanNumber === 0) {
+            el.textContent = `${prefix}0${suffix}`;
+            return;
+        }
+
+        const originalText = rawText;
+        const duration = Math.min(1000, Math.max(500, Math.log10(cleanNumber + 1) * 320));
+        const startTime = performance.now();
+        const hasThousandSeparator = numberStr.includes('.') || numberStr.includes(',');
+
+        el.dataset.animating = 'true';
+
+        function updateCounter(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Ease out cubic / expo
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            const currentVal = Math.round(easeOut * cleanNumber);
+
+            let formattedVal = currentVal.toString();
+            if (hasThousandSeparator && cleanNumber >= 1000) {
+                formattedVal = currentVal.toLocaleString('id-ID');
+            }
+
+            el.textContent = `${prefix}${formattedVal}${suffix}`;
+
+            if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+            } else {
+                el.textContent = originalText;
+                el.dataset.animating = 'false';
+            }
+        }
+
+        requestAnimationFrame(updateCounter);
+    });
+}
+window.animateNumberCounters = animateNumberCounters;
+
+/* ── Live Pulse Status Badge Enhancement ─────────────────── */
+function applyPulseStatusBadges(container = document) {
+    if (!container) return;
+    const badges = container.querySelectorAll('.badge, .badge-success, .badge-live');
+    const liveKeywords = ['sedang berlangsung', 'hadir', 'aktif', 'sesi aktif', 'sesi terbuka', 'live'];
+
+    badges.forEach(b => {
+        const text = (b.textContent || '').trim().toLowerCase();
+        const isLive = liveKeywords.some(kw => text.includes(kw));
+
+        if (isLive && !b.querySelector('.pulse-dot') && !b.classList.contains('badge-live-pulse')) {
+            const dot = document.createElement('span');
+            dot.className = 'pulse-dot';
+            dot.style.marginRight = '5px';
+            if (text.includes('izin') || text.includes('menunggu')) {
+                dot.classList.add('yellow');
+            } else if (text.includes('terlambat') || text.includes('alpa')) {
+                dot.classList.add('red');
+            }
+            b.insertBefore(dot, b.firstChild);
+        }
+    });
+}
+window.applyPulseStatusBadges = applyPulseStatusBadges;
+
+/* ── Skeleton / Shimmer Table Loading Helper ─────────────── */
+function showTableSkeleton(tbodyOrSelector, rows = 5, cols = 6) {
+    const tbody = typeof tbodyOrSelector === 'string' ? document.querySelector(tbodyOrSelector) : tbodyOrSelector;
+    if (!tbody) return;
+
+    let skeletonHtml = '';
+    for (let r = 0; r < rows; r++) {
+        skeletonHtml += '<tr class="skeleton-row">';
+        for (let c = 0; c < cols; c++) {
+            const widthPct = c === 0 ? '30px' : (c === 1 ? '70px' : (c === 2 ? '140px' : '50px'));
+            skeletonHtml += `<td><div class="skeleton-bar" style="height:14px;width:${widthPct};margin:0 auto"></div></td>`;
+        }
+        skeletonHtml += '</tr>';
+    }
+    tbody.innerHTML = skeletonHtml;
+}
+window.showTableSkeleton = showTableSkeleton;
+
+function hideTableSkeleton(tbodyOrSelector) {
+    const tbody = typeof tbodyOrSelector === 'string' ? document.querySelector(tbodyOrSelector) : tbodyOrSelector;
+    if (tbody && tbody.querySelector('.skeleton-row')) {
+        tbody.innerHTML = '';
+    }
+}
+window.hideTableSkeleton = hideTableSkeleton;
+
 function showPage(page){
     document.querySelectorAll('[id^="page-"]').forEach(el=>{
         if(el.id!=='page-'+page) el.style.display='none';
     });
     const t=document.getElementById('page-'+page);
-    if(t){t.style.display='block';t.classList.remove('page-anim');void t.offsetWidth;t.classList.add('page-anim');}
+    if(t){
+        t.style.display='block';
+        t.classList.remove('page-anim');
+        void t.offsetWidth;
+        t.classList.add('page-anim');
+        // Animate counter and pulse badges on visible page
+        setTimeout(() => {
+            animateNumberCounters(t);
+            applyPulseStatusBadges(t);
+        }, 50);
+    }
     document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
     const n=document.getElementById('nav-'+page);
     if(n) n.classList.add('active');
@@ -264,6 +391,11 @@ function loadSiswaByKelas(idKelas){
         updateGuruJurnalUI(cachedJadwalGuruData, idKelas);
     }
 
+    const tbody = root ? qs('#siswa-tbody', root) : document.getElementById('siswa-tbody');
+    if (tbody) {
+        showTableSkeleton(tbody, 5, 9);
+    }
+
     fetch(`/absensi/siswa/${idKelas}`)
         .then(res => res.json())
         .then(res => {
@@ -275,7 +407,10 @@ function loadSiswaByKelas(idKelas){
                 muatAbsensiTersimpan();
             }
         })
-        .catch(err => console.error('Error fetching siswa:', err));
+        .catch(err => {
+            console.error('Error fetching siswa:', err);
+            if (tbody) tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:24px;color:#ef4444">Gagal memuat data siswa. Silakan coba lagi.</td></tr>';
+        });
 }
 
 let activeJadwalGuruId = null;
@@ -3320,6 +3455,10 @@ function perbaruiBadgeNotifikasi() {
 document.addEventListener('DOMContentLoaded', function() {
     perbaruiBadgeNotifikasi();
     setInterval(perbaruiBadgeNotifikasi, 30000);
+    setTimeout(function() {
+        animateNumberCounters(document);
+        applyPulseStatusBadges(document);
+    }, 60);
 });
 
 window.showSelfiePopup = function(url, title) {

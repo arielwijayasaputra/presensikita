@@ -9,6 +9,7 @@ use App\Models\JurnalKelas;
 use App\Models\JurnalSiswaTidakHadir;
 use App\Models\KeterlambatanSiswa;
 use App\Models\Siswa;
+use App\Services\JadwalService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -62,18 +63,26 @@ class KeterlambatanSiswaController extends Controller
                     ->value('id_wali_kelas');
 
                 $jamKeMasuk = (int) $data['jam_ke'];
-                $guruPengajarSaatItuIds = DB::table('jadwal_mengajar')
+                $jadwalListKelas = DB::table('jadwal_mengajar')
                     ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
+                    ->join('mapel', 'jadwal_mengajar.id_mapel', '=', 'mapel.id_mapel')
                     ->where('jadwal_mengajar.id_kelas', $siswa->id_kelas)
                     ->where('jadwal_mengajar.hari', $namaHari)
-                    ->where(function ($q) use ($jamKeMasuk) {
-                        $q->where('jam_pelajaran.jam_ke', $jamKeMasuk)
-                            ->orWhere('jam_pelajaran.jam_ke', $jamKeMasuk + 100);
-                    })
                     ->whereNull('jadwal_mengajar.deleted_at')
                     ->whereNull('jam_pelajaran.deleted_at')
-                    ->pluck('jadwal_mengajar.id_guru')
-                    ->merge([$waliKelasId])
+                    ->whereNull('mapel.deleted_at')
+                    ->select('jadwal_mengajar.id_jadwal', 'jadwal_mengajar.id_guru', 'jadwal_mengajar.id_kelas', 'jam_pelajaran.id_jam', 'jam_pelajaran.jam_ke', 'mapel.nama_mapel')
+                    ->get();
+
+                $jadwalListKelas = JadwalService::applyJadwalMaju($jadwalListKelas, $namaHari);
+                $guruPengajarSaatItu = $jadwalListKelas->first(function ($j) use ($jamKeMasuk) {
+                    $norm = $j->jam_ke >= 100 ? $j->jam_ke - 100 : $j->jam_ke;
+
+                    return (int) $norm === $jamKeMasuk;
+                });
+                $guruPengajarId = $guruPengajarSaatItu?->id_guru;
+
+                $guruPengajarSaatItuIds = collect([$guruPengajarId, $waliKelasId])
                     ->filter()
                     ->unique()
                     ->values()

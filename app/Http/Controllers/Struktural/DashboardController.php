@@ -18,6 +18,7 @@ use App\Models\Pengaturan;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
 use App\Services\AbsensiService;
+use App\Services\JadwalService;
 use App\Services\WhatsAppService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -81,10 +82,11 @@ class DashboardController extends Controller
             ->whereNull('kelas.deleted_at')
             ->whereNull('jam_pelajaran.deleted_at')
             ->where('jadwal_mengajar.hari', $hariIni)
-            ->select('jadwal_mengajar.id_jadwal', 'jadwal_mengajar.hari', 'guru.nama_guru', 'mapel.nama_mapel', 'kelas.nama_kelas', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
+            ->select('jadwal_mengajar.id_jadwal', 'jadwal_mengajar.id_kelas', 'jadwal_mengajar.hari', 'guru.nama_guru', 'mapel.nama_mapel', 'kelas.nama_kelas', 'jam_pelajaran.id_jam', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
             ->orderBy('jam_pelajaran.jam_ke')
             ->orderBy('kelas.nama_kelas')
             ->get();
+        $jadwalHariIni = JadwalService::applyJadwalMaju($jadwalHariIni, $hariIni);
         $totalJadwalHariIni = $jadwalHariIni->count();
         $totalKelasHariIni = $jadwalHariIni->pluck('nama_kelas')->unique()->count();
         $totalGuruHariIni = $jadwalHariIni->pluck('nama_guru')->unique()->count();
@@ -148,9 +150,11 @@ class DashboardController extends Controller
                     ->select(
                         'jadwal_mengajar.id_jadwal',
                         'jadwal_mengajar.id_guru',
+                        'jadwal_mengajar.id_kelas',
                         'guru.nama_guru',
                         'mapel.nama_mapel',
                         'kelas.nama_kelas',
+                        'jam_pelajaran.id_jam',
                         'jam_pelajaran.jam_ke',
                         'jam_pelajaran.jam_mulai',
                         'jam_pelajaran.jam_selesai'
@@ -158,6 +162,8 @@ class DashboardController extends Controller
                     ->orderBy('jam_pelajaran.jam_ke')
                     ->orderBy('kelas.nama_kelas')
                     ->get();
+
+                $sdmJadwal = JadwalService::applyJadwalMaju($sdmJadwal, $hariFilter);
 
                 // Map jurnal ke jadwal
                 $jurnalMap = JurnalKelas::whereDate('tanggal', $sdmTanggal)
@@ -308,15 +314,19 @@ class DashboardController extends Controller
                 ->where('jadwal_mengajar.hari', $hariNamaIndo)
                 ->select(
                     'jadwal_mengajar.id_jadwal',
+                    'jadwal_mengajar.id_kelas',
                     'guru.nama_guru',
                     'guru.foto_profil',
                     'mapel.nama_mapel',
+                    'jam_pelajaran.id_jam',
                     'jam_pelajaran.jam_ke',
                     'jam_pelajaran.jam_mulai',
                     'jam_pelajaran.jam_selesai'
                 )
                 ->orderBy('jam_pelajaran.jam_ke')
                 ->get();
+
+            $jadwalWaliHariIni = JadwalService::applyJadwalMaju($jadwalWaliHariIni, $hariNamaIndo);
 
             $jurnalWaliHariIniMap = JurnalKelas::whereDate('tanggal', $waliTanggalHariIni)
                 ->whereIn('id_jadwal', $jadwalWaliHariIni->pluck('id_jadwal'))

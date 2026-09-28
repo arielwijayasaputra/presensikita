@@ -446,12 +446,18 @@ class AbsensiService
             ->select(
                 'jadwal_mengajar.id_jadwal',
                 'jadwal_mengajar.id_guru',
+                'jadwal_mengajar.id_kelas',
+                'jam_pelajaran.id_jam',
                 'jam_pelajaran.jam_ke',
                 'jam_pelajaran.jam_mulai',
-                'jam_pelajaran.jam_selesai'
+                'jam_pelajaran.jam_selesai',
+                'mapel.nama_mapel',
+                'mapel.kode_mapel'
             )
             ->orderBy('jam_pelajaran.jam_ke')
             ->get();
+
+        $jadwalList = JadwalService::applyJadwalMaju($jadwalList, $hariIndo);
 
         if ($jadwalList->isEmpty()) {
             return;

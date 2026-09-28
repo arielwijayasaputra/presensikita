@@ -68,6 +68,7 @@ Route::middleware('auth.admin')->group(function () {
     Route::delete('/jam-pelajaran/hari/{hari}', [JamPelajaranController::class, 'destroyDay'])->name('jam-pelajaran.hapus-hari');
     Route::post('/jam-pelajaran/istirahat/{hari}/{nomor}', [JamPelajaranController::class, 'updateIstirahat'])->name('jam-pelajaran.update-istirahat');
     Route::delete('/jam-pelajaran/istirahat/{hari}/{nomor}', [JamPelajaranController::class, 'destroyIstirahat'])->name('jam-pelajaran.hapus-istirahat');
+    Route::post('/jam-pelajaran/kemajuan-jadwal', [JamPelajaranController::class, 'toggleKemajuanJadwal'])->name('jam-pelajaran.toggle-kemajuan');
     Route::get('/jadwal/guru-tersedia', [JadwalMengajarController::class, 'guruTersedia'])->name('jadwal.guru-tersedia');
     Route::post('/jadwal/{id}/tugaskan-guru', [JadwalMengajarController::class, 'tugaskanGuru'])->name('jadwal.tugaskan-guru');
     Route::post('/jadwal/import', [JadwalMengajarController::class, 'import'])->name('jadwal.import');

@@ -11,6 +11,7 @@ use App\Models\Pengaturan;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
 use App\Services\AbsensiService;
+use App\Services\JadwalService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -123,6 +124,8 @@ class AbsensiController extends Controller
             ->when($tahunAjaran, fn ($query) => $query->where('jadwal_mengajar.id_tahun_ajaran', $tahunAjaran->id_tahun_ajaran))
             ->select(
                 'jadwal_mengajar.id_jadwal',
+                'jadwal_mengajar.id_kelas',
+                'jam_pelajaran.id_jam',
                 'jam_pelajaran.jam_ke',
                 'jam_pelajaran.jam_mulai',
                 'jam_pelajaran.jam_selesai',
@@ -132,6 +135,8 @@ class AbsensiController extends Controller
             )
             ->orderBy('jam_pelajaran.jam_ke')
             ->get();
+
+        $jadwalList = JadwalService::applyJadwalMaju($jadwalList, $hariIndo);
 
         $isPastDate = ($tanggal < now()->toDateString());
         $isToday = ($tanggal === now()->toDateString());

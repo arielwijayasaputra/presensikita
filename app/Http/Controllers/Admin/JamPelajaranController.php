@@ -26,7 +26,7 @@ class JamPelajaranController extends Controller
             'jam_mulai' => ['required', 'date_format:H:i'],
             'jam_selesai' => ['required', 'date_format:H:i', 'after:jam_mulai'],
             'hari' => ['required', 'array', 'min:1'],
-            'hari.*' => ['required', 'in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu'],
+            'hari.*' => ['required', 'in:Senin,Selasa,Rabu,Kamis,Jumat'],
         ], [
             'jam_ke.required' => 'Nomor jam pelajaran (jam ke-) wajib diisi.',
             'jam_ke.integer' => 'Nomor jam pelajaran harus berupa angka.',
@@ -106,7 +106,7 @@ class JamPelajaranController extends Controller
         ]);
         $source = JamPelajaran::findOrFail($id);
         $hariPilihan = $request->input('hari', [$source->hari]);
-        $hariPilihan = array_values(array_intersect($hariPilihan, ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']));
+        $hariPilihan = array_values(array_intersect($hariPilihan, ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat']));
         foreach ($hariPilihan as $hari) {
             $jamKe = (int) $source->jam_ke;
             if ($hari === 'Jumat' && $jamKe < 100) {
@@ -268,4 +268,34 @@ class JamPelajaranController extends Controller
             'message' => "Waktu Istirahat {$nomor} berhasil dihapus.",
         ]);
     }
+
+    /**
+     * Mengubah status saklar kemajuan jadwal khusus hari Senin atau Jumat.
+     *
+     * @return JsonResponse
+     */
+    public function toggleKemajuanJadwal(Request $request)
+    {
+        $data = $request->validate([
+            'hari' => ['required', 'in:Senin,Jumat'],
+            'status' => ['required', 'boolean'],
+        ]);
+
+        $key = $data['hari'] === 'Senin' ? 'jadwal_maju_senin' : 'jadwal_maju_jumat';
+        $val = $data['status'] ? '1' : '0';
+        Pengaturan::set($key, $val);
+
+        $labelHari = $data['hari'];
+        $keterangan = $data['status']
+            ? "Kemajuan jadwal hari {$labelHari} diaktifkan. Jadwal mapel akan maju menggantikan jam ".($labelHari === 'Senin' ? 'upacara' : 'pembiasaan').'.'
+            : "Kemajuan jadwal hari {$labelHari} dinonaktifkan (Jadwal normal).";
+
+        return response()->json([
+            'status' => 'success',
+            'message' => $keterangan,
+            'hari' => $labelHari,
+            'is_aktif' => (bool) $data['status'],
+        ]);
+    }
 }
+

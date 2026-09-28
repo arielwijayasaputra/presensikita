@@ -1628,7 +1628,7 @@
                 <div class="jam-row-item {{ !empty($p['is_ongoing']) ? 'jam-ongoing-active' : '' }}" data-jam-ke="{{ $p['jam_ke'] }}">
                     <div class="jam-badge-time">
                         <span class="jam-number">Jam Ke-{{ $p['jam_ke'] >= 100 ? $p['jam_ke'] - 100 : $p['jam_ke'] }}</span>
-                        <span class="jam-time-span">{{ $p['jam_mulai'] }} - {{ $p['jam_selesai'] }} WIB</span>
+                        <span class="jam-time-span">{{ substr($p['jam_mulai'], 0, 5) }} - {{ substr($p['jam_selesai'], 0, 5) }} WIB</span>
                         @if(!empty($p['is_ongoing']))
                             <span class="badge-jam-live" style="margin-top:5px;display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;color:#16a34a;background:#dcfce7;padding:2px 8px;border-radius:12px;width:fit-content;border:1px solid #bbf7d0">
                                 <span style="width:6px;height:6px;border-radius:50%;background:#16a34a;animation:pulseLive 1.2s infinite"></span>

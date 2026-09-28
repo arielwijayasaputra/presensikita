@@ -18,8 +18,11 @@ class GuruPiketImportService
      */
     public function import(UploadedFile $file): JsonResponse
     {
+        $realPath = $file->getRealPath();
+        $ext = strtolower($file->getClientOriginalExtension() ?: pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION));
+
         try {
-            $rows = $this->readFileRows($file->getRealPath());
+            $rows = $this->readFileRows($realPath, $ext);
         } catch (\Throwable $exception) {
             return response()->json([
                 'status' => 'error',
@@ -30,7 +33,7 @@ class GuruPiketImportService
         if (empty($rows)) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'File kosong atau tidak memiliki data.',
+                'message' => 'File kosong atau format kolom tidak sesuai.',
             ], 422);
         }
 
@@ -127,7 +130,7 @@ class GuruPiketImportService
                 $firstDate = $tanggal;
             }
 
-            // Ambil nama guru dari slot piket
+            // Ambil 6 slot guru piket per hari (3 Sesi 1 Pagi, 3 Sesi 2 Siang)
             $piketTeacherNames = [
                 $row['pagi_1'] ?? '',
                 $row['pagi_2'] ?? '',
@@ -192,6 +195,8 @@ class GuruPiketImportService
         $bulanNum = (int) $firstCarbon->format('n');
         $tahunNum = (int) $firstCarbon->format('Y');
 
+        $guruNameMap = $allGuru->pluck('nama_guru', 'id_guru')->toArray();
+
         return response()->json([
             'status' => 'success',
             'message' => "Jadwal guru piket berhasil diimpor! ({$totalDays} hari aktif, total {$totalAssigned} penugasan guru).",
@@ -199,6 +204,8 @@ class GuruPiketImportService
             'total_assigned' => $totalAssigned,
             'target_bulan' => $bulanNum,
             'target_tahun' => $tahunNum,
+            'assignments' => $assignmentsByDate,
+            'guru_map' => $guruNameMap,
             'skipped' => $skipped,
         ]);
     }
@@ -206,10 +213,49 @@ class GuruPiketImportService
     /**
      * Membaca baris-baris file CSV atau Excel dan memetakannya ke struktur guru piket.
      */
-    private function readFileRows(string $path): array
+    private function readFileRows(string $path, string $ext = ''): array
     {
-        // Gunakan PhpSpreadsheet untuk membaca spreadsheet / CSV secara seragam
-        $sheet = IOFactory::load($path)->getActiveSheet()->toArray(null, true, true, false);
+        $sheet = [];
+
+        // 1. Coba baca sebagai CSV murni terlebih dahulu jika ekstensi csv/txt
+        if (in_array($ext, ['csv', 'txt'], true) || is_readable($path)) {
+            $rawContent = @file_get_contents($path);
+            if ($rawContent !== false && ! empty(trim($rawContent))) {
+                // Hapus UTF-8 BOM jika ada
+                $rawContent = preg_replace('/^\xEF\xBB\xBF/', '', $rawContent);
+                $lines = preg_split('/\r\n|\r|\n/', trim($rawContent));
+                if (! empty($lines)) {
+                    // Deteksi delimiter
+                    $firstLine = $lines[0];
+                    $delimiter = ',';
+                    if (substr_count($firstLine, ';') > substr_count($firstLine, ',')) {
+                        $delimiter = ';';
+                    } elseif (substr_count($firstLine, "\t") > substr_count($firstLine, ',')) {
+                        $delimiter = "\t";
+                    }
+
+                    $csvRows = [];
+                    foreach ($lines as $line) {
+                        if (trim($line) === '') {
+                            continue;
+                        }
+                        $row = str_getcsv($line, $delimiter);
+                        $csvRows[] = $row;
+                    }
+
+                    if (count($csvRows) >= 2 && count($csvRows[0]) >= 3) {
+                        $sheet = $csvRows;
+                    }
+                }
+            }
+        }
+
+        // 2. Jika belum terbaca atau format xlsx/xls, gunakan PhpSpreadsheet
+        if (empty($sheet)) {
+            $spreadsheet = IOFactory::load($path);
+            $sheet = $spreadsheet->getActiveSheet()->toArray(null, true, true, false);
+        }
+
         if (count($sheet) < 1) {
             return [];
         }

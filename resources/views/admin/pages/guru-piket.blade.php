@@ -1007,6 +1007,21 @@ function bukaUploadCsvGuruPiketModal() {
                 return data;
             })
             .then(data => {
+                // Langsung isi slot guru piket di tampilan form jika tanggal cocok
+                if (data.assignments && data.guru_map && window.gpSetValue) {
+                    for (const [tgl, guruIds] of Object.entries(data.assignments)) {
+                        const card = document.querySelector('#guru-piket-form .gp-day-card[data-date="' + tgl + '"]');
+                        if (card) {
+                            const slots = card.querySelectorAll('.gp-sd');
+                            slots.forEach((sd, idx) => {
+                                const gId = guruIds[idx] || '';
+                                const gName = gId ? (data.guru_map[gId] || '') : '';
+                                window.gpSetValue(sd, gId, gName);
+                            });
+                        }
+                    }
+                }
+
                 let detailHtml = `<div style="text-align:left;font-size:13.5px;color:#475569;line-height:1.8">`;
                 detailHtml += `<div style="font-size:20px;font-weight:800;color:#16a34a;margin-bottom:4px">${data.total_days} Hari Aktif</div>`;
                 detailHtml += `<div>Total <strong>${data.total_assigned} penugasan guru piket</strong> berhasil diisi dan disimpan ke jadwal.</div>`;
@@ -1049,7 +1064,11 @@ function ubahBulanPiket(bulan, tahun) {
     url.searchParams.set('piket_bulan', bulan);
     url.searchParams.set('piket_tahun', tahun);
     url.hash = 'guru-piket';
-    window.location.href = url.toString();
+    if (window.location.href === url.toString()) {
+        window.location.reload();
+    } else {
+        window.location.href = url.toString();
+    }
 }
 
 function filterMingguPiket(weekVal) {

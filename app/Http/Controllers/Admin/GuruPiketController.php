@@ -25,10 +25,9 @@ class GuruPiketController extends Controller
     public function importCsv(Request $request)
     {
         $request->validate([
-            'file_csv' => ['required', 'file', 'max:25600', 'mimes:csv,txt,xlsx,xls'],
+            'file_csv' => ['required', 'file', 'max:25600'],
         ], [
             'file_csv.required' => 'File jadwal guru piket wajib dipilih.',
-            'file_csv.mimes' => 'Format file harus CSV, TXT, XLSX, atau XLS.',
             'file_csv.max' => 'Ukuran file maksimal 25MB.',
         ]);
 

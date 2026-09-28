@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Sep 23, 2026 at 04:39 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Host: localhost:3306
+-- Generation Time: Sep 28, 2026 at 03:54 AM
+-- Server version: 8.0.30
+-- PHP Version: 8.5.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,17 +28,17 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `akun_admin` (
-  `id_admin` int(10) UNSIGNED NOT NULL,
-  `nama` varchar(100) NOT NULL DEFAULT 'Administrator',
-  `username` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `password_hash` varchar(255) DEFAULT NULL,
-  `no_tlp` varchar(20) DEFAULT NULL,
-  `no_hp` varchar(20) DEFAULT NULL,
-  `foto_profil` varchar(255) DEFAULT NULL,
+  `id_admin` int UNSIGNED NOT NULL,
+  `nama` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Administrator',
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `no_tlp` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `no_hp` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `foto_profil` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `update_pw_at` timestamp NULL DEFAULT NULL,
   `update_usn_at` timestamp NULL DEFAULT NULL,
-  `is_aktif` tinyint(4) NOT NULL DEFAULT 1,
+  `is_aktif` tinyint NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -58,13 +58,13 @@ INSERT INTO `akun_admin` (`id_admin`, `nama`, `username`, `password`, `password_
 --
 
 CREATE TABLE `akun_satpam` (
-  `id_satpam` int(10) UNSIGNED NOT NULL,
-  `nama` varchar(100) NOT NULL DEFAULT 'Satpam',
-  `username` varchar(50) NOT NULL,
-  `password_hash` varchar(255) NOT NULL,
-  `no_hp` varchar(20) DEFAULT NULL,
-  `foto_profil` varchar(255) DEFAULT NULL,
-  `is_aktif` tinyint(4) NOT NULL DEFAULT 1,
+  `id_satpam` int UNSIGNED NOT NULL,
+  `nama` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Satpam',
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `no_hp` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `foto_profil` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_aktif` tinyint NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -84,13 +84,13 @@ INSERT INTO `akun_satpam` (`id_satpam`, `nama`, `username`, `password_hash`, `no
 --
 
 CREATE TABLE `akun_waka_sdm` (
-  `id_waka_sdm` int(10) UNSIGNED NOT NULL,
-  `nama` varchar(100) NOT NULL DEFAULT 'Waka SDM',
-  `username` varchar(50) NOT NULL,
-  `password_hash` varchar(255) NOT NULL,
-  `no_hp` varchar(20) DEFAULT NULL,
-  `foto_profil` varchar(255) DEFAULT NULL,
-  `is_aktif` tinyint(4) NOT NULL DEFAULT 1,
+  `id_waka_sdm` int UNSIGNED NOT NULL,
+  `nama` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Waka SDM',
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `no_hp` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `foto_profil` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_aktif` tinyint NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -110,14 +110,14 @@ INSERT INTO `akun_waka_sdm` (`id_waka_sdm`, `nama`, `username`, `password_hash`,
 --
 
 CREATE TABLE `alumni` (
-  `id_alumni` bigint(20) UNSIGNED NOT NULL,
-  `nisn` varchar(20) DEFAULT NULL,
-  `nama_siswa` varchar(100) NOT NULL,
-  `jenis_kelamin` enum('L','P') NOT NULL,
-  `nama_kelas` varchar(50) NOT NULL,
-  `tingkat_kelas` varchar(10) NOT NULL,
-  `jurusan` varchar(50) NOT NULL,
-  `tahun_lulus` varchar(50) NOT NULL,
+  `id_alumni` bigint UNSIGNED NOT NULL,
+  `nisn` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_siswa` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jenis_kelamin` enum('L','P') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_kelas` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tingkat_kelas` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jurusan` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tahun_lulus` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tanggal_lulus` date NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -131,18 +131,18 @@ CREATE TABLE `alumni` (
 --
 
 CREATE TABLE `dispen_siswa` (
-  `id_dispen_siswa` bigint(20) UNSIGNED NOT NULL,
-  `id_siswa` int(11) NOT NULL,
-  `id_guru_piket` int(11) NOT NULL,
+  `id_dispen_siswa` bigint UNSIGNED NOT NULL,
+  `id_siswa` int NOT NULL,
+  `id_guru_piket` int NOT NULL,
   `tanggal_dispen` date NOT NULL,
-  `alasan` text NOT NULL,
-  `jenis_absen` varchar(10) NOT NULL DEFAULT 'I',
-  `foto_surat` varchar(255) DEFAULT NULL,
-  `id_jurnal` int(11) DEFAULT NULL,
-  `status_waka` varchar(20) NOT NULL DEFAULT 'menunggu',
-  `status_guru_piket` varchar(20) NOT NULL DEFAULT 'menunggu',
-  `catatan_waka` text DEFAULT NULL,
-  `catatan_guru_piket` text DEFAULT NULL,
+  `alasan` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jenis_absen` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'I',
+  `foto_surat` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id_jurnal` int DEFAULT NULL,
+  `status_waka` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'menunggu',
+  `status_guru_piket` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'menunggu',
+  `catatan_waka` text COLLATE utf8mb4_unicode_ci,
+  `catatan_guru_piket` text COLLATE utf8mb4_unicode_ci,
   `disetujui_waka_pada` timestamp NULL DEFAULT NULL,
   `disetujui_guru_piket_pada` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -173,18 +173,18 @@ INSERT INTO `dispen_siswa` (`id_dispen_siswa`, `id_siswa`, `id_guru_piket`, `tan
 --
 
 CREATE TABLE `guru` (
-  `id_guru` int(11) NOT NULL,
-  `nip` varchar(30) DEFAULT NULL,
-  `nama_guru` varchar(100) NOT NULL,
-  `Peran` varchar(255) NOT NULL DEFAULT 'Guru',
-  `foto_profil` varchar(255) DEFAULT NULL,
-  `id_mapel` int(11) DEFAULT NULL,
-  `no_hp` varchar(20) DEFAULT NULL,
-  `username` varchar(50) NOT NULL,
-  `password_hash` varchar(255) NOT NULL,
-  `is_admin` tinyint(1) NOT NULL DEFAULT 0,
-  `is_aktif` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `id_guru` int NOT NULL,
+  `nip` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_guru` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Peran` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Guru',
+  `foto_profil` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id_mapel` int DEFAULT NULL,
+  `no_hp` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_admin` tinyint(1) NOT NULL DEFAULT '0',
+  `is_aktif` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -329,8 +329,8 @@ INSERT INTO `guru` (`id_guru`, `nip`, `nama_guru`, `Peran`, `foto_profil`, `id_m
 --
 
 CREATE TABLE `guru_piket` (
-  `id_guru_piket` bigint(20) UNSIGNED NOT NULL,
-  `id_guru` int(11) NOT NULL,
+  `id_guru_piket` bigint UNSIGNED NOT NULL,
+  `id_guru` int NOT NULL,
   `tanggal` date NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -346,23 +346,138 @@ INSERT INTO `guru_piket` (`id_guru_piket`, `id_guru`, `tanggal`, `created_at`, `
 (60, 2, '2026-08-31', '2026-08-31 00:13:48', '2026-08-31 19:55:41', '2026-08-31 19:55:41'),
 (61, 3, '2026-08-31', '2026-08-31 00:13:48', '2026-08-31 19:55:41', '2026-08-31 19:55:41'),
 (62, 4, '2026-08-31', '2026-08-31 00:13:48', '2026-08-31 19:55:41', '2026-08-31 19:55:41'),
-(63, 19, '2026-09-01', '2026-08-31 00:13:48', '2026-09-01 17:08:36', '2026-09-01 17:08:36'),
-(64, 24, '2026-09-01', '2026-08-31 00:13:48', '2026-09-01 17:08:36', '2026-09-01 17:08:36'),
-(65, 21, '2026-09-01', '2026-08-31 00:13:48', '2026-09-01 17:08:36', '2026-09-01 17:08:36'),
-(66, 40, '2026-09-01', '2026-08-31 00:13:48', '2026-09-01 17:08:36', '2026-09-01 17:08:36'),
-(71, 91, '2026-09-02', '2026-09-01 18:15:23', '2026-09-02 17:16:29', '2026-09-02 17:16:29'),
-(72, 49, '2026-09-02', '2026-09-01 18:15:23', '2026-09-02 17:16:29', '2026-09-02 17:16:29'),
-(79, 125, '2026-09-07', '2026-09-07 00:27:48', '2026-09-07 17:12:50', '2026-09-07 17:12:50'),
-(80, 91, '2026-09-07', '2026-09-07 00:27:48', '2026-09-07 17:12:50', '2026-09-07 17:12:50'),
-(83, 91, '2026-09-08', '2026-09-07 17:13:33', '2026-09-08 17:11:13', '2026-09-08 17:11:13'),
-(84, 25, '2026-09-09', '2026-09-07 17:13:33', '2026-09-10 01:09:42', '2026-09-10 01:09:42'),
-(85, 47, '2026-09-09', '2026-09-07 17:13:33', '2026-09-10 01:09:42', '2026-09-10 01:09:42'),
-(86, 91, '2026-09-14', '2026-09-14 12:58:57', '2026-09-15 00:34:02', '2026-09-15 00:34:02'),
-(87, 125, '2026-09-15', '2026-09-15 01:36:13', '2026-09-16 00:34:30', '2026-09-16 00:34:30'),
-(88, 36, '2026-09-16', '2026-09-16 00:35:02', '2026-09-17 00:25:02', '2026-09-17 00:25:02'),
-(89, 47, '2026-09-16', '2026-09-16 00:35:02', '2026-09-17 00:25:02', '2026-09-17 00:25:02'),
-(90, 109, '2026-09-16', '2026-09-16 00:35:02', '2026-09-17 00:25:02', '2026-09-17 00:25:02'),
-(91, 125, '2026-09-17', '2026-09-17 00:25:19', '2026-09-20 13:05:26', '2026-09-20 13:05:26');
+(490, 87, '2026-09-01', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(491, 88, '2026-09-01', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(492, 92, '2026-09-01', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(493, 32, '2026-09-01', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(494, 40, '2026-09-01', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(495, 100, '2026-09-01', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(496, 95, '2026-09-02', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(497, 80, '2026-09-02', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(498, 124, '2026-09-02', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(499, 44, '2026-09-02', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(500, 83, '2026-09-02', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(501, 55, '2026-09-02', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(502, 119, '2026-09-03', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(503, 93, '2026-09-03', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(504, 109, '2026-09-03', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(505, 66, '2026-09-03', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(506, 72, '2026-09-03', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(507, 120, '2026-09-03', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(508, 60, '2026-09-04', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(509, 13, '2026-09-04', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(510, 15, '2026-09-04', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(511, 81, '2026-09-04', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(512, 51, '2026-09-04', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(513, 94, '2026-09-04', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(514, 48, '2026-09-07', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(515, 2, '2026-09-07', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(516, 5, '2026-09-07', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(517, 68, '2026-09-07', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(518, 104, '2026-09-07', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(519, 108, '2026-09-07', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(520, 11, '2026-09-08', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(521, 42, '2026-09-08', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(522, 74, '2026-09-08', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(523, 17, '2026-09-08', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(524, 52, '2026-09-08', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(525, 8, '2026-09-08', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(526, 7, '2026-09-09', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(527, 49, '2026-09-09', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(528, 85, '2026-09-09', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(529, 23, '2026-09-09', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(530, 50, '2026-09-09', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(531, 116, '2026-09-09', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(532, 4, '2026-09-10', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(533, 12, '2026-09-10', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(534, 106, '2026-09-10', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(535, 24, '2026-09-10', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(536, 58, '2026-09-10', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(537, 26, '2026-09-10', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(538, 3, '2026-09-11', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(539, 21, '2026-09-11', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(540, 98, '2026-09-11', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(541, 20, '2026-09-11', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(542, 28, '2026-09-11', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(543, 111, '2026-09-11', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(544, 30, '2026-09-14', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(545, 10, '2026-09-14', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(546, 67, '2026-09-14', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(547, 46, '2026-09-14', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(548, 41, '2026-09-14', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(549, 57, '2026-09-14', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(550, 87, '2026-09-15', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(551, 88, '2026-09-15', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(552, 92, '2026-09-15', '2026-09-28 03:51:17', '2026-09-28 03:51:17', NULL),
+(553, 32, '2026-09-15', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(554, 40, '2026-09-15', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(555, 100, '2026-09-15', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(556, 95, '2026-09-16', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(557, 80, '2026-09-16', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(558, 124, '2026-09-16', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(559, 44, '2026-09-16', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(560, 83, '2026-09-16', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(561, 55, '2026-09-16', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(562, 119, '2026-09-17', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(563, 93, '2026-09-17', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(564, 109, '2026-09-17', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(565, 66, '2026-09-17', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(566, 72, '2026-09-17', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(567, 120, '2026-09-17', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(568, 60, '2026-09-18', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(569, 13, '2026-09-18', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(570, 15, '2026-09-18', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(571, 81, '2026-09-18', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(572, 51, '2026-09-18', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(573, 94, '2026-09-18', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(574, 48, '2026-09-21', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(575, 2, '2026-09-21', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(576, 5, '2026-09-21', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(577, 68, '2026-09-21', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(578, 104, '2026-09-21', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(579, 108, '2026-09-21', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(580, 11, '2026-09-22', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(581, 42, '2026-09-22', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(582, 74, '2026-09-22', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(583, 17, '2026-09-22', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(584, 52, '2026-09-22', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(585, 8, '2026-09-22', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(586, 7, '2026-09-23', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(587, 49, '2026-09-23', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(588, 85, '2026-09-23', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(589, 23, '2026-09-23', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(590, 50, '2026-09-23', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(591, 116, '2026-09-23', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(592, 4, '2026-09-24', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(593, 12, '2026-09-24', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(594, 106, '2026-09-24', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(595, 24, '2026-09-24', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(596, 58, '2026-09-24', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(597, 26, '2026-09-24', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(598, 3, '2026-09-25', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(599, 21, '2026-09-25', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(600, 98, '2026-09-25', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(601, 20, '2026-09-25', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(602, 28, '2026-09-25', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(603, 111, '2026-09-25', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(604, 30, '2026-09-28', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(605, 10, '2026-09-28', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(606, 67, '2026-09-28', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(607, 46, '2026-09-28', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(608, 41, '2026-09-28', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(609, 57, '2026-09-28', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(610, 87, '2026-09-29', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(611, 88, '2026-09-29', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(612, 92, '2026-09-29', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(613, 32, '2026-09-29', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(614, 40, '2026-09-29', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(615, 100, '2026-09-29', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(616, 95, '2026-09-30', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(617, 80, '2026-09-30', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(618, 124, '2026-09-30', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(619, 44, '2026-09-30', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(620, 83, '2026-09-30', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL),
+(621, 55, '2026-09-30', '2026-09-28 03:51:18', '2026-09-28 03:51:18', NULL);
 
 -- --------------------------------------------------------
 
@@ -371,12 +486,12 @@ INSERT INTO `guru_piket` (`id_guru_piket`, `id_guru`, `tanggal`, `created_at`, `
 --
 
 CREATE TABLE `hari` (
-  `id_hari` int(11) NOT NULL,
-  `nama_hari` varchar(20) NOT NULL,
-  `nama_inggris` varchar(20) NOT NULL,
-  `singkatan` varchar(5) NOT NULL,
-  `urutan` int(11) NOT NULL,
-  `is_aktif` tinyint(1) NOT NULL DEFAULT 1
+  `id_hari` int NOT NULL,
+  `nama_hari` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_inggris` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `singkatan` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `urutan` int NOT NULL,
+  `is_aktif` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -399,16 +514,16 @@ INSERT INTO `hari` (`id_hari`, `nama_hari`, `nama_inggris`, `singkatan`, `urutan
 --
 
 CREATE TABLE `izin_guru` (
-  `id_izin_guru` bigint(20) UNSIGNED NOT NULL,
-  `id_guru` int(11) NOT NULL,
-  `id_guru_piket` int(11) NOT NULL,
+  `id_izin_guru` bigint UNSIGNED NOT NULL,
+  `id_guru` int NOT NULL,
+  `id_guru_piket` int NOT NULL,
   `tanggal_izin` date NOT NULL,
-  `alasan` text NOT NULL,
-  `foto_surat` varchar(255) DEFAULT NULL,
-  `status_kepsek` varchar(20) NOT NULL DEFAULT 'menunggu',
-  `status_waka` varchar(20) NOT NULL DEFAULT 'menunggu',
-  `catatan_kepsek` text DEFAULT NULL,
-  `catatan_waka` text DEFAULT NULL,
+  `alasan` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `foto_surat` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status_kepsek` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'menunggu',
+  `status_waka` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'menunggu',
+  `catatan_kepsek` text COLLATE utf8mb4_unicode_ci,
+  `catatan_waka` text COLLATE utf8mb4_unicode_ci,
   `disetujui_kepsek_pada` timestamp NULL DEFAULT NULL,
   `disetujui_waka_pada` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -438,13 +553,13 @@ INSERT INTO `izin_guru` (`id_izin_guru`, `id_guru`, `id_guru_piket`, `tanggal_iz
 --
 
 CREATE TABLE `jadwal_mengajar` (
-  `id_jadwal` int(11) NOT NULL,
-  `id_guru` int(11) DEFAULT NULL,
-  `id_mapel` int(11) NOT NULL,
-  `id_kelas` int(11) NOT NULL,
-  `id_jam` int(11) NOT NULL,
-  `hari` enum('Senin','Selasa','Rabu','Kamis','Jumat') NOT NULL,
-  `id_tahun_ajaran` int(11) NOT NULL,
+  `id_jadwal` int NOT NULL,
+  `id_guru` int DEFAULT NULL,
+  `id_mapel` int NOT NULL,
+  `id_kelas` int NOT NULL,
+  `id_jam` int NOT NULL,
+  `hari` enum('Senin','Selasa','Rabu','Kamis','Jumat') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_tahun_ajaran` int NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -2975,9 +3090,9 @@ INSERT INTO `jadwal_mengajar` (`id_jadwal`, `id_guru`, `id_mapel`, `id_kelas`, `
 --
 
 CREATE TABLE `jam_pelajaran` (
-  `id_jam` int(11) NOT NULL,
-  `jam_ke` int(11) NOT NULL,
-  `hari` varchar(10) DEFAULT NULL,
+  `id_jam` int NOT NULL,
+  `jam_ke` int NOT NULL,
+  `hari` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `jam_mulai` time NOT NULL,
   `jam_selesai` time NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -3049,15 +3164,15 @@ INSERT INTO `jam_pelajaran` (`id_jam`, `jam_ke`, `hari`, `jam_mulai`, `jam_seles
 --
 
 CREATE TABLE `jurnal_kelas` (
-  `id_jurnal` int(11) NOT NULL,
-  `id_jadwal` int(11) NOT NULL,
-  `id_guru` int(11) DEFAULT NULL,
+  `id_jurnal` int NOT NULL,
+  `id_jadwal` int NOT NULL,
+  `id_guru` int DEFAULT NULL,
   `tanggal` date NOT NULL,
-  `status_kehadiran_guru` enum('Hadir','Tidak Hadir') NOT NULL DEFAULT 'Hadir',
-  `foto_selfie` varchar(255) DEFAULT NULL,
-  `materi` varchar(255) DEFAULT NULL,
-  `jumlah_hadir` int(11) NOT NULL DEFAULT 0,
-  `waktu_input` timestamp NULL DEFAULT current_timestamp(),
+  `status_kehadiran_guru` enum('Hadir','Tidak Hadir') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Hadir',
+  `foto_selfie` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `materi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jumlah_hadir` int NOT NULL DEFAULT '0',
+  `waktu_input` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -3093,7 +3208,10 @@ INSERT INTO `jurnal_kelas` (`id_jurnal`, `id_jadwal`, `id_guru`, `tanggal`, `sta
 (666, 2037, 83, '2026-09-22', 'Hadir', 'selfie-guru/selfie_83_42_1790050509_ZfxnN0.jpeg', 'Pembelajaran Harian', 31, '2026-09-22 04:15:09', NULL),
 (667, 2039, 102, '2026-09-22', 'Hadir', 'selfie-guru/selfie_102_42_1790057127_0V0HxS.jpeg', 'Pembelajaran Harian', 31, '2026-09-22 06:05:27', NULL),
 (668, 2038, 83, '2026-09-22', 'Hadir', NULL, 'Pembelajaran Harian', 32, '2026-09-22 06:05:27', NULL),
-(669, 2042, 83, '2026-09-23', 'Hadir', 'selfie-guru/selfie_83_42_1790122494_LkummA.jpeg', 'Pembelajaran Harian', 32, '2026-09-23 00:15:07', NULL);
+(669, 2042, 83, '2026-09-23', 'Hadir', 'selfie-guru/selfie_83_42_1790122494_LkummA.jpeg', 'Pembelajaran Harian', 32, '2026-09-23 00:15:07', NULL),
+(670, 2023, 124, '2026-09-28', 'Hadir', 'selfie-guru/selfie_124_42_1790562891_h4T8x6.jpeg', 'Pembelajaran Harian', 31, '2026-09-28 02:34:51', NULL),
+(671, 2024, 124, '2026-09-28', 'Hadir', 'selfie-guru/selfie_124_42_1790562891_h4T8x6.jpeg', 'Pembelajaran Harian', 31, '2026-09-28 02:34:51', NULL),
+(672, 2025, 124, '2026-09-28', 'Hadir', 'selfie-guru/selfie_124_42_1790562891_h4T8x6.jpeg', 'Pembelajaran Harian', 31, '2026-09-28 02:34:51', NULL);
 
 -- --------------------------------------------------------
 
@@ -3102,11 +3220,11 @@ INSERT INTO `jurnal_kelas` (`id_jurnal`, `id_jadwal`, `id_guru`, `tanggal`, `sta
 --
 
 CREATE TABLE `jurnal_siswa_tidak_hadir` (
-  `id_absen` int(11) NOT NULL,
-  `id_jurnal` int(11) NOT NULL,
-  `id_siswa` int(11) NOT NULL,
-  `status` enum('S','I','D','A','T') DEFAULT 'S',
-  `keterangan` varchar(150) DEFAULT NULL,
+  `id_absen` int NOT NULL,
+  `id_jurnal` int NOT NULL,
+  `id_siswa` int NOT NULL,
+  `status` enum('S','I','D','A','T') COLLATE utf8mb4_unicode_ci DEFAULT 'S',
+  `keterangan` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -3134,7 +3252,10 @@ INSERT INTO `jurnal_siswa_tidak_hadir` (`id_absen`, `id_jurnal`, `id_siswa`, `st
 (539, 664, 1747, 'S', NULL, NULL),
 (540, 665, 1747, 'S', NULL, NULL),
 (541, 666, 1747, 'S', NULL, NULL),
-(542, 667, 1747, 'S', NULL, NULL);
+(542, 667, 1747, 'S', NULL, NULL),
+(543, 670, 1759, 'S', NULL, NULL),
+(544, 671, 1759, 'S', NULL, NULL),
+(545, 672, 1759, 'S', NULL, NULL);
 
 --
 -- Triggers `jurnal_siswa_tidak_hadir`
@@ -3177,11 +3298,11 @@ DELIMITER ;
 --
 
 CREATE TABLE `jurusan` (
-  `id_jurusan` bigint(20) UNSIGNED NOT NULL,
-  `kode_jurusan` varchar(20) NOT NULL,
-  `nama_jurusan` varchar(100) NOT NULL,
-  `deskripsi` text DEFAULT NULL,
-  `is_aktif` tinyint(1) NOT NULL DEFAULT 1,
+  `id_jurusan` bigint UNSIGNED NOT NULL,
+  `kode_jurusan` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_jurusan` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi` text COLLATE utf8mb4_unicode_ci,
+  `is_aktif` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -3210,12 +3331,12 @@ INSERT INTO `jurusan` (`id_jurusan`, `kode_jurusan`, `nama_jurusan`, `deskripsi`
 --
 
 CREATE TABLE `kelas` (
-  `id_kelas` int(11) NOT NULL,
-  `nama_kelas` varchar(50) NOT NULL,
-  `tingkat_kelas` varchar(10) NOT NULL,
-  `jurusan` varchar(50) NOT NULL,
-  `id_tahun_ajaran` int(11) NOT NULL,
-  `id_wali_kelas` int(11) DEFAULT NULL,
+  `id_kelas` int NOT NULL,
+  `nama_kelas` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tingkat_kelas` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jurusan` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_tahun_ajaran` int NOT NULL,
+  `id_wali_kelas` int DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -3304,15 +3425,15 @@ INSERT INTO `kelas` (`id_kelas`, `nama_kelas`, `tingkat_kelas`, `jurusan`, `id_t
 --
 
 CREATE TABLE `keterlambatan_siswa` (
-  `id_keterlambatan` bigint(20) UNSIGNED NOT NULL,
-  `id_siswa` int(11) NOT NULL,
-  `id_guru_piket` int(11) DEFAULT NULL,
+  `id_keterlambatan` bigint UNSIGNED NOT NULL,
+  `id_siswa` int NOT NULL,
+  `id_guru_piket` int DEFAULT NULL,
   `tanggal` date NOT NULL,
   `jam_masuk` time NOT NULL,
-  `jam_ke` int(10) UNSIGNED NOT NULL DEFAULT 1,
-  `alasan` text DEFAULT NULL,
-  `foto_surat` varchar(255) DEFAULT NULL,
-  `status` enum('menunggu','diizinkan','ditolak') NOT NULL DEFAULT 'diizinkan',
+  `jam_ke` int UNSIGNED NOT NULL DEFAULT '1',
+  `alasan` text COLLATE utf8mb4_unicode_ci,
+  `foto_surat` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` enum('menunggu','diizinkan','ditolak') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'diizinkan',
   `disetujui_pada` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -3335,13 +3456,13 @@ INSERT INTO `keterlambatan_siswa` (`id_keterlambatan`, `id_siswa`, `id_guru_pike
 --
 
 CREATE TABLE `laporan` (
-  `id_laporan` int(11) NOT NULL,
-  `role_pelapor` varchar(50) NOT NULL,
-  `nama_pelapor` varchar(100) NOT NULL,
-  `judul` varchar(150) NOT NULL,
-  `isi_laporan` text NOT NULL,
-  `status` enum('menunggu','diterima','ditolak','diproses','selesai','dibatalkan') NOT NULL DEFAULT 'menunggu',
-  `catatan_admin` text DEFAULT NULL,
+  `id_laporan` int NOT NULL,
+  `role_pelapor` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_pelapor` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `judul` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `isi_laporan` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('menunggu','diterima','ditolak','diproses','selesai','dibatalkan') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'menunggu',
+  `catatan_admin` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -3366,10 +3487,10 @@ INSERT INTO `laporan` (`id_laporan`, `role_pelapor`, `nama_pelapor`, `judul`, `i
 --
 
 CREATE TABLE `mapel` (
-  `id_mapel` int(11) NOT NULL,
-  `kode_mapel` varchar(20) DEFAULT NULL,
-  `nama_mapel` varchar(100) NOT NULL,
-  `kelompok` varchar(10) DEFAULT NULL,
+  `id_mapel` int NOT NULL,
+  `kode_mapel` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_mapel` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kelompok` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -3432,9 +3553,9 @@ INSERT INTO `mapel` (`id_mapel`, `kode_mapel`, `nama_mapel`, `kelompok`, `delete
 --
 
 CREATE TABLE `migrations` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `migration` varchar(255) NOT NULL,
-  `batch` int(11) NOT NULL
+  `id` int UNSIGNED NOT NULL,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3501,14 +3622,14 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 --
 
 CREATE TABLE `notifikasi` (
-  `id` int(11) NOT NULL,
-  `id_guru` int(11) DEFAULT NULL,
-  `id_kelas` int(11) DEFAULT NULL,
-  `judul` varchar(150) NOT NULL,
-  `pesan` text NOT NULL,
-  `tipe` enum('info','success','warning','error') NOT NULL DEFAULT 'info',
-  `is_read` tinyint(1) NOT NULL DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `id` int NOT NULL,
+  `id_guru` int DEFAULT NULL,
+  `id_kelas` int DEFAULT NULL,
+  `judul` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pesan` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tipe` enum('info','success','warning','error') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'info',
+  `is_read` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -3531,8 +3652,8 @@ INSERT INTO `notifikasi` (`id`, `id_guru`, `id_kelas`, `judul`, `pesan`, `tipe`,
 --
 
 CREATE TABLE `pengaturan` (
-  `kunci` varchar(50) NOT NULL,
-  `nilai` text DEFAULT NULL
+  `kunci` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `nilai` text COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -3554,9 +3675,9 @@ INSERT INTO `pengaturan` (`kunci`, `nilai`) VALUES
 ('wa_gateway_aktif', '1'),
 ('wa_gateway_endpoint', 'http://127.0.0.1:3000/send-message'),
 ('wa_nomor_bot', '628133103966'),
-('wa_nomor_kepsek', '0877777777'),
-('wa_nomor_waka_kesiswaan', '0899999999'),
-('wa_nomor_waka_sdm', '0888888888'),
+('wa_nomor_kepsek', '0881036073441'),
+('wa_nomor_waka_kesiswaan', '085707819270'),
+('wa_nomor_waka_sdm', '0881036073441'),
 ('wa_public_url', 'https://tabloid-doorstop-sneezing.ngrok-free.dev');
 
 -- --------------------------------------------------------
@@ -3566,12 +3687,12 @@ INSERT INTO `pengaturan` (`kunci`, `nilai`) VALUES
 --
 
 CREATE TABLE `pengumuman` (
-  `id_pengumuman` bigint(20) UNSIGNED NOT NULL,
-  `judul` varchar(150) NOT NULL,
-  `isi` text NOT NULL,
-  `target_role` varchar(255) NOT NULL DEFAULT 'semua',
-  `is_aktif` tinyint(1) NOT NULL DEFAULT 1,
-  `id_admin` int(11) DEFAULT NULL,
+  `id_pengumuman` bigint UNSIGNED NOT NULL,
+  `judul` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `isi` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `target_role` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'semua',
+  `is_aktif` tinyint(1) NOT NULL DEFAULT '1',
+  `id_admin` int DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -3584,14 +3705,14 @@ CREATE TABLE `pengumuman` (
 --
 
 CREATE TABLE `roles` (
-  `id_role` int(11) NOT NULL,
-  `nama_role` varchar(50) NOT NULL,
-  `slug_role` varchar(50) NOT NULL,
-  `deskripsi` text DEFAULT NULL,
-  `route_name` varchar(100) DEFAULT NULL,
-  `is_struktural` tinyint(1) NOT NULL DEFAULT 0,
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `id_role` int NOT NULL,
+  `nama_role` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug_role` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi` text COLLATE utf8mb4_unicode_ci,
+  `route_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_struktural` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3615,12 +3736,12 @@ INSERT INTO `roles` (`id_role`, `nama_role`, `slug_role`, `deskripsi`, `route_na
 --
 
 CREATE TABLE `siswa` (
-  `id_siswa` int(11) NOT NULL,
-  `nisn` varchar(20) DEFAULT NULL,
-  `nama_siswa` varchar(100) NOT NULL,
-  `jenis_kelamin` enum('L','P') NOT NULL,
-  `id_kelas` int(11) NOT NULL,
-  `is_aktif` tinyint(1) NOT NULL DEFAULT 1,
+  `id_siswa` int NOT NULL,
+  `nisn` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_siswa` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jenis_kelamin` enum('L','P') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_kelas` int NOT NULL,
+  `is_aktif` tinyint(1) NOT NULL DEFAULT '1',
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -6224,11 +6345,11 @@ INSERT INTO `siswa` (`id_siswa`, `nisn`, `nama_siswa`, `jenis_kelamin`, `id_kela
 --
 
 CREATE TABLE `status_laporan` (
-  `id_status` int(11) NOT NULL,
-  `nama_status` varchar(50) NOT NULL,
-  `slug_status` varchar(50) NOT NULL,
-  `deskripsi_status` varchar(255) DEFAULT NULL,
-  `urutan` int(11) NOT NULL
+  `id_status` int NOT NULL,
+  `nama_status` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug_status` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi_status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `urutan` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -6250,10 +6371,10 @@ INSERT INTO `status_laporan` (`id_status`, `nama_status`, `slug_status`, `deskri
 --
 
 CREATE TABLE `tahun_ajaran` (
-  `id_tahun_ajaran` int(11) NOT NULL,
-  `tahun_ajaran` varchar(20) NOT NULL,
-  `semester` enum('Ganjil','Genap') NOT NULL,
-  `is_aktif` tinyint(1) NOT NULL DEFAULT 0,
+  `id_tahun_ajaran` int NOT NULL,
+  `tahun_ajaran` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `semester` enum('Ganjil','Genap') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_aktif` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -6271,11 +6392,11 @@ INSERT INTO `tahun_ajaran` (`id_tahun_ajaran`, `tahun_ajaran`, `semester`, `is_a
 --
 
 CREATE TABLE `tingkat` (
-  `id_tingkat` int(11) NOT NULL,
-  `nama_tingkat` varchar(10) NOT NULL,
-  `angka` int(11) NOT NULL,
-  `urutan` int(11) NOT NULL,
-  `is_aktif` tinyint(1) NOT NULL DEFAULT 1
+  `id_tingkat` int NOT NULL,
+  `nama_tingkat` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `angka` int NOT NULL,
+  `urutan` int NOT NULL,
+  `is_aktif` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -6500,139 +6621,139 @@ ALTER TABLE `tingkat`
 -- AUTO_INCREMENT for table `akun_admin`
 --
 ALTER TABLE `akun_admin`
-  MODIFY `id_admin` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_admin` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `akun_satpam`
 --
 ALTER TABLE `akun_satpam`
-  MODIFY `id_satpam` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_satpam` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `akun_waka_sdm`
 --
 ALTER TABLE `akun_waka_sdm`
-  MODIFY `id_waka_sdm` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_waka_sdm` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `alumni`
 --
 ALTER TABLE `alumni`
-  MODIFY `id_alumni` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_alumni` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `dispen_siswa`
 --
 ALTER TABLE `dispen_siswa`
-  MODIFY `id_dispen_siswa` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id_dispen_siswa` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `guru`
 --
 ALTER TABLE `guru`
-  MODIFY `id_guru` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=695;
+  MODIFY `id_guru` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=695;
 
 --
 -- AUTO_INCREMENT for table `guru_piket`
 --
 ALTER TABLE `guru_piket`
-  MODIFY `id_guru_piket` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id_guru_piket` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=622;
 
 --
 -- AUTO_INCREMENT for table `izin_guru`
 --
 ALTER TABLE `izin_guru`
-  MODIFY `id_izin_guru` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_izin_guru` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `jadwal_mengajar`
 --
 ALTER TABLE `jadwal_mengajar`
-  MODIFY `id_jadwal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12547;
+  MODIFY `id_jadwal` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12547;
 
 --
 -- AUTO_INCREMENT for table `jam_pelajaran`
 --
 ALTER TABLE `jam_pelajaran`
-  MODIFY `id_jam` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=232;
+  MODIFY `id_jam` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=232;
 
 --
 -- AUTO_INCREMENT for table `jurnal_kelas`
 --
 ALTER TABLE `jurnal_kelas`
-  MODIFY `id_jurnal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=670;
+  MODIFY `id_jurnal` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=673;
 
 --
 -- AUTO_INCREMENT for table `jurnal_siswa_tidak_hadir`
 --
 ALTER TABLE `jurnal_siswa_tidak_hadir`
-  MODIFY `id_absen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=543;
+  MODIFY `id_absen` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=546;
 
 --
 -- AUTO_INCREMENT for table `jurusan`
 --
 ALTER TABLE `jurusan`
-  MODIFY `id_jurusan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_jurusan` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `kelas`
 --
 ALTER TABLE `kelas`
-  MODIFY `id_kelas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=553;
+  MODIFY `id_kelas` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=553;
 
 --
 -- AUTO_INCREMENT for table `keterlambatan_siswa`
 --
 ALTER TABLE `keterlambatan_siswa`
-  MODIFY `id_keterlambatan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id_keterlambatan` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `laporan`
 --
 ALTER TABLE `laporan`
-  MODIFY `id_laporan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_laporan` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `mapel`
 --
 ALTER TABLE `mapel`
-  MODIFY `id_mapel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id_mapel` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `notifikasi`
 --
 ALTER TABLE `notifikasi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 
 --
 -- AUTO_INCREMENT for table `pengumuman`
 --
 ALTER TABLE `pengumuman`
-  MODIFY `id_pengumuman` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_pengumuman` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id_role` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_role` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `siswa`
 --
 ALTER TABLE `siswa`
-  MODIFY `id_siswa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3926;
+  MODIFY `id_siswa` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3926;
 
 --
 -- AUTO_INCREMENT for table `tahun_ajaran`
 --
 ALTER TABLE `tahun_ajaran`
-  MODIFY `id_tahun_ajaran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_tahun_ajaran` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables

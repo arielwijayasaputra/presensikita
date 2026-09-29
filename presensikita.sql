@@ -504,8 +504,8 @@ INSERT INTO `hari` (`id_hari`, `nama_hari`, `nama_inggris`, `singkatan`, `urutan
 (3, 'Rabu', 'Wednesday', 'Rab', 3, 1),
 (4, 'Kamis', 'Thursday', 'Kam', 4, 1),
 (5, 'Jumat', 'Friday', 'Jum', 5, 1),
-(6, 'Sabtu', 'Saturday', 'Sab', 6, 1),
-(7, 'Minggu', 'Sunday', 'Min', 7, 1);
+(6, 'Sabtu', 'Saturday', 'Sab', 6, 0),
+(7, 'Minggu', 'Sunday', 'Min', 7, 0);
 
 -- --------------------------------------------------------
 

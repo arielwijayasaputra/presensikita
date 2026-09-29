@@ -228,7 +228,7 @@ class JamPelajaranController extends Controller
      */
     public function destroyDay(string $hari)
     {
-        abort_unless(in_array($hari, ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'], true), 404);
+        abort_unless(in_array($hari, ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'], true), 404);
 
         $jamIds = JamPelajaran::where('hari', $hari)->pluck('id_jam');
         $usedInJadwal = DB::table('jadwal_mengajar')
@@ -258,7 +258,7 @@ class JamPelajaranController extends Controller
      */
     public function destroyIstirahat(string $hari, int $nomor)
     {
-        abort_unless(in_array($hari, ['weekday', 'friday', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'], true) && in_array($nomor, [1, 2], true), 404);
+        abort_unless(in_array($hari, ['weekday', 'friday', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'], true) && in_array($nomor, [1, 2], true), 404);
         $prefix = ($hari === 'friday' || $hari === 'Jumat') ? 'jam_istirahat_jumat_' : 'jam_istirahat_';
         Pengaturan::set($prefix.$nomor.'_mulai', '');
         Pengaturan::set($prefix.$nomor.'_selesai', '');

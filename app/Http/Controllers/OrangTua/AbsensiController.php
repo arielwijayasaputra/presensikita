@@ -94,8 +94,6 @@ class AbsensiController extends Controller
             3 => 'Rabu',
             4 => 'Kamis',
             5 => 'Jumat',
-            6 => 'Sabtu',
-            7 => 'Minggu',
         ];
         $dayNum = date('N', strtotime($tanggal));
         $hariIndo = $dayMap[$dayNum] ?? 'Senin';

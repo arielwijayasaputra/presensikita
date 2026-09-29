@@ -128,6 +128,7 @@ class DashboardController extends Controller
         $sdmJadwal = collect();
         $sdmIzinGuru = collect();
         $sdmRekapGuru = [];
+        $sdmDataGuru = [];
         $sdmStatHadir = 0;
         $sdmStatTidakHadir = 0;
         $sdmStatBelumIsi = 0;
@@ -190,6 +191,7 @@ class DashboardController extends Controller
                 ->get();
 
             $sdmRekapGuru = $this->buildRekapBulananGuru($sdmBulan, $sdmTahun);
+            $sdmDataGuru = app(DataGuruController::class)->rekap($sdmBulan, $sdmTahun);
         }
 
         // ── Wali Kelas: Data Kelas yang Diampu ──
@@ -484,7 +486,7 @@ class DashboardController extends Controller
             'totalGuruHariIni',
             'jamAktif',
             'guruAktif', 'izinGuruTerbaru', 'isGuruPiket', 'isWaliKelas', 'kelasesWali', 'kelases', 'selectedKelas', 'laporanBulan', 'laporanTahun', 'laporanRekap', 'siswaAktif', 'dispenTerbaru', 'absensiSiswaTerbaru', 'keterlambatanTerbaru', 'isSatpam', 'dispenHariIni',
-            'isWakaSDM', 'sdmTanggal', 'sdmJadwal', 'sdmIzinGuru', 'sdmStatHadir', 'sdmStatTidakHadir', 'sdmStatBelumIsi', 'sdmBulan', 'sdmTahun', 'sdmRekapGuru',
+            'isWakaSDM', 'sdmTanggal', 'sdmJadwal', 'sdmIzinGuru', 'sdmStatHadir', 'sdmStatTidakHadir', 'sdmStatBelumIsi', 'sdmBulan', 'sdmTahun', 'sdmRekapGuru', 'sdmDataGuru',
             'waliKelasObj', 'waliKelasId', 'waliSiswaList', 'waliBulan', 'waliTahun', 'waliRekapData', 'dispenDanIzinKelas', 'siswaPerluPerhatian',
             'waliTanggalHariIni', 'waliAbsensiHariIniList', 'waliStatsHariIni', 'waliJadwalHariIni', 'waliStatsJurnalHariIni',
             'waliTglMulaiAbsen', 'waliTglSelesaiAbsen', 'waliRekapAbsensiRange',

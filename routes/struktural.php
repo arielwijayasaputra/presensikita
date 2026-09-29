@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\DispenSiswaController;
 use App\Http\Controllers\IzinGuruController;
 use App\Http\Controllers\KeterlambatanSiswaController;
+use App\Http\Controllers\Struktural\DataGuruController;
 use App\Http\Controllers\Struktural\DashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,7 @@ Route::middleware('auth.struktural')->group(function () {
     Route::get('/waka-sdm', [DashboardController::class, 'index'])->name('wakasdm.index');
     Route::get('/waka-sdm/export-rekap', [DashboardController::class, 'exportRekapGuru'])->name('wakasdm.export');
     Route::get('/waka-sdm/export-rekap-pdf', [DashboardController::class, 'exportRekapGuruPdf'])->name('wakasdm.export-pdf');
+    Route::get('/waka-sdm/data-guru/{guru}/detail', [DataGuruController::class, 'detail'])->name('wakasdm.data-guru.detail');
 
     Route::post('/struktural/profil/update', [PengaturanController::class, 'updateProfil'])->name('struktural.profil.update');
     Route::post('/guru-piket/izin-guru', [IzinGuruController::class, 'store'])->name('izin-guru.store');

@@ -14,6 +14,7 @@
     @endif
     @if(session('auth_role') === 'waka_sdm')
         @include('struktural.pages.waka_sdm')
+        @include('struktural.pages.data_guru')
     @endif
     @if($isWaliKelas)
         @include('struktural.pages.walikelas')

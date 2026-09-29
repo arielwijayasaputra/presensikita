@@ -521,6 +521,7 @@ class AbsensiService
                             'tanggal' => $tanggal,
                             'status_kehadiran_guru' => $source->status_kehadiran_guru,
                             'foto_selfie' => null,
+                            'tanda_tangan' => null,
                             'materi' => $source->materi,
                             'jumlah_hadir' => $totalSiswa,
                             'waktu_input' => now(),

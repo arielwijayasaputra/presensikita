@@ -544,6 +544,8 @@ class AbsensiController extends Controller
                 'materi' => $jurnal->materi,
                 'foto_selfie' => $jurnal->foto_selfie,
                 'foto_selfie_url' => $jurnal->foto_selfie ? Storage::disk('public')->url($jurnal->foto_selfie) : null,
+                'tanda_tangan' => $jurnal->tanda_tangan,
+                'tanda_tangan_url' => $jurnal->tanda_tangan ? Storage::disk('public')->url($jurnal->tanda_tangan) : null,
                 'jumlah_hadir' => $jurnal->jumlah_hadir,
                 'status_kehadiran_guru' => $jurnal->status_kehadiran_guru,
                 'waktu_input' => $jurnal->waktu_input,
@@ -697,6 +699,25 @@ class AbsensiController extends Controller
                 }
             }
 
+            // Proses upload / decode tanda tangan guru (opsional, sebagai pelengkap foto selfie)
+            $tandaTanganPath = null;
+            if ($request->filled('tanda_tangan') && str_starts_with($request->tanda_tangan, 'data:image')) {
+                $base64Ttd = $request->tanda_tangan;
+                if (preg_match('/^data:image\/(\w+);base64,/', $base64Ttd, $type)) {
+                    $base64Ttd = substr($base64Ttd, strpos($base64Ttd, ',') + 1);
+                    $type = strtolower($type[1]);
+                    if (! in_array($type, ['jpg', 'jpeg', 'png', 'webp'])) {
+                        $type = 'png';
+                    }
+                    $decodedTtd = base64_decode($base64Ttd);
+                    if ($decodedTtd !== false) {
+                        $filename = 'ttd_'.$idGuru.'_'.$kelasId.'_'.time().'_'.Str::random(6).'.'.$type;
+                        Storage::disk('public')->put('tanda-tangan-guru/'.$filename, $decodedTtd);
+                        $tandaTanganPath = 'tanda-tangan-guru/'.$filename;
+                    }
+                }
+            }
+
             // Cek apakah sudah ada foto selfie sebelumnya pada jadwal hari ini untuk guru & kelas ini
             $hasExistingSelfie = false;
             $allJadwalIds = $jadwalGuruHariIni->pluck('id_jadwal')->toArray();
@@ -765,6 +786,7 @@ class AbsensiController extends Controller
                     ->first();
 
                 $fotoToSave = $fotoPath ?? ($existing && $existing->foto_selfie ? $existing->foto_selfie : ($existingCheck ? $existingCheck->foto_selfie : null));
+                $tandaTanganToSave = $tandaTanganPath ?? ($existing && $existing->tanda_tangan ? $existing->tanda_tangan : null);
 
                 if ($existing) {
                     if ($existing->trashed()) {
@@ -775,6 +797,7 @@ class AbsensiController extends Controller
                         'id_guru' => $idGuru,
                         'status_kehadiran_guru' => $statusKehadiranGuru,
                         'foto_selfie' => $fotoToSave,
+                        'tanda_tangan' => $tandaTanganToSave,
                         'materi' => $request->materi ?? $jurnal->materi,
                         'jumlah_hadir' => $jumlahHadir,
                         'waktu_input' => now(),
@@ -788,6 +811,7 @@ class AbsensiController extends Controller
                         'tanggal' => $tanggal,
                         'status_kehadiran_guru' => $statusKehadiranGuru,
                         'foto_selfie' => $fotoToSave,
+                        'tanda_tangan' => $tandaTanganToSave,
                         'materi' => $request->materi ?? 'Pembelajaran Harian',
                         'jumlah_hadir' => $jumlahHadir,
                         'waktu_input' => now(),

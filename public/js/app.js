@@ -199,6 +199,7 @@ function showPage(page){
     }
     if(page==='laporan') initLaporanCharts();
     if(page !== 'jurnal-absensi') stopSelfieCamera();
+    if(page === 'jurnal-absensi') initSignaturePad();
     if (window.location.hash !== '#' + page) {
         history.replaceState(null, '', '#' + page);
     }
@@ -776,6 +777,123 @@ function retakeSelfiePhoto() {
 }
 window.retakeSelfiePhoto = retakeSelfiePhoto;
 
+/* ── Tanda Tangan Guru (canvas signature pad) ───────────────────── */
+let sigCtx = null;
+let sigDrawing = false;
+let sigInitReady = false;
+
+function initSignaturePad() {
+    const canvas = document.getElementById('signature-canvas');
+    if (!canvas || sigInitReady) return;
+    sigInitReady = true;
+
+    const applyResolution = function() {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = Math.round(rect.width || 500);
+        canvas.height = Math.round(rect.height || 160);
+    };
+    applyResolution();
+    sigCtx = canvas.getContext('2d');
+    sigCtx.lineCap = 'round';
+    sigCtx.lineJoin = 'round';
+    sigCtx.strokeStyle = '#1e293b';
+    sigCtx.lineWidth = 2.5;
+
+    const getPos = function(e) {
+        const rect = canvas.getBoundingClientRect();
+        if (e.touches && e.touches[0]) {
+            return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+        }
+        return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    };
+
+    canvas.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        sigDrawing = true;
+        const pos = getPos(e);
+        sigCtx.beginPath();
+        sigCtx.moveTo(pos.x, pos.y);
+    });
+    canvas.addEventListener('mousemove', function(e) {
+        if (!sigDrawing) return;
+        e.preventDefault();
+        const pos = getPos(e);
+        sigCtx.lineTo(pos.x, pos.y);
+        sigCtx.stroke();
+    });
+    canvas.addEventListener('mouseup', function() { if (sigDrawing) { sigDrawing = false; sigCtx.closePath(); } });
+    canvas.addEventListener('mouseleave', function() { if (sigDrawing) { sigDrawing = false; } });
+    canvas.addEventListener('touchstart', function(e) {
+        if (e.touches && e.touches[0]) {
+            e.preventDefault();
+            sigDrawing = true;
+            const pos = getPos(e);
+            sigCtx.beginPath();
+            sigCtx.moveTo(pos.x, pos.y);
+        }
+    }, { passive: false });
+    canvas.addEventListener('touchmove', function(e) {
+        if (!sigDrawing) return;
+        e.preventDefault();
+        const pos = getPos(e);
+        sigCtx.lineTo(pos.x, pos.y);
+        sigCtx.stroke();
+    }, { passive: false });
+    canvas.addEventListener('touchend', function() { if (sigDrawing) { sigDrawing = false; sigCtx.closePath(); } });
+}
+window.initSignaturePad = initSignaturePad;
+
+function isSignatureCanvasEmpty() {
+    const canvas = document.getElementById('signature-canvas');
+    if (!canvas || !sigCtx) return true;
+    const data = sigCtx.getImageData(0, 0, canvas.width, canvas.height).data;
+    for (let i = 0; i < data.length; i += 4) {
+        if (data[i] !== 0 || data[i+1] !== 0 || data[i+2] !== 0 || data[i+3] !== 0) return false;
+    }
+    return true;
+}
+
+function clearSignature() {
+    const canvas = document.getElementById('signature-canvas');
+    if (canvas && sigCtx) {
+        sigCtx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    const input = document.getElementById('input-tanda-tangan');
+    if (input) { input.value = ''; input.dataset.hasExistingTandaTangan = '0'; }
+    const preview = document.getElementById('signature-preview');
+    const placeholder = document.getElementById('signature-placeholder');
+    const canvasWrapper = document.getElementById('signature-canvas-wrapper');
+    const previewContainer = document.getElementById('signature-preview-container');
+    if (preview) { preview.src = ''; preview.style.display = 'none'; }
+    if (placeholder) placeholder.style.display = 'block';
+    if (canvasWrapper) canvasWrapper.style.display = 'block';
+    if (previewContainer) previewContainer.style.display = 'block';
+    initSignaturePad();
+}
+window.clearSignature = clearSignature;
+
+function saveSignature() {
+    const canvas = document.getElementById('signature-canvas');
+    if (!canvas || !sigCtx) {
+        Swal.fire({ icon: 'warning', title: 'Kanvas Tidak Siap', text: 'Silakan gambar tanda tangan terlebih dahulu.', confirmButtonColor: '#1a3268' });
+        return;
+    }
+    if (isSignatureCanvasEmpty()) {
+        Swal.fire({ icon: 'warning', title: 'Tanda Tangan Kosong', text: 'Gambar tanda tangan Anda terlebih dahulu.', confirmButtonColor: '#1a3268' });
+        return;
+    }
+    const dataUrl = canvas.toDataURL('image/png');
+    const input = document.getElementById('input-tanda-tangan');
+    if (input) { input.value = dataUrl; input.dataset.hasExistingTandaTangan = '1'; }
+    const preview = document.getElementById('signature-preview');
+    const placeholder = document.getElementById('signature-placeholder');
+    const canvasWrapper = document.getElementById('signature-canvas-wrapper');
+    if (preview) { preview.src = dataUrl; preview.style.display = 'block'; }
+    if (placeholder) placeholder.style.display = 'none';
+    if (canvasWrapper) canvasWrapper.style.display = 'none';
+}
+window.saveSignature = saveSignature;
+
 function muatAbsensiTersimpan(){
     const root = absensiRoot();
     if (!root) return;
@@ -929,6 +1047,35 @@ function muatAbsensiTersimpan(){
                     sudahAbsensiMsg.style.display = 'none';
                 }
             }
+
+            // Sync status tanda tangan
+            const ttdInput = root ? qs('#input-tanda-tangan', root) : document.getElementById('input-tanda-tangan');
+            const ttdPreview = document.getElementById('signature-preview');
+            const ttdPlaceholder = document.getElementById('signature-placeholder');
+            const ttdCanvasWrapper = document.getElementById('signature-canvas-wrapper');
+            const ttdPreviewContainer = document.getElementById('signature-preview-container');
+            if (data.jurnal && (data.jurnal.tanda_tangan_url || data.jurnal.tanda_tangan)) {
+                if (ttdInput) {
+                    ttdInput.value = '';
+                    ttdInput.dataset.hasExistingTandaTangan = '1';
+                }
+                if (ttdPreview) {
+                    ttdPreview.src = data.jurnal.tanda_tangan_url || '';
+                    ttdPreview.style.display = 'block';
+                }
+                if (ttdPlaceholder) ttdPlaceholder.style.display = 'none';
+                if (ttdCanvasWrapper) ttdCanvasWrapper.style.display = 'none';
+                if (ttdPreviewContainer) ttdPreviewContainer.style.display = 'block';
+            } else {
+                if (ttdInput) {
+                    ttdInput.value = '';
+                    ttdInput.dataset.hasExistingTandaTangan = '0';
+                }
+                if (ttdPreview) { ttdPreview.src = ''; ttdPreview.style.display = 'none'; }
+                if (ttdPlaceholder) ttdPlaceholder.style.display = 'block';
+                if (ttdCanvasWrapper) ttdCanvasWrapper.style.display = 'block';
+            }
+            initSignaturePad();
 
             const submitBtn = root ? qs('#btn-submit-jurnal', root) : document.getElementById('btn-submit-jurnal');
             const submitBtnTop = root ? qs('#btn-submit-jurnal-top', root) : document.getElementById('btn-submit-jurnal-top');
@@ -1225,6 +1372,8 @@ function submitAbsensi(){
     const materi = (root ? qs('#input-materi', root) : document.getElementById('input-materi'))?.value || '';
     const fotoInputEl = root ? qs('#input-foto-selfie', root) : document.getElementById('input-foto-selfie');
     const fotoSelfie = fotoInputEl?.value || '';
+    const ttdInputEl = root ? qs('#input-tanda-tangan', root) : document.getElementById('input-tanda-tangan');
+    const tandaTangan = ttdInputEl?.value || '';
     const previewSrc = (root ? qs('#selfie-preview', root) : document.getElementById('selfie-preview'))?.getAttribute('src') || '';
     const hasExistingSelfie = fotoInputEl?.dataset?.hasExistingSelfie === '1'
         || (document.getElementById('sudah-absensi-message') && document.getElementById('sudah-absensi-message').style.display !== 'none');
@@ -1270,6 +1419,7 @@ function submitAbsensi(){
             tanggal: tanggal,
             materi: materi,
             foto_selfie: fotoSelfie,
+            tanda_tangan: tandaTangan,
             absensi: absensiData
         })
     })
@@ -3590,6 +3740,32 @@ window.showSelfiePopup = function(url, title) {
     });
 };
 
+window.showSignaturePopup = function(url, title) {
+    Swal.fire({
+        title: 'Tanda Tangan Guru',
+        html: `
+            ${title ? `<div style="font-size:13.5px;font-weight:600;color:#64748b;margin-top:-6px;margin-bottom:14px">${title}</div>` : ''}
+            <div style="border-radius:12px;overflow:hidden;background:#f1f5f9;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;min-height:160px;position:relative">
+                <img src="${url}" 
+                     alt="Tanda Tangan Guru" 
+                     style="max-width:100%;max-height:360px;object-fit:contain;display:block;border-radius:11px" 
+                     onerror="this.parentElement.innerHTML='<div style=\\'padding:32px 20px;color:#94a3b8;font-size:13px;font-weight:600;text-align:center\\'><svg width=\\'28\\' height=\\'28\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2\\'><circle cx=\\'12\\' cy=\\'12\\' r=\\'10\\'/><line x1=\\'12\\' y1=\\'8\\' x2=\\'12\\' y2=\\'12\\'/><line x1=\\'12\\' y1=\\'16\\' x2=\\'12.01\\' y2=\\'16\\'/></svg>Tanda tangan tidak ditemukan atau gagal dimuat.</div>'">
+            </div>
+            <div style="margin-top:14px;display:flex;justify-content:center;gap:8px">
+                <a href="${url}" target="_blank" rel="noopener" class="custom-swal-confirm" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:8px 16px;border-radius:8px;background:#2563eb;color:#ffffff">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    Buka Ukuran Penuh
+                </a>
+            </div>
+        `,
+        showCloseButton: true,
+        showConfirmButton: false,
+        customClass: {
+            popup: 'custom-swal-popup'
+        },
+        width: 480
+    });
+};
 
 /* ── Global filterTable: progressive text search for any table ─────────── */
 window.filterTable = function(inputId, tableId) {

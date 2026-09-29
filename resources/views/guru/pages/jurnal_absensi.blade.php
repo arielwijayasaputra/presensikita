@@ -139,6 +139,48 @@
                 </div>
             </div>
         </div>
+
+        {{-- ── Komponen Tanda Tangan Guru (pelengkap foto selfie) ── --}}
+        <div id="signature-section" class="signature-section-card" style="margin-top:16px;padding:18px;border-radius:12px;border:1px solid #e2e8f0">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+                <div style="display:flex;align-items:center;gap:8px">
+                    <div style="width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(37,99,235,0.15)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5a1 1 0 0 1-1.4.4l-4-2a1 1 0 0 1 .3-1.8l10-3z"/><path d="M2 19l7-7 2 2 5-5 6 6v4a1 1 0 0 1-1 1l-9 2-4 2z"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size:14px;font-weight:700">Tanda Tangan Guru</div>
+                        <div style="font-size:12px;color:var(--text-secondary)">Gambar tanda tangan Anda di kanvas di bawah ini (opsional, disimpan bersama jurnal).</div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:8px">
+                    <button type="button" id="btn-clear-signature" onclick="clearSignature()" style="background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px" {{ !$canInputJurnal ? 'disabled' : '' }}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        Hapus
+                    </button>
+                    <button type="button" id="btn-save-signature" onclick="saveSignature()" style="background:#2563eb;color:#fff;border:none;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px" {{ !$canInputJurnal ? 'disabled' : '' }}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="25"><polyline points="20 6 9 17 4 12"/></svg>
+                        Simpan Tanda Tangan
+                    </button>
+                </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:16px;align-items:start">
+                <div id="signature-canvas-wrapper" style="position:relative;border:1px dashed #cbd5e1;border-radius:10px;overflow:hidden;background:#fff;aspect-ratio:500/160;max-height:160px">
+                    <canvas id="signature-canvas" width="500" height="160" style="width:100%;height:100%;display:block;background:#fff;cursor:crosshair"></canvas>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+                    <div id="signature-preview-container" style="border:1px dashed #cbd5e1;border-radius:10px;overflow:hidden;background:#f8fafc;display:flex;align-items:center;justify-content:center;aspect-ratio:500/160;max-height:160px">
+                        <img id="signature-preview" src="" alt="Preview Tanda Tangan" style="width:100%;height:100%;object-fit:contain;display:none;">
+                        <div id="signature-placeholder" style="text-align:center;color:#94a3b8;padding:14px">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 8px;display:block"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5a1 1 0 0 1-1.4.4l-4-2a1 1 0 0 1 .3-1.8l10-3z"/><path d="M2 19l7-7 2 2 5-5 6 6v4a1 1 0 0 1-1 1l-9 2-4 2z"/></svg>
+                            <div style="font-size:11.5px;font-weight:600">Tanda tangan yang sudah disimpan akan tampil di sini</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" id="input-tanda-tangan" value="">
+        </div>
     </div>
 
     {{-- ── Placeholder saat belum jam mengajar ── --}}

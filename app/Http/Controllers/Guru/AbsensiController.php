@@ -484,6 +484,7 @@ class AbsensiController extends Controller
 
         $dispenMap = DispenSiswa::whereIn('id_siswa', $siswaList->pluck('id_siswa'))
             ->whereDate('tanggal_dispen', $tanggal)
+            ->where('status_waka', 'disetujui')
             ->get()
             ->keyBy('id_siswa');
 
@@ -505,19 +506,21 @@ class AbsensiController extends Controller
 
             $status = $th ? $th->status : 'H';
             $keterangan = $th ? ($th->keterangan ?? '') : '';
+            $hasApprovedDispen = false;
 
-            // Jika belum ada record tidak hadir dari jurnal jam ini tapi siswa ada dispen hari ini
-            if (! $th && $dp) {
-                $wMulai = $dp->waktu_keluar ? $dp->waktu_keluar->format('H:i:s') : ($dp->created_at ? $dp->created_at->format('H:i:s') : '00:00:00');
-                $wSelesai = $dp->waktu_masuk ? $dp->waktu_masuk->format('H:i:s') : '23:59:59';
-                if ($nowTime >= $wMulai && $nowTime < $wSelesai) {
-                    $status = $dp->jenis_absen ?? 'D';
-                    $keterangan = strtoupper($status).($dp->alasan ? ': '.$dp->alasan : '');
-                }
+            // Jika siswa memiliki surat dispensasi resmi yang sudah disetujui Waka: OTOMATIS STATUS DISPEN
+            if ($dp) {
+                $hasApprovedDispen = true;
+                $status = 'D';
+                $keterangan = 'Dispensasi' . ($dp->alasan ? ': ' . $dp->alasan : ' Resmi (Disetujui Waka)');
+            } elseif ($status === 'D') {
+                // Jika tidak ada surat dispen yang disetujui, guru tidak dapat memberikan status D
+                $status = 'H';
+                $keterangan = '';
             } elseif (! $th && $kt) {
                 if ($normalizedCurrentJamKe < $kt->jam_ke) {
                     $status = 'T';
-                    $keterangan = 'Masuk Terlambat'.($kt->alasan ? ': '.$kt->alasan : '');
+                    $keterangan = 'Masuk Terlambat' . ($kt->alasan ? ': ' . $kt->alasan : '');
                 } else {
                     $status = 'H';
                 }
@@ -529,6 +532,8 @@ class AbsensiController extends Controller
                 'nama_siswa' => $s->nama_siswa,
                 'status' => $status,
                 'keterangan' => $keterangan,
+                'has_approved_dispen' => $hasApprovedDispen,
+                'dispen_alasan' => $dp?->alasan,
             ];
         });
 
@@ -551,17 +556,48 @@ class AbsensiController extends Controller
     {
         DB::beginTransaction();
         try {
+            $idGuru = session('auth_guru_id') ?? Guru::first()?->id_guru;
+            $kelasId = (int) $request->id_kelas;
+            $tanggal = $request->tanggal;
+            if ($tanggal !== now()->toDateString()) {
+                DB::rollBack();
+
+                return response()->json(['status' => 'error', 'message' => 'Jurnal hanya dapat diisi untuk hari ini.'], 422);
+            }
+
             $jumlahHadir = 0;
             $tidakHadirList = [];
             $validStatuses = ['H', 'S', 'I', 'D', 'A', 'T'];
             $validSiswaIds = Siswa::where('id_kelas', $request->id_kelas)->where('is_aktif', 1)->pluck('id_siswa')->map(fn ($id) => (string) $id)->toArray();
 
+            // Ambil daftar dispensasi resmi yang SUDAH DISETUJUI WAKA
+            $approvedDispenMap = DispenSiswa::whereIn('id_siswa', $validSiswaIds)
+                ->whereDate('tanggal_dispen', $tanggal)
+                ->where('status_waka', 'disetujui')
+                ->get()
+                ->keyBy('id_siswa');
+
             foreach ($request->absensi as $idSiswa => $item) {
                 if (! in_array((string) $idSiswa, $validSiswaIds)) {
                     continue;
                 }
-                $status = isset($item['status']) && in_array($item['status'], $validStatuses) ? $item['status'] : 'H';
-                $ket = $item['keterangan'] ?? null;
+
+                $dp = $approvedDispenMap->get((int) $idSiswa);
+                if ($dp) {
+                    // OTOMATIS DISPEN jika ada surat yang disetujui Waka
+                    $status = 'D';
+                    $ket = 'Dispensasi' . ($dp->alasan ? ': ' . $dp->alasan : ' Resmi (Disetujui Waka)');
+                } else {
+                    $reqStatus = isset($item['status']) && in_array($item['status'], $validStatuses) ? $item['status'] : 'H';
+                    // Jika tidak ada surat dispen yang disetujui, guru TIDAK BISA memberikan status D manual
+                    if ($reqStatus === 'D') {
+                        $status = 'H';
+                        $ket = null;
+                    } else {
+                        $status = $reqStatus;
+                        $ket = $item['keterangan'] ?? null;
+                    }
+                }
 
                 if ($status === 'H') {
                     $jumlahHadir++;
@@ -572,15 +608,6 @@ class AbsensiController extends Controller
                         'keterangan' => $ket,
                     ];
                 }
-            }
-
-            $idGuru = session('auth_guru_id') ?? Guru::first()?->id_guru;
-            $kelasId = (int) $request->id_kelas;
-            $tanggal = $request->tanggal;
-            if ($tanggal !== now()->toDateString()) {
-                DB::rollBack();
-
-                return response()->json(['status' => 'error', 'message' => 'Jurnal hanya dapat diisi untuk hari ini.'], 422);
             }
 
             $hariMap = Hari::getActiveDays()->pluck('nama_hari', 'nama_inggris')->toArray();

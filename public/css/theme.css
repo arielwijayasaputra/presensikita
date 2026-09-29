@@ -1283,3 +1283,96 @@ html.theme-transitioning *::after {
     border-color: var(--text-muted);
     color: var(--text-primary);
 }
+
+/* ==========================================================================
+   #9 — Jurnal & Selfie Section Dark Mode & High-Contrast Banner Fixes
+   ========================================================================== */
+[data-theme="dark"] .sudah-absensi-banner,
+[data-theme="dark"] #sudah-absensi-message {
+    background: rgba(34, 197, 94, 0.1) !important;
+    border: 1.5px solid rgba(34, 197, 94, 0.3) !important;
+}
+[data-theme="dark"] .sudah-absensi-icon-wrap,
+[data-theme="dark"] #sudah-absensi-message .sudah-absensi-icon-wrap {
+    background: rgba(34, 197, 94, 0.2) !important;
+    color: #4ade80 !important;
+}
+[data-theme="dark"] .sudah-absensi-title,
+[data-theme="dark"] #sudah-absensi-message .sudah-absensi-title {
+    color: #4ade80 !important;
+}
+[data-theme="dark"] .sudah-absensi-sub,
+[data-theme="dark"] #sudah-absensi-message .sudah-absensi-sub {
+    color: #86efac !important;
+}
+
+[data-theme="dark"] .selfie-section-card {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+}
+[data-theme="dark"] .selfie-header-icon {
+    background: rgba(37, 99, 235, 0.18) !important;
+    color: #60a5fa !important;
+}
+[data-theme="dark"] .selfie-title-text {
+    color: #f8fafc !important;
+}
+[data-theme="dark"] .preview-box-container {
+    background: #0f172a !important;
+    border-color: #263654 !important;
+}
+[data-theme="dark"] .absensi-locked-box {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+}
+[data-theme="dark"] .form-input-readonly {
+    background: #141b2b !important;
+    color: #94a3b8 !important;
+    border-color: var(--border) !important;
+}
+[data-theme="dark"] .mobile-top-save-bar {
+    background: var(--card-bg) !important;
+    border-color: var(--border) !important;
+}
+
+/* Comprehensive fallback for any inline white or light pastels in dark mode */
+[data-theme="dark"] [style*="background: #f0fdf4"],
+[data-theme="dark"] [style*="background:#f0fdf4"],
+[data-theme="dark"] [style*="background: rgb(240, 253, 244)"],
+[data-theme="dark"] [style*="background:rgb(240, 253, 244)"],
+[data-theme="dark"] [style*="background: #dcfce7"],
+[data-theme="dark"] [style*="background:#dcfce7"],
+[data-theme="dark"] [style*="background: rgb(220, 252, 231)"],
+[data-theme="dark"] [style*="background:rgb(220, 252, 231)"] {
+    background: rgba(34, 197, 94, 0.1) !important;
+    border-color: rgba(34, 197, 94, 0.3) !important;
+    color: #4ade80 !important;
+}
+
+[data-theme="dark"] [style*="background: #eff6ff"],
+[data-theme="dark"] [style*="background:#eff6ff"],
+[data-theme="dark"] [style*="background: rgb(239, 246, 255)"],
+[data-theme="dark"] [style*="background:rgb(239, 246, 255)"] {
+    background: rgba(59, 130, 246, 0.12) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+    color: #60a5fa !important;
+}
+
+[data-theme="dark"] [style*="background: #fffbeb"],
+[data-theme="dark"] [style*="background:#fffbeb"],
+[data-theme="dark"] [style*="background: rgb(255, 251, 235)"],
+[data-theme="dark"] [style*="background:rgb(255, 251, 235)"] {
+    background: rgba(245, 158, 11, 0.12) !important;
+    border-color: rgba(245, 158, 11, 0.3) !important;
+    color: #fbbf24 !important;
+}
+
+[data-theme="dark"] [style*="background: #fef2f2"],
+[data-theme="dark"] [style*="background:#fef2f2"],
+[data-theme="dark"] [style*="background: rgb(254, 242, 242)"],
+[data-theme="dark"] [style*="background:rgb(254, 242, 242)"] {
+    background: rgba(239, 68, 68, 0.12) !important;
+    border-color: rgba(239, 68, 68, 0.3) !important;
+    color: #f87171 !important;
+}
+

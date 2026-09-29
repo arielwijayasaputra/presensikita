@@ -47,7 +47,7 @@
         <div class="jurnal-form-grid">
             <div class="form-field">
                 <label for="pilih-kelas">Kelas</label>
-                <select id="pilih-kelas" class="form-select" disabled style="background:#f1f5f9;color:#64748b;cursor:not-allowed;border-color:#cbd5e1;" title="Kelas otomatis mengikuti jadwal mengajar Anda">
+                <select id="pilih-kelas" class="form-select form-input-readonly" disabled title="Kelas otomatis mengikuti jadwal mengajar Anda">
                     @foreach($kelases as $k)
                     <option value="{{ $k->id_kelas }}" {{ (isset($selectedKelas->id_kelas) && $selectedKelas->id_kelas == $k->id_kelas) ? 'selected' : '' }}>
                         {{ $k->nama_kelas }}
@@ -57,7 +57,7 @@
             </div>
             <div class="form-field">
                 <label for="input-tanggal">Tanggal Pelaksanaan</label>
-                <input type="date" id="input-tanggal" class="form-input" value="{{ date('Y-m-d') }}" readonly disabled style="background:#f1f5f9;color:#64748b;cursor:not-allowed;border-color:#cbd5e1;" title="Tanggal otomatis hari ini">
+                <input type="date" id="input-tanggal" class="form-input form-input-readonly" value="{{ date('Y-m-d') }}" readonly disabled title="Tanggal otomatis hari ini">
             </div>
             <div class="form-field">
                 <label for="input-materi">Materi Pembelajaran</label>
@@ -66,19 +66,19 @@
         </div>
 
         {{-- ── Komponen Foto Selfie Realtime Guru Per Jadwal/Kelas ── --}}
-        <div id="selfie-section" style="margin-top:16px;padding:18px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px">
+        <div id="selfie-section" class="selfie-section-card" style="margin-top:16px;padding:18px;border-radius:12px">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px">
                 <div style="display:flex;align-items:center;gap:8px">
-                    <div style="width:34px;height:34px;border-radius:8px;background:#eff6ff;color:#2563eb;display:flex;align-items:center;justify-content:center">
+                    <div class="selfie-header-icon" style="width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
                     </div>
                     <div>
-                        <div style="font-size:14px;font-weight:700;color:#1e293b">Foto Selfie Realtime Mengajar di Kelas</div>
-                        <div style="font-size:12px;color:#64748b">Wajib diambil secara langsung melalui kamera di awal jam mengajar kelas ini.</div>
+                        <div style="font-size:14px;font-weight:700" class="selfie-title-text">Foto Selfie Realtime Mengajar di Kelas</div>
+                        <div style="font-size:12px;color:var(--text-secondary)">Wajib diambil secara langsung melalui kamera di awal jam mengajar kelas ini.</div>
                     </div>
                 </div>
                 <div id="selfie-badge-container">
-                    <span id="selfie-status-badge" class="badge" style="background:#fee2e2;color:#b91c1c;border:1px solid #fecaca;padding:5px 12px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:6px">
+                    <span id="selfie-status-badge" class="badge badge-danger" style="padding:5px 12px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:6px">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                         Belum Ambil Foto
                     </span>
@@ -110,7 +110,7 @@
 
                 <!-- Preview Box & Actions -->
                 <div style="display:flex;flex-direction:column;gap:12px">
-                    <div id="preview-box" style="position:relative;background:#f1f5f9;border:2px dashed #cbd5e1;border-radius:10px;overflow:hidden;aspect-ratio:4/3;max-height:280px;display:flex;align-items:center;justify-content:center">
+                    <div id="preview-box" class="preview-box-container" style="position:relative;border-radius:10px;overflow:hidden;aspect-ratio:4/3;max-height:280px;display:flex;align-items:center;justify-content:center">
                         <img id="selfie-preview" src="" alt="Preview Selfie" style="width:100%;height:100%;object-fit:cover;display:none;">
                         <div id="preview-placeholder" style="text-align:center;color:#94a3b8;padding:20px">
                             <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 8px;display:block"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
@@ -142,12 +142,12 @@
     </div>
 
     {{-- ── Placeholder saat belum jam mengajar ── --}}
-    <div id="absensi-locked-placeholder" style="text-align:center;padding:48px 20px;background:#ffffff;border-radius:12px;border:1px dashed #cbd5e1;margin-top:16px;box-shadow:0 1px 3px rgba(0,0,0,0.05);{{ $canInputJurnal ? 'display:none;' : '' }}">
-        <div style="width:56px;height:56px;border-radius:50%;background:#fef2f2;color:#ef4444;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+    <div id="absensi-locked-placeholder" class="absensi-locked-box" style="text-align:center;padding:48px 20px;border-radius:12px;margin-top:16px;{{ $canInputJurnal ? 'display:none;' : '' }}">
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(239,68,68,0.15);color:#ef4444;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         </div>
-        <h4 style="font-size:16px;font-weight:700;color:#1e293b;margin-bottom:6px">Daftar Absensi Siswa Belum Dibuka</h4>
-        <p style="font-size:13px;color:#64748b;max-width:480px;margin:0 auto;line-height:1.5">
+        <h4 style="font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:6px">Daftar Absensi Siswa Belum Dibuka</h4>
+        <p style="font-size:13px;color:var(--text-secondary);max-width:480px;margin:0 auto;line-height:1.5">
             Daftar kehadiran siswa untuk kelas ini akan otomatis terbuka saat Anda memasuki jam mengajar yang telah dijadwalkan.
         </p>
     </div>
@@ -155,7 +155,7 @@
     {{-- ── Kontainer Tabel Absensi Siswa (Hanya tampil saat jam mengajar aktif) ── --}}
     <div id="absensi-table-wrapper" class="table-card" style="margin-top:16px;{{ !$canInputJurnal ? 'display:none;' : '' }}">
         {{-- Tombol Simpan khusus Mobile (ditampilkan di atas) --}}
-        <div id="mobile-top-save" class="mobile-top-save-bar" style="display:none;padding:14px 16px;border-bottom:1px solid #e2e8f0;background:#f0fdf4">
+        <div id="mobile-top-save" class="mobile-top-save-bar" style="display:none;padding:14px 16px;">
             <button id="btn-submit-jurnal-top" class="btn-submit-jurnal" onclick="submitAbsensi()" style="width:100%;text-align:center" {{ !$canInputJurnal ? 'disabled' : '' }}>Simpan Jurnal &amp; Absensi</button>
         </div>
         <div class="absensi-toolbar" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #e2e8f0">

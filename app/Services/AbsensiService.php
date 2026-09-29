@@ -475,6 +475,7 @@ class AbsensiService
 
         $dispenList = DispenSiswa::whereIn('id_siswa', $allSiswa->pluck('id_siswa'))
             ->whereDate('tanggal_dispen', $tanggal)
+            ->where('status_waka', 'disetujui')
             ->get();
 
         $keterlambatanList = KeterlambatanSiswa::whereIn('id_siswa', $allSiswa->pluck('id_siswa'))

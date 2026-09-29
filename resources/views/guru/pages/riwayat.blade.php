@@ -6,9 +6,16 @@
         </div>
     </div>
 
-    <div class="table-card">
+    <div class="table-card" style="padding:22px 24px">
+        <div class="card-header" style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+            <div class="card-title" style="font-size:15px;font-weight:700;color:#0f172a">Daftar Riwayat Jurnal</div>
+            <div style="position:relative">
+                <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="search-guru-riwayat" oninput="filterTable('search-guru-riwayat','table-guru-riwayat')" onkeyup="filterTable('search-guru-riwayat','table-guru-riwayat')" placeholder="Cari kelas / materi / tanggal..." class="filter-input" style="padding:7px 12px 7px 32px;font-size:12.5px;border-radius:8px;border:1px solid #cbd5e1;width:230px">
+            </div>
+        </div>
         <div style="overflow-x:auto">
-            <table style="min-width:760px">
+            <table class="data-table" id="table-guru-riwayat" style="min-width:760px">
                 <thead>
                     <tr>
                         <th style="width:40px;text-align:center">No.</th>

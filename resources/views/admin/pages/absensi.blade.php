@@ -23,7 +23,7 @@
         </div>
         <div class="filter-group">
             <label>Cari Siswa</label>
-            <input type="text" class="filter-input" placeholder="Ketik nama atau NISN..." oninput="filterSiswa(this.value)">
+            <input type="text" class="filter-input" id="search-input-absensi" placeholder="Ketik nama atau NISN..." oninput="filterSiswa(this.value)" onkeyup="filterSiswa(this.value)">
         </div>
         <div class="filter-hint filter-hint-info">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>

@@ -1144,7 +1144,8 @@ function filterSiswa(q){
     rows.forEach(row => {
         const nama = row.dataset.nama || '';
         const nisn = row.dataset.nisn || '';
-        const isMatch = !q || nama.includes(q) || nisn.includes(q);
+        const fullText = (row.textContent || '').toLowerCase();
+        const isMatch = !q || nama.includes(q) || nisn.includes(q) || fullText.includes(q);
         row.style.display = isMatch ? '' : 'none';
         if (isMatch) matchCount++;
     });
@@ -1152,7 +1153,8 @@ function filterSiswa(q){
     cards.forEach(card => {
         const nama = card.dataset.nama || '';
         const nisn = card.dataset.nisn || '';
-        const isMatch = !q || nama.includes(q) || nisn.includes(q);
+        const fullText = (card.textContent || '').toLowerCase();
+        const isMatch = !q || nama.includes(q) || nisn.includes(q) || fullText.includes(q);
         card.style.display = isMatch ? '' : 'none';
     });
 
@@ -1169,6 +1171,43 @@ function filterSiswa(q){
         emptyRow.style.display = 'none';
     }
 }
+window.filterSiswa = filterSiswa;
+
+window.filterTable = function(inputId, tableId) {
+    const input = typeof inputId === 'string' ? document.getElementById(inputId) : inputId;
+    const q = (input ? input.value : '').toLowerCase().trim();
+    const table = typeof tableId === 'string' ? document.getElementById(tableId) : tableId;
+    if (!table) return;
+
+    const tbody = table.querySelector('tbody') || table;
+    const rows = Array.from(tbody.querySelectorAll('tr:not(.search-empty-row)'));
+    let matchCount = 0;
+
+    rows.forEach(row => {
+        if (row.querySelector('th') && !row.querySelector('td')) return;
+        const text = (row.textContent || row.innerText || '').toLowerCase();
+        const isMatch = !q || text.includes(q);
+        row.style.display = isMatch ? '' : 'none';
+        if (isMatch) matchCount++;
+    });
+
+    let emptyRow = tbody.querySelector('.search-empty-row');
+    if (matchCount === 0 && rows.length > 0) {
+        if (!emptyRow) {
+            const colCount = table.querySelectorAll('thead th, tr:first-child th, tr:first-child td').length || 8;
+            emptyRow = document.createElement('tr');
+            emptyRow.className = 'search-empty-row';
+            emptyRow.innerHTML = `<td colspan="${colCount}" style="text-align:center;padding:24px;color:#94a3b8;font-style:italic">Tidak ada data yang cocok dengan pencarian "${q}".</td>`;
+            tbody.appendChild(emptyRow);
+        } else {
+            const td = emptyRow.querySelector('td');
+            if (td) td.textContent = `Tidak ada data yang cocok dengan pencarian "${q}".`;
+        }
+        emptyRow.style.display = '';
+    } else if (emptyRow) {
+        emptyRow.style.display = 'none';
+    }
+};
 
 function submitAbsensi(){
     const root = absensiRoot();
@@ -3551,4 +3590,18 @@ window.showSelfiePopup = function(url, title) {
     });
 };
 
+
+/* ── Global filterTable: progressive text search for any table ─────────── */
+window.filterTable = function(inputId, tableId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    const kw = input.value.toLowerCase();
+    const table = document.getElementById(tableId);
+    if (!table) return;
+    const rows = table.querySelectorAll('tbody tr');
+    rows.forEach(row => {
+        const text = (row.textContent || row.innerText || '').toLowerCase();
+        row.style.display = text.includes(kw) ? '' : 'none';
+    });
+};
 

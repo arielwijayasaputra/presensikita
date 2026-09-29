@@ -64,6 +64,7 @@
                 <input type="text" class="filter-input" id="alumni-cari"
                     placeholder="Ketik nama atau NISN..."
                     oninput="filterAlumni()"
+                    onkeyup="filterAlumni()"
                     style="width:100%;max-width:320px;padding-left:32px">
             </div>
         </div>

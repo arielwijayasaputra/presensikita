@@ -104,6 +104,7 @@
                 <input type="text" class="filter-input" id="kelas-cari"
                     placeholder="Ketik nama kelas..."
                     oninput="filterKelasPage()"
+                    onkeyup="filterKelasPage()"
                     style="width:100%;max-width:300px;padding-left:32px">
             </div>
         </div>
@@ -613,7 +614,7 @@ function lihatSiswaKelasModal(id, namaKelas, waliKelas) {
                             ${total > 0 ? `
                             <div style="position:relative;margin-bottom:12px">
                                 <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                                <input type="text" id="modal-cari-siswa" placeholder="Cari berdasarkan nama lengkap atau NISN..." oninput="filterModalSiswaList(this.value)" style="width:100%;padding:9px 12px 9px 36px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:13px;outline:none;box-sizing:border-box;background: #ffffff;transition:border-color 0.2s, box-shadow 0.2s;">
+                                <input type="text" id="modal-cari-siswa" placeholder="Cari berdasarkan nama lengkap atau NISN..." oninput="filterModalSiswaList(this.value)" onkeyup="filterModalSiswaList(this.value)" style="width:100%;padding:9px 12px 9px 36px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:13px;outline:none;box-sizing:border-box;background: #ffffff;transition:border-color 0.2s, box-shadow 0.2s;">
                             </div>
                             ` : ''}
                         </div>

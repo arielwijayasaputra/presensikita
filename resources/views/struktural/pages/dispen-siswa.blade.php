@@ -8,15 +8,19 @@
                     <label for="dispen-siswa">Siswa</label>
                     <input type="hidden" id="dispen-siswa" name="id_siswa" required>
                     <div style="position:relative;margin-top:4px">
-                        <input type="text" id="dispen-siswa-search" class="filter-input" placeholder="Ketik nama siswa..." autocomplete="off" required style="width:100%;box-sizing:border-box">
+                        <input type="text" id="dispen-siswa-search" class="filter-input" placeholder="Ketik nama atau kelas siswa..." autocomplete="off" required style="width:100%;box-sizing:border-box"
+                            onfocus="filterDispenSiswaDropdown(this.value)"
+                            oninput="filterDispenSiswaDropdown(this.value)"
+                            onkeyup="filterDispenSiswaDropdown(this.value)">
                         <svg style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                        <div id="dispen-siswa-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #e2e8f0;border-radius:8px;margin-top:4px;max-height:220px;overflow-y:auto;z-index:50;box-shadow:0 4px 12px rgba(0,0,0,0.1)">
+                        <div id="dispen-siswa-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--card-bg, #ffffff);color:var(--text, #0f172a);border:1px solid var(--border, #cbd5e1);border-radius:8px;margin-top:4px;max-height:220px;overflow-y:auto;z-index:999;box-shadow:0 10px 25px rgba(0,0,0,0.25)">
                             @foreach($siswaAktif as $siswa)
-                                <div class="dispen-siswa-dropdown-item" data-id="{{ $siswa->id_siswa }}" data-search="{{ strtolower($siswa->nama_siswa . ' ' . ($siswa->kelas->nama_kelas ?? '')) }}"
+                                <div class="dispen-siswa-dropdown-item" data-id="{{ $siswa->id_siswa }}" data-search="{{ strtolower($siswa->nama_siswa . ' ' . ($siswa->kelas->nama_kelas ?? '') . ' ' . ($siswa->nisn ?? '')) }}"
                                     onclick="pilihDispenSiswaDropdown('{{ $siswa->id_siswa }}', '{{ addslashes($siswa->nama_siswa) }} - {{ addslashes($siswa->kelas->nama_kelas ?? '') }}')"
-                                    style="padding:10px 14px;cursor:pointer;font-size:13px;border-bottom:1px solid #f1f5f9;transition:background 0.15s"
-                                    onmouseenter="this.style.background='#f1f5f9'" onmouseleave="this.style.background='#fff'">
-                                    {{ $siswa->nama_siswa }} - {{ $siswa->kelas->nama_kelas ?? '-' }}
+                                    style="padding:10px 14px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border, #f1f5f9);transition:background 0.15s;color:inherit"
+                                    onmouseenter="this.style.background='var(--hover-bg, rgba(255,255,255,0.06))'" onmouseleave="this.style.background='transparent'">
+                                    <div style="font-weight:600;color:inherit">{{ $siswa->nama_siswa }}</div>
+                                    <div style="font-size:11.5px;color:#94a3b8">{{ $siswa->kelas->nama_kelas ?? '-' }} • NISN: {{ $siswa->nisn ?? '-' }}</div>
                                 </div>
                             @endforeach
                             <div id="dispen-siswa-empty" style="display:none;padding:14px;text-align:center;color:#94a3b8;font-size:13px">Siswa tidak ditemukan</div>
@@ -46,11 +50,15 @@
         </div>
     </div>
     <div class="card" style="padding:22px 24px;margin-top:20px">
-        <div class="card-header" style="margin-bottom:16px">
+        <div class="card-header" style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
             <div class="card-title">Status Dispensasi</div>
+            <div style="position:relative">
+                <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="search-dispen-status" oninput="filterTable('search-dispen-status','table-dispen-status')" onkeyup="filterTable('search-dispen-status','table-dispen-status')" placeholder="Cari nama, kelas, alasan..." class="filter-input" style="padding:7px 12px 7px 32px;font-size:12.5px;border-radius:8px;border:1px solid #cbd5e1;width:220px">
+            </div>
         </div>
         <div style="overflow-x:auto">
-            <table class="data-table" style="min-width:950px">
+            <table class="data-table" id="table-dispen-status" style="min-width:950px">
                 <thead>
                     <tr>
                         <th>Siswa</th>
@@ -141,8 +149,38 @@ function buatDispen(event){
 }
 function salinDispen(id){navigator.clipboard.writeText(document.getElementById(id).value).then(()=>Swal.fire({icon:'success',title:'Link disalin',timer:1200,showConfirmButton:false}));}
 
-function toggleDispenSiswaDropdown(show){var dd=document.getElementById('dispen-siswa-dropdown');if(dd)dd.style.display=show?'block':'none';}
-function filterDispenSiswaDropdown(keyword){var items=document.querySelectorAll('.dispen-siswa-dropdown-item');var empty=document.getElementById('dispen-siswa-empty');var q=keyword.toLowerCase().trim();var found=0;items.forEach(function(item){var match=item.dataset.search.includes(q);item.style.display=match?'':'none';if(match)found++;});if(empty)empty.style.display=found===0?'block':'none';toggleDispenSiswaDropdown(true);}
-function pilihDispenSiswaDropdown(id,nama){document.getElementById('dispen-siswa').value=id;document.getElementById('dispen-siswa-search').value=nama;toggleDispenSiswaDropdown(false);}
-document.addEventListener('click',function(e){var search=document.getElementById('dispen-siswa-search');if(search&&search.parentElement&&!search.parentElement.contains(e.target)){toggleDispenSiswaDropdown(false);}});
+function toggleDispenSiswaDropdown(show){
+    var dd = document.getElementById('dispen-siswa-dropdown');
+    if (dd) dd.style.display = show ? 'block' : 'none';
+}
+
+function filterDispenSiswaDropdown(keyword){
+    var items = document.querySelectorAll('.dispen-siswa-dropdown-item');
+    var empty = document.getElementById('dispen-siswa-empty');
+    var q = (keyword || '').toLowerCase().trim();
+    var found = 0;
+    items.forEach(function(item){
+        var searchStr = (item.getAttribute('data-search') || item.dataset.search || '').toLowerCase();
+        var match = !q || searchStr.includes(q);
+        item.style.display = match ? 'block' : 'none';
+        if(match) found++;
+    });
+    if(empty) empty.style.display = found === 0 ? 'block' : 'none';
+    toggleDispenSiswaDropdown(true);
+}
+
+function pilihDispenSiswaDropdown(id, nama){
+    var idInput = document.getElementById('dispen-siswa');
+    var searchInput = document.getElementById('dispen-siswa-search');
+    if (idInput) idInput.value = id;
+    if (searchInput) searchInput.value = nama;
+    toggleDispenSiswaDropdown(false);
+}
+
+document.addEventListener('click', function(e){
+    var search = document.getElementById('dispen-siswa-search');
+    if (search && search.parentElement && !search.parentElement.contains(e.target)){
+        toggleDispenSiswaDropdown(false);
+    }
+});
 </script>

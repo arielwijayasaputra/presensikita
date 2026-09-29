@@ -55,7 +55,11 @@
                 <div class="card-title">Daftar Log Keluar-Masuk Siswa Dispensasi</div>
                 <div style="font-size:12px;color:#64748b;margin-top:2px">Menampilkan siswa yang memiliki izin dispensasi khusus hari ini.</div>
             </div>
-            <div style="display:flex;align-items:center;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                <div style="position:relative">
+                    <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="search-satpam-dashboard" oninput="filterTable('search-satpam-dashboard','table-satpam-dashboard')" onkeyup="filterTable('search-satpam-dashboard','table-satpam-dashboard')" placeholder="Cari nama siswa..." class="filter-input" style="padding:7px 12px 7px 32px;font-size:12.5px;border-radius:8px;border:1px solid #cbd5e1;width:200px">
+                </div>
                 <span class="card-action">Hari Ini</span>
                 <button type="button" class="btn-secondary" onclick="showPage('satpam-harian')" style="border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:5px">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -64,7 +68,7 @@
             </div>
         </div>
         <div style="overflow-x:auto">
-            <table class="data-table" style="min-width:900px">
+            <table class="data-table" id="table-satpam-dashboard" style="min-width:900px">
                 <thead>
                     <tr>
                         <th>Siswa &amp; Kelas</th>

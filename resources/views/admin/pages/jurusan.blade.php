@@ -82,6 +82,7 @@
                 <input type="text" class="filter-input" id="cari-jurusan"
                     placeholder="Ketik kode atau nama jurusan..."
                     oninput="filterJurusanPage(this.value)"
+                    onkeyup="filterJurusanPage(this.value)"
                     style="width:100%;max-width:320px;padding-left:32px">
             </div>
         </div>

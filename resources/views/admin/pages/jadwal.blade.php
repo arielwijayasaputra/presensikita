@@ -42,7 +42,7 @@
         <div class="filter-bar" style="margin-bottom:16px;align-items:flex-end;gap:12px;flex-wrap:wrap">
             <div class="filter-group" style="flex:1;min-width:200px">
                 <label>Cari jadwal</label>
-                <input type="search" id="jadwal-cari" class="filter-input" placeholder="Ketik guru, mapel, kelas..." oninput="filterJadwal()" style="width:100%">
+                <input type="search" id="jadwal-cari" class="filter-input" placeholder="Ketik guru, mapel, kelas..." oninput="filterJadwal()" onkeyup="filterJadwal()" style="width:100%">
             </div>
             <div class="filter-group" style="min-width:130px">
                 <label>Hari</label>
@@ -255,14 +255,15 @@ function onMapelChange() {
 }
 
 function filterJadwal() {
-    const keyword = document.getElementById('jadwal-cari').value.trim().toLowerCase();
-    const hari = document.getElementById('jadwal-hari').value;
-    const kelas = document.getElementById('jadwal-kelas').value;
-    const status = document.getElementById('jadwal-filter-status').value;
+    const keyword = (document.getElementById('jadwal-cari')?.value || '').trim().toLowerCase();
+    const hari = document.getElementById('jadwal-hari')?.value || '';
+    const kelas = document.getElementById('jadwal-kelas')?.value || '';
+    const status = document.getElementById('jadwal-filter-status')?.value || '';
     let visible = 0;
 
     document.querySelectorAll('.jadwal-row').forEach(row => {
-        const matches = row.dataset.search.includes(keyword) &&
+        const hay = (row.dataset.search || '').toLowerCase();
+        const matches = (!keyword || hay.includes(keyword)) &&
             (!hari || row.dataset.hari === hari) &&
             (!kelas || row.dataset.kelas === kelas) &&
             (!status || row.dataset.status === status);
@@ -270,8 +271,10 @@ function filterJadwal() {
         if (matches) visible++;
     });
 
-    document.getElementById('jadwal-count').textContent = `${visible} jadwal`;
-    document.getElementById('jadwal-no-result').style.display = visible ? 'none' : 'block';
+    const countEl = document.getElementById('jadwal-count');
+    if (countEl) countEl.textContent = `${visible} jadwal`;
+    const noResEl = document.getElementById('jadwal-no-result');
+    if (noResEl) noResEl.style.display = visible ? 'none' : 'block';
 }
 
 function bukaModalJadwalKosong() {

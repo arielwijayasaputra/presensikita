@@ -88,6 +88,7 @@
                 <input type="text" class="filter-input" id="cari-mapel"
                     placeholder="Ketik nama mata pelajaran..."
                     oninput="filterMapelPage(this.value)"
+                    onkeyup="filterMapelPage(this.value)"
                     style="width:100%;max-width:320px;padding-left:32px">
             </div>
         </div>

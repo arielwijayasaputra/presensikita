@@ -75,7 +75,7 @@
 
             <!-- Searching Harian -->
             <div style="position:relative; width:260px">
-                <input type="text" id="search-harian" onkeyup="filterTable('search-harian', 'table-harian')" placeholder="Cari guru, mapel, atau kelas..." class="filter-input" style="width:100%; padding:7px 12px 7px 32px; font-size:12.5px; border-radius:8px; border:1px solid #cbd5e1">
+                <input type="text" id="search-harian" oninput="filterTable('search-harian', 'table-harian')" onkeyup="filterTable('search-harian', 'table-harian')" placeholder="Cari guru, mapel, atau kelas..." class="filter-input" style="width:100%; padding:7px 12px 7px 32px; font-size:12.5px; border-radius:8px; border:1px solid #cbd5e1">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" style="position:absolute; left:10px; top:9px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             </div>
         </div>
@@ -169,7 +169,7 @@
 
                 <!-- Search Rekap Bulanan -->
                 <div style="position:relative; width:220px">
-                    <input type="text" id="search-rekap" onkeyup="filterTable('search-rekap', 'table-rekap')" placeholder="Cari nama guru / NIP..." class="filter-input" style="width:100%; padding:7px 12px 7px 32px; font-size:12.5px; border-radius:8px; border:1px solid #cbd5e1">
+                    <input type="text" id="search-rekap" oninput="filterTable('search-rekap', 'table-rekap')" onkeyup="filterTable('search-rekap', 'table-rekap')" placeholder="Cari nama guru / NIP..." class="filter-input" style="width:100%; padding:7px 12px 7px 32px; font-size:12.5px; border-radius:8px; border:1px solid #cbd5e1">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" style="position:absolute; left:10px; top:9px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 </div>
             </div>
@@ -242,7 +242,7 @@
             </div>
             
             <div style="position:relative; width:220px">
-                <input type="text" id="search-izin" onkeyup="filterTable('search-izin', 'table-izin')" placeholder="Cari nama guru / alasan..." class="filter-input" style="width:100%; padding:7px 12px 7px 32px; font-size:12.5px; border-radius:8px; border:1px solid #cbd5e1">
+                <input type="text" id="search-izin" oninput="filterTable('search-izin', 'table-izin')" onkeyup="filterTable('search-izin', 'table-izin')" placeholder="Cari nama guru / alasan..." class="filter-input" style="width:100%; padding:7px 12px 7px 32px; font-size:12.5px; border-radius:8px; border:1px solid #cbd5e1">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" style="position:absolute; left:10px; top:9px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             </div>
         </div>

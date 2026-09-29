@@ -70,11 +70,15 @@
     </div>
 
     <div class="card" style="margin-top:20px">
-        <div class="card-header" style="margin-bottom:16px">
+        <div class="card-header" style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
             <div class="card-title">Riwayat Siswa Terlambat Hari Ini</div>
+            <div style="position:relative">
+                <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="search-terlambat-tbl" oninput="filterTable('search-terlambat-tbl','table-terlambat-tbl')" onkeyup="filterTable('search-terlambat-tbl','table-terlambat-tbl')" placeholder="Cari nama atau kelas..." class="filter-input" style="padding:7px 12px 7px 32px;font-size:12.5px;border-radius:8px;border:1px solid #cbd5e1;width:210px">
+            </div>
         </div>
         <div style="overflow-x:auto">
-            <table class="data-table">
+            <table class="data-table" id="table-terlambat-tbl">
                 <thead>
                     <tr>
                         <th>Siswa</th>

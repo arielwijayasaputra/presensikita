@@ -35,7 +35,16 @@
             </div>
         </div>
     </div>
-    <div class="card" style="padding:22px 24px;margin-top:20px"><div class="card-header" style="margin-bottom:16px"><div class="card-title">Data dan Status Izin Saya</div></div><div style="overflow-x:auto"><table class="data-table" style="min-width:950px"><thead><tr><th>Tanggal</th><th>Alasan</th><th>Surat</th><th>Status Kepsek</th><th>Status Waka</th><th>Status Akhir</th></tr></thead><tbody>@forelse($izinGuruTerbaru as $izin)<tr><td>{{ $izin->tanggal_izin->format('d-m-Y') }}</td><td>{{ $izin->alasan }}</td><td>@if($izin->foto_surat)<a href="{{ Storage::disk('public')->url($izin->foto_surat) }}" target="_blank" rel="noopener">Lihat foto</a>@else<span style="color:#94a3b8">Tidak ada</span>@endif</td><td>{{ ucfirst($izin->status_kepsek) }}</td><td>{{ ucfirst($izin->status_waka) }}</td><td>@if($izin->isDisetujui())<span class="badge badge-success">Diterima</span>@elseif($izin->status_kepsek === 'ditolak' || $izin->status_waka === 'ditolak')<span class="badge badge-danger">Ditolak</span>@else<span class="badge badge-warning">Menunggu</span>@endif</td></tr>@empty<tr><td colspan="6" style="text-align:center;color:#64748b;padding:22px">Belum ada data izin.</td></tr>@endforelse</tbody></table></div></div>
+    <div class="card" style="padding:22px 24px;margin-top:20px">
+        <div class="card-header" style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+            <div class="card-title">Data dan Status Izin Saya</div>
+            <div style="position:relative">
+                <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="search-guru-izin-saya" oninput="filterTable('search-guru-izin-saya','table-guru-izin-saya')" onkeyup="filterTable('search-guru-izin-saya','table-guru-izin-saya')" placeholder="Cari alasan / tanggal..." class="filter-input" style="padding:7px 12px 7px 32px;font-size:12.5px;border-radius:8px;border:1px solid #cbd5e1;width:210px">
+            </div>
+        </div>
+        <div style="overflow-x:auto"><table class="data-table" id="table-guru-izin-saya" style="min-width:950px"><thead><tr><th>Tanggal</th><th>Alasan</th><th>Surat</th><th>Status Kepsek</th><th>Status Waka</th><th>Status Akhir</th></tr></thead><tbody>@forelse($izinGuruTerbaru as $izin)<tr><td>{{ $izin->tanggal_izin->format('d-m-Y') }}</td><td>{{ $izin->alasan }}</td><td>@if($izin->foto_surat)<a href="{{ Storage::disk('public')->url($izin->foto_surat) }}" target="_blank" rel="noopener">Lihat foto</a>@else<span style="color:#94a3b8">Tidak ada</span>@endif</td><td>{{ ucfirst($izin->status_kepsek) }}</td><td>{{ ucfirst($izin->status_waka) }}</td><td>@if($izin->isDisetujui())<span class="badge badge-success">Diterima</span>@elseif($izin->status_kepsek === 'ditolak' || $izin->status_waka === 'ditolak')<span class="badge badge-danger">Ditolak</span>@else<span class="badge badge-warning">Menunggu</span>@endif</td></tr>@empty<tr><td colspan="6" style="text-align:center;color:#64748b;padding:22px">Belum ada data izin.</td></tr>@endforelse</tbody></table></div>
+    </div>
 </div>
 <script>
 function buatPermintaanIzinGuru(event){

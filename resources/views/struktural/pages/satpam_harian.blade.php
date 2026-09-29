@@ -97,9 +97,15 @@
                     Menampilkan seluruh data dispensasi siswa untuk tanggal yang dipilih.
                 </div>
             </div>
-            <span class="card-action" style="background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;padding:5px 12px;border-radius:8px;font-size:12.5px;font-weight:700">
-                {{ $totalHarian }} Data Ditemukan
-            </span>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <div style="position:relative">
+                    <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="search-satpam-harian" oninput="filterSatpamHarian(this.value)" onkeyup="filterSatpamHarian(this.value)" placeholder="Cari nama atau kelas..." class="filter-input" style="padding:7px 12px 7px 32px;font-size:12.5px;border-radius:8px;border:1px solid #cbd5e1;width:200px">
+                </div>
+                <span class="card-action" style="background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;padding:5px 12px;border-radius:8px;font-size:12.5px;font-weight:700">
+                    {{ $totalHarian }} Data Ditemukan
+                </span>
+            </div>
         </div>
 
         <div style="overflow-x:auto">
@@ -211,3 +217,14 @@
         </div>
     </div>
 </div>
+
+<script>
+window.filterSatpamHarian = function(q) {
+    const kw = (q || '').toLowerCase();
+    const rows = document.querySelectorAll('#page-satpam-harian .data-table tbody tr');
+    rows.forEach(row => {
+        const text = (row.textContent || '').toLowerCase();
+        row.style.display = text.includes(kw) ? '' : 'none';
+    });
+};
+</script>

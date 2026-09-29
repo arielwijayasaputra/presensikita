@@ -142,6 +142,15 @@
             </div>
         </div>
 
+        {{-- Cari Nama Siswa --}}
+        <div class="filter-group" style="min-width:180px">
+            <label style="font-size:11.5px;font-weight:600;color:#475569;margin-bottom:5px;display:block">Cari Nama</label>
+            <div style="position:relative">
+                <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="riwayat-search-nama" oninput="filterRiwayatNama(this.value)" onkeyup="filterRiwayatNama(this.value)" placeholder="Ketik nama siswa..." class="filter-input" style="width:100%;padding:9px 12px 9px 32px">
+            </div>
+        </div>
+
         {{-- Tombol Filter di kanan --}}
         <button type="button" class="btn-secondary" onclick="filterRiwayatPage()" style="margin-left:auto;border-radius:10px;padding:10px 20px;font-size:13.5px;font-weight:600;border-radius:10px;display:inline-flex;align-items:center;gap:8px">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
@@ -292,14 +301,22 @@
         riwayatFiltered = allRows().filter(row => {
             const rKelas = row.dataset.kelas || '';
             const rBulan = row.dataset.bulan || '';
+            const namaInput = document.getElementById('riwayat-search-nama');
+            const nama = (namaInput?.value || '').toLowerCase();
+            const rowText = (row.dataset.search || row.textContent || '').toLowerCase();
             return (!kelas || rKelas === kelas)
-                && (!bulan || rBulan === bulan);
+                && (!bulan || rBulan === bulan)
+                && (!nama || rowText.includes(nama));
         });
 
         updateRiwayatSummary();
 
         riwayatPage = 1;
         renderRiwayatPage();
+    };
+
+    window.filterRiwayatNama = function() {
+        filterRiwayatPage();
     };
 
     function updateRiwayatSummary(){

@@ -30,7 +30,34 @@
             <button type="submit" class="btn-primary" style="border-radius:8px;padding:10px 16px;font-size:13px">Simpan &amp; Absen ke Jurnal</button>
         </form>
     </div>
-    <div class="card" style="padding:22px 24px;margin-top:20px"><div class="card-header" style="margin-bottom:16px"><div class="card-title">Riwayat Absensi Siswa</div></div><div style="overflow-x:auto"><table class="data-table" style="min-width:900px"><thead><tr><th>Siswa</th><th>Kelas</th><th>Jenis</th><th>Tanggal</th><th>Surat</th><th>Jurnal</th></tr></thead><tbody>@forelse($absensiSiswaTerbaru as $item)<tr><td><strong>{{ $item->siswa->nama_siswa ?? '-' }}</strong></td><td>{{ $item->siswa->kelas->nama_kelas ?? '-' }}</td><td>{{ $item->jenis_absen === 'S' ? 'Sakit' : 'Izin' }}</td><td>{{ $item->tanggal_dispen->format('d-m-Y') }}</td><td>@if($item->foto_surat)<a href="{{ Storage::disk('public')->url($item->foto_surat) }}" target="_blank" rel="noopener">Lihat foto</a>@else-@endif</td><td><span class="badge badge-success">Tersimpan</span></td></tr>@empty<tr><td colspan="6" style="text-align:center;color:#64748b;padding:22px">Belum ada absensi siswa.</td></tr>@endforelse</tbody></table></div></div>
+    <div class="card" style="padding:22px 24px;margin-top:20px">
+        <div class="card-header" style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+            <div class="card-title">Riwayat Absensi Siswa</div>
+            <div style="position:relative">
+                <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="search-absensi-siswa-tbl" oninput="filterTable('search-absensi-siswa-tbl','table-absensi-siswa-tbl')" onkeyup="filterTable('search-absensi-siswa-tbl','table-absensi-siswa-tbl')" placeholder="Cari nama atau kelas..." class="filter-input" style="padding:7px 12px 7px 32px;font-size:12.5px;border-radius:8px;border:1px solid #cbd5e1;width:210px">
+            </div>
+        </div>
+        <div style="overflow-x:auto">
+            <table class="data-table" id="table-absensi-siswa-tbl" style="min-width:900px">
+                <thead><tr><th>Siswa</th><th>Kelas</th><th>Jenis</th><th>Tanggal</th><th>Surat</th><th>Jurnal</th></tr></thead>
+                <tbody>
+                    @forelse($absensiSiswaTerbaru as $item)
+                        <tr>
+                            <td><strong>{{ $item->siswa->nama_siswa ?? '-' }}</strong></td>
+                            <td>{{ $item->siswa->kelas->nama_kelas ?? '-' }}</td>
+                            <td>{{ $item->jenis_absen === 'S' ? 'Sakit' : 'Izin' }}</td>
+                            <td>{{ $item->tanggal_dispen->format('d-m-Y') }}</td>
+                            <td>@if($item->foto_surat)<a href="{{ Storage::disk('public')->url($item->foto_surat) }}" target="_blank" rel="noopener">Lihat foto</a>@else-@endif</td>
+                            <td><span class="badge badge-success">Tersimpan</span></td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="6" style="text-align:center;color:#64748b;padding:22px">Belum ada absensi siswa.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 <script>
 function simpanAbsensiSiswa(event){event.preventDefault();fetch(@json(route('absensi-siswa.store')),{method:'POST',headers:{'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content,'Accept':'application/json'},body:new FormData(document.getElementById('absensi-siswa-form'))}).then(async r=>{const d=await r.json();if(!r.ok)throw new Error(d.message||'Gagal menyimpan absensi siswa.');return d}).then(d=>{Swal.fire({icon:'success',title:'Absensi tersimpan',text:d.message,confirmButtonColor:'#2563eb'}).then(()=>window.location.reload())}).catch(e=>Swal.fire({icon:'error',title:'Gagal',text:e.message,confirmButtonColor:'#dc2626'}));}

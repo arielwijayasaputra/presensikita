@@ -82,14 +82,20 @@
                     Urutan jam mengajar otomatis disesuaikan dengan pengaturan jam sekolah.
                 </div>
             </div>
-            <button type="button" class="btn-secondary" onclick="showPage('jurnal-absensi')" style="border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;display:inline-flex;align-items:center;gap:6px">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                Buka Jurnal &amp; Absensi
-            </button>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <div style="position:relative">
+                    <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="search-guru-jadwal-mengajar" oninput="filterTable('search-guru-jadwal-mengajar','table-guru-jadwal-mengajar')" onkeyup="filterTable('search-guru-jadwal-mengajar','table-guru-jadwal-mengajar')" placeholder="Cari kelas / mapel..." class="filter-input" style="padding:7px 12px 7px 32px;font-size:12.5px;border-radius:8px;border:1px solid #cbd5e1;width:200px">
+                </div>
+                <button type="button" class="btn-secondary" onclick="showPage('jurnal-absensi')" style="border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;display:inline-flex;align-items:center;gap:6px">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    Buka Jurnal &amp; Absensi
+                </button>
+            </div>
         </div>
 
         <div style="overflow-x:auto">
-            <table class="data-table" style="min-width:750px">
+            <table class="data-table" id="table-guru-jadwal-mengajar" style="min-width:750px">
                 <thead>
                     <tr>
                         <th style="width:90px;text-align:center">Jam Ke-</th>

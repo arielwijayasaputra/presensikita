@@ -105,6 +105,7 @@
                 <input type="text" class="filter-input" id="guru-cari"
                     placeholder="Ketik nama, NIP, atau username..."
                     oninput="filterGuruPage()"
+                    onkeyup="filterGuruPage()"
                     style="width:100%;max-width:320px;padding-left:32px">
             </div>
         </div>

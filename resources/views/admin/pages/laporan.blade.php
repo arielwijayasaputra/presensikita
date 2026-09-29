@@ -212,8 +212,12 @@
 
     {{-- ── Main Table: Rekap Absensi Siswa ── --}}
     <div class="table-card" style="margin-bottom:20px">
-        <div class="card-header" style="padding:18px 20px;border-bottom:1px solid #e2e8f0;margin-bottom:0">
+        <div class="card-header" style="padding:18px 20px;border-bottom:1px solid #e2e8f0;margin-bottom:0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
             <div class="card-title" style="font-size:15px;font-weight:700;color:#1e293b">Rekap Absensi Siswa</div>
+            <div style="position:relative;min-width:200px">
+                <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="search-laporan-rekap" oninput="filterLaporanRekap(this.value)" onkeyup="filterLaporanRekap(this.value)" placeholder="Cari nama siswa..." class="filter-input" style="padding:7px 12px 7px 32px;font-size:12.5px;border-radius:8px;border:1px solid #cbd5e1;width:100%">
+            </div>
         </div>
         <table id="laporan-table">
             <thead>
@@ -274,3 +278,14 @@
         </div>
     </div>
 </div>
+
+<script>
+window.filterLaporanRekap = function(q) {
+    const kw = (q || '').toLowerCase();
+    const rows = document.querySelectorAll('#laporan-tbody .laporan-row');
+    rows.forEach(row => {
+        const nama = (row.querySelector('td:nth-child(2)')?.textContent || '').toLowerCase();
+        row.style.display = nama.includes(kw) ? '' : 'none';
+    });
+};
+</script>

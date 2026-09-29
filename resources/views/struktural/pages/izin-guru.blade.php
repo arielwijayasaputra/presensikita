@@ -63,7 +63,37 @@
             </div>
         </div>
     </div>
-    <div class="card" style="padding:22px 24px;margin-top:20px"><div class="card-header" style="margin-bottom:16px"><div class="card-title">Status Permintaan Izin</div></div><div style="overflow-x:auto"><table class="data-table" style="min-width:980px"><thead><tr><th>Guru</th><th>Tanggal</th><th>Alasan</th><th>Status Kepsek</th><th>Status Waka</th><th>Link</th></tr></thead><tbody>@forelse($izinGuruTerbaru as $izin)<tr><td><strong>{{ $izin->guru->nama_guru ?? '-' }}</strong></td><td>{{ $izin->tanggal_izin->format('d-m-Y') }}</td><td>{{ $izin->alasan }}</td><td>{{ ucfirst($izin->status_kepsek) }}</td><td>{{ ucfirst($izin->status_waka) }}</td><td><a href="{{ URL::temporarySignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'kepsek']) }}" target="_blank" style="font-size:12px;margin-right:8px">Kepsek</a><a href="{{ URL::temporarySignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'waka']) }}" target="_blank" style="font-size:12px">Waka</a></td></tr>@empty<tr><td colspan="6" style="text-align:center;color:#64748b;padding:22px">Belum ada permintaan izin.</td></tr>@endforelse</tbody></table></div></div>
+    <div class="card" style="padding:22px 24px;margin-top:20px">
+        <div class="card-header" style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+            <div class="card-title">Status Permintaan Izin</div>
+            <div style="position:relative">
+                <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="search-izin-guru-tbl" oninput="filterTable('search-izin-guru-tbl','table-izin-guru-tbl')" onkeyup="filterTable('search-izin-guru-tbl','table-izin-guru-tbl')" placeholder="Cari nama guru / alasan..." class="filter-input" style="padding:7px 12px 7px 32px;font-size:12.5px;border-radius:8px;border:1px solid #cbd5e1;width:210px">
+            </div>
+        </div>
+        <div style="overflow-x:auto">
+            <table class="data-table" id="table-izin-guru-tbl" style="min-width:980px">
+                <thead><tr><th>Guru</th><th>Tanggal</th><th>Alasan</th><th>Status Kepsek</th><th>Status Waka</th><th>Link</th></tr></thead>
+                <tbody>
+                    @forelse($izinGuruTerbaru as $izin)
+                        <tr>
+                            <td><strong>{{ $izin->guru->nama_guru ?? '-' }}</strong></td>
+                            <td>{{ $izin->tanggal_izin->format('d-m-Y') }}</td>
+                            <td>{{ $izin->alasan }}</td>
+                            <td>{{ ucfirst($izin->status_kepsek) }}</td>
+                            <td>{{ ucfirst($izin->status_waka) }}</td>
+                            <td>
+                                <a href="{{ URL::temporarySignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'kepsek']) }}" target="_blank" style="font-size:12px;margin-right:8px">Kepsek</a>
+                                <a href="{{ URL::temporarySignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'waka']) }}" target="_blank" style="font-size:12px">Waka</a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="6" style="text-align:center;color:#64748b;padding:22px">Belum ada permintaan izin.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 <script>
 function buatLinkIzinGuru(event) {

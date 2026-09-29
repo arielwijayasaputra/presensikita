@@ -49,8 +49,17 @@
     </div>
 
     <div class="card" style="padding:22px 24px;margin-bottom:20px">
-        <div class="card-header" style="margin-bottom:16px"><div><div class="card-title">Jadwal Mengajar Hari Ini</div><div style="font-size:12px;color:#64748b;margin-top:3px">Jadwal otomatis berdasarkan akun Guru yang sedang login</div></div><span class="card-action">{{ now()->format('d M Y') }}</span></div>
-        <div style="overflow-x:auto"><table class="data-table" style="min-width:700px"><thead><tr><th>Jam Ke-</th><th>Waktu</th><th>Kelas</th><th>Mata Pelajaran</th><th>Status</th></tr></thead><tbody>@forelse($jadwalMengajarHariIni as $jadwal)<tr><td><span class="badge badge-info">{{ $jadwal->jam_ke >= 100 ? $jadwal->jam_ke - 100 : $jadwal->jam_ke }}</span></td><td>{{ substr($jadwal->jam_mulai, 0, 5) }} - {{ substr($jadwal->jam_selesai, 0, 5) }}</td><td><strong>{{ $jadwal->nama_kelas }}</strong></td><td>{{ $jadwal->nama_mapel }}</td><td>@if(now()->format('H:i:s') >= $jadwal->jam_mulai && now()->format('H:i:s') <= $jadwal->jam_selesai)<span class="badge badge-success">Sedang berlangsung</span>@elseif(now()->format('H:i:s') < $jadwal->jam_mulai)<span class="badge badge-info">Belum dimulai</span>@else<span class="badge">Selesai</span>@endif</td></tr>@empty<tr><td colspan="5" style="text-align:center;color:#64748b;padding:24px">Tidak ada jadwal mengajar hari ini.</td></tr>@endforelse</tbody></table></div>
+        <div class="card-header" style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+            <div><div class="card-title">Jadwal Mengajar Hari Ini</div><div style="font-size:12px;color:#64748b;margin-top:3px">Jadwal otomatis berdasarkan akun Guru yang sedang login</div></div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <div style="position:relative">
+                    <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="search-guru-dash-jadwal" oninput="filterTable('search-guru-dash-jadwal','table-guru-dash-jadwal')" onkeyup="filterTable('search-guru-dash-jadwal','table-guru-dash-jadwal')" placeholder="Cari kelas / mapel..." class="filter-input" style="padding:7px 12px 7px 32px;font-size:12.5px;border-radius:8px;border:1px solid #cbd5e1;width:200px">
+                </div>
+                <span class="card-action">{{ now()->format('d M Y') }}</span>
+            </div>
+        </div>
+        <div style="overflow-x:auto"><table class="data-table" id="table-guru-dash-jadwal" style="min-width:700px"><thead><tr><th>Jam Ke-</th><th>Waktu</th><th>Kelas</th><th>Mata Pelajaran</th><th>Status</th></tr></thead><tbody>@forelse($jadwalMengajarHariIni as $jadwal)<tr><td><span class="badge badge-info">{{ $jadwal->jam_ke >= 100 ? $jadwal->jam_ke - 100 : $jadwal->jam_ke }}</span></td><td>{{ substr($jadwal->jam_mulai, 0, 5) }} - {{ substr($jadwal->jam_selesai, 0, 5) }}</td><td><strong>{{ $jadwal->nama_kelas }}</strong></td><td>{{ $jadwal->nama_mapel }}</td><td>@if(now()->format('H:i:s') >= $jadwal->jam_mulai && now()->format('H:i:s') <= $jadwal->jam_selesai)<span class="badge badge-success">Sedang berlangsung</span>@elseif(now()->format('H:i:s') < $jadwal->jam_mulai)<span class="badge badge-info">Belum dimulai</span>@else<span class="badge">Selesai</span>@endif</td></tr>@empty<tr><td colspan="5" style="text-align:center;color:#64748b;padding:24px">Tidak ada jadwal mengajar hari ini.</td></tr>@endforelse</tbody></table></div>
     </div>
 
     <div class="charts-row" style="grid-template-columns:1.5fr 1fr">

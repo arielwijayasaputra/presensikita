@@ -109,7 +109,7 @@
             </div>
 
             <div style="position:relative; width:250px">
-                <input type="text" id="search-wali-rekap-1th" onkeyup="filterTable('search-wali-rekap-1th', 'table-wali-rekap-1th')" placeholder="Cari siswa / NISN..." class="filter-input" style="width:100%; padding:7px 12px 7px 32px; font-size:12.5px; border-radius:8px; border:1px solid #cbd5e1">
+                <input type="text" id="search-wali-rekap-1th" oninput="filterTable('search-wali-rekap-1th', 'table-wali-rekap-1th')" onkeyup="filterTable('search-wali-rekap-1th', 'table-wali-rekap-1th')" placeholder="Cari siswa / NISN..." class="filter-input" style="width:100%; padding:7px 12px 7px 32px; font-size:12.5px; border-radius:8px; border:1px solid #cbd5e1">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" style="position:absolute; left:10px; top:9px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             </div>
         </div>
@@ -194,7 +194,7 @@
             </div>
 
             <div style="position:relative; width:250px">
-                <input type="text" id="search-wali-jurnal-1th" onkeyup="filterTable('search-wali-jurnal-1th', 'table-wali-jurnal-1th')" placeholder="Cari mapel / guru / tanggal..." class="filter-input" style="width:100%; padding:7px 12px 7px 32px; font-size:12.5px; border-radius:8px; border:1px solid #cbd5e1">
+                <input type="text" id="search-wali-jurnal-1th" oninput="filterTable('search-wali-jurnal-1th', 'table-wali-jurnal-1th')" onkeyup="filterTable('search-wali-jurnal-1th', 'table-wali-jurnal-1th')" placeholder="Cari mapel / guru / tanggal..." class="filter-input" style="width:100%; padding:7px 12px 7px 32px; font-size:12.5px; border-radius:8px; border:1px solid #cbd5e1">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" style="position:absolute; left:10px; top:9px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             </div>
         </div>

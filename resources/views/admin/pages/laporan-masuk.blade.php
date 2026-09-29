@@ -110,7 +110,7 @@
             {{-- Search Box --}}
             <div style="position:relative;min-width:240px">
                 <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#94a3b8" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input type="text" id="search-laporan" onkeyup="searchLaporanTabel()" placeholder="Cari nama, role, judul..." style="width:100%;padding:8px 12px 8px 36px;font-size:13px;border:1px solid #cbd5e1;border-radius:10px;outline:none">
+                <input type="text" id="search-laporan" oninput="searchLaporanTabel()" onkeyup="searchLaporanTabel()" placeholder="Cari nama, role, judul..." style="width:100%;padding:8px 12px 8px 36px;font-size:13px;border:1px solid #cbd5e1;border-radius:10px;outline:none">
             </div>
         </div>
     </div>
@@ -253,8 +253,11 @@
 </div>
 
 <script>
+    let currentLaporanStatus = 'semua';
+
     // Filter Berdasarkan Status Tabs
     function filterLaporanStatus(status, btn) {
+        currentLaporanStatus = status;
         document.querySelectorAll('.btn-filter-status').forEach(b => {
             b.style.background = '#ffffff';
             b.style.color = '#475569';
@@ -277,29 +280,42 @@
             btn.style.background = '#fff1f2'; btn.style.color = '#be123c'; btn.style.borderColor = '#fecdd3';
         }
 
-        const rows = document.querySelectorAll('.row-laporan-item');
-        rows.forEach(r => {
-            const st = r.dataset.status;
-            if (status === 'semua' || st === status) {
-                r.style.display = '';
-            } else {
-                r.style.display = 'none';
-            }
-        });
+        searchLaporanTabel();
     }
 
     // Live Search In Table
     function searchLaporanTabel() {
-        const input = document.getElementById('search-laporan').value.toLowerCase();
+        const input = (document.getElementById('search-laporan')?.value || '').toLowerCase().trim();
         const rows = document.querySelectorAll('.row-laporan-item');
+        let matchCount = 0;
         rows.forEach(r => {
-            const text = r.innerText.toLowerCase();
-            if (text.includes(input)) {
+            const text = (r.textContent || r.innerText || '').toLowerCase();
+            const st = r.dataset.status;
+            const matchStatus = currentLaporanStatus === 'semua' || st === currentLaporanStatus;
+            const matchText = !input || text.includes(input);
+            if (matchStatus && matchText) {
                 r.style.display = '';
+                matchCount++;
             } else {
                 r.style.display = 'none';
             }
         });
+
+        const tbody = document.querySelector('#tabel-laporan-masuk tbody');
+        if (tbody) {
+            let emptySearch = tbody.querySelector('.laporan-empty-search-row');
+            if (matchCount === 0 && rows.length > 0) {
+                if (!emptySearch) {
+                    emptySearch = document.createElement('tr');
+                    emptySearch.className = 'laporan-empty-search-row';
+                    emptySearch.innerHTML = '<td colspan="6" style="text-align:center;padding:32px;color:#94a3b8;font-style:italic">Tidak ada laporan yang cocok dengan kata kunci pencarian.</td>';
+                    tbody.appendChild(emptySearch);
+                }
+                emptySearch.style.display = '';
+            } else if (emptySearch) {
+                emptySearch.style.display = 'none';
+            }
+        }
     }
 
     // Modal / Alert Detail Laporan

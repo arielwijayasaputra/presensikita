@@ -126,6 +126,7 @@
                 <input type="text" class="filter-input" id="siswa-cari"
                     placeholder="Ketik nama atau NISN..."
                     oninput="filterSiswaPage()"
+                    onkeyup="filterSiswaPage()"
                     style="width:100%;max-width:300px;padding-left:32px">
             </div>
         </div>

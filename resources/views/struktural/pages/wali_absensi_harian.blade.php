@@ -86,7 +86,7 @@
 
             <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
                 <div style="display:flex; gap:6px">
-                    <button type="button" onclick="tandaiSemuaWali('H')" class="btn-secondary" style="font-size:11.5px; padding:5px 10px; border-radius:6px; border:1px solid #cbd5e1">Set Semuar Hadir</button>
+                    <button type="button" onclick="tandaiSemuaWali('H')" class="btn-secondary" style="font-size:11.5px; padding:5px 10px; border-radius:6px; border:1px solid #cbd5e1">Set Semua Hadir</button>
                 </div>
 
                 <div style="position:relative; width:230px">
@@ -98,16 +98,20 @@
 
         <form id="form-wali-absensi-harian">
             <div style="overflow-x:auto">
-                <table class="data-table" id="table-wali-harian" style="min-width:900px">
+                <table class="data-table" id="table-wali-harian" style="min-width:980px">
                     <thead>
                         <tr>
                             <th style="width:45px">No</th>
-                            <th>NISN</th>
+                            <th style="width:110px">NISN</th>
                             <th>Nama Lengkap Siswa</th>
-                            <th style="text-align:center; width:50px">L/P</th>
-                            <th style="text-align:center; width:220px">Status Presensi Hari Ini</th>
-                            <th>Keterangan</th>
-                            <th style="text-align:center; width:130px">Aksi Ortu</th>
+                            <th style="text-align:center; width:60px; white-space:nowrap">L/P</th>
+                            <th style="text-align:center; width:70px"><div class="status-header" style="white-space:nowrap"><span class="status-dot-c green"></span>Hadir</div></th>
+                            <th style="text-align:center; width:70px"><div class="status-header" style="white-space:nowrap"><span class="status-dot-c yellow"></span>Sakit</div></th>
+                            <th style="text-align:center; width:70px"><div class="status-header" style="white-space:nowrap"><span class="status-dot-c blue"></span>Izin</div></th>
+                            <th style="text-align:center; width:70px"><div class="status-header" style="white-space:nowrap"><span class="status-dot-c" style="background:#06b6d4"></span>Dispen</div></th>
+                            <th style="text-align:center; width:70px"><div class="status-header" style="white-space:nowrap"><span class="status-dot-c red"></span>Alpa</div></th>
+                            <th style="min-width:160px">Keterangan</th>
+                            <th style="text-align:center; width:110px">Aksi Ortu</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -116,28 +120,39 @@
                                 <td style="color:#94a3b8; font-weight:600">{{ $idx + 1 }}</td>
                                 <td style="font-family:monospace; font-size:12.5px; color:#64748b">{{ $s['nisn'] }}</td>
                                 <td><strong style="color:#0f172a">{{ $s['nama_siswa'] }}</strong></td>
-                                <td style="text-align:center">{{ $s['jenis_kelamin'] }}</td>
-                                <td style="text-align:center">
-                                    <div style="display:flex; justify-content:center; gap:6px; flex-wrap:wrap">
-                                        <label style="cursor:pointer; display:inline-flex; align-items:center; gap:3px; font-size:12px; font-weight:600; color:#15803d">
-                                            <input type="radio" name="absensi[{{ $s['id_siswa'] }}][status]" value="H" {{ $s['status'] === 'H' ? 'checked' : '' }} style="accent-color:#22c55e"> H
-                                        </label>
-                                        <label style="cursor:pointer; display:inline-flex; align-items:center; gap:3px; font-size:12px; font-weight:600; color:#b45309">
-                                            <input type="radio" name="absensi[{{ $s['id_siswa'] }}][status]" value="S" {{ $s['status'] === 'S' ? 'checked' : '' }} style="accent-color:#f59e0b"> S
-                                        </label>
-                                        <label style="cursor:pointer; display:inline-flex; align-items:center; gap:3px; font-size:12px; font-weight:600; color:#1d4ed8">
-                                            <input type="radio" name="absensi[{{ $s['id_siswa'] }}][status]" value="I" {{ $s['status'] === 'I' ? 'checked' : '' }} style="accent-color:#3b82f6"> I
-                                        </label>
-                                        <label style="cursor:pointer; display:inline-flex; align-items:center; gap:3px; font-size:12px; font-weight:600; color:#0e7490">
-                                            <input type="radio" name="absensi[{{ $s['id_siswa'] }}][status]" value="D" {{ $s['status'] === 'D' ? 'checked' : '' }} style="accent-color:#06b6d4"> D
-                                        </label>
-                                        <label style="cursor:pointer; display:inline-flex; align-items:center; gap:3px; font-size:12px; font-weight:600; color:#b91c1c">
-                                            <input type="radio" name="absensi[{{ $s['id_siswa'] }}][status]" value="A" {{ $s['status'] === 'A' ? 'checked' : '' }} style="accent-color:#ef4444"> A
-                                        </label>
-                                    </div>
+                                <td style="text-align:center; font-weight:600; white-space:nowrap">{{ $s['jenis_kelamin'] }}</td>
+                                <td class="td-status" style="text-align:center">
+                                    <label class="status-pill-btn status-pill-h">
+                                        <input type="radio" name="absensi[{{ $s['id_siswa'] }}][status]" value="H" {{ $s['status'] === 'H' ? 'checked' : '' }}>
+                                        <span>H</span>
+                                    </label>
+                                </td>
+                                <td class="td-status" style="text-align:center">
+                                    <label class="status-pill-btn status-pill-s">
+                                        <input type="radio" name="absensi[{{ $s['id_siswa'] }}][status]" value="S" {{ $s['status'] === 'S' ? 'checked' : '' }}>
+                                        <span>S</span>
+                                    </label>
+                                </td>
+                                <td class="td-status" style="text-align:center">
+                                    <label class="status-pill-btn status-pill-i">
+                                        <input type="radio" name="absensi[{{ $s['id_siswa'] }}][status]" value="I" {{ $s['status'] === 'I' ? 'checked' : '' }}>
+                                        <span>I</span>
+                                    </label>
+                                </td>
+                                <td class="td-status" style="text-align:center">
+                                    <label class="status-pill-btn status-pill-d">
+                                        <input type="radio" name="absensi[{{ $s['id_siswa'] }}][status]" value="D" {{ $s['status'] === 'D' ? 'checked' : '' }}>
+                                        <span>D</span>
+                                    </label>
+                                </td>
+                                <td class="td-status" style="text-align:center">
+                                    <label class="status-pill-btn status-pill-a">
+                                        <input type="radio" name="absensi[{{ $s['id_siswa'] }}][status]" value="A" {{ $s['status'] === 'A' ? 'checked' : '' }}>
+                                        <span>A</span>
+                                    </label>
                                 </td>
                                 <td>
-                                    <input type="text" name="absensi[{{ $s['id_siswa'] }}][keterangan]" value="{{ $s['keterangan'] }}" placeholder="Catatan/Keterangan..." style="width:100%; padding:5px 8px; font-size:12px; border-radius:6px; border:1px solid #cbd5e1">
+                                    <input type="text" name="absensi[{{ $s['id_siswa'] }}][keterangan]" value="{{ $s['keterangan'] }}" placeholder="Catatan/Keterangan..." style="width:100%; padding:6px 10px; font-size:12.5px; border-radius:8px; border:1px solid #cbd5e1; outline:none">
                                 </td>
                                 <td style="text-align:center">
                                     @if(!empty($s['no_hp_ortu']))
@@ -146,7 +161,7 @@
                                             if(str_starts_with($hpWa, '0')) { $hpWa = '62' . substr($hpWa, 1); }
                                             $msgWa = urlencode("Halo Bapak/Ibu Wali dari " . $s['nama_siswa'] . ", menginformasikan presensi siswa hari ini.");
                                         @endphp
-                                        <a href="https://wa.me/{{ $hpWa }}?text={{ $msgWa }}" target="_blank" style="font-size:11.5px; padding:4px 8px; border-radius:6px; background:#25d366; color:#fff; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px">
+                                        <a href="https://wa.me/{{ $hpWa }}?text={{ $msgWa }}" target="_blank" style="font-size:11.5px; padding:5px 10px; border-radius:6px; background:#25d366; color:#fff; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px">
                                             WA Ortu
                                         </a>
                                     @else
@@ -156,7 +171,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" style="text-align:center; color:#64748b; padding:24px">
+                                <td colspan="11" style="text-align:center; color:#64748b; padding:24px">
                                     Belum ada data siswa terdaftar di kelas ini.
                                 </td>
                             </tr>

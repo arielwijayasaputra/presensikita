@@ -3,14 +3,12 @@
     <div class="card" style="padding:22px 24px;max-width:900px">
         <div class="card-header" style="margin-bottom:16px"><div class="card-title">Catat Sakit atau Izin</div></div>
         <form id="absensi-siswa-form" onsubmit="simpanAbsensiSiswa(event)">@csrf
-            <div style="display:grid;grid-template-columns:1fr 180px 180px;gap:14px;margin-bottom:14px">
-                <div>
+            <div style="display:grid;grid-template-columns:minmax(0, 1fr) minmax(130px, 160px) minmax(140px, 170px);gap:14px;margin-bottom:14px;align-items:flex-start">
+                <div style="min-width:0">
                     <label for="absensi-siswa">Siswa</label>
                     <input type="hidden" id="absensi-siswa" name="id_siswa" required>
                     <div style="position:relative;margin-top:4px">
-                        <input type="text" id="absensi-siswa-search" class="filter-input" placeholder="Ketik nama siswa..." autocomplete="off" required style="width:100%"
-                            onfocus="toggleAbsensiSiswaDropdown(true)"
-                            oninput="filterAbsensiSiswaDropdown(this.value)">
+                        <input type="text" id="absensi-siswa-search" class="filter-input" placeholder="Ketik nama siswa..." autocomplete="off" required style="width:100%;box-sizing:border-box">
                         <svg style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                         <div id="absensi-siswa-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #e2e8f0;border-radius:8px;margin-top:4px;max-height:220px;overflow-y:auto;z-index:50;box-shadow:0 4px 12px rgba(0,0,0,0.1)">
                             @foreach($siswaAktif as $siswa)
@@ -25,8 +23,8 @@
                         </div>
                     </div>
                 </div>
-                <div><label for="absensi-jenis">Jenis absensi</label><select id="absensi-jenis" name="jenis_absen" class="filter-select" required style="width:100%;margin-top:4px"><option value="S">Sakit</option><option value="I">Izin</option></select></div>
-                <div><label for="absensi-tanggal">Tanggal</label><input id="absensi-tanggal" type="date" name="tanggal_dispen" value="{{ now()->toDateString() }}" class="filter-input" required style="width:100%;margin-top:4px"></div>
+                <div style="min-width:0"><label for="absensi-jenis">Jenis absensi</label><select id="absensi-jenis" name="jenis_absen" class="filter-select" required style="width:100%;margin-top:4px;box-sizing:border-box"><option value="S">Sakit</option><option value="I">Izin</option></select></div>
+                <div style="min-width:0"><label for="absensi-tanggal">Tanggal</label><input id="absensi-tanggal" type="date" name="tanggal_dispen" value="{{ now()->toDateString() }}" class="filter-input" required style="width:100%;margin-top:4px;box-sizing:border-box"></div>
             </div>
             <div style="margin-bottom:14px"><label for="absensi-foto">Foto surat keterangan <small style="color:#94a3b8">(opsional)</small></label><input id="absensi-foto" type="file" name="foto_surat" accept="image/jpeg,image/png,image/webp" style="display:block;width:100%;margin-top:6px;font-size:13px"><small style="display:block;color:#64748b;margin-top:5px">Format JPG, PNG, atau WEBP. Maksimal 5 MB.</small></div>
             <button type="submit" class="btn-primary" style="border-radius:8px;padding:10px 16px;font-size:13px">Simpan &amp; Absen ke Jurnal</button>

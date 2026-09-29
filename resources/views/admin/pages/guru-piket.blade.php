@@ -29,7 +29,7 @@
     box-shadow: 0 4px 14px rgba(249,115,22,0.12);
 }
 .gp-session-box {
-    background: var(--input-bg);;
+    background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
     padding: 10px;
@@ -54,7 +54,7 @@
     font-size: 11.5px !important;
     font-weight: 500 !important;
     color: #1e293b !important;
-    background: var(--input-bg);;
+    background: #ffffff;
     border: 1.5px solid #cbd5e1 !important;
     border-radius: 8px !important;
     cursor: pointer !important;
@@ -70,7 +70,7 @@
 .gp-sd.open .gp-sd-trigger {
     border-color: #ea580c !important;
     box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15) !important;
-    background: var(--input-bg);;
+    background: #ffffff;
 }
 .gp-sd-value {
     flex: 1 !important;
@@ -92,7 +92,7 @@
     min-width: 190px !important;
     max-width: 250px !important;
     z-index: 80 !important;
-    background: var(--input-bg);;
+    background: #ffffff;
     border: 1px solid #cbd5e1 !important;
     border-radius: 10px !important;
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.18), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
@@ -125,7 +125,7 @@
     width: 100% !important;
     text-align: left !important;
     border: none !important;
-    background: var(--input-bg);;
+    background: #ffffff;
     padding: 7px 10px !important;
     font-size: 12px !important;
     color: #334155 !important;
@@ -383,7 +383,7 @@
 
 {{-- Modal Pengaturan Nomor WhatsApp Bot / Guru Piket (Di luar .page-content agar fixed backdrop tidak ikut ter-scroll) --}}
 <div id="modal-wa-guru-piket" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;width:100vw;height:100vh;background:rgba(15,23,42,.65);z-index:1040;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px);box-sizing:border-box" onclick="if(event.target===this) tutupModalPengaturanWaPiket()">
-    <div class="card" style="width:100%;max-width:580px;max-height:calc(100vh - 40px);background: var(--input-bg);;border-radius:16px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.35);border:1px solid #e2e8f0;display:flex;flex-direction:column;overflow:hidden;animation:modalEnter 0.25s ease-out">
+    <div class="card" style="width:100%;max-width:580px;max-height:calc(100vh - 40px);background: #ffffff;border-radius:16px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.35);border:1px solid #e2e8f0;display:flex;flex-direction:column;overflow:hidden;animation:modalEnter 0.25s ease-out">
         {{-- Header Modal --}}
         <div style="display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid #f1f5f9;background:#fafbfc">
             <div style="display:flex;align-items:center;gap:12px">
@@ -416,11 +416,11 @@
                 </div>
 
                 {{-- Box QR Code jika butuh scan login / tambah bot --}}
-                <div id="modal-bot-qr-box" style="display:none;background: var(--input-bg);;border:1.5px dashed #059669;border-radius:12px;padding:16px;text-align:center;box-shadow:0 4px 12px rgba(5,150,105,0.08)">
+                <div id="modal-bot-qr-box" style="display:none;background: #ffffff;border:1.5px dashed #059669;border-radius:12px;padding:16px;text-align:center;box-shadow:0 4px 12px rgba(5,150,105,0.08)">
                     <div style="font-size:13px;font-weight:700;color:#065f46;margin-bottom:4px">Scan QR Code dengan WhatsApp di HP Anda</div>
                     <div style="font-size:11.5px;color:#047857;margin-bottom:10px">Buka WhatsApp &gt; Perangkat Tertaut &gt; Tautkan Perangkat</div>
                     <div id="modal-bot-qr-img-wrap" style="display:flex;justify-content:center;margin-bottom:10px">
-                        <img id="modal-bot-qr-img" src="" alt="Scan QR Code WhatsApp" style="width:200px;height:200px;border-radius:10px;border:1px solid #e2e8f0;background: var(--input-bg);;padding:6px">
+                        <img id="modal-bot-qr-img" src="" alt="Scan QR Code WhatsApp" style="width:200px;height:200px;border-radius:10px;border:1px solid #e2e8f0;background: #ffffff;padding:6px">
                     </div>
                     <div style="font-size:11px;color:#64748b;display:flex;align-items:center;justify-content:center;gap:6px">
                         <span style="display:inline-block;width:6px;height:6px;background:#059669;border-radius:50%;animation:pulse 1.5s infinite"></span>
@@ -480,7 +480,7 @@
                             Reset ke IP Otomatis
                         </button>
                     </div>
-                    <div style="font-size:11px;color:#475569;background: var(--input-bg);;padding:8px 10px;border-radius:6px;border:1px solid #e2e8f0;word-break:break-all">
+                    <div style="font-size:11px;color:#475569;background: #ffffff;padding:8px 10px;border-radius:6px;border:1px solid #e2e8f0;word-break:break-all">
                         <strong style="color:#0f172a">Preview Link di WA:</strong> <span id="modal-preview-link-wa" style="color:#2563eb;font-family:monospace">Memuat...</span>
                     </div>
                 </div>

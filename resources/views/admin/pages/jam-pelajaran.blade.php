@@ -205,7 +205,7 @@
 }
 .jam-popup-field input[type="time"]:focus {
     outline: none;
-    background: var(--input-bg);;
+    background: #ffffff;
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
 }
@@ -254,7 +254,7 @@
     height: 20px;
     border-radius: 6px;
     border: 1.5px solid #cbd5e1;
-    background: var(--input-bg);;
+    background: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -271,7 +271,7 @@
 .jam-day-card:has(input:checked) .jam-day-check-indicator {
     background: #2563eb;
     border-color: #2563eb;
-    color: inherit;;
+    color: #fff;
 }
 .jam-day-card .jam-day-name {
     font-size: 12px;
@@ -298,7 +298,7 @@
     border: 0;
     border-radius: 10px;
     background: linear-gradient(135deg, #2563eb, #1d4ed8);
-    color: inherit;;
+    color: #fff;
     padding: 10px 18px;
     font-size: 13px;
     font-weight: 700;
@@ -313,7 +313,7 @@
 .jam-popup-cancel {
     border: 1.5px solid #cbd5e1;
     border-radius: 10px;
-    background: var(--input-bg);;
+    background: #ffffff;
     color: #475569;
     padding: 10px 16px;
     font-size: 13px;

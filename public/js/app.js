@@ -996,7 +996,11 @@ function muatAbsensiTersimpan(){
                 if (retakeBtn) retakeBtn.style.display = 'none';
                 if (nativeCameraInput) nativeCameraInput.style.display = 'none';
                 if (preview) {
-                    preview.src = data.jurnal.foto_selfie_url || '';
+                    let selfieUrl = data.jurnal.foto_selfie_url || '';
+                    if (selfieUrl && selfieUrl.includes('/storage/')) {
+                        selfieUrl = '/storage/' + selfieUrl.split('/storage/').slice(1).join('/storage/');
+                    }
+                    preview.src = selfieUrl;
                     preview.style.display = 'none';
                 }
                 if (previewPlaceholder) previewPlaceholder.style.display = 'none';
@@ -1059,8 +1063,12 @@ function muatAbsensiTersimpan(){
                     ttdInput.value = '';
                     ttdInput.dataset.hasExistingTandaTangan = '1';
                 }
+                let ttdUrl = data.jurnal.tanda_tangan_url || '';
+                if (ttdUrl && ttdUrl.includes('/storage/')) {
+                    ttdUrl = '/storage/' + ttdUrl.split('/storage/').slice(1).join('/storage/');
+                }
                 if (ttdPreview) {
-                    ttdPreview.src = data.jurnal.tanda_tangan_url || '';
+                    ttdPreview.src = ttdUrl;
                     ttdPreview.style.display = 'block';
                 }
                 if (ttdPlaceholder) ttdPlaceholder.style.display = 'none';

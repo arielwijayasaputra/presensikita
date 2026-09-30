@@ -243,6 +243,15 @@
                 </span>
             </div>
 
+            @if($dispen->tanda_tangan_waka)
+                <div class="row" style="align-items:flex-start;padding-top:12px;padding-bottom:12px">
+                    <span class="label">Tanda Tangan Waka</span>
+                    <div style="text-align:right">
+                        <img src="{{ Storage::disk('public')->url($dispen->tanda_tangan_waka) }}" alt="Tanda Tangan Waka Kesiswaan" style="max-height:75px;background:#ffffff;border:1px solid #cbd5e1;border-radius:8px;padding:4px;display:inline-block">
+                    </div>
+                </div>
+            @endif
+
             @if(session('approval_message'))
                 <div class="alert alert-success" style="margin-top:14px">
                     {{ session('approval_message') }}
@@ -250,12 +259,33 @@
             @endif
 
             @if($status === 'menunggu')
-                <form method="POST" action="{{ $approvalUrl }}" onsubmit="return konfirmasi(event, '{{ $role === 'waka' ? 'Waka Kesiswaan' : 'Guru Piket' }}')">
+                <form id="dispen-approval-form" method="POST" action="{{ $approvalUrl }}" onsubmit="return konfirmasi(event, '{{ $role === 'waka' ? 'Waka Kesiswaan' : 'Guru Piket' }}')">
                     @csrf
                     <div>
                         <label class="form-label" style="margin-bottom:6px">Catatan Persetujuan (Opsional)</label>
                         <textarea name="catatan" rows="3" class="form-textarea" placeholder="Tambahkan catatan jika diperlukan..."></textarea>
                     </div>
+
+                    <div style="margin-top:16px;margin-bottom:14px">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+                            <label class="form-label" style="margin-bottom:0">
+                                Tanda Tangan Digital <span style="color:#ef4444">*</span>
+                            </label>
+                            <button type="button" onclick="clearSignature()" style="background:transparent;border:none;color:#ef4444;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                Ulangi / Hapus
+                            </button>
+                        </div>
+                        <div style="border:1.5px dashed #cbd5e1;border-radius:10px;overflow:hidden;background:#ffffff;position:relative;touch-action:none">
+                            <canvas id="signature-canvas" style="width:100%;height:150px;display:block;cursor:crosshair;background:#ffffff"></canvas>
+                            <div id="signature-hint" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#94a3b8;font-size:12px;pointer-events:none;text-align:center">
+                                ✍️ Goreskan tanda tangan di sini
+                            </div>
+                        </div>
+                        <input type="hidden" id="input-tanda-tangan" name="tanda_tangan" value="">
+                        <div style="font-size:11.5px;color:#64748b;margin-top:4px">Wajib tanda tangan terlebih dahulu dengan jari (layar sentuh) atau mouse sebelum menyetujui / menolak.</div>
+                    </div>
+
                     <div class="btn-group">
                         <button type="submit" class="btn btn-success" name="keputusan" value="disetujui">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -277,13 +307,126 @@
 </main>
 
 <script>
+let canvas, ctx;
+let drawing = false;
+let hasSigned = false;
+
+function initCanvas() {
+    canvas = document.getElementById('signature-canvas');
+    if (!canvas) return;
+    
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = Math.round(rect.width || 480);
+    canvas.height = 150;
+    
+    ctx = canvas.getContext('2d');
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#0f172a';
+    ctx.lineWidth = 2.5;
+
+    function getPos(e) {
+        const r = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+            x: (clientX - r.left) * (canvas.width / r.width),
+            y: (clientY - r.top) * (canvas.height / r.height)
+        };
+    }
+
+    function startDraw(e) {
+        e.preventDefault();
+        drawing = true;
+        hasSigned = true;
+        const hint = document.getElementById('signature-hint');
+        if (hint) hint.style.display = 'none';
+        const pos = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+    }
+
+    function draw(e) {
+        if (!drawing) return;
+        e.preventDefault();
+        const pos = getPos(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+    }
+
+    function endDraw() {
+        if (drawing) {
+            drawing = false;
+            ctx.closePath();
+            syncSignatureInput();
+        }
+    }
+
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', endDraw);
+    canvas.addEventListener('mouseleave', endDraw);
+
+    canvas.addEventListener('touchstart', startDraw, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+    canvas.addEventListener('touchend', endDraw);
+}
+
+function clearSignature() {
+    if (!canvas || !ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hasSigned = false;
+    const input = document.getElementById('input-tanda-tangan');
+    if (input) input.value = '';
+    const hint = document.getElementById('signature-hint');
+    if (hint) hint.style.display = 'block';
+}
+
+function isCanvasBlank() {
+    if (!canvas || !ctx || !hasSigned) return true;
+    const pixelBuffer = new Uint32Array(
+        ctx.getImageData(0, 0, canvas.width, canvas.height).data.buffer
+    );
+    return !pixelBuffer.some(color => color !== 0);
+}
+
+function syncSignatureInput() {
+    const input = document.getElementById('input-tanda-tangan');
+    if (!input) return;
+    if (isCanvasBlank()) {
+        input.value = '';
+    } else {
+        input.value = canvas.toDataURL('image/png');
+    }
+}
+
+window.addEventListener('load', initCanvas);
+window.addEventListener('resize', function() {
+    if (canvas && isCanvasBlank()) {
+        initCanvas();
+    }
+});
+
 function konfirmasi(e, role) {
     e.preventDefault();
     const form = e.target;
     const isReject = e.submitter && e.submitter.value === 'ditolak';
+
+    syncSignatureInput();
+    const ttdVal = document.getElementById('input-tanda-tangan')?.value;
+    if (!ttdVal || isCanvasBlank()) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Tanda Tangan Diperlukan',
+            text: 'Silakan tanda tangan terlebih dahulu sebelum menyetujui atau menolak dispensasi.',
+            confirmButtonColor: '#2563eb'
+        });
+        return false;
+    }
+
     Swal.fire({
         title: isReject ? 'Tolak dispensasi?' : 'Setujui dispensasi?',
-        text: 'Keputusan sebagai ' + role + ' akan disimpan dan dikirimkan.',
+        text: 'Keputusan sebagai ' + role + ' beserta tanda tangan akan disimpan ke sistem.',
         icon: isReject ? 'warning' : 'question',
         showCancelButton: true,
         confirmButtonText: isReject ? 'Ya, Tolak' : 'Ya, Setujui',

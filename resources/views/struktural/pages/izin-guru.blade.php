@@ -75,7 +75,7 @@
         </div>
         <div style="overflow-x:auto">
             <table class="data-table" id="table-izin-guru-tbl" style="min-width:980px">
-                <thead><tr><th>Guru</th><th>Tanggal</th><th>Alasan</th><th>Status Kepsek</th><th>Status Waka</th><th>Link</th></tr></thead>
+                <thead><tr><th>Guru</th><th>Tanggal</th><th>Alasan</th><th>Status Kepsek</th><th>Status Waka</th><th style="text-align:center">Tanda Tangan</th><th>Link</th></tr></thead>
                 <tbody>
                     @forelse($izinGuruTerbaru as $izin)
                         <tr>
@@ -84,13 +84,32 @@
                             <td>{{ $izin->alasan }}</td>
                             <td>{{ ucfirst($izin->status_kepsek) }}</td>
                             <td>{{ ucfirst($izin->status_waka) }}</td>
+                            <td style="text-align:center">
+                                <div style="display:inline-flex;gap:4px;flex-wrap:wrap;justify-content:center">
+                                    @if($izin->tanda_tangan_kepsek)
+                                        <button type="button" onclick="showSignaturePopup('{{ Storage::disk('public')->url($izin->tanda_tangan_kepsek) }}', 'Izin: {{ $izin->guru->nama_guru ?? '' }}', 'Tanda Tangan Kepala Sekolah')" style="background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;padding:3px 7px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:3px">
+                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5a1 1 0 0 1-1.4.4l-4-2a1 1 0 0 1 .3-1.8l10-3z"/><path d="M2 19l7-7 2 2 5-5 6 6v4a1 1 0 0 1-1 1l-9 2-4 2z"/></svg>
+                                            Kepsek
+                                        </button>
+                                    @endif
+                                    @if($izin->tanda_tangan_waka)
+                                        <button type="button" onclick="showSignaturePopup('{{ Storage::disk('public')->url($izin->tanda_tangan_waka) }}', 'Izin: {{ $izin->guru->nama_guru ?? '' }}', 'Tanda Tangan Waka SDM')" style="background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;border-radius:6px;padding:3px 7px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:3px">
+                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5a1 1 0 0 1-1.4.4l-4-2a1 1 0 0 1 .3-1.8l10-3z"/><path d="M2 19l7-7 2 2 5-5 6 6v4a1 1 0 0 1-1 1l-9 2-4 2z"/></svg>
+                                            Waka
+                                        </button>
+                                    @endif
+                                    @if(!$izin->tanda_tangan_kepsek && !$izin->tanda_tangan_waka)
+                                        <span style="color:#94a3b8;font-size:12px">-</span>
+                                    @endif
+                                </div>
+                            </td>
                             <td>
                                 <a href="{{ URL::temporarySignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'kepsek'], false) }}" target="_blank" style="font-size:12px;margin-right:8px">Kepsek</a>
                                 <a href="{{ URL::temporarySignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'waka'], false) }}" target="_blank" style="font-size:12px">Waka</a>
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" style="text-align:center;color:#64748b;padding:22px">Belum ada permintaan izin.</td></tr>
+                        <tr><td colspan="7" style="text-align:center;color:#64748b;padding:22px">Belum ada permintaan izin.</td></tr>
                     @endforelse
                 </tbody>
             </table>

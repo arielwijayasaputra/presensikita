@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 
 class DispenSiswaController extends Controller
 {
@@ -127,13 +128,45 @@ class DispenSiswaController extends Controller
     public function approve(Request $request, DispenSiswa $dispen, string $role)
     {
         abort_unless($role === 'waka', 404);
-        $data = $request->validate(['keputusan' => ['required', 'in:disetujui,ditolak'], 'catatan' => ['nullable', 'string', 'max:1000']]);
+        $data = $request->validate([
+            'keputusan' => ['required', 'in:disetujui,ditolak'],
+            'catatan' => ['nullable', 'string', 'max:1000'],
+            'tanda_tangan' => ['required', 'string'],
+        ], [
+            'tanda_tangan.required' => 'Tanda tangan digital wajib diisi sebelum menyimpan keputusan.',
+        ]);
+
+        $tandaTanganPath = null;
+        if ($request->filled('tanda_tangan') && str_starts_with($request->tanda_tangan, 'data:image')) {
+            $base64Ttd = $request->tanda_tangan;
+            if (preg_match('/^data:image\/(\w+);base64,/', $base64Ttd, $type)) {
+                $base64Ttd = substr($base64Ttd, strpos($base64Ttd, ',') + 1);
+                $type = strtolower($type[1]);
+                if (! in_array($type, ['jpg', 'jpeg', 'png', 'webp'])) {
+                    $type = 'png';
+                }
+                $decodedTtd = base64_decode($base64Ttd);
+                if ($decodedTtd !== false) {
+                    $filename = 'ttd_dispen_waka_'.$dispen->id_dispen_siswa.'_'.time().'_'.Str::random(6).'.'.$type;
+                    Storage::disk('public')->put('tanda-tangan-struktural/'.$filename, $decodedTtd);
+                    $tandaTanganPath = 'tanda-tangan-struktural/'.$filename;
+                }
+            }
+        }
+
+        if (! $tandaTanganPath) {
+            return back()->withErrors(['tanda_tangan' => 'Tanda tangan digital tidak valid atau gagal diproses.']);
+        }
+
         $statusField = 'status_'.$role;
         $noteField = 'catatan_'.$role;
         $dateField = 'disetujui_'.$role.'_pada';
+        $ttdField = 'tanda_tangan_'.$role;
+
         $dispen->{$statusField} = $data['keputusan'];
         $dispen->{$noteField} = $data['catatan'] ?? null;
         $dispen->{$dateField} = $data['keputusan'] === 'disetujui' ? now() : null;
+        $dispen->{$ttdField} = $tandaTanganPath;
         $dispen->save();
 
         $url = URL::temporarySignedRoute('dispen-siswa.public', now()->addDays(2), ['dispen' => $dispen->id_dispen_siswa, 'role' => $role], false);

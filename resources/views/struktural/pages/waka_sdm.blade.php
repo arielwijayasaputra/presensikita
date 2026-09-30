@@ -256,6 +256,7 @@
                         <th>Alasan Izin</th>
                         <th style="text-align:center">Status Kepsek</th>
                         <th style="text-align:center">Status Waka</th>
+                        <th style="text-align:center">Tanda Tangan</th>
                         <th style="text-align:center">Detail / Aksi</th>
                     </tr>
                 </thead>
@@ -284,6 +285,25 @@
                                 @endif
                             </td>
                             <td style="text-align:center">
+                                <div style="display:inline-flex;gap:4px;flex-wrap:wrap;justify-content:center">
+                                    @if($izin->tanda_tangan_kepsek)
+                                        <button type="button" onclick="showSignaturePopup('{{ Storage::disk('public')->url($izin->tanda_tangan_kepsek) }}', 'Izin: {{ $izin->guru->nama_guru ?? '' }}', 'Tanda Tangan Kepala Sekolah')" style="background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;padding:3px 7px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:3px">
+                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5a1 1 0 0 1-1.4.4l-4-2a1 1 0 0 1 .3-1.8l10-3z"/><path d="M2 19l7-7 2 2 5-5 6 6v4a1 1 0 0 1-1 1l-9 2-4 2z"/></svg>
+                                            Kepsek
+                                        </button>
+                                    @endif
+                                    @if($izin->tanda_tangan_waka)
+                                        <button type="button" onclick="showSignaturePopup('{{ Storage::disk('public')->url($izin->tanda_tangan_waka) }}', 'Izin: {{ $izin->guru->nama_guru ?? '' }}', 'Tanda Tangan Waka SDM')" style="background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;border-radius:6px;padding:3px 7px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:3px">
+                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5a1 1 0 0 1-1.4.4l-4-2a1 1 0 0 1 .3-1.8l10-3z"/><path d="M2 19l7-7 2 2 5-5 6 6v4a1 1 0 0 1-1 1l-9 2-4 2z"/></svg>
+                                            Waka
+                                        </button>
+                                    @endif
+                                    @if(!$izin->tanda_tangan_kepsek && !$izin->tanda_tangan_waka)
+                                        <span style="color:#94a3b8;font-size:12px">-</span>
+                                    @endif
+                                </div>
+                            </td>
+                            <td style="text-align:center">
                                 <a href="{{ URL::temporarySignedRoute('izin-guru.public', now()->addDays(2), ['izin' => $izin->id_izin_guru], false) }}" target="_blank" style="font-size:12.5px; font-weight:600; color:#2563eb">
                                     Buka Surat
                                 </a>
@@ -291,7 +311,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" style="text-align:center; color:#64748b; padding:22px">
+                            <td colspan="7" style="text-align:center; color:#64748b; padding:22px">
                                 Belum ada pengajuan izin guru.
                             </td>
                         </tr>

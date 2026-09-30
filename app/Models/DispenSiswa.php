@@ -18,6 +18,7 @@ class DispenSiswa extends Model
         'id_siswa', 'id_guru_piket', 'tanggal_dispen', 'alasan',
         'jenis_absen', 'foto_surat', 'id_jurnal',
         'status_waka', 'status_guru_piket', 'catatan_waka', 'catatan_guru_piket',
+        'tanda_tangan_waka',
         'disetujui_waka_pada', 'disetujui_guru_piket_pada',
         'waktu_keluar', 'waktu_masuk',
     ];

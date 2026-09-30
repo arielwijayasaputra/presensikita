@@ -229,7 +229,13 @@
         </section>
 
         <div class="row"><span class="label">Status Kepala Sekolah</span><span class="badge {{ $izin->status_kepsek === 'disetujui' ? 'badge-success' : ($izin->status_kepsek === 'ditolak' ? 'badge-danger' : 'badge-warning') }}">{{ ucfirst($izin->status_kepsek) }}</span></div>
+        @if($izin->tanda_tangan_kepsek)
+            <div class="row"><span class="label">Tanda Tangan Kepsek</span><img src="{{ Storage::disk('public')->url($izin->tanda_tangan_kepsek) }}" alt="TTD Kepsek" style="max-height:60px;background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:3px"></div>
+        @endif
         <div class="row" style="margin-bottom:14px"><span class="label">Status Waka</span><span class="badge {{ $izin->status_waka === 'disetujui' ? 'badge-success' : ($izin->status_waka === 'ditolak' ? 'badge-danger' : 'badge-warning') }}">{{ ucfirst($izin->status_waka) }}</span></div>
+        @if($izin->tanda_tangan_waka)
+            <div class="row" style="margin-bottom:14px"><span class="label">Tanda Tangan Waka SDM</span><img src="{{ Storage::disk('public')->url($izin->tanda_tangan_waka) }}" alt="TTD Waka" style="max-height:60px;background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:3px"></div>
+        @endif
 
         @if(session('approval_message'))
             <div class="alert alert-success" style="margin-bottom:14px">

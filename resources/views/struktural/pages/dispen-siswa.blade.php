@@ -68,6 +68,7 @@
                         <th>Surat</th>
                         <th>Status Waka</th>
                         <th>Status Keluar-Masuk</th>
+                        <th style="text-align:center">Tanda Tangan</th>
                         <th>Link Waka</th>
                     </tr>
                 </thead>
@@ -95,6 +96,16 @@
                                     <span class="badge badge-info">Di Sekolah</span>
                                 @endif
                             </td>
+                            <td style="text-align:center">
+                                @if($item->tanda_tangan_waka)
+                                    <button type="button" onclick="showSignaturePopup('{{ Storage::disk('public')->url($item->tanda_tangan_waka) }}', 'Dispensasi - {{ $item->siswa->nama_siswa ?? '' }}', 'Tanda Tangan Waka Kesiswaan')" style="background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;border-radius:6px;padding:4px 8px;font-size:11.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5a1 1 0 0 1-1.4.4l-4-2a1 1 0 0 1 .3-1.8l10-3z"/><path d="M2 19l7-7 2 2 5-5 6 6v4a1 1 0 0 1-1 1l-9 2-4 2z"/></svg>
+                                        Lihat TTD
+                                    </button>
+                                @else
+                                    <span style="color:#94a3b8;font-size:12px">-</span>
+                                @endif
+                            </td>
                             <td>
                                 <a href="{{ URL::temporarySignedRoute('dispen-siswa.public', now()->addDays(2), ['dispen' => $item->id_dispen_siswa, 'role' => 'waka'], false) }}" target="_blank">
                                     Buka Waka
@@ -103,7 +114,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" style="text-align:center;color:#64748b;padding:22px">
+                            <td colspan="9" style="text-align:center;color:#64748b;padding:22px">
                                 Belum ada permintaan dispensasi.
                             </td>
                         </tr>

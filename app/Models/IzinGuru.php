@@ -23,6 +23,8 @@ class IzinGuru extends Model
         'status_waka',
         'catatan_kepsek',
         'catatan_waka',
+        'tanda_tangan_kepsek',
+        'tanda_tangan_waka',
         'disetujui_kepsek_pada',
         'disetujui_waka_pada',
     ];

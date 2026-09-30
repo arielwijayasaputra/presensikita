@@ -3782,16 +3782,17 @@ window.showSelfiePopup = function(url, title) {
     });
 };
 
-window.showSignaturePopup = function(url, title) {
+window.showSignaturePopup = function(url, title, modalTitle) {
     Swal.fire({
-        title: 'Tanda Tangan Guru',
+        title: modalTitle || 'Tanda Tangan Digital',
         html: `
-            ${title ? `<div style="font-size:13.5px;font-weight:600;color:#64748b;margin-top:-6px;margin-bottom:14px">${title}</div>` : ''}
-            <div style="border-radius:12px;overflow:hidden;background:#f1f5f9;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;min-height:160px;position:relative">
+            ${title ? `<div style="font-size:13.5px;font-weight:600;color:var(--text-secondary, #64748b);margin-top:-6px;margin-bottom:14px">${title}</div>` : ''}
+            <div class="swal-signature-box" style="border-radius:12px;overflow:hidden;background:#ffffff !important;border:1.5px solid #cbd5e1 !important;display:flex;align-items:center;justify-content:center;min-height:160px;position:relative;padding:12px;box-shadow:0 4px 14px rgba(0,0,0,0.25)">
                 <img src="${url}" 
-                     alt="Tanda Tangan Guru" 
-                     style="max-width:100%;max-height:360px;object-fit:contain;display:block;border-radius:11px" 
-                     onerror="this.parentElement.innerHTML='<div style=\\'padding:32px 20px;color:#94a3b8;font-size:13px;font-weight:600;text-align:center\\'><svg width=\\'28\\' height=\\'28\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2\\'><circle cx=\\'12\\' cy=\\'12\\' r=\\'10\\'/><line x1=\\'12\\' y1=\\'8\\' x2=\\'12\\' y2=\\'12\\'/><line x1=\\'12\\' y1=\\'16\\' x2=\\'12.01\\' y2=\\'16\\'/></svg>Tanda tangan tidak ditemukan atau gagal dimuat.</div>'">
+                     alt="Tanda Tangan" 
+                     class="signature-display-img"
+                     style="max-width:100%;max-height:360px;object-fit:contain;display:block;border-radius:8px;background:#ffffff !important" 
+                     onerror="this.parentElement.innerHTML='<div style=\\'padding:32px 20px;color:#64748b;font-size:13px;font-weight:600;text-align:center\\'><svg width=\\'28\\' height=\\'28\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2\\'><circle cx=\\'12\\' cy=\\'12\\' r=\\'10\\'/><line x1=\\'12\\' y1=\\'8\\' x2=\\'12\\' y2=\\'12\\'/><line x1=\\'12\\' y1=\\'16\\' x2=\\'12.01\\' y2=\\'16\\'/></svg><br>Tanda tangan tidak ditemukan atau gagal dimuat.</div>'">
             </div>
             <div style="margin-top:14px;display:flex;justify-content:center;gap:8px">
                 <a href="${url}" target="_blank" rel="noopener" class="custom-swal-confirm" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:8px 16px;border-radius:8px;background:#2563eb;color:#ffffff">

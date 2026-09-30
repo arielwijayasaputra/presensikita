@@ -12,7 +12,9 @@ use App\Models\Siswa;
 use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 
 class IzinGuruController extends Controller
 {
@@ -151,16 +153,43 @@ class IzinGuruController extends Controller
         $data = $request->validate([
             'keputusan' => ['required', 'in:disetujui,ditolak'],
             'catatan' => ['nullable', 'string', 'max:1000'],
+            'tanda_tangan' => ['required', 'string'],
+        ], [
+            'tanda_tangan.required' => 'Tanda tangan digital wajib diisi sebelum menyimpan keputusan.',
         ]);
+
+        $tandaTanganPath = null;
+        if ($request->filled('tanda_tangan') && str_starts_with($request->tanda_tangan, 'data:image')) {
+            $base64Ttd = $request->tanda_tangan;
+            if (preg_match('/^data:image\/(\w+);base64,/', $base64Ttd, $type)) {
+                $base64Ttd = substr($base64Ttd, strpos($base64Ttd, ',') + 1);
+                $type = strtolower($type[1]);
+                if (! in_array($type, ['jpg', 'jpeg', 'png', 'webp'])) {
+                    $type = 'png';
+                }
+                $decodedTtd = base64_decode($base64Ttd);
+                if ($decodedTtd !== false) {
+                    $filename = 'ttd_izin_'.$role.'_'.$izin->id_izin_guru.'_'.time().'_'.Str::random(6).'.'.$type;
+                    Storage::disk('public')->put('tanda-tangan-struktural/'.$filename, $decodedTtd);
+                    $tandaTanganPath = 'tanda-tangan-struktural/'.$filename;
+                }
+            }
+        }
+
+        if (! $tandaTanganPath) {
+            return back()->withErrors(['tanda_tangan' => 'Tanda tangan digital tidak valid atau gagal diproses.']);
+        }
 
         $statusField = 'status_'.$role;
         $noteField = 'catatan_'.$role;
         $dateField = 'disetujui_'.$role.'_pada';
+        $ttdField = 'tanda_tangan_'.$role;
 
-        DB::transaction(function () use ($izin, $statusField, $noteField, $dateField, $data) {
+        DB::transaction(function () use ($izin, $statusField, $noteField, $dateField, $ttdField, $tandaTanganPath, $data) {
             $izin->{$statusField} = $data['keputusan'];
             $izin->{$noteField} = $data['catatan'] ?? null;
             $izin->{$dateField} = $data['keputusan'] === 'disetujui' ? now() : null;
+            $izin->{$ttdField} = $tandaTanganPath;
             $izin->save();
 
             if ($izin->isDisetujui()) {

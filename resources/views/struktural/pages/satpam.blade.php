@@ -2,7 +2,7 @@
     <div class="greeting-row">
         <div class="greeting-text">
             <h2>Dashboard Satpam</h2>
-            <p>{{ $hariIni }}, {{ now()->format('d F Y') }} · {{ $namaSekolah }}</p>
+            <p>{{ $hariIni }}, {{ now()->translatedFormat('d F Y') }} · {{ $namaSekolah }}</p>
         </div>
         <div class="header-date" style="background:#f1f5f9;border-color:#cbd5e1;color:#334155">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
@@ -137,8 +137,14 @@
                                     <button type="button" class="btn-satpam-masuk" onclick="prosesMasuk({{ $item->id_dispen_siswa }}, this)">
                                         Izinkan Masuk
                                     </button>
-                                @else
+                                @elseif($item->status_waka === 'disetujui')
                                     <button type="button" class="btn-satpam-keluar" onclick="prosesKeluar({{ $item->id_dispen_siswa }}, this)">
+                                        Izinkan Keluar
+                                    </button>
+                                @elseif($item->status_waka === 'ditolak')
+                                    <span class="badge badge-danger" style="font-size:11.5px;padding:4px 8px">Ditolak Waka</span>
+                                @else
+                                    <button type="button" class="btn-satpam-keluar-disabled" onclick="Swal.fire({icon: 'warning', title: 'Belum Disetujui', text: 'Dispensasi siswa ini belum disetujui oleh Waka Kesiswaan. Siswa belum diizinkan keluar.'})">
                                         Izinkan Keluar
                                     </button>
                                 @endif
@@ -174,6 +180,24 @@
 .btn-satpam-keluar:hover {
     transform: translateY(-1px);
     box-shadow: 0 6px 14px rgba(59, 130, 246, 0.4);
+}
+.btn-satpam-keluar-disabled {
+    background: #94a3b8;
+    color: #fff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    opacity: 0.7;
+    box-shadow: none;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+.btn-satpam-keluar-disabled:hover {
+    background: #64748b;
+    transform: translateY(-1px);
 }
 .btn-satpam-masuk {
     background: linear-gradient(135deg, #10b981, #059669);

@@ -501,6 +501,13 @@ class DashboardController extends Controller
     {
         abort_unless(session('auth_role') === 'satpam', 403);
 
+        if ($dispen->status_waka !== 'disetujui') {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Dispensasi belum disetujui oleh Waka Kesiswaan. Siswa belum diizinkan keluar.',
+            ], 422);
+        }
+
         $dispen->update([
             'waktu_keluar' => now(),
         ]);

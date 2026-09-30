@@ -189,8 +189,14 @@
                                         <button type="button" class="btn-satpam-masuk" onclick="prosesMasuk({{ $item->id_dispen_siswa }}, this)">
                                             Izinkan Masuk
                                         </button>
-                                    @else
+                                    @elseif($item->status_waka === 'disetujui')
                                         <button type="button" class="btn-satpam-keluar" onclick="prosesKeluar({{ $item->id_dispen_siswa }}, this)">
+                                            Izinkan Keluar
+                                        </button>
+                                    @elseif($item->status_waka === 'ditolak')
+                                        <span class="badge badge-danger" style="font-size:11.5px;padding:4px 8px">Ditolak Waka</span>
+                                    @else
+                                        <button type="button" class="btn-satpam-keluar-disabled" onclick="Swal.fire({icon: 'warning', title: 'Belum Disetujui', text: 'Dispensasi siswa ini belum disetujui oleh Waka Kesiswaan. Siswa belum diizinkan keluar.'})">
                                             Izinkan Keluar
                                         </button>
                                     @endif

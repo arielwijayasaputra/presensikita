@@ -222,7 +222,7 @@
                     <select id="select-piket-minggu" class="filter-select" onchange="filterMingguPiket(this.value)" style="border:none;background:transparent;font-weight:700;font-size:13.5px;color:#0f172a;padding:4px 6px;cursor:pointer">
                         <option value="all">Semua Minggu (1 Bulan Penuh)</option>
                         @foreach($guruPiketWeeks as $w)
-                            <option value="{{ $w['week_num'] }}">Minggu {{ $w['week_num'] }} ({{ \Carbon\Carbon::parse($w['days'][0]['tanggal'])->format('d M') }} – {{ \Carbon\Carbon::parse(end($w['days'])['tanggal'])->format('d M') }})</option>
+                            <option value="{{ $w['week_num'] }}">Minggu {{ $w['week_num'] }} ({{ \Carbon\Carbon::parse($w['days'][0]['tanggal'])->translatedFormat('d M') }} – {{ \Carbon\Carbon::parse(end($w['days'])['tanggal'])->translatedFormat('d M') }})</option>
                         @endforeach
                     </select>
                 </div>
@@ -272,7 +272,7 @@
                                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid {{ $isToday ? '#fed7aa' : '#f1f5f9' }}">
                                         <div style="display:flex;align-items:center;gap:7px">
                                             <span style="font-size:13.5px;font-weight:800;color:{{ $isToday ? '#ea580c' : '#1e293b' }}">{{ $day['hari'] }}</span>
-                                            <span style="font-size:12px;color:#64748b;font-weight:600">{{ \Carbon\Carbon::parse($day['tanggal'])->format('d M Y') }}</span>
+                                            <span style="font-size:12px;color:#64748b;font-weight:600">{{ \Carbon\Carbon::parse($day['tanggal'])->translatedFormat('d M Y') }}</span>
                                             @if($isToday)
                                                 <span style="background:#ea580c;color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;text-transform:uppercase;letter-spacing:0.5px">Hari Ini</span>
                                             @endif

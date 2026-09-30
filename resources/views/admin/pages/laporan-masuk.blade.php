@@ -136,7 +136,7 @@
                     <tr class="row-laporan-item" data-status="{{ $st }}" style="border-bottom:1px solid #f1f5f9;transition:background 0.15s">
                         <td style="padding:14px 16px;font-size:13px;color:#64748b;font-weight:600">{{ $idx + 1 }}</td>
                         <td style="padding:14px 16px;font-size:12.5px;color:#475569">
-                            <div style="font-weight:700;color:#1e293b">{{ $lap->created_at->format('d M Y') }}</div>
+                            <div style="font-weight:700;color:#1e293b">{{ $lap->created_at->translatedFormat('d M Y') }}</div>
                             <div style="font-size:11.5px;color:#94a3b8">{{ $lap->created_at->format('H:i') }} WIB</div>
                         </td>
                         <td style="padding:14px 16px;font-size:13px">
@@ -150,7 +150,7 @@
                             <div style="color:#64748b;font-size:12.5px;line-height:1.4;max-width:380px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
                                 {{ $lap->isi_laporan }}
                             </div>
-                            <button type="button" onclick="bukaDetailLaporan('{{ htmlspecialchars($lap->nama_pelapor) }}', '{{ htmlspecialchars($lap->role_pelapor) }}', '{{ htmlspecialchars($lap->judul) }}', '{{ htmlspecialchars($lap->isi_laporan) }}', '{{ $lap->created_at->format('d M Y, H:i') }} WIB')" style="background:none;border:none;color:#2563eb;font-size:11.5px;font-weight:700;cursor:pointer;padding:0;margin-top:4px">
+                            <button type="button" onclick="bukaDetailLaporan('{{ htmlspecialchars($lap->nama_pelapor) }}', '{{ htmlspecialchars($lap->role_pelapor) }}', '{{ htmlspecialchars($lap->judul) }}', '{{ htmlspecialchars($lap->isi_laporan) }}', '{{ $lap->created_at->translatedFormat('d M Y, H:i') }} WIB')" style="background:none;border:none;color:#2563eb;font-size:11.5px;font-weight:700;cursor:pointer;padding:0;margin-top:4px">
                                 lihat selengkapnya &raquo;
                             </button>
                         </td>

@@ -2,7 +2,7 @@
     <div class="greeting-row">
         <div class="greeting-text">
             <h2>Dashboard Guru Piket</h2>
-            <p>{{ $hariIni }}, {{ now()->format('d F Y') }} · {{ $namaSekolah }}</p>
+            <p>{{ $hariIni }}, {{ now()->translatedFormat('d F Y') }} · {{ $namaSekolah }}</p>
         </div>
     </div>
 

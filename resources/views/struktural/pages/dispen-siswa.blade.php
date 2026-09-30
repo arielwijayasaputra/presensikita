@@ -96,7 +96,7 @@
                                 @endif
                             </td>
                             <td>
-                                <a href="{{ URL::temporarySignedRoute('dispen-siswa.public', now()->addDays(2), ['dispen' => $item->id_dispen_siswa, 'role' => 'waka']) }}" target="_blank">
+                                <a href="{{ URL::temporarySignedRoute('dispen-siswa.public', now()->addDays(2), ['dispen' => $item->id_dispen_siswa, 'role' => 'waka'], false) }}" target="_blank">
                                     Buka Waka
                                 </a>
                             </td>

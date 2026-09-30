@@ -85,8 +85,8 @@
                             <td>{{ ucfirst($izin->status_kepsek) }}</td>
                             <td>{{ ucfirst($izin->status_waka) }}</td>
                             <td>
-                                <a href="{{ URL::temporarySignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'kepsek']) }}" target="_blank" style="font-size:12px;margin-right:8px">Kepsek</a>
-                                <a href="{{ URL::temporarySignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'waka']) }}" target="_blank" style="font-size:12px">Waka</a>
+                                <a href="{{ URL::temporarySignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'kepsek'], false) }}" target="_blank" style="font-size:12px;margin-right:8px">Kepsek</a>
+                                <a href="{{ URL::temporarySignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'waka'], false) }}" target="_blank" style="font-size:12px">Waka</a>
                             </td>
                         </tr>
                     @empty

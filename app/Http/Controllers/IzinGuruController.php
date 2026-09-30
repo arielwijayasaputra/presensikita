@@ -80,7 +80,8 @@ class IzinGuruController extends Controller
         $link = URL::temporarySignedRoute(
             'izin-guru.public',
             now()->addDays(2),
-            ['izin' => $izin->id_izin_guru]
+            ['izin' => $izin->id_izin_guru],
+            false
         );
 
         $kepsekLink = WhatsAppService::generateLanSignedRoute('izin-guru.public.role', now()->addDays(2), ['izin' => $izin->id_izin_guru, 'role' => 'kepsek']);

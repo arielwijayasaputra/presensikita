@@ -284,7 +284,7 @@
                                 @endif
                             </td>
                             <td style="text-align:center">
-                                <a href="{{ URL::temporarySignedRoute('izin-guru.public', now()->addDays(2), ['izin' => $izin->id_izin_guru]) }}" target="_blank" style="font-size:12.5px; font-weight:600; color:#2563eb">
+                                <a href="{{ URL::temporarySignedRoute('izin-guru.public', now()->addDays(2), ['izin' => $izin->id_izin_guru], false) }}" target="_blank" style="font-size:12.5px; font-weight:600; color:#2563eb">
                                     Buka Surat
                                 </a>
                             </td>

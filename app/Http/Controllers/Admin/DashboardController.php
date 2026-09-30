@@ -128,7 +128,6 @@ class DashboardController extends Controller
         }
 
         $allSiswa = Siswa::with('kelas')
-            ->where('is_aktif', 1)
             ->join('kelas', 'siswa.id_kelas', '=', 'kelas.id_kelas')
             ->whereNull('kelas.deleted_at')
             ->select('siswa.*')

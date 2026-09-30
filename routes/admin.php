@@ -28,12 +28,14 @@ Route::middleware('auth.admin')->group(function () {
     Route::post('/siswa/import-csv', [SiswaController::class, 'importCsv'])->name('siswa.import');
     Route::post('/siswa/hapus-semua', [SiswaController::class, 'hapusSemua'])->name('siswa.hapus-semua');
     Route::post('/siswa/{id}/update', [SiswaController::class, 'update'])->name('siswa.update');
+    Route::patch('/siswa/{id}/toggle-aktif', [SiswaController::class, 'toggleAktif'])->name('siswa.toggle');
     Route::delete('/siswa/{id}', [SiswaController::class, 'destroy'])->name('siswa.hapus');
 
     // CRUD Kelas
     Route::get('/kelas/{id}/siswa', [KelasController::class, 'getSiswa'])->name('kelas.siswa');
     Route::post('/kelas/tambah', [KelasController::class, 'store'])->name('kelas.tambah');
     Route::post('/kelas/{id}/update', [KelasController::class, 'update'])->name('kelas.update');
+    Route::patch('/kelas/{id}/toggle-aktif', [KelasController::class, 'toggleAktif'])->name('kelas.toggle');
     Route::delete('/kelas/{id}', [KelasController::class, 'destroy'])->name('kelas.hapus');
 
     // CRUD Jurusan

@@ -178,13 +178,15 @@
                     <th>Nama Siswa</th>
                     <th style="width:140px;text-align:center">Jenis Kelamin</th>
                     <th style="width:120px">Kelas</th>
-                    <th style="width:110px;text-align:center">Status</th>
+                    <th style="width:100px;text-align:center">Status</th>
+                    <th style="width:120px;text-align:center">Aktif / Nonaktif</th>
                     <th style="width:90px;text-align:center">Aksi</th>
                 </tr>
             </thead>
             <tbody id="siswa-tbody-page">
                 @forelse($allSiswa as $idx => $s)
                 <tr class="siswa-row-item"
+                    id="row-siswa-{{ $s->id_siswa }}"
                     data-search="{{ strtolower(($s->nisn ?? '') . ' ' . $s->nama_siswa) }}"
                     data-kelas="{{ $s->id_kelas }}"
                     data-jk="{{ $s->jenis_kelamin }}"
@@ -209,12 +211,20 @@
                     <td>
                         <span class="badge badge-info">{{ $s->kelas->nama_kelas ?? '-' }}</span>
                     </td>
-                    <td style="text-align:center">
+                    <td style="text-align:center" id="status-cell-siswa-{{ $s->id_siswa }}">
                         @if($s->is_aktif)
                             <span class="badge badge-success">Aktif</span>
                         @else
-                            <span class="badge badge-warning">Nonaktif</span>
+                            <span class="badge badge-danger">Nonaktif</span>
                         @endif
+                    </td>
+                    <td style="text-align:center">
+                        <label class="toggle-switch" style="position:relative;display:inline-block;width:38px;height:22px;cursor:pointer;vertical-align:middle">
+                            <input type="checkbox" {{ $s->is_aktif ? 'checked' : '' }} onchange="toggleAktifSiswa({{ $s->id_siswa }}, this, '{{ htmlspecialchars($s->nama_siswa, ENT_QUOTES) }}')" style="opacity:0;width:0;height:0">
+                            <span class="toggle-slider" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:{{ $s->is_aktif ? '#10b981' : '#cbd5e1' }};transition:.3s;border-radius:22px">
+                                <span class="toggle-knob" style="position:absolute;height:16px;width:16px;left:{{ $s->is_aktif ? '19px' : '3px' }};bottom:3px;background-color:white;transition:.3s;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.2)"></span>
+                            </span>
+                        </label>
                     </td>
                     <td style="text-align:center">
                         <div style="display:inline-flex;align-items:center;gap:6px">
@@ -229,13 +239,18 @@
                                 style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:#fff1f2;border:1px solid #fecdd3;color:#e11d48;border-radius:8px;cursor:pointer;transition:all 0.2s;"
                                 title="Hapus">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                @endforeach
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                @empty
                 <tr id="siswa-empty-state" style="display:none">
-                    <td colspan="8" style="text-align:center;padding:40px;color:#94a3b8">
+                    <td colspan="9" style="text-align:center;padding:40px;color:#94a3b8">
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" style="margin:0 auto 10px;display:block"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                         Tidak ada data siswa yang cocok dengan pencarian/filter.
                     </td>
                 </tr>
+                @endforelse
             </tbody>
         </table>
 
@@ -435,6 +450,101 @@
     if(target && target.style.display !== 'none') initSiswaPage();
     setTimeout(initSiswaPage, 300);
 })();
+
+function toggleAktifSiswa(id, checkboxEl, nama) {
+    const isChecked = checkboxEl.checked;
+    const actionText = isChecked ? 'mengaktifkan' : 'menonaktifkan';
+
+    Swal.fire({
+        title: `${isChecked ? 'Aktifkan' : 'Nonaktifkan'} Siswa?`,
+        text: `Apakah Anda yakin ingin ${actionText} data siswa ${nama}?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: `Ya, ${isChecked ? 'Aktifkan' : 'Nonaktifkan'}`,
+        cancelButtonText: 'Batal',
+        customClass: {
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            confirmButton: 'custom-swal-confirm',
+            cancelButton: 'custom-swal-cancel'
+        },
+        buttonsStyling: false
+    }).then(result => {
+        if (result.isConfirmed) {
+            fetch(`/siswa/${id}/toggle-aktif`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
+                }
+            })
+            .then(async res => {
+                const data = await res.json();
+                if (!res.ok || data.status === 'error') {
+                    throw new Error(data.message || 'Gagal mengubah status siswa');
+                }
+                return data;
+            })
+            .then(data => {
+                const newStatus = data.is_aktif;
+                const row = document.getElementById(`row-siswa-${id}`);
+                const statusCell = document.getElementById(`status-cell-siswa-${id}`);
+                const slider = checkboxEl.nextElementSibling;
+                const knob = slider ? slider.querySelector('.toggle-knob') : null;
+
+                if (slider) {
+                    slider.style.backgroundColor = newStatus ? '#10b981' : '#cbd5e1';
+                }
+                if (knob) {
+                    knob.style.left = newStatus ? '19px' : '3px';
+                }
+
+                if (statusCell) {
+                    statusCell.innerHTML = newStatus
+                        ? '<span class="badge badge-success">Aktif</span>'
+                        : '<span class="badge badge-danger">Nonaktif</span>';
+                }
+
+                if (row) {
+                    row.dataset.status = newStatus ? 'aktif' : 'nonaktif';
+                }
+
+                // Update summary numbers
+                const allR = document.querySelectorAll('#siswa-tbody-page .siswa-row-item');
+                let a = 0, na = 0;
+                allR.forEach(r => {
+                    if (r.dataset.status === 'aktif') a++; else na++;
+                });
+                const ssAktif = document.getElementById('ss-aktif');
+                const ssNonaktif = document.getElementById('ss-nonaktif');
+                if (ssAktif) ssAktif.textContent = a;
+                if (ssNonaktif) ssNonaktif.textContent = na;
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Status Diperbarui',
+                    text: data.message,
+                    timer: 1500,
+                    showConfirmButton: false,
+                    customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title' }
+                });
+            })
+            .catch(err => {
+                checkboxEl.checked = !isChecked;
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Peringatan',
+                    text: err.message || 'Terjadi kesalahan sistem.',
+                    customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title', confirmButton: 'custom-swal-confirm' },
+                    buttonsStyling: false
+                });
+            });
+        } else {
+            checkboxEl.checked = !isChecked;
+        }
+    });
+}
 
 function editSiswaModal(id, nisn, nama, jk, idKelas){
     Swal.fire({

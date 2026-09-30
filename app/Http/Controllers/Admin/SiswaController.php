@@ -108,4 +108,22 @@ class SiswaController extends Controller
             'message' => 'Data siswa berhasil dihapus!',
         ]);
     }
+
+    /**
+     * Mengaktifkan atau menonaktifkan status siswa.
+     *
+     * @return JsonResponse
+     */
+    public function toggleAktif($id): JsonResponse
+    {
+        $siswa = Siswa::findOrFail($id);
+        $siswa->is_aktif = $siswa->is_aktif ? 0 : 1;
+        $siswa->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => $siswa->is_aktif ? 'Siswa berhasil diaktifkan!' : 'Siswa berhasil dinonaktifkan!',
+            'is_aktif' => (int) $siswa->is_aktif,
+        ]);
+    }
 }

@@ -110,4 +110,22 @@ class KelasController extends Controller
             'data' => $siswa,
         ]);
     }
+
+    /**
+     * Mengaktifkan atau menonaktifkan status kelas.
+     *
+     * @return JsonResponse
+     */
+    public function toggleAktif($id): JsonResponse
+    {
+        $kelas = Kelas::findOrFail($id);
+        $kelas->is_aktif = $kelas->is_aktif ? 0 : 1;
+        $kelas->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => $kelas->is_aktif ? 'Kelas berhasil diaktifkan!' : 'Kelas berhasil dinonaktifkan!',
+            'is_aktif' => (int) $kelas->is_aktif,
+        ]);
+    }
 }

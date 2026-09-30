@@ -67,25 +67,28 @@
             </div>
 
             {{-- Kelas Aktif --}}
+            {{-- Kelas Aktif --}}
+            @php $jmlKelasAktif = $allKelas->where('is_aktif', 1)->count(); @endphp
             <div class="kelas-summary-card" style="background: #ffffff;border:1px solid #e2e8f0;border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)">
                 <div style="width:46px;height:46px;background:#f5f3ff;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 </div>
                 <div>
                     <div style="font-size:11.5px;color:#7c3aed;font-weight:600;margin-bottom:1px">Kelas Aktif</div>
-                    <div id="ks-kelas-aktif" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ count($allKelas) }}</div>
+                    <div id="ks-kelas-aktif" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ $jmlKelasAktif }}</div>
                     <div style="font-size:11px;color:#94a3b8">Kelas</div>
                 </div>
             </div>
 
             {{-- Kelas Nonaktif --}}
+            @php $jmlKelasNonaktif = $allKelas->where('is_aktif', 0)->count(); @endphp
             <div class="kelas-summary-card" style="background: #ffffff;border:1px solid #e2e8f0;border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)">
                 <div style="width:46px;height:46px;background:#fff1f2;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e11d48" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                 </div>
                 <div>
                     <div style="font-size:11.5px;color:#e11d48;font-weight:600;margin-bottom:1px">Kelas Nonaktif</div>
-                    <div id="ks-kelas-nonaktif" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">0</div>
+                    <div id="ks-kelas-nonaktif" style="font-size:26px;font-weight:800;color:#1e293b;line-height:1.1">{{ $jmlKelasNonaktif }}</div>
                     <div style="font-size:11px;color:#94a3b8">Kelas</div>
                 </div>
             </div>
@@ -157,6 +160,18 @@
             </div>
         </div>
 
+        {{-- Status --}}
+        <div class="filter-group" style="min-width:140px">
+            <label>Status</label>
+            <div style="position:relative">
+                <select class="filter-select" id="kelas-filter-status" onchange="filterKelasPage()" style="width:100%;padding-right:28px;appearance:none">
+                    <option value="">Semua Status</option>
+                    <option value="aktif">Aktif</option>
+                    <option value="nonaktif">Nonaktif</option>
+                </select>
+                <svg style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+        </div>
 
     </div>
 
@@ -181,17 +196,19 @@
                     <th style="padding-left:20px">Wali Kelas</th>
                     <th style="width:130px;text-align:center;white-space:nowrap">Jumlah Siswa</th>
                     <th style="width:100px;text-align:center">Status</th>
+                    <th style="width:120px;text-align:center">Aktif / Nonaktif</th>
                     <th style="width:90px;text-align:center">Aksi</th>
                 </tr>
             </thead>
             <tbody id="kelas-tbody-page">
                 @forelse($allKelas as $idx => $k)
                 <tr class="kelas-row-item"
+                    id="row-kelas-{{ $k->id_kelas }}"
                     data-search="{{ strtolower(($k->nama_kelas ?? '') . ' ' . ($k->waliKelas->nama_guru ?? '')) }}"
                     data-tingkat="{{ $k->tingkat_kelas }}"
                     data-jurusan="{{ $k->jurusan }}"
                     data-wali="{{ $k->id_wali_kelas }}"
-                    data-status="aktif"
+                    data-status="{{ ($k->is_aktif ?? 1) ? 'aktif' : 'nonaktif' }}"
                     data-siswa-count="{{ $k->siswa_count }}">
                     <td style="width:40px"><input type="checkbox" class="checklist-item" data-id="{{ $k->id_kelas }}" data-page="kelas"></td>
                     <td style="color:#94a3b8;font-weight:600;font-size:13px">{{ $idx + 1 }}</td>
@@ -216,8 +233,20 @@
                             <span>{{ $k->siswa_count }} Siswa</span>
                         </button>
                     </td>
+                    <td style="text-align:center" id="status-cell-kelas-{{ $k->id_kelas }}">
+                        @if($k->is_aktif ?? 1)
+                            <span class="badge badge-success">Aktif</span>
+                        @else
+                            <span class="badge badge-danger">Nonaktif</span>
+                        @endif
+                    </td>
                     <td style="text-align:center">
-                        <span class="badge badge-success">Aktif</span>
+                        <label class="toggle-switch" style="position:relative;display:inline-block;width:38px;height:22px;cursor:pointer;vertical-align:middle">
+                            <input type="checkbox" {{ ($k->is_aktif ?? 1) ? 'checked' : '' }} onchange="toggleAktifKelas({{ $k->id_kelas }}, this, '{{ htmlspecialchars($k->nama_kelas, ENT_QUOTES) }}')" style="opacity:0;width:0;height:0">
+                            <span class="toggle-slider" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:{{ ($k->is_aktif ?? 1) ? '#10b981' : '#cbd5e1' }};transition:.3s;border-radius:22px">
+                                <span class="toggle-knob" style="position:absolute;height:16px;width:16px;left:{{ ($k->is_aktif ?? 1) ? '19px' : '3px' }};bottom:3px;background-color:white;transition:.3s;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.2)"></span>
+                            </span>
+                        </label>
                     </td>
                     <td style="text-align:center">
                         <div style="display:inline-flex;align-items:center;gap:6px">
@@ -242,13 +271,14 @@
                         </div>
                     </td>
                 </tr>
-                @endforeach
+                @empty
                 <tr id="kelas-empty-state" style="display:none">
-                    <td colspan="9" style="text-align:center;padding:40px;color:#94a3b8">
+                    <td colspan="10" style="text-align:center;padding:40px;color:#94a3b8">
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" style="margin:0 auto 10px;display:block"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                         Tidak ada data kelas yang cocok dengan pencarian/filter.
                     </td>
                 </tr>
+                @endforelse
             </tbody>
         </table>
 
@@ -435,6 +465,101 @@
     if(target && target.style.display !== 'none') initKelasPage();
     setTimeout(initKelasPage, 300);
 })();
+
+function toggleAktifKelas(id, checkboxEl, nama) {
+    const isChecked = checkboxEl.checked;
+    const actionText = isChecked ? 'mengaktifkan' : 'menonaktifkan';
+
+    Swal.fire({
+        title: `${isChecked ? 'Aktifkan' : 'Nonaktifkan'} Kelas?`,
+        text: `Apakah Anda yakin ingin ${actionText} kelas ${nama}?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: `Ya, ${isChecked ? 'Aktifkan' : 'Nonaktifkan'}`,
+        cancelButtonText: 'Batal',
+        customClass: {
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            confirmButton: 'custom-swal-confirm',
+            cancelButton: 'custom-swal-cancel'
+        },
+        buttonsStyling: false
+    }).then(result => {
+        if (result.isConfirmed) {
+            fetch(`/kelas/${id}/toggle-aktif`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
+                }
+            })
+            .then(async res => {
+                const data = await res.json();
+                if (!res.ok || data.status === 'error') {
+                    throw new Error(data.message || 'Gagal mengubah status kelas');
+                }
+                return data;
+            })
+            .then(data => {
+                const newStatus = data.is_aktif;
+                const row = document.getElementById(`row-kelas-${id}`);
+                const statusCell = document.getElementById(`status-cell-kelas-${id}`);
+                const slider = checkboxEl.nextElementSibling;
+                const knob = slider ? slider.querySelector('.toggle-knob') : null;
+
+                if (slider) {
+                    slider.style.backgroundColor = newStatus ? '#10b981' : '#cbd5e1';
+                }
+                if (knob) {
+                    knob.style.left = newStatus ? '19px' : '3px';
+                }
+
+                if (statusCell) {
+                    statusCell.innerHTML = newStatus
+                        ? '<span class="badge badge-success">Aktif</span>'
+                        : '<span class="badge badge-danger">Nonaktif</span>';
+                }
+
+                if (row) {
+                    row.dataset.status = newStatus ? 'aktif' : 'nonaktif';
+                }
+
+                // Update summary numbers
+                const allR = document.querySelectorAll('#kelas-tbody-page .kelas-row-item');
+                let a = 0, na = 0;
+                allR.forEach(r => {
+                    if (r.dataset.status === 'aktif') a++; else na++;
+                });
+                const ksAktif = document.getElementById('ks-kelas-aktif');
+                const ksNonaktif = document.getElementById('ks-kelas-nonaktif');
+                if (ksAktif) ksAktif.textContent = a;
+                if (ksNonaktif) ksNonaktif.textContent = na;
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Status Diperbarui',
+                    text: data.message,
+                    timer: 1500,
+                    showConfirmButton: false,
+                    customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title' }
+                });
+            })
+            .catch(err => {
+                checkboxEl.checked = !isChecked;
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Peringatan',
+                    text: err.message || 'Terjadi kesalahan sistem.',
+                    customClass: { popup: 'custom-swal-popup', title: 'custom-swal-title', confirmButton: 'custom-swal-confirm' },
+                    buttonsStyling: false
+                });
+            });
+        } else {
+            checkboxEl.checked = !isChecked;
+        }
+    });
+}
 
 function editKelasModal(id, nama, tingkat, jurusan, idWali){
     Swal.fire({

@@ -8,15 +8,20 @@
                     <label for="absensi-siswa">Siswa</label>
                     <input type="hidden" id="absensi-siswa" name="id_siswa" required>
                     <div style="position:relative;margin-top:4px">
-                        <input type="text" id="absensi-siswa-search" class="filter-input" placeholder="Ketik nama siswa..." autocomplete="off" required style="width:100%;box-sizing:border-box">
+                        <input type="text" id="absensi-siswa-search" class="filter-input" placeholder="Ketik nama atau kelas siswa..." autocomplete="off" required style="width:100%;box-sizing:border-box"
+                            onfocus="filterAbsensiSiswaDropdown(this.value)"
+                            onclick="filterAbsensiSiswaDropdown(this.value)"
+                            oninput="filterAbsensiSiswaDropdown(this.value)"
+                            onkeyup="filterAbsensiSiswaDropdown(this.value)">
                         <svg style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                        <div id="absensi-siswa-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #e2e8f0;border-radius:8px;margin-top:4px;max-height:220px;overflow-y:auto;z-index:50;box-shadow:0 4px 12px rgba(0,0,0,0.1)">
+                        <div id="absensi-siswa-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--card-bg, #ffffff);color:var(--text, #0f172a);border:1px solid var(--border, #cbd5e1);border-radius:8px;margin-top:4px;max-height:220px;overflow-y:auto;z-index:999;box-shadow:0 10px 25px rgba(0,0,0,0.25)">
                             @foreach($siswaAktif as $siswa)
-                                <div class="absensi-siswa-dropdown-item" data-id="{{ $siswa->id_siswa }}" data-search="{{ strtolower($siswa->nama_siswa . ' ' . ($siswa->kelas->nama_kelas ?? '')) }}"
+                                <div class="absensi-siswa-dropdown-item" data-id="{{ $siswa->id_siswa }}" data-search="{{ strtolower($siswa->nama_siswa . ' ' . ($siswa->kelas->nama_kelas ?? '') . ' ' . ($siswa->nisn ?? '')) }}"
                                     onclick="pilihAbsensiSiswaDropdown('{{ $siswa->id_siswa }}', '{{ addslashes($siswa->nama_siswa) }} - {{ addslashes($siswa->kelas->nama_kelas ?? '') }}')"
-                                    style="padding:10px 14px;cursor:pointer;font-size:13px;border-bottom:1px solid #f1f5f9;transition:background 0.15s"
-                                    onmouseenter="this.style.background='#f1f5f9'" onmouseleave="this.style.background='#fff'">
-                                    {{ $siswa->nama_siswa }} - {{ $siswa->kelas->nama_kelas ?? '-' }}
+                                    style="padding:10px 14px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border, #f1f5f9);transition:background 0.15s;color:inherit"
+                                    onmouseenter="this.style.background='var(--hover-bg, rgba(255,255,255,0.06))'" onmouseleave="this.style.background='transparent'">
+                                    <div style="font-weight:600;color:inherit">{{ $siswa->nama_siswa }}</div>
+                                    <div style="font-size:11.5px;color:#94a3b8">{{ $siswa->kelas->nama_kelas ?? '-' }} • NISN: {{ $siswa->nisn ?? '-' }}</div>
                                 </div>
                             @endforeach
                             <div id="absensi-siswa-empty" style="display:none;padding:14px;text-align:center;color:#94a3b8;font-size:13px">Siswa tidak ditemukan</div>
@@ -62,8 +67,35 @@
 <script>
 function simpanAbsensiSiswa(event){event.preventDefault();fetch(@json(route('absensi-siswa.store')),{method:'POST',headers:{'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content,'Accept':'application/json'},body:new FormData(document.getElementById('absensi-siswa-form'))}).then(async r=>{const d=await r.json();if(!r.ok)throw new Error(d.message||'Gagal menyimpan absensi siswa.');return d}).then(d=>{Swal.fire({icon:'success',title:'Absensi tersimpan',text:d.message,confirmButtonColor:'#2563eb'}).then(()=>window.location.reload())}).catch(e=>Swal.fire({icon:'error',title:'Gagal',text:e.message,confirmButtonColor:'#dc2626'}));}
 
-function toggleAbsensiSiswaDropdown(show){var dd=document.getElementById('absensi-siswa-dropdown');if(dd)dd.style.display=show?'block':'none';}
-function filterAbsensiSiswaDropdown(keyword){var items=document.querySelectorAll('.absensi-siswa-dropdown-item');var empty=document.getElementById('absensi-siswa-empty');var q=keyword.toLowerCase().trim();var found=0;items.forEach(function(item){var match=item.dataset.search.includes(q);item.style.display=match?'':'none';if(match)found++;});if(empty)empty.style.display=found===0?'block':'none';toggleAbsensiSiswaDropdown(true);}
-function pilihAbsensiSiswaDropdown(id,nama){document.getElementById('absensi-siswa').value=id;document.getElementById('absensi-siswa-search').value=nama;toggleAbsensiSiswaDropdown(false);}
-document.addEventListener('click',function(e){var search=document.getElementById('absensi-siswa-search');if(search&&search.parentElement&&!search.parentElement.contains(e.target)){toggleAbsensiSiswaDropdown(false);}});
+function toggleAbsensiSiswaDropdown(show){
+    var dd = document.getElementById('absensi-siswa-dropdown');
+    if (dd) dd.style.display = show ? 'block' : 'none';
+}
+function filterAbsensiSiswaDropdown(keyword){
+    var items = document.querySelectorAll('.absensi-siswa-dropdown-item');
+    var empty = document.getElementById('absensi-siswa-empty');
+    var q = (keyword || '').toLowerCase().trim();
+    var found = 0;
+    items.forEach(function(item){
+        var searchStr = (item.getAttribute('data-search') || item.dataset.search || '').toLowerCase();
+        var match = !q || searchStr.includes(q);
+        item.style.display = match ? 'block' : 'none';
+        if(match) found++;
+    });
+    if(empty) empty.style.display = found === 0 ? 'block' : 'none';
+    toggleAbsensiSiswaDropdown(true);
+}
+function pilihAbsensiSiswaDropdown(id,nama){
+    var idInput = document.getElementById('absensi-siswa');
+    var searchInput = document.getElementById('absensi-siswa-search');
+    if (idInput) idInput.value = id;
+    if (searchInput) searchInput.value = nama;
+    toggleAbsensiSiswaDropdown(false);
+}
+document.addEventListener('click',function(e){
+    var search = document.getElementById('absensi-siswa-search');
+    if (search && search.parentElement && !search.parentElement.contains(e.target)){
+        toggleAbsensiSiswaDropdown(false);
+    }
+});
 </script>

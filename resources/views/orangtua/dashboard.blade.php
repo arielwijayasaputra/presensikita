@@ -764,7 +764,7 @@
             transform: translateY(-1px);
         }
 
-        /* ─── TABEL REKAP PER MAPEL BULANAN ─── */
+        /* ─── TABEL REKAP & RIWAYAT (DESKTOP) ─── */
         .table-responsive {
             width: 100%;
             overflow-x: auto;
@@ -810,6 +810,49 @@
             height: 100%;
             background-color: #0284c7;
             border-radius: 4px;
+        }
+
+        .mobile-stat-label,
+        .mobile-field-label,
+        .mobile-card-section {
+            display: none !important;
+        }
+
+        .desktop-only-cell {
+            display: block;
+        }
+
+        .rekap-stats-mobile-grid {
+            display: none;
+        }
+
+        .badge-status-izin {
+            background: #ffedd5;
+            color: #c2410c;
+            font-size: 11.5px;
+            padding: 4px 9px;
+            font-weight: 700;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .badge-dispen-purple {
+            background: #ede9fe;
+            color: #7c3aed;
+            font-size: 12px;
+            padding: 4px 10px;
+            font-weight: 700;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .badge-status-pill {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
         @media (max-width: 768px) {
@@ -891,6 +934,307 @@
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr) !important;
                 gap: 10px;
+            }
+
+            /* ─── MOBILE CARD TABLE TRANSFORMATION ─── */
+            .mobile-card-section {
+                display: block !important;
+            }
+
+            .desktop-only-cell,
+            .td-desktop-col {
+                display: none !important;
+            }
+
+            .table-responsive {
+                overflow-x: visible !important;
+            }
+
+            .mobile-card-table {
+                display: block !important;
+                width: 100% !important;
+            }
+
+            .mobile-card-table thead {
+                display: none !important;
+            }
+
+            .mobile-card-table tbody {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 12px !important;
+                padding: 12px 14px !important;
+            }
+
+            .mobile-card-table tr {
+                display: block !important;
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 14px;
+                padding: 14px;
+                box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+                transition: transform 0.15s ease, box-shadow 0.15s ease;
+            }
+
+            .mobile-card-table tr:hover td {
+                background-color: transparent !important;
+            }
+
+            .mobile-card-table td {
+                display: block !important;
+                padding: 0 !important;
+                border-bottom: none !important;
+                text-align: left !important;
+            }
+
+            .mobile-card-table td.td-empty {
+                text-align: center !important;
+                padding: 20px 10px !important;
+            }
+
+            /* --- 1. REKAP PER MAPEL (MOBILE) --- */
+            .table-rekap-mapel .td-no-mapel {
+                display: none !important;
+            }
+
+            .table-rekap-mapel .td-nama-mapel {
+                border-bottom: 1px dashed #e2e8f0;
+                padding-bottom: 8px !important;
+                margin-bottom: 10px;
+            }
+
+            .mapel-title-group .mapel-name-text {
+                font-size: 14.5px;
+                font-weight: 800;
+                color: #0f172a;
+                display: block;
+                line-height: 1.3;
+            }
+
+            .mapel-title-group .mapel-code-text {
+                font-size: 11px;
+                color: #64748b;
+                display: inline-block;
+                margin-top: 3px;
+                background: #f1f5f9;
+                padding: 1px 7px;
+                border-radius: 4px;
+                font-weight: 600;
+            }
+
+            .rekap-stats-mobile-grid {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                gap: 6px;
+                margin: 4px 0 10px;
+            }
+
+            .rekap-stat-item {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 6px 3px;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .rekap-stat-item.stat-hadir { background: #f0fdf4; border-color: #bbf7d0; }
+            .rekap-stat-item.stat-sakit { background: #fefce8; border-color: #fef08a; }
+            .rekap-stat-item.stat-izin  { background: #f0f9ff; border-color: #bae6fd; }
+            .rekap-stat-item.stat-alpa  { background: #fef2f2; border-color: #fecaca; }
+
+            .rekap-stat-label {
+                font-size: 9.5px;
+                font-weight: 700;
+                text-transform: uppercase;
+                color: #64748b;
+                line-height: 1;
+                margin-bottom: 3px;
+            }
+
+            .rekap-stat-item.stat-hadir .rekap-stat-label { color: #15803d; }
+            .rekap-stat-item.stat-sakit .rekap-stat-label { color: #a16207; }
+            .rekap-stat-item.stat-izin .rekap-stat-label  { color: #0284c7; }
+            .rekap-stat-item.stat-alpa .rekap-stat-label  { color: #b91c1c; }
+
+            .rekap-stat-val {
+                font-size: 13px;
+                font-weight: 800;
+                color: #0f172a;
+                line-height: 1;
+            }
+
+            .rekap-stat-item.stat-hadir .rekap-stat-val { color: #15803d; }
+            .rekap-stat-item.stat-sakit .rekap-stat-val { color: #b45309; }
+            .rekap-stat-item.stat-izin .rekap-stat-val  { color: #0369a1; }
+            .rekap-stat-item.stat-alpa .rekap-stat-val  { color: #b91c1c; }
+
+            .table-rekap-mapel .td-persentase {
+                border-top: 1px dashed #e2e8f0;
+                padding-top: 8px !important;
+            }
+
+            .progress-wrap-mobile {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                width: 100%;
+            }
+
+            .progress-wrap-mobile .mobile-stat-label {
+                display: inline-block;
+                font-size: 11.5px;
+                font-weight: 700;
+                color: #475569;
+                white-space: nowrap;
+            }
+
+            .progress-wrap-mobile .progress-bar-bg {
+                flex: 1;
+                width: auto;
+                height: 9px;
+                margin-right: 0;
+            }
+
+            .progress-wrap-mobile .pct-val {
+                font-size: 13px;
+                font-weight: 800;
+                color: #0284c7;
+                min-width: 42px;
+                text-align: right;
+            }
+
+            /* --- 2. RIWAYAT KETERLAMBATAN (MOBILE) --- */
+            .terlambat-card-row .td-no-terlambat {
+                display: none !important;
+            }
+
+            .terlambat-header-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border-bottom: 1px dashed #e2e8f0;
+                padding-bottom: 8px;
+                margin-bottom: 8px;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .terlambat-date-wrap .date-main {
+                font-size: 14px;
+                font-weight: 800;
+                color: #0f172a;
+            }
+
+            .terlambat-date-wrap .day-sub {
+                font-size: 11.5px;
+                color: #64748b;
+                margin-left: 4px;
+                font-weight: 600;
+            }
+
+            .terlambat-badge-group {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .time-arrive-val {
+                font-size: 11.5px;
+                font-weight: 800;
+                color: #b45309;
+                background: #fef3c7;
+                padding: 3px 8px;
+                border-radius: 6px;
+                border: 1px solid #fde68a;
+            }
+
+            .badge-jam-masuk {
+                font-size: 11px;
+                padding: 3px 8px;
+                border-radius: 6px;
+            }
+
+            .terlambat-body-row {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                font-size: 12.5px;
+                margin-bottom: 8px;
+            }
+
+            .field-row-mobile {
+                display: flex;
+                align-items: flex-start;
+                gap: 6px;
+                line-height: 1.4;
+            }
+
+            .mobile-field-label {
+                display: inline-block;
+                font-size: 11.5px;
+                font-weight: 700;
+                color: #64748b;
+                min-width: 76px;
+                flex-shrink: 0;
+            }
+
+            .alasan-text, .guru-name-val {
+                font-size: 12.5px;
+                color: #1e293b;
+                font-weight: 500;
+                word-break: break-word;
+            }
+
+            .terlambat-footer-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border-top: 1px dashed #e2e8f0;
+                padding-top: 8px;
+                gap: 8px;
+            }
+
+            /* --- 3. RIWAYAT DISPENSASI & IZIN (MOBILE) --- */
+            .dispen-header-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border-bottom: 1px dashed #e2e8f0;
+                padding-bottom: 8px;
+                margin-bottom: 8px;
+                gap: 6px;
+            }
+
+            .dispen-header-row .date-main {
+                font-size: 14px;
+                font-weight: 800;
+                color: #0f172a;
+            }
+
+            .dispen-body-row {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                margin-bottom: 8px;
+            }
+
+            .dispen-footer-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border-top: 1px dashed #e2e8f0;
+                padding-top: 8px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .btn-foto-mobile {
+                padding: 5px 12px;
+                font-size: 11.5px;
             }
         }
 
@@ -1241,6 +1585,63 @@
         }
         [data-theme="dark"] .progress-bar-bg {
             background: #1e2d45 !important;
+        }
+
+        /* Mobile table cards in Dark Mode */
+        [data-theme="dark"] .mobile-card-table tr {
+            background: #111827 !important;
+            border-color: #1e3a5f !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+        }
+        [data-theme="dark"] .mobile-card-table .td-nama-mapel,
+        [data-theme="dark"] .mobile-card-table .td-persentase,
+        [data-theme="dark"] .terlambat-header-row,
+        [data-theme="dark"] .terlambat-footer-row,
+        [data-theme="dark"] .dispen-header-row,
+        [data-theme="dark"] .dispen-footer-row {
+            border-color: #1e3a5f !important;
+        }
+        [data-theme="dark"] .mapel-title-group .mapel-name-text,
+        [data-theme="dark"] .terlambat-date-wrap .date-main,
+        [data-theme="dark"] .dispen-header-row .date-main,
+        [data-theme="dark"] .rekap-stat-val,
+        [data-theme="dark"] .alasan-text,
+        [data-theme="dark"] .guru-name-val {
+            color: #f1f5f9 !important;
+        }
+        [data-theme="dark"] .mapel-title-group .mapel-code-text {
+            background: #1e2d45 !important;
+            color: #94a3b8 !important;
+        }
+        [data-theme="dark"] .mobile-field-label,
+        [data-theme="dark"] .progress-wrap-mobile .mobile-stat-label,
+        [data-theme="dark"] .terlambat-date-wrap .day-sub {
+            color: #94a3b8 !important;
+        }
+        [data-theme="dark"] .rekap-stat-item {
+            background: #0f172a !important;
+            border-color: #243552 !important;
+        }
+        [data-theme="dark"] .rekap-stat-item.stat-hadir {
+            background: rgba(16,185,129,0.1) !important;
+            border-color: rgba(16,185,129,0.3) !important;
+        }
+        [data-theme="dark"] .rekap-stat-item.stat-sakit {
+            background: rgba(245,158,11,0.1) !important;
+            border-color: rgba(245,158,11,0.3) !important;
+        }
+        [data-theme="dark"] .rekap-stat-item.stat-izin {
+            background: rgba(2,132,199,0.1) !important;
+            border-color: rgba(2,132,199,0.3) !important;
+        }
+        [data-theme="dark"] .rekap-stat-item.stat-alpa {
+            background: rgba(239,68,68,0.1) !important;
+            border-color: rgba(239,68,68,0.3) !important;
+        }
+        [data-theme="dark"] .time-arrive-val {
+            background: rgba(245,158,11,0.15) !important;
+            border-color: rgba(245,158,11,0.3) !important;
+            color: #fbbf24 !important;
         }
     </style>
 </head>
@@ -1688,42 +2089,69 @@
             </div>
 
             <div class="table-responsive">
-                <table class="custom-table">
+                <table class="custom-table mobile-card-table table-rekap-mapel">
                     <thead>
                         <tr>
-                            <th>No</th>
+                            <th style="width:45px">No</th>
                             <th>Mata Pelajaran</th>
-                            <th>Total Jam</th>
-                            <th>Hadir</th>
-                            <th>Sakit</th>
-                            <th>Izin</th>
-                            <th>Alpa</th>
+                            <th style="text-align:center">Total Jam</th>
+                            <th style="text-align:center">Hadir</th>
+                            <th style="text-align:center">Sakit</th>
+                            <th style="text-align:center">Izin</th>
+                            <th style="text-align:center">Alpa</th>
                             <th>Persentase</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($rekapPerMapel as $idx => $rm)
                         <tr>
-                            <td style="font-weight:700;">{{ $idx + 1 }}</td>
-                            <td>
-                                <strong>{{ $rm['nama_mapel'] }}</strong>
-                                <span style="font-size:11px; color:#64748b; display:block;">Kode: {{ $rm['kode_mapel'] }}</span>
-                            </td>
-                            <td>{{ $rm['total_jam'] }} Jam</td>
-                            <td><span style="color:#15803d; font-weight:700;">{{ $rm['hadir'] }}</span></td>
-                            <td><span style="color:#b45309; font-weight:700;">{{ $rm['sakit'] }}</span></td>
-                            <td><span style="color:#0369a1; font-weight:700;">{{ $rm['izin'] }}</span></td>
-                            <td><span style="color:#b91c1c; font-weight:700;">{{ $rm['alpa'] }}</span></td>
-                            <td>
-                                <div class="progress-bar-bg">
-                                    <div class="progress-bar-fill" style="width: {{ $rm['persentase'] }}%;"></div>
+                            <td class="td-no-mapel td-desktop-col" style="font-weight:700;">{{ $idx + 1 }}</td>
+                            <td class="td-nama-mapel">
+                                <div class="mapel-title-group">
+                                    <strong class="mapel-name-text">{{ $rm['nama_mapel'] }}</strong>
+                                    <span class="mapel-code-text">Kode: {{ $rm['kode_mapel'] }}</span>
                                 </div>
-                                <strong>{{ $rm['persentase'] }}%</strong>
+                                <div class="rekap-stats-mobile-grid mobile-card-section">
+                                    <div class="rekap-stat-item stat-total">
+                                        <span class="rekap-stat-label">Total</span>
+                                        <span class="rekap-stat-val">{{ $rm['total_jam'] }}j</span>
+                                    </div>
+                                    <div class="rekap-stat-item stat-hadir">
+                                        <span class="rekap-stat-label">Hadir</span>
+                                        <span class="rekap-stat-val">{{ $rm['hadir'] }}</span>
+                                    </div>
+                                    <div class="rekap-stat-item stat-sakit">
+                                        <span class="rekap-stat-label">Sakit</span>
+                                        <span class="rekap-stat-val">{{ $rm['sakit'] }}</span>
+                                    </div>
+                                    <div class="rekap-stat-item stat-izin">
+                                        <span class="rekap-stat-label">Izin</span>
+                                        <span class="rekap-stat-val">{{ $rm['izin'] }}</span>
+                                    </div>
+                                    <div class="rekap-stat-item stat-alpa">
+                                        <span class="rekap-stat-label">Alpa</span>
+                                        <span class="rekap-stat-val">{{ $rm['alpa'] }}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="td-desktop-col" style="text-align:center">{{ $rm['total_jam'] }} Jam</td>
+                            <td class="td-desktop-col" style="text-align:center"><span style="color:#15803d; font-weight:700;">{{ $rm['hadir'] }}</span></td>
+                            <td class="td-desktop-col" style="text-align:center"><span style="color:#b45309; font-weight:700;">{{ $rm['sakit'] }}</span></td>
+                            <td class="td-desktop-col" style="text-align:center"><span style="color:#0369a1; font-weight:700;">{{ $rm['izin'] }}</span></td>
+                            <td class="td-desktop-col" style="text-align:center"><span style="color:#b91c1c; font-weight:700;">{{ $rm['alpa'] }}</span></td>
+                            <td class="td-persentase">
+                                <div class="progress-wrap-mobile">
+                                    <span class="mobile-stat-label">Kehadiran:</span>
+                                    <div class="progress-bar-bg">
+                                        <div class="progress-bar-fill" style="width: {{ $rm['persentase'] }}%;"></div>
+                                    </div>
+                                    <strong class="pct-val">{{ $rm['persentase'] }}%</strong>
+                                </div>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="8" style="text-align:center; color:#64748b; padding:24px;">Belum ada data rekap presensi mata pelajaran pada bulan ini.</td>
+                            <td colspan="8" class="td-empty" style="text-align:center; color:#64748b; padding:24px;">Belum ada data rekap presensi mata pelajaran pada bulan ini.</td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -1747,7 +2175,7 @@
             </div>
 
             <div class="table-responsive">
-                <table class="custom-table">
+                <table class="custom-table mobile-card-table table-riwayat-terlambat">
                     <thead>
                         <tr>
                             <th style="width:45px">No</th>
@@ -1773,30 +2201,50 @@
                             ];
                         @endphp
                         @forelse($riwayatKeterlambatan ?? [] as $idx => $rk)
-                        <tr>
-                            <td style="font-weight:700;">{{ $idx + 1 }}</td>
-                            <td>
-                                <strong>{{ \Carbon\Carbon::parse($rk->tanggal)->format('d-m-Y') }}</strong>
-                                <span style="font-size:11px; color:#64748b; display:block;">{{ $namaHariIndo[\Carbon\Carbon::parse($rk->tanggal)->format('l')] ?? \Carbon\Carbon::parse($rk->tanggal)->format('l') }}</span>
+                        <tr class="terlambat-card-row">
+                            <td class="td-desktop-col" style="font-weight:700;">{{ $idx + 1 }}</td>
+                            <td class="td-tanggal-terlambat">
+                                <!-- Mobile Header Card -->
+                                <div class="terlambat-header-row mobile-card-section">
+                                    <div class="terlambat-date-wrap">
+                                        <strong class="date-main">{{ \Carbon\Carbon::parse($rk->tanggal)->format('d-m-Y') }}</strong>
+                                        <span class="day-sub">({{ $namaHariIndo[\Carbon\Carbon::parse($rk->tanggal)->format('l')] ?? \Carbon\Carbon::parse($rk->tanggal)->format('l') }})</span>
+                                    </div>
+                                    <div class="terlambat-badge-group">
+                                        <span class="time-arrive-val">{{ substr($rk->jam_masuk, 0, 5) }} WIB</span>
+                                        <span class="badge badge-info badge-jam-masuk">Jam ke-{{ $rk->jam_ke }}</span>
+                                    </div>
+                                </div>
+                                <!-- Desktop Tanggal Cell -->
+                                <div class="desktop-only-cell">
+                                    <strong>{{ \Carbon\Carbon::parse($rk->tanggal)->format('d-m-Y') }}</strong>
+                                    <span style="font-size:11px; color:#64748b; display:block;">{{ $namaHariIndo[\Carbon\Carbon::parse($rk->tanggal)->format('l')] ?? \Carbon\Carbon::parse($rk->tanggal)->format('l') }}</span>
+                                </div>
                             </td>
-                            <td style="text-align:center">
+                            <td class="td-desktop-col" style="text-align:center">
                                 <span style="font-weight:700; color:#1e293b">{{ substr($rk->jam_masuk, 0, 5) }} WIB</span>
                             </td>
-                            <td style="text-align:center">
+                            <td class="td-desktop-col" style="text-align:center">
                                 <span class="badge badge-info" style="font-size:11.5px; padding:3px 8px">Jam ke-{{ $rk->jam_ke }}</span>
                             </td>
-                            <td>
-                                <span style="color:#334155">{{ $rk->alasan ?: '-' }}</span>
+                            <td class="td-alasan-terlambat">
+                                <div class="field-row-mobile">
+                                    <span class="mobile-field-label">Alasan:</span>
+                                    <span class="alasan-text">{{ $rk->alasan ?: '-' }}</span>
+                                </div>
                             </td>
-                            <td>
-                                <span style="color:#475569; font-size:12.5px">{{ $rk->guruPiket->nama_guru ?? '-' }}</span>
+                            <td class="td-guru-piket">
+                                <div class="field-row-mobile">
+                                    <span class="mobile-field-label">Guru Piket:</span>
+                                    <span class="guru-name-val">{{ $rk->guruPiket->nama_guru ?? '-' }}</span>
+                                </div>
                             </td>
-                            <td style="text-align:center">
-                                <span class="badge" style="background:#ffedd5; color:#c2410c; font-size:11.5px; padding:4px 9px; font-weight:700; border-radius:6px">Diizinkan Masuk</span>
+                            <td class="td-status-terlambat td-desktop-col" style="text-align:center">
+                                <span class="badge badge-status-izin">Diizinkan Masuk</span>
                             </td>
-                            <td style="text-align:center">
+                            <td class="td-foto-terlambat td-desktop-col" style="text-align:center">
                                 @if($rk->foto_surat)
-                                    <button type="button" class="btn-lihat-surat" onclick="showSuratPopup('{{ Storage::disk('public')->url($rk->foto_surat) }}')" style="font-size:11.5px; font-weight:700; color:#2563eb; background:#dbeafe; border:1.5px solid #93c5fd; padding:4px 10px; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:4px">
+                                    <button type="button" class="btn-lihat-surat btn-foto-mobile" onclick="showSuratPopup('{{ Storage::disk('public')->url($rk->foto_surat) }}')">
                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                                         Lihat Foto
                                     </button>
@@ -1804,10 +2252,22 @@
                                     <span style="color:#94a3b8; font-size:12px">-</span>
                                 @endif
                             </td>
+                            <!-- Mobile Footer Card -->
+                            <td class="td-mobile-footer mobile-card-section">
+                                <div class="terlambat-footer-row">
+                                    <span class="badge badge-status-izin">Diizinkan Masuk</span>
+                                    @if($rk->foto_surat)
+                                        <button type="button" class="btn-lihat-surat btn-foto-mobile" onclick="showSuratPopup('{{ Storage::disk('public')->url($rk->foto_surat) }}')">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                            Lihat Foto
+                                        </button>
+                                    @endif
+                                </div>
+                            </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="8" style="text-align:center; color:#64748b; padding:24px;">
+                            <td colspan="8" class="td-empty" style="text-align:center; color:#64748b; padding:24px;">
                                 Belum ada catatan riwayat keterlambatan siswa.
                             </td>
                         </tr>
@@ -1818,63 +2278,96 @@
         </div>
 
         <!-- RIWAYAT DISPENSASI & SURAT IZIN SISWA -->
-        <div class="card" style="padding:22px 24px; margin-top:28px; background:#fff; border-radius:var(--radius); border:1px solid #e2e8f0; box-shadow:var(--shadow)">
-            <div style="margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px">
+        <div class="card-main-box" style="margin-top:28px">
+            <div class="card-box-header">
                 <div>
-                    <h3 style="font-size:16px; font-weight:700; color:#0f172a; margin:0">Riwayat Dispensasi &amp; Surat Izin Siswa</h3>
-                    <p style="font-size:12.5px; color:#64748b; margin:2px 0 0 0">Riwayat pengajuan dispensasi, sakit, dan izin beserta status keluar-masuk sekolah dan bukti surat resmi</p>
+                    <div class="card-box-title" style="margin:0">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        Riwayat Dispensasi &amp; Surat Izin Siswa
+                    </div>
+                    <p style="font-size:12.5px; color:#64748b; margin:3px 0 0 0">Riwayat pengajuan dispensasi, sakit, dan izin beserta status keluar-masuk sekolah dan bukti surat resmi</p>
                 </div>
             </div>
 
-            <div style="overflow-x:auto">
-                <table class="data-table" style="width:100%; min-width:800px; border-collapse:collapse">
+            <div class="table-responsive">
+                <table class="custom-table mobile-card-table table-riwayat-dispen">
                     <thead>
-                        <tr style="background:#f8fafc; border-bottom:1px solid #e2e8f0">
-                            <th style="padding:10px 14px; text-align:left; font-size:12.5px; color:#475569">Tanggal</th>
-                            <th style="padding:10px 14px; text-align:center; font-size:12.5px; color:#475569">Jenis Presensi</th>
-                            <th style="padding:10px 14px; text-align:left; font-size:12.5px; color:#475569">Alasan / Keperluan</th>
-                            <th style="padding:10px 14px; text-align:left; font-size:12.5px; color:#475569">Guru Piket</th>
-                            <th style="padding:10px 14px; text-align:center; font-size:12.5px; color:#475569">Status Keluar-Masuk</th>
-                            <th style="padding:10px 14px; text-align:center; font-size:12.5px; color:#475569">Foto Surat</th>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th style="text-align:center">Jenis Presensi</th>
+                            <th>Alasan / Keperluan</th>
+                            <th>Guru Piket</th>
+                            <th style="text-align:center">Status Keluar-Masuk</th>
+                            <th style="text-align:center">Foto Surat</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($riwayatDispen as $rd)
-                            <tr style="border-bottom:1px solid #f1f5f9">
-                                <td style="padding:12px 14px; font-size:13px"><strong>{{ \Carbon\Carbon::parse($rd->tanggal_dispen)->format('d-m-Y') }}</strong></td>
-                                <td style="padding:12px 14px; text-align:center">
+                            <tr class="dispen-card-row">
+                                <td class="td-tanggal-dispen">
+                                    <!-- Mobile Header Card -->
+                                    <div class="dispen-header-row mobile-card-section">
+                                        <strong class="date-main">{{ \Carbon\Carbon::parse($rd->tanggal_dispen)->format('d-m-Y') }}</strong>
+                                        <div>
+                                            @if($rd->jenis_absen === 'S')
+                                                <span class="badge badge-warning" style="font-size:11.5px; padding:3px 8px">Sakit</span>
+                                            @elseif($rd->jenis_absen === 'I')
+                                                <span class="badge badge-info" style="font-size:11.5px; padding:3px 8px">Izin</span>
+                                            @elseif($rd->jenis_absen === 'D')
+                                                <span class="badge badge-dispen-purple" style="font-size:11.5px; padding:3px 8px">Dispensasi</span>
+                                            @else
+                                                <span class="badge" style="font-size:11.5px; padding:3px 8px">{{ $rd->jenis_absen }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <!-- Desktop Tanggal Cell -->
+                                    <div class="desktop-only-cell">
+                                        <strong>{{ \Carbon\Carbon::parse($rd->tanggal_dispen)->format('d-m-Y') }}</strong>
+                                    </div>
+                                </td>
+                                <td class="td-jenis-dispen td-desktop-col" style="text-align:center">
                                     @if($rd->jenis_absen === 'S')
                                         <span class="badge badge-warning" style="font-size:12px; padding:4px 10px">Sakit</span>
                                     @elseif($rd->jenis_absen === 'I')
                                         <span class="badge badge-info" style="font-size:12px; padding:4px 10px">Izin</span>
                                     @elseif($rd->jenis_absen === 'D')
-                                        <span class="badge" style="font-size:12px; background:#ede9fe; color:#7c3aed; padding:4px 10px">Dispensasi</span>
+                                        <span class="badge badge-dispen-purple">Dispensasi</span>
                                     @else
                                         <span class="badge" style="font-size:12px; background:#f1f5f9; color:#475569; padding:4px 10px">{{ $rd->jenis_absen }}</span>
                                     @endif
                                 </td>
-                                <td style="padding:12px 14px; font-size:13px; color:#334155">{{ $rd->alasan }}</td>
-                                <td style="padding:12px 14px; font-size:12.5px; color:#475569">{{ $rd->guruPiket->nama_guru ?? '-' }}</td>
-                                <td style="padding:12px 14px; text-align:center">
+                                <td class="td-alasan-dispen">
+                                    <div class="field-row-mobile">
+                                        <span class="mobile-field-label">Keperluan:</span>
+                                        <span class="alasan-text">{{ $rd->alasan }}</span>
+                                    </div>
+                                </td>
+                                <td class="td-guru-dispen">
+                                    <div class="field-row-mobile">
+                                        <span class="mobile-field-label">Guru Piket:</span>
+                                        <span class="guru-name-val">{{ $rd->guruPiket->nama_guru ?? '-' }}</span>
+                                    </div>
+                                </td>
+                                <td class="td-status-dispen td-desktop-col" style="text-align:center">
                                     @if($rd->sudahKembali())
-                                        <span class="badge badge-success" style="font-size:12px; background:#dcfce7; color:#15803d; padding:4px 10px; display:inline-flex; align-items:center; gap:4px">
+                                        <span class="badge badge-success badge-status-pill" style="background:#dcfce7; color:#15803d;">
                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                                             Sudah Masuk ({{ $rd->waktu_masuk->format('H:i') }})
                                         </span>
                                     @elseif($rd->sedangKeluarSekolah() || (!empty($rd->waktu_keluar) && $rd->jenis_absen === 'D'))
-                                        <span class="badge badge-warning" style="font-size:12px; background:#fef3c7; color:#b45309; padding:4px 10px; display:inline-flex; align-items:center; gap:4px">
+                                        <span class="badge badge-warning badge-status-pill" style="background:#fef3c7; color:#b45309;">
                                             <span class="status-pulse-dot dot-warning" style="background:#f59e0b; width:6px; height:6px;"></span>
                                             Di Luar (Keluar: {{ $rd->waktu_keluar->format('H:i') }})
                                         </span>
                                     @elseif($rd->jenis_absen === 'D')
-                                        <span class="badge badge-info" style="font-size:12px; background:#dbeafe; color:#1d4ed8; padding:4px 10px">Di Dalam Sekolah</span>
+                                        <span class="badge badge-info badge-status-pill">Di Dalam Sekolah</span>
                                     @else
                                         <span style="color:#94a3b8; font-size:12px">-</span>
                                     @endif
                                 </td>
-                                <td style="padding:12px 14px; text-align:center">
+                                <td class="td-foto-dispen td-desktop-col" style="text-align:center">
                                     @if($rd->fotoSuratUrl())
-                                        <button type="button" class="btn-lihat-surat" data-url="{{ $rd->fotoSuratUrl() }}" style="font-size:12px; font-weight:700; color:#2563eb; background:#dbeafe; border:1.5px solid #93c5fd; padding:5px 12px; border-radius:7px; cursor:pointer">
+                                        <button type="button" class="btn-lihat-surat btn-foto-mobile" data-url="{{ $rd->fotoSuratUrl() }}">
                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                                             Lihat Surat
                                         </button>
@@ -1882,10 +2375,36 @@
                                         <span style="color:#94a3b8; font-size:12px">-</span>
                                     @endif
                                 </td>
+                                <!-- Mobile Footer Card -->
+                                <td class="td-mobile-footer mobile-card-section">
+                                    <div class="dispen-footer-row">
+                                        <div>
+                                            @if($rd->sudahKembali())
+                                                <span class="badge badge-success badge-status-pill" style="background:#dcfce7; color:#15803d;">
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                                    Sudah Masuk ({{ $rd->waktu_masuk->format('H:i') }})
+                                                </span>
+                                            @elseif($rd->sedangKeluarSekolah() || (!empty($rd->waktu_keluar) && $rd->jenis_absen === 'D'))
+                                                <span class="badge badge-warning badge-status-pill" style="background:#fef3c7; color:#b45309;">
+                                                    <span class="status-pulse-dot dot-warning" style="background:#f59e0b; width:6px; height:6px;"></span>
+                                                    Di Luar (Keluar: {{ $rd->waktu_keluar->format('H:i') }})
+                                                </span>
+                                            @elseif($rd->jenis_absen === 'D')
+                                                <span class="badge badge-info badge-status-pill">Di Dalam Sekolah</span>
+                                            @endif
+                                        </div>
+                                        @if($rd->fotoSuratUrl())
+                                            <button type="button" class="btn-lihat-surat btn-foto-mobile" data-url="{{ $rd->fotoSuratUrl() }}">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                                Lihat Surat
+                                            </button>
+                                        @endif
+                                    </div>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" style="text-align:center; color:#64748b; padding:22px">
+                                <td colspan="6" class="td-empty" style="text-align:center; color:#64748b; padding:22px">
                                     Belum ada data riwayat dispensasi atau surat izin.
                                 </td>
                             </tr>

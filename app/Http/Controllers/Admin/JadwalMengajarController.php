@@ -140,13 +140,14 @@ class JadwalMengajarController extends Controller
         $tahunId = $jadwal->id_tahun_ajaran;
 
         // Cek apakah guru ini sedang mengajar di jam dan hari yang sama di kelas lain
-        $bentrok = JadwalMengajar::where('hari', $jadwal->hari)
-            ->where('id_jam', $jadwal->id_jam)
-            ->where('id_tahun_ajaran', $tahunId)
-            ->where('id_guru', $guru->id_guru)
-            ->where('id_jadwal', '!=', $jadwal->id_jadwal)
-            ->whereNull('deleted_at')
+        $bentrok = JadwalMengajar::where('jadwal_mengajar.hari', $jadwal->hari)
+            ->where('jadwal_mengajar.id_jam', $jadwal->id_jam)
+            ->where('jadwal_mengajar.id_tahun_ajaran', $tahunId)
+            ->where('jadwal_mengajar.id_guru', $guru->id_guru)
+            ->where('jadwal_mengajar.id_jadwal', '!=', $jadwal->id_jadwal)
+            ->whereNull('jadwal_mengajar.deleted_at')
             ->join('kelas', 'jadwal_mengajar.id_kelas', '=', 'kelas.id_kelas')
+            ->whereNull('kelas.deleted_at')
             ->select('kelas.nama_kelas')
             ->first();
 

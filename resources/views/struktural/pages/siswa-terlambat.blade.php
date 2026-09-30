@@ -21,12 +21,12 @@
                             onfocus="toggleTerlambatSiswaDropdown(true)"
                             oninput="filterTerlambatSiswaDropdown(this.value)">
                         <svg style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                        <div id="terlambat-siswa-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #e2e8f0;border-radius:8px;margin-top:4px;max-height:220px;overflow-y:auto;z-index:50;box-shadow:0 4px 12px rgba(0,0,0,0.1)">
+                        <div id="terlambat-siswa-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--card-bg, #ffffff);color:var(--text, #0f172a);border:1px solid var(--border, #cbd5e1);border-radius:8px;margin-top:4px;max-height:220px;overflow-y:auto;z-index:999;box-shadow:0 10px 25px rgba(0,0,0,0.25)">
                             @foreach($siswaAktif as $siswa)
                                 <div class="terlambat-siswa-dropdown-item" data-id="{{ $siswa->id_siswa }}" data-search="{{ strtolower($siswa->nama_siswa . ' ' . ($siswa->kelas->nama_kelas ?? '')) }}"
                                     onclick="pilihTerlambatSiswaDropdown('{{ $siswa->id_siswa }}', '{{ addslashes($siswa->nama_siswa) }} - {{ addslashes($siswa->kelas->nama_kelas ?? '') }}')"
-                                    style="padding:12px 14px;cursor:pointer;font-size:13px;border-bottom:1px solid #f1f5f9;transition:background 0.15s"
-                                    onmouseenter="this.style.background='#f1f5f9'" onmouseleave="this.style.background='#fff'">
+                                    style="padding:12px 14px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border, #f1f5f9);transition:background 0.15s;color:inherit"
+                                    onmouseenter="this.style.background='var(--hover-bg, rgba(255,255,255,0.06))'" onmouseleave="this.style.background='transparent'">
                                     {{ $siswa->nama_siswa }} - {{ $siswa->kelas->nama_kelas ?? '-' }}
                                 </div>
                             @endforeach

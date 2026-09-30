@@ -18,8 +18,8 @@ class StoreJurusanRequest extends FormRequest
     {
         return [
             'kode_jurusan' => 'required|string|max:20|unique:jurusan,kode_jurusan',
-            'nama_jurusan' => 'required|string|max:100',
-            'deskripsi' => 'nullable|string|max:500',
+            'nama_jurusan' => 'required|string|max:100|unique:jurusan,nama_jurusan',
+            'deskripsi'    => 'nullable|string|max:500',
         ];
     }
 
@@ -30,8 +30,9 @@ class StoreJurusanRequest extends FormRequest
     {
         return [
             'kode_jurusan.required' => 'Kode jurusan wajib diisi.',
-            'kode_jurusan.unique' => 'Kode jurusan sudah digunakan.',
+            'kode_jurusan.unique'   => 'Kode jurusan sudah digunakan.',
             'nama_jurusan.required' => 'Nama jurusan wajib diisi.',
+            'nama_jurusan.unique'   => 'Nama jurusan sudah digunakan.',
         ];
     }
 }

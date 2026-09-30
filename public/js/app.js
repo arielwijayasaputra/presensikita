@@ -1514,15 +1514,28 @@ function tambahSiswaModal(){
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify(result.value)
             })
-            .then(res => res.json())
+            .then(async res => {
+                const data = await res.json();
+                if (!res.ok || data.status === 'error') {
+                    // Handle Laravel validation errors (422)
+                    if (data.errors) {
+                        const msgs = Object.values(data.errors).flat().join('\n');
+                        throw new Error(msgs);
+                    }
+                    throw new Error(data.message || 'Gagal menyimpan data siswa');
+                }
+                return data;
+            })
             .then(data => {
                 Swal.fire({ icon: 'success', title: 'Berhasil!', text: data.message })
                 .then(() => reloadCurrentPage());
-            });
+            })
+            .catch(err => Swal.fire('Gagal', err.message || 'Terjadi kesalahan sistem.', 'error'));
         }
     });
 }
@@ -1586,15 +1599,28 @@ function tambahKelasModal(){
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify(result.value)
             })
-            .then(res => res.json())
+            .then(async res => {
+                const data = await res.json();
+                if (!res.ok || data.status === 'error') {
+                    // Handle Laravel validation errors (422)
+                    if (data.errors) {
+                        const msgs = Object.values(data.errors).flat().join('\n');
+                        throw new Error(msgs);
+                    }
+                    throw new Error(data.message || 'Gagal menyimpan data kelas');
+                }
+                return data;
+            })
             .then(data => {
                 Swal.fire({ icon: 'success', title: 'Berhasil!', text: data.message })
                 .then(() => reloadCurrentPage());
-            });
+            })
+            .catch(err => Swal.fire('Gagal', err.message || 'Terjadi kesalahan sistem.', 'error'));
         }
     });
 }
@@ -2339,21 +2365,29 @@ function tambahGuruModal() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify(result.value)
             })
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    Swal.fire({ icon: 'success', title: 'Berhasil!', text: data.message })
-                    .then(() => reloadCurrentPage());
-                } else {
-                    Swal.fire({ icon: 'error', title: 'Gagal!', text: data.message || 'Terjadi kesalahan saat menyimpan data.' });
+            .then(async res => {
+                const data = await res.json();
+                if (!res.ok || data.status === 'error') {
+                    // Handle Laravel validation errors (422)
+                    if (data.errors) {
+                        const msgs = Object.values(data.errors).flat().join('\n');
+                        throw new Error(msgs);
+                    }
+                    throw new Error(data.message || 'Gagal menyimpan data guru');
                 }
+                return data;
+            })
+            .then(data => {
+                Swal.fire({ icon: 'success', title: 'Berhasil!', text: data.message })
+                .then(() => reloadCurrentPage());
             })
             .catch(err => {
-                Swal.fire('Error', 'Username mungkin sudah terpakai atau terjadi masalah server.', 'error');
+                Swal.fire('Gagal', err.message || 'Terjadi kesalahan sistem.', 'error');
             });
         }
     });

@@ -684,7 +684,13 @@ window.editGuruModal = function(id, nama, nip, peran, hp, username, isAdmin){
             })
             .then(async res => {
                 const data = await res.json();
-                if (!res.ok || data.status === 'error') throw new Error(data.message || 'Gagal memperbarui data guru');
+                if (!res.ok || data.status === 'error') {
+                    if (data.errors) {
+                        const msgs = Object.values(data.errors).flat().join('\n');
+                        throw new Error(msgs);
+                    }
+                    throw new Error(data.message || 'Gagal memperbarui data guru');
+                }
                 return data;
             })
             .then(data => {

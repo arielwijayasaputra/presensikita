@@ -19,7 +19,8 @@ class UpdateGuruRequest extends FormRequest
     {
         return [
             'nama_guru' => 'required|string',
-            'username' => ['required', 'string', Rule::unique('guru', 'username')->ignore($this->route('id'), 'id_guru')],
+            'nip'       => ['nullable', 'string', 'max:30', Rule::unique('guru', 'nip')->ignore($this->route('id'), 'id_guru')],
+            'username'  => ['required', 'string', Rule::unique('guru', 'username')->ignore($this->route('id'), 'id_guru')],
         ];
     }
 
@@ -30,8 +31,9 @@ class UpdateGuruRequest extends FormRequest
     {
         return [
             'nama_guru.required' => 'Nama guru wajib diisi.',
-            'username.required' => 'Username wajib diisi.',
-            'username.unique' => 'Username sudah digunakan guru lain.',
+            'nip.unique'         => 'NIP sudah digunakan guru lain.',
+            'username.required'  => 'Username wajib diisi.',
+            'username.unique'    => 'Username sudah digunakan guru lain.',
         ];
     }
 }

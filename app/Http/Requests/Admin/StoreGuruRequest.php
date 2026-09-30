@@ -18,8 +18,9 @@ class StoreGuruRequest extends FormRequest
     {
         return [
             'nama_guru' => 'required|string',
-            'username' => 'required|string|unique:guru,username',
-            'password' => 'required|string|min:4',
+            'nip'       => 'nullable|string|max:30|unique:guru,nip',
+            'username'  => 'required|string|unique:guru,username',
+            'password'  => 'required|string|min:4',
         ];
     }
 
@@ -30,10 +31,11 @@ class StoreGuruRequest extends FormRequest
     {
         return [
             'nama_guru.required' => 'Nama guru wajib diisi.',
-            'username.required' => 'Username wajib diisi.',
-            'username.unique' => 'Username sudah digunakan guru lain.',
-            'password.required' => 'Password wajib diisi.',
-            'password.min' => 'Password minimal 4 karakter.',
+            'nip.unique'         => 'NIP sudah digunakan guru lain.',
+            'username.required'  => 'Username wajib diisi.',
+            'username.unique'    => 'Username sudah digunakan guru lain.',
+            'password.required'  => 'Password wajib diisi.',
+            'password.min'       => 'Password minimal 4 karakter.',
         ];
     }
 }

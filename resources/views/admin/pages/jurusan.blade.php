@@ -312,6 +312,10 @@ function tambahJurusanModal() {
             .then(async res => {
                 const data = await res.json();
                 if (!res.ok || data.status === 'error') {
+                    if (data.errors) {
+                        const msgs = Object.values(data.errors).flat().join('\n');
+                        throw new Error(msgs);
+                    }
                     throw new Error(data.message || 'Gagal menambahkan jurusan');
                 }
                 return data;
@@ -393,6 +397,10 @@ function editJurusanModal(id, kode, nama, deskripsi) {
             .then(async res => {
                 const data = await res.json();
                 if (!res.ok || data.status === 'error') {
+                    if (data.errors) {
+                        const msgs = Object.values(data.errors).flat().join('\n');
+                        throw new Error(msgs);
+                    }
                     throw new Error(data.message || 'Gagal memperbarui jurusan');
                 }
                 return data;

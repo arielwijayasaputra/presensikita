@@ -17,7 +17,7 @@
     --yellow-light: #fef3c7;
     --blue-light: #dbeafe;
     --red-light: #fee2e2;
-    --purple-light: #ede9fe;
+    --purple-light: #faf5ff;
     --radius: 12px;
     --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
     --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
@@ -2143,12 +2143,12 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     }
     .main-content:not(.is-admin) .table-cards tr {
         display: block;
-        background: #fff;
+        background: var(--card-bg);
         border: 1px solid var(--border);
         border-radius: 12px;
         padding: 12px 14px;
         margin-bottom: 10px;
-        box-shadow: 0 1px 3px rgba(15, 40, 100, 0.05);
+        box-shadow: var(--shadow);
     }
     .main-content:not(.is-admin) .table-cards td {
         display: flex;
@@ -2163,7 +2163,7 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     .main-content:not(.is-admin) .table-cards td[data-label]::before {
         content: attr(data-label);
         font-weight: 600;
-        color: #64748b;
+        color: var(--text-secondary);
         font-size: 11.5px;
         text-align: left;
     }
@@ -2463,12 +2463,12 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     #page-jurnal-absensi tbody tr td { display: none; }
     #page-jurnal-absensi .absensi-card {
         display: block;
-        background: #fff;
-        border: 1px solid #e2e8f0;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
         border-radius: 12px;
         padding: 14px;
         margin-bottom: 10px;
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+        box-shadow: var(--shadow);
     }
     #page-jurnal-absensi .absensi-card-head {
         display: flex;
@@ -2493,7 +2493,7 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     #page-jurnal-absensi .absensi-card-nama {
         font-size: 14px;
         font-weight: 700;
-        color: #1e293b;
+        color: var(--text-primary);
         line-height: 1.3;
     }
     #page-jurnal-absensi .absensi-card-nisn {
@@ -2505,16 +2505,16 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     }
     #page-jurnal-absensi .absensi-status-row {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         gap: 6px;
         margin-bottom: 10px;
     }
     #page-jurnal-absensi .absensi-status-btn {
         position: relative;
-        border: 1.5px solid #e2e8f0;
+        border: 1.5px solid var(--border);
         border-radius: 8px;
-        background: #f8fafc;
-        color: #64748b;
+        background: var(--body-bg);
+        color: var(--text-secondary);
         font-size: 12.5px;
         font-weight: 700;
         padding: 9px 0;
@@ -2526,17 +2526,18 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     #page-jurnal-absensi .absensi-status-btn.selected[data-status="H"] { background: #dcfce7; border-color: #22c55e; color: #15803d; }
     #page-jurnal-absensi .absensi-status-btn.selected[data-status="S"] { background: #fef3c7; border-color: #f59e0b; color: #b45309; }
     #page-jurnal-absensi .absensi-status-btn.selected[data-status="I"] { background: #dbeafe; border-color: #3b82f6; color: #1d4ed8; }
+    #page-jurnal-absensi .absensi-status-btn.selected[data-status="D"] { background: #f5f3ff; border-color: #8b5cf6; color: #7c3aed; }
     #page-jurnal-absensi .absensi-status-btn.selected[data-status="A"] { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
     #page-jurnal-absensi .absensi-ket-input {
         width: 100%;
-        border: 1px solid #e2e8f0;
+        border: 1px solid var(--input-border);
         border-radius: 8px;
         padding: 8px 10px;
         font-size: 12.5px;
         font-family: inherit;
         outline: none;
-        background: #fff;
-        color: #1e293b;
+        background: var(--input-bg);
+        color: var(--text-primary);
     }
     #page-jurnal-absensi .absensi-ket-input:focus { border-color: #2563eb; }
 }
@@ -2548,21 +2549,21 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
    ════════════════════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
     /* ── Helper umum: sel jadi blok dalam kartu ── */
-    #absensi-table, #table-wali-harian { min-width: 0 !important; }
-    #absensi-table thead, #table-wali-harian thead { display: none; }
-    #absensi-table tbody, #table-wali-harian tbody,
-    #absensi-table tbody tr, #table-wali-harian tbody tr,
-    #absensi-table tbody td, #table-wali-harian tbody td { display: block; width: 100% !important; }
-    #absensi-table, #absensi-table tbody, #table-wali-harian, #table-wali-harian tbody { overflow: visible; }
-    #absensi-table tbody tr, #table-wali-harian tbody tr {
-        background: #fff;
-        border: 1px solid #e2e8f0;
+    #absensi-table { min-width: 0 !important; }
+    #absensi-table thead { display: none; }
+    #absensi-table tbody,
+    #absensi-table tbody tr,
+    #absensi-table tbody td { display: block; width: 100% !important; }
+    #absensi-table, #absensi-table tbody { overflow: visible; }
+    #absensi-table tbody tr {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
         border-radius: 12px;
         padding: 14px;
         margin-bottom: 10px;
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+        box-shadow: var(--shadow);
     }
-    #absensi-table tbody td, #table-wali-harian tbody td { border: none !important; padding: 4px 0 !important; }
+    #absensi-table tbody td { border: none !important; padding: 4px 0 !important; }
 
     /* ── Admin: Absensi Harian (read-only) ── */
     #page-absensi-harian #absensi-table tbody tr td:nth-child(1) { display: none; } /* No. */
@@ -2593,81 +2594,225 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
         background: #f8fafc; color: #475569; margin-top: 6px;
     }
 
-    /* ── Wali Kelas: Presensi Harian (form isi) ── */
+    /* ── Wali Kelas: Presensi Harian (form isi kartu mobile rapi & menyamping) ── */
+    #table-wali-harian { min-width: 0 !important; width: 100% !important; }
+    #table-wali-harian thead { display: none; }
+    #table-wali-harian tbody { display: block; overflow: visible; width: 100% !important; }
+    #table-wali-harian tbody tr {
+        display: grid !important;
+        grid-template-columns: repeat(5, 1fr) !important;
+        gap: 8px 6px;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 12px;
+        box-shadow: var(--shadow);
+        box-sizing: border-box;
+        width: 100% !important;
+    }
+    #table-wali-harian tbody td { border: none !important; padding: 0 !important; }
     #table-wali-harian tbody tr td:nth-child(1), /* No */
-    #table-wali-harian tbody tr td:nth-child(4)  /* L/P */ { display: none; }
+    #table-wali-harian tbody tr td:nth-child(4)  /* L/P */ { display: none !important; }
+
     #table-wali-harian tbody tr td:nth-child(2) { /* NISN */
-        font-family: monospace; font-size: 11px; color: #94a3b8; font-weight: 600; margin-top: -6px;
+        grid-column: 1 / -1;
+        order: 1;
+        font-family: monospace;
+        font-size: 11.5px;
+        color: var(--text-secondary, #64748b);
+        font-weight: 600;
+        margin-bottom: 2px;
     }
     #table-wali-harian tbody tr td:nth-child(3) { /* Nama */
-        font-size: 14.5px; font-weight: 700; color: #0f172a;
+        grid-column: 1 / -1;
+        order: 2;
+        font-size: 14.5px;
+        font-weight: 700;
+        color: var(--text-primary, #0f172a);
+        margin-bottom: 8px;
     }
-    #table-wali-harian tbody tr td:nth-child(5) { /* Status */
-        width: auto !important; margin: 8px 0;
+    #table-wali-harian tbody tr td:nth-child(3) strong {
+        color: inherit;
     }
-    #table-wali-harian tbody tr td:nth-child(5) > div {
-        display: grid !important; grid-template-columns: repeat(4, 1fr); gap: 6px;
+
+    /* Status buttons H/S/I/D/A disusun menyamping (5 kolom) */
+    #table-wali-harian tbody tr td.td-status {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+        order: 3;
     }
-    #table-wali-harian tbody tr td:nth-child(5) label {
-        display: flex !important; justify-content: center !important;
-        border: 1.5px solid #e2e8f0; border-radius: 8px;
-        background: #f8fafc; padding: 9px 0 !important;
+    #table-wali-harian tbody tr td.td-status .status-pill-btn {
+        width: 100%;
+        display: flex;
+    }
+    #table-wali-harian tbody tr td.td-status .status-pill-btn span {
+        width: 100%;
+        height: 40px;
+        border-radius: 9px;
+        font-size: 13.5px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #table-wali-harian tbody tr td:nth-child(10) { /* Keterangan */
+        grid-column: 1 / -1;
+        order: 4;
+        width: 100% !important;
+        margin-top: 6px;
+    }
+    #table-wali-harian tbody tr td:nth-child(10) input {
+        width: 100%;
+        border: 1px solid var(--input-border, #cbd5e1);
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 12.5px;
+        font-family: inherit;
+        background: var(--input-bg, #ffffff);
+        color: var(--text-primary, #0f172a);
+        box-sizing: border-box;
+    }
+
+    #table-wali-harian tbody tr td:nth-child(11) { /* Aksi Ortu */
+        grid-column: 1 / -1;
+        order: 5;
+        width: 100% !important;
+        margin-top: 4px;
+    }
+    #table-wali-harian tbody tr td:nth-child(11) a {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 100%;
+        padding: 8px 12px !important;
+        border-radius: 8px;
         font-size: 12.5px !important;
-        transition: all 0.15s;
-    }
-    #table-wali-harian tbody tr td:nth-child(5) label:has(input:checked[value="H"]) { background: #dcfce7; border-color: #22c55e; color: #15803d; }
-    #table-wali-harian tbody tr td:nth-child(5) label:has(input:checked[value="S"]) { background: #fef3c7; border-color: #f59e0b; color: #b45309; }
-    #table-wali-harian tbody tr td:nth-child(5) label:has(input:checked[value="I"]) { background: #dbeafe; border-color: #3b82f6; color: #1d4ed8; }
-    #table-wali-harian tbody tr td:nth-child(5) label:has(input:checked[value="A"]) { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
-    #table-wali-harian tbody tr td:nth-child(5) label:has(input:checked[value="D"]) { background: #cffafe; border-color: #06b6d4; color: #0e7490; }
-    #table-wali-harian tbody tr td:nth-child(6) input { /* Keterangan */
-        width: 100%; border: 1px solid #e2e8f0; border-radius: 8px;
-        padding: 8px 10px; font-size: 12.5px; font-family: inherit;
-    }
-    #table-wali-harian tbody tr td:nth-child(7) { /* Aksi Ortu */ margin-top: 4px; }
-    #table-wali-harian tbody tr td:nth-child(7) a {
-        display: flex !important; justify-content: center;
-        padding: 9px 0 !important; border-radius: 8px; font-size: 13px !important;
+        box-sizing: border-box;
     }
 }
 
 /* ── Wali Kelas: Rekap Absensi (tabel rekap jadi kartu) ── */
 @media (max-width: 768px) {
-    #table-wali-rekap-absensi-tbl { min-width: 0 !important; }
-    #table-wali-rekap-absensi-tbl thead { display: none; }
+    #table-wali-rekap-absensi-tbl,
+    #table-wali-rekap-1th { min-width: 0 !important; }
+    #table-wali-rekap-absensi-tbl thead,
+    #table-wali-rekap-1th thead { display: none; }
     #table-wali-rekap-absensi-tbl tbody,
     #table-wali-rekap-absensi-tbl tbody tr,
-    #table-wali-rekap-absensi-tbl tbody td { display: block; width: 100% !important; text-align: left !important; }
-    #table-wali-rekap-absensi-tbl tbody tr {
-        background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
-        padding: 14px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+    #table-wali-rekap-absensi-tbl tbody td,
+    #table-wali-rekap-1th tbody,
+    #table-wali-rekap-1th tbody tr,
+    #table-wali-rekap-1th tbody td { display: block; width: 100% !important; text-align: left !important; }
+    #table-wali-rekap-absensi-tbl tbody tr,
+    #table-wali-rekap-1th tbody tr {
+        background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+        padding: 14px; margin-bottom: 12px; box-shadow: var(--shadow);
     }
-    #table-wali-rekap-absensi-tbl tbody td { border: none !important; padding: 4px 0 !important; }
-    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(1), /* No */
-    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(4)  /* L/P */ { display: none; }
-    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(2) {
-        font-family: monospace; font-size: 11px; color: #94a3b8; font-weight: 600;
+    #table-wali-rekap-absensi-tbl tbody td,
+    #table-wali-rekap-1th tbody td { border: none !important; padding: 4px 0 !important; }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(1),
+    #table-wali-rekap-1th tbody tr td:nth-child(1), /* No */
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(4),
+    #table-wali-rekap-1th tbody tr td:nth-child(4)  /* L/P */ { display: none; }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(2),
+    #table-wali-rekap-1th tbody tr td:nth-child(2) {
+        font-family: monospace; font-size: 11.5px; color: var(--text-muted); font-weight: 600; margin-bottom: 2px;
     }
-    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(3) {
-        font-size: 14.5px; font-weight: 700; color: #0f172a; margin-bottom: 4px;
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(3),
+    #table-wali-rekap-1th tbody tr td:nth-child(3) {
+        font-size: 15px; font-weight: 800; color: var(--text-primary); margin-bottom: 10px;
     }
-    /* Baris statistik H/S/I/A — tampil berdampingan dengan label */
+    /* Chips H/S/I/D/A — tampil sejajar dalam satu flex row */
     #table-wali-rekap-absensi-tbl tbody tr td:nth-child(5),
     #table-wali-rekap-absensi-tbl tbody tr td:nth-child(6),
     #table-wali-rekap-absensi-tbl tbody tr td:nth-child(7),
     #table-wali-rekap-absensi-tbl tbody tr td:nth-child(8),
-    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(9) {
-        display: inline-block !important; width: auto !important; margin-right: 12px;
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(9),
+    #table-wali-rekap-1th tbody tr td:nth-child(5),
+    #table-wali-rekap-1th tbody tr td:nth-child(6),
+    #table-wali-rekap-1th tbody tr td:nth-child(7),
+    #table-wali-rekap-1th tbody tr td:nth-child(8),
+    #table-wali-rekap-1th tbody tr td:nth-child(9) {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 6px;
+        width: auto !important;
+        margin-right: 10px;
+        margin-bottom: 8px;
     }
-    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(5)::before { content: "H: "; color: #15803d; font-weight: 700; font-size: 12px; }
-    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(6)::before { content: "S: "; color: #b45309; font-weight: 700; font-size: 12px; }
-    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(7)::before { content: "I: "; color: #1d4ed8; font-weight: 700; font-size: 12px; }
-    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(8)::before { content: "D: "; color: #7c3aed; font-weight: 700; font-size: 12px; }
-    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(9)::before { content: "A: "; color: #b91c1c; font-weight: 700; font-size: 12px; }
-    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(10) { margin-top: 6px; } /* Persentase */
-    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(10) > div { justify-content: flex-start !important; }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(5)::before,
+    #table-wali-rekap-1th tbody tr td:nth-child(5)::before { content: "H"; font-weight: 800; font-size: 11.5px; color: #15803d; }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(6)::before,
+    #table-wali-rekap-1th tbody tr td:nth-child(6)::before { content: "S"; font-weight: 800; font-size: 11.5px; color: #b45309; }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(7)::before,
+    #table-wali-rekap-1th tbody tr td:nth-child(7)::before { content: "I"; font-weight: 800; font-size: 11.5px; color: #1d4ed8; }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(8)::before,
+    #table-wali-rekap-1th tbody tr td:nth-child(8)::before { content: "D"; font-weight: 800; font-size: 11.5px; color: #7c3aed; }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(9)::before,
+    #table-wali-rekap-1th tbody tr td:nth-child(9)::before { content: "A"; font-weight: 800; font-size: 11.5px; color: #b91c1c; }
+
+    /* Badge di dalam chip */
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(5) .badge,
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(6) .badge,
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(7) .badge,
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(8) .badge,
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(9) .badge,
+    #table-wali-rekap-1th tbody tr td:nth-child(5) .badge,
+    #table-wali-rekap-1th tbody tr td:nth-child(6) .badge,
+    #table-wali-rekap-1th tbody tr td:nth-child(7) .badge,
+    #table-wali-rekap-1th tbody tr td:nth-child(8) .badge,
+    #table-wali-rekap-1th tbody tr td:nth-child(9) .badge {
+        min-width: 28px;
+        height: 26px;
+        border-radius: 8px !important;
+        font-size: 12px !important;
+        font-weight: 800;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        padding: 0 6px !important;
+    }
+
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(10),
+    #table-wali-rekap-1th tbody tr td:nth-child(10) {
+        margin-top: 8px;
+        padding-top: 10px !important;
+        border-top: 1px solid var(--border) !important;
+    }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(10) > div,
+    #table-wali-rekap-1th tbody tr td:nth-child(10) > div {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+
     #table-wali-rekap-absensi-tbl tbody tr td:nth-child(11),
-    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(12) { display: inline-block !important; width: auto !important; margin-right: 10px; }
+    #table-wali-rekap-1th tbody tr td:nth-child(11) {
+        text-align: center !important;
+        font-size: 12.5px !important;
+        font-weight: 600;
+        padding-top: 6px !important;
+    }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(12) {
+        margin-top: 6px;
+        padding-top: 6px !important;
+    }
+    #table-wali-rekap-absensi-tbl tbody tr td:nth-child(12) a {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 100%;
+        padding: 8px 12px !important;
+        border-radius: 8px;
+        font-size: 12.5px !important;
+        box-sizing: border-box;
+    }
 }
 
 /* ── Guru: Riwayat Jurnal (tabel 760px jadi kartu) ── */
@@ -2678,19 +2823,19 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     #page-riwayat-jurnal tbody tr,
     #page-riwayat-jurnal tbody td { display: block; width: 100% !important; text-align: left !important; }
     #page-riwayat-jurnal tbody tr {
-        background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
-        padding: 14px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+        background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+        padding: 14px; margin-bottom: 10px; box-shadow: var(--shadow);
     }
     #page-riwayat-jurnal tbody td { border: none !important; padding: 3px 0 !important; }
     #page-riwayat-jurnal tbody tr td:nth-child(1) { display: none; } /* No. */
     #page-riwayat-jurnal tbody tr td:nth-child(2) { /* Kelas */
-        font-size: 14.5px; font-weight: 700; color: #1e293b;
+        font-size: 14.5px; font-weight: 700; color: var(--text-primary);
     }
     #page-riwayat-jurnal tbody tr td:nth-child(3) {
-        font-size: 12px; color: #64748b; font-weight: 600;
+        font-size: 12px; color: var(--text-secondary); font-weight: 600;
     }
     #page-riwayat-jurnal tbody tr td:nth-child(4) {
-        font-size: 12.5px; color: #475569;
+        font-size: 12.5px; color: var(--text-secondary);
     }
     /* Statistik hadir/S/I/A + total siswa berdampingan */
     #page-riwayat-jurnal tbody tr td:nth-child(5),
@@ -2716,15 +2861,15 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     #page-jadwal-mengajar tbody tr,
     #page-jadwal-mengajar tbody td { display: block; width: 100% !important; text-align: left !important; }
     #page-jadwal-mengajar tbody tr.jadwal-row-item {
-        background: #fff !important;
-        border: 1px solid #e2e8f0;
+        background: var(--card-bg) !important;
+        border: 1px solid var(--border);
         border-radius: 12px;
         padding: 14px;
         margin-bottom: 10px;
-        box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+        box-shadow: var(--shadow);
     }
     #page-jadwal-mengajar tbody tr.jadwal-row-item:has(.badge-success) {
-        border-color: #86efac; background: #f0fdf4 !important;
+        border-color: #86efac; background: var(--card-bg) !important;
     }
     #page-jadwal-mengajar tbody td { border: none !important; padding: 4px 0 !important; }
 
@@ -2735,13 +2880,13 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     }
     /* Baris 2: Kelas + Mapel */
     #page-jadwal-mengajar tbody tr td:nth-child(3) {
-        font-size: 15px; font-weight: 800; color: #1e3a8a; margin-top: 6px;
+        font-size: 15px; font-weight: 800; color: var(--blue); margin-top: 6px;
     }
     #page-jadwal-mengajar tbody tr td:nth-child(4) {
-        font-size: 13.5px; font-weight: 600; color: #1e293b;
+        font-size: 13.5px; font-weight: 600; color: var(--text-primary);
     }
     #page-jadwal-mengajar tbody tr td:nth-child(4)::before {
-        content: "Mapel: "; font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px;
+        content: "Mapel: "; font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px;
     }
     /* Baris 3: Status */
     #page-jadwal-mengajar tbody tr td.status-cell {
@@ -2767,16 +2912,16 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     #page-guru-dashboard tbody tr,
     #page-guru-dashboard tbody td { display: block; width: 100% !important; text-align: left !important; }
     #page-guru-dashboard tbody tr {
-        background: #fff !important;
-        border: 1px solid #e2e8f0;
+        background: var(--card-bg) !important;
+        border: 1px solid var(--border);
         border-radius: 12px;
         padding: 14px;
         margin-bottom: 10px;
-        box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+        box-shadow: var(--shadow);
     }
     #page-guru-dashboard tbody tr:has(.badge-success) {
-        border-color: #86efac;
-        background: #f0fdf4 !important;
+        border-color: rgba(134, 239, 172, 0.5);
+        background: var(--card-bg) !important;
     }
     #page-guru-dashboard tbody td { border: none !important; padding: 3px 0 !important; }
 
@@ -2789,7 +2934,7 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     }
     #page-guru-dashboard tbody tr td:nth-child(2) {
         font-weight: 600;
-        color: #475569;
+        color: var(--text-secondary);
         font-size: 13px;
     }
 
@@ -2797,7 +2942,7 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     #page-guru-dashboard tbody tr td:nth-child(3) {
         font-size: 15px;
         font-weight: 800;
-        color: #1e3a8a;
+        color: var(--blue);
         margin-top: 6px;
     }
 
@@ -2805,7 +2950,7 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     #page-guru-dashboard tbody tr td:nth-child(4) {
         font-size: 13.5px;
         font-weight: 600;
-        color: #1e293b;
+        color: var(--text-primary);
     }
     #page-guru-dashboard tbody tr td:nth-child(4)::before {
         content: "Mapel: ";
@@ -2835,12 +2980,12 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     #page-izin-guru tbody tr,
     #page-izin-guru tbody td { display: block; width: 100% !important; text-align: left !important; }
     #page-izin-guru tbody tr {
-        background: #fff !important;
-        border: 1px solid #e2e8f0;
+        background: var(--card-bg) !important;
+        border: 1px solid var(--border);
         border-radius: 12px;
         padding: 14px;
         margin-bottom: 10px;
-        box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+        box-shadow: var(--shadow);
     }
     #page-izin-guru tbody td { border: none !important; padding: 3px 0 !important; }
 
@@ -2848,7 +2993,7 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     #page-izin-guru tbody tr td:nth-child(1) {
         font-size: 14px;
         font-weight: 800;
-        color: #1e293b;
+        color: var(--text-primary);
     }
 
     /* Baris 2: Alasan */
@@ -2903,12 +3048,12 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     #page-satpam .data-table tbody { display: block; width: 100%; }
     #page-satpam .data-table tbody tr {
         display: block;
-        background: #fff;
-        border: 1px solid #e2e8f0;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
         border-radius: 14px;
         padding: 14px 16px;
         margin-bottom: 12px;
-        box-shadow: 0 1px 4px rgba(15,23,42,0.06);
+        box-shadow: var(--shadow);
     }
     #page-satpam .data-table tbody td {
         display: flex;
@@ -2985,12 +3130,12 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     #page-satpam-harian .data-table tbody { display: block; width: 100%; }
     #page-satpam-harian .data-table tbody tr {
         display: block;
-        background: #fff;
-        border: 1px solid #e2e8f0;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
         border-radius: 12px;
         padding: 12px 14px;
         margin-bottom: 10px;
-        box-shadow: 0 1px 3px rgba(15,23,42,0.05);
+        box-shadow: var(--shadow);
     }
     #page-satpam-harian .data-table tbody td {
         display: flex;
@@ -3021,12 +3166,12 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     #page-dispen-siswa .data-table tbody { display: block; width: 100%; }
     #page-dispen-siswa .data-table tbody tr {
         display: block;
-        background: #fff;
-        border: 1px solid #e2e8f0;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
         border-radius: 12px;
         padding: 14px 16px;
         margin-bottom: 10px;
-        box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+        box-shadow: var(--shadow);
     }
     #page-dispen-siswa .data-table tbody td {
         display: flex;
@@ -3065,31 +3210,72 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     #table-wali-rekap, #table-wali-rekap tbody { display: block; width: 100%; }
     #table-wali-rekap tbody tr {
         display: block;
-        background: #fff;
-        border: 1px solid #e2e8f0;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
         border-radius: 12px;
         padding: 14px;
         margin-bottom: 10px;
-        box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+        box-shadow: var(--shadow);
     }
     #table-wali-rekap tbody td { display: block; border: none !important; padding: 4px 0 !important; }
     #table-wali-rekap tbody tr td:nth-child(1) { display: none; }
-    #table-wali-rekap tbody tr td:nth-child(2) { font-family: monospace; font-size: 11px; color: #94a3b8; font-weight: 600; }
-    #table-wali-rekap tbody tr td:nth-child(3) { font-size: 14.5px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+    #table-wali-rekap tbody tr td:nth-child(2) { font-family: monospace; font-size: 11.5px; color: var(--text-muted); font-weight: 600; margin-bottom: 2px; }
+    #table-wali-rekap tbody tr td:nth-child(3) { font-size: 15px; font-weight: 800; color: var(--text-primary); margin-bottom: 10px; }
+
+    /* Chips H/S/I/D/A — tampil sejajar dalam satu flex row persis seperti screenshot */
     #table-wali-rekap tbody tr td:nth-child(4),
     #table-wali-rekap tbody tr td:nth-child(5),
     #table-wali-rekap tbody tr td:nth-child(6),
     #table-wali-rekap tbody tr td:nth-child(7),
     #table-wali-rekap tbody tr td:nth-child(8) {
-        display: inline-block !important; width: auto !important; margin-right: 14px;
+        display: inline-flex !important;
+        align-items: center;
+        gap: 6px;
+        width: auto !important;
+        margin-right: 10px;
+        margin-bottom: 8px;
     }
-    #table-wali-rekap tbody tr td:nth-child(4)::before { content: "H: "; color: #15803d; font-weight: 700; font-size: 12px; }
-    #table-wali-rekap tbody tr td:nth-child(5)::before { content: "S: "; color: #b45309; font-weight: 700; font-size: 12px; }
-    #table-wali-rekap tbody tr td:nth-child(6)::before { content: "I: "; color: #1d4ed8; font-weight: 700; font-size: 12px; }
-    #table-wali-rekap tbody tr td:nth-child(7)::before { content: "D: "; color: #7c3aed; font-weight: 700; font-size: 12px; }
-    #table-wali-rekap tbody tr td:nth-child(8)::before { content: "A: "; color: #b91c1c; font-weight: 700; font-size: 12px; }
-    #table-wali-rekap tbody tr td:nth-child(9) { margin-top: 6px; }
-    #table-wali-rekap tbody tr td:nth-child(9) > div { justify-content: flex-start !important; }
+    #table-wali-rekap tbody tr td:nth-child(4)::before { content: "H"; font-weight: 800; font-size: 11.5px; color: #15803d; }
+    #table-wali-rekap tbody tr td:nth-child(5)::before { content: "S"; font-weight: 800; font-size: 11.5px; color: #b45309; }
+    #table-wali-rekap tbody tr td:nth-child(6)::before { content: "I"; font-weight: 800; font-size: 11.5px; color: #1d4ed8; }
+    #table-wali-rekap tbody tr td:nth-child(7)::before { content: "D"; font-weight: 800; font-size: 11.5px; color: #7c3aed; }
+    #table-wali-rekap tbody tr td:nth-child(8)::before { content: "A"; font-weight: 800; font-size: 11.5px; color: #b91c1c; }
+
+    /* Badge di dalam chip */
+    #table-wali-rekap tbody tr td:nth-child(4) .badge,
+    #table-wali-rekap tbody tr td:nth-child(5) .badge,
+    #table-wali-rekap tbody tr td:nth-child(6) .badge,
+    #table-wali-rekap tbody tr td:nth-child(7) .badge,
+    #table-wali-rekap tbody tr td:nth-child(8) .badge {
+        min-width: 28px;
+        height: 26px;
+        border-radius: 8px !important;
+        font-size: 12px !important;
+        font-weight: 800;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        padding: 0 6px !important;
+    }
+
+    #table-wali-rekap tbody tr td:nth-child(9) {
+        margin-top: 8px;
+        padding-top: 10px !important;
+        border-top: 1px solid var(--border) !important;
+    }
+    #table-wali-rekap tbody tr td:nth-child(9) > div {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+
+    #table-wali-rekap tbody tr td:nth-child(10) {
+        text-align: center !important;
+        font-size: 12.5px !important;
+        font-weight: 600;
+        color: var(--text-secondary) !important;
+        padding-top: 6px !important;
+    }
 
     /* Wali Kelas header buttons: full width */
     #page-walikelas > div:first-child {
@@ -3140,12 +3326,12 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     #page-absensi-siswa .data-table tbody tr,
     #page-izin-guru-waka .data-table tbody tr {
         display: block;
-        background: #fff;
-        border: 1px solid #e2e8f0;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
         border-radius: 12px;
         padding: 14px;
         margin-bottom: 10px;
-        box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+        box-shadow: var(--shadow);
     }
     #page-waka-sdm .data-table tbody td,
     #page-guru-piket .data-table tbody td,
@@ -3670,13 +3856,40 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     transition-duration: 0.1s;
 }
 
-/* Admin (read-only) state */
+/* Read-only & Auto-Dispen states */
+.status-pill-btn.is-admin,
+.status-pill-btn.is-auto-dispen,
+.status-pill-d {
+    cursor: not-allowed !important;
+}
 .status-pill-btn.is-admin {
     pointer-events: none;
-    cursor: default;
 }
 .status-pill-btn.is-admin span {
     opacity: 0.65;
+}
+.status-pill-d {
+    pointer-events: none !important;
+}
+.status-pill-d:not(:has(input:checked)) span {
+    background: #faf5ff;
+    color: #9333ea;
+    border-color: #e9d5ff;
+    opacity: 0.7;
+}
+.status-pill-d:has(input:checked) span {
+    opacity: 1;
+}
+
+.absensi-status-btn.is-auto-dispen,
+.absensi-status-btn[data-status="D"] {
+    cursor: not-allowed !important;
+}
+.absensi-status-btn[data-status="D"]:not(.selected) {
+    background: #faf5ff !important;
+    color: #9333ea !important;
+    border-color: #e9d5ff !important;
+    opacity: 0.7;
 }
 
 
@@ -3922,4 +4135,201 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     font-size: 12px;
     color: #16a34a;
     margin-top: 2px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   DARK MODE — Mobile Card Text Color Overrides
+   Memastikan semua teks di mobile card (termasuk ::before pseudo-elements)
+   tampil dengan kontras yang benar di dark mode, sama seperti desktop.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    /* Warna teks utama di mobile cards */
+    [data-theme="dark"] #page-satpam-harian .data-table tbody tr td:nth-child(1),
+    [data-theme="dark"] #page-satpam .data-table tbody tr td:nth-child(1) strong,
+    [data-theme="dark"] #page-dispen-siswa .data-table tbody tr td:nth-child(1),
+    [data-theme="dark"] #page-waka-sdm .data-table tbody tr td:first-child,
+    [data-theme="dark"] #page-guru-piket .data-table tbody tr td:first-child,
+    [data-theme="dark"] #page-absensi-siswa .data-table tbody tr td:first-child,
+    [data-theme="dark"] #page-izin-guru-waka .data-table tbody tr td:first-child,
+    [data-theme="dark"] #table-wali-rekap tbody tr td:nth-child(3),
+    [data-theme="dark"] #table-wali-rekap-absensi-tbl tbody tr td:nth-child(3),
+    [data-theme="dark"] #page-absensi-harian #absensi-table tbody tr td:nth-child(3) {
+        color: var(--text-primary) !important;
+    }
+
+    /* Border bottom di dalam mobile cards */
+    [data-theme="dark"] #page-satpam-harian .data-table tbody tr td:nth-child(1),
+    [data-theme="dark"] #page-satpam .data-table tbody tr td:nth-child(1) {
+        border-bottom-color: var(--border) !important;
+    }
+
+    /* Label ::before warna di dark mode */
+    [data-theme="dark"] #page-satpam-harian .data-table tbody tr td:nth-child(2)::before,
+    [data-theme="dark"] #page-satpam-harian .data-table tbody tr td:nth-child(3)::before,
+    [data-theme="dark"] #page-satpam-harian .data-table tbody tr td:nth-child(4)::before,
+    [data-theme="dark"] #page-satpam-harian .data-table tbody tr td:nth-child(5)::before,
+    [data-theme="dark"] #page-dispen-siswa .data-table tbody tr td::before,
+    [data-theme="dark"] #page-satpam .data-table tbody tr td::before,
+    [data-theme="dark"] #page-waka-sdm .data-table tbody tr td::before,
+    [data-theme="dark"] #page-guru-piket .data-table tbody tr td::before,
+    [data-theme="dark"] #page-absensi-siswa .data-table tbody tr td::before,
+    [data-theme="dark"] #page-izin-guru-waka .data-table tbody tr td::before,
+    [data-theme="dark"] #page-izin-guru tbody tr td::before,
+    [data-theme="dark"] #page-riwayat-jurnal tbody tr td::before,
+    [data-theme="dark"] #page-jadwal-mengajar tbody tr td:nth-child(4)::before,
+    [data-theme="dark"] #page-guru-dashboard tbody tr td:nth-child(4)::before {
+        color: var(--text-muted) !important;
+    }
+
+    /* Monospace NISN/kode di mobile cards */
+    [data-theme="dark"] #page-absensi-harian #absensi-table tbody tr td:nth-child(2),
+    [data-theme="dark"] #table-wali-rekap tbody tr td:nth-child(2),
+    [data-theme="dark"] #table-wali-rekap-absensi-tbl tbody tr td:nth-child(2),
+    [data-theme="dark"] #page-jurnal-absensi .absensi-card-nisn {
+        color: var(--text-muted) !important;
+    }
+
+    /* Semua teks di dalam mobile cards yang masih belum punya CSS var */
+    [data-theme="dark"] .main-content:not(.is-admin) .table-cards td {
+        color: var(--text-primary);
+    }
+
+    /* Absensi status btn di dark mode */
+    [data-theme="dark"] #page-jurnal-absensi .absensi-status-btn {
+        background: var(--card-surface, #182033) !important;
+        border-color: var(--border) !important;
+        color: var(--text-secondary) !important;
+    }
+
+    /* Keterangan input dark */
+    [data-theme="dark"] #page-jurnal-absensi .absensi-ket-input,
+    [data-theme="dark"] #table-wali-harian tbody tr td:nth-child(10) input {
+        background: var(--input-bg) !important;
+        border-color: var(--input-border) !important;
+        color: var(--text-primary) !important;
+    }
+
+    /* Nomor urut badge di absensi card */
+    [data-theme="dark"] #page-jurnal-absensi .absensi-card-no {
+        background: rgba(59, 130, 246, 0.18) !important;
+        color: #60a5fa !important;
+    }
+
+    /* Guru dashboard border-top header divider di dalam card */
+    [data-theme="dark"] .guru-nav-right {
+        border-top-color: var(--border) !important;
+    }
+}
+
+/* ── Warna teks khusus yang hardcoded di mobile cards ── */
+@media (max-width: 768px) {
+    [data-theme="dark"] #page-satpam .data-table tbody tr td:nth-child(1) strong {
+        color: var(--text-primary) !important;
+    }
+    [data-theme="dark"] #page-satpam .data-table tbody tr td:nth-child(1) {
+        border-bottom-color: var(--border) !important;
+    }
+    /* Sedang berlangsung badge di jadwal mengajar mobile */
+    [data-theme="dark"] #page-jadwal-mengajar tbody tr.jadwal-row-item:has(.badge-success) {
+        background: rgba(34, 197, 94, 0.1) !important;
+        border-color: rgba(34, 197, 94, 0.4) !important;
+    }
+    [data-theme="dark"] #page-guru-dashboard tbody tr:has(.badge-success) {
+        background: rgba(34, 197, 94, 0.1) !important;
+        border-color: rgba(34, 197, 94, 0.4) !important;
+    }
+    /* Wali Rekap teks statistik label warna */
+    [data-theme="dark"] #table-wali-rekap tbody tr td:nth-child(4)::before { color: #4ade80 !important; }
+    [data-theme="dark"] #table-wali-rekap tbody tr td:nth-child(5)::before { color: #fbbf24 !important; }
+    [data-theme="dark"] #table-wali-rekap tbody tr td:nth-child(6)::before { color: #60a5fa !important; }
+    [data-theme="dark"] #table-wali-rekap tbody tr td:nth-child(7)::before { color: #a78bfa !important; }
+    [data-theme="dark"] #table-wali-rekap tbody tr td:nth-child(8)::before { color: #f87171 !important; }
+    [data-theme="dark"] #table-wali-rekap tbody tr td:nth-child(4) .badge {
+        background: rgba(34, 197, 94, 0.18) !important;
+        color: #4ade80 !important;
+    }
+    [data-theme="dark"] #table-wali-rekap tbody tr td:nth-child(5) .badge {
+        background: rgba(245, 158, 11, 0.18) !important;
+        color: #fbbf24 !important;
+    }
+    [data-theme="dark"] #table-wali-rekap tbody tr td:nth-child(6) .badge {
+        background: rgba(59, 130, 246, 0.18) !important;
+        color: #60a5fa !important;
+    }
+    [data-theme="dark"] #table-wali-rekap tbody tr td:nth-child(7) .badge,
+    [data-theme="dark"] .badge-purple {
+        background: rgba(139, 92, 246, 0.2) !important;
+        color: #c084fc !important;
+    }
+    [data-theme="dark"] #table-wali-rekap tbody tr td:nth-child(8) .badge {
+        background: rgba(239, 68, 68, 0.18) !important;
+        color: #f87171 !important;
+    }
+    [data-theme="dark"] #table-wali-rekap [style*="background:#e2e8f0"],
+    [data-theme="dark"] #table-wali-rekap [style*="background: #e2e8f0"] {
+        background: #1e293b !important;
+    }
+    [data-theme="dark"] #table-wali-rekap [style*="color:#334155"] {
+        color: #f8fafc !important;
+    }
+    [data-theme="dark"] #table-wali-rekap-absensi-tbl tbody tr td:nth-child(5)::before,
+    [data-theme="dark"] #table-wali-rekap-1th tbody tr td:nth-child(5)::before { color: #4ade80 !important; }
+    [data-theme="dark"] #table-wali-rekap-absensi-tbl tbody tr td:nth-child(6)::before,
+    [data-theme="dark"] #table-wali-rekap-1th tbody tr td:nth-child(6)::before { color: #fbbf24 !important; }
+    [data-theme="dark"] #table-wali-rekap-absensi-tbl tbody tr td:nth-child(7)::before,
+    [data-theme="dark"] #table-wali-rekap-1th tbody tr td:nth-child(7)::before { color: #60a5fa !important; }
+    [data-theme="dark"] #table-wali-rekap-absensi-tbl tbody tr td:nth-child(8)::before,
+    [data-theme="dark"] #table-wali-rekap-1th tbody tr td:nth-child(8)::before { color: #c084fc !important; }
+    [data-theme="dark"] #table-wali-rekap-absensi-tbl tbody tr td:nth-child(9)::before,
+    [data-theme="dark"] #table-wali-rekap-1th tbody tr td:nth-child(9)::before { color: #f87171 !important; }
+
+    [data-theme="dark"] #table-wali-rekap-absensi-tbl tbody tr td:nth-child(5) .badge,
+    [data-theme="dark"] #table-wali-rekap-1th tbody tr td:nth-child(5) .badge {
+        background: rgba(34, 197, 94, 0.18) !important;
+        color: #4ade80 !important;
+    }
+    [data-theme="dark"] #table-wali-rekap-absensi-tbl tbody tr td:nth-child(6) .badge,
+    [data-theme="dark"] #table-wali-rekap-1th tbody tr td:nth-child(6) .badge {
+        background: rgba(245, 158, 11, 0.18) !important;
+        color: #fbbf24 !important;
+    }
+    [data-theme="dark"] #table-wali-rekap-absensi-tbl tbody tr td:nth-child(7) .badge,
+    [data-theme="dark"] #table-wali-rekap-1th tbody tr td:nth-child(7) .badge {
+        background: rgba(59, 130, 246, 0.18) !important;
+        color: #60a5fa !important;
+    }
+    [data-theme="dark"] #table-wali-rekap-absensi-tbl tbody tr td:nth-child(8) .badge,
+    [data-theme="dark"] #table-wali-rekap-1th tbody tr td:nth-child(8) .badge {
+        background: rgba(139, 92, 246, 0.2) !important;
+        color: #c084fc !important;
+    }
+    [data-theme="dark"] #table-wali-rekap-absensi-tbl tbody tr td:nth-child(9) .badge,
+    [data-theme="dark"] #table-wali-rekap-1th tbody tr td:nth-child(9) .badge {
+        background: rgba(239, 68, 68, 0.18) !important;
+        color: #f87171 !important;
+    }
+    [data-theme="dark"] #table-wali-rekap-absensi-tbl [style*="background:#e2e8f0"],
+    [data-theme="dark"] #table-wali-rekap-absensi-tbl [style*="background: #e2e8f0"],
+    [data-theme="dark"] #table-wali-rekap-1th [style*="background:#e2e8f0"],
+    [data-theme="dark"] #table-wali-rekap-1th [style*="background: #e2e8f0"] {
+        background: #1e293b !important;
+    }
+    [data-theme="dark"] #table-wali-rekap-absensi-tbl [style*="color:#334155"],
+    [data-theme="dark"] #table-wali-rekap-1th [style*="color:#334155"] {
+        color: #f8fafc !important;
+    }
+    [data-theme="dark"] #table-wali-rekap tbody tr td:nth-child(3),
+    [data-theme="dark"] #table-wali-rekap-absensi-tbl tbody tr td:nth-child(3),
+    [data-theme="dark"] #table-wali-rekap-1th tbody tr td:nth-child(3) {
+        color: var(--text-primary) !important;
+    }
+    /* Riwayat jurnal statistik label */
+    [data-theme="dark"] #page-riwayat-jurnal tbody tr td:nth-child(5)::before,
+    [data-theme="dark"] #page-riwayat-jurnal tbody tr td:nth-child(6)::before,
+    [data-theme="dark"] #page-riwayat-jurnal tbody tr td:nth-child(7)::before,
+    [data-theme="dark"] #page-riwayat-jurnal tbody tr td:nth-child(8)::before,
+    [data-theme="dark"] #page-riwayat-jurnal tbody tr td:nth-child(9)::before {
+        color: var(--text-muted) !important;
+    }
 }

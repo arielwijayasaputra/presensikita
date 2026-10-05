@@ -1142,7 +1142,7 @@ function renderTable(data){
     const pageGuru = document.getElementById('page-jurnal-absensi');
     const isGuruDisabled = pageGuru && pageGuru.querySelector('#btn-submit-jurnal')?.disabled;
     const radioAttr = isAdmin ? 'onclick="return false;" tabindex="-1"' : (isGuruDisabled ? 'disabled onchange="updateRekap()"' : 'onchange="updateRekap()"');
-    const radioDAttr = (isAdmin || isGuru) ? 'onclick="return false;" tabindex="-1"' : (isGuruDisabled ? 'disabled' : 'onchange="updateRekap()"');
+    const radioDAttr = 'onclick="return false;" tabindex="-1"';
     const ketAttr = isAdmin
         ? 'readonly placeholder="Diisi oleh Guru..." style="border:1px solid #e2e8f0;border-radius:6px;padding:4px 8px;font-size:12px;width:100%;outline:none;background:#f8fafc;color:#475569;cursor:default;"'
         : (isGuruDisabled
@@ -1164,7 +1164,7 @@ function renderTable(data){
             <td class="td-status"><label class="status-pill-btn status-pill-h${isAdmin ? ' is-admin' : ''}"><input type="radio" name="st-${id}" value="H" checked ${radioAttr}><span>H</span></label></td>
             <td class="td-status"><label class="status-pill-btn status-pill-s${isAdmin ? ' is-admin' : ''}"><input type="radio" name="st-${id}" value="S" ${radioAttr}><span>S</span></label></td>
             <td class="td-status"><label class="status-pill-btn status-pill-i${isAdmin ? ' is-admin' : ''}"><input type="radio" name="st-${id}" value="I" ${radioAttr}><span>I</span></label></td>
-            <td class="td-status"><label class="status-pill-btn status-pill-d${(isAdmin || isGuru) ? ' is-admin is-auto-dispen' : ''}" title="Status Dispen terisi otomatis saat surat dispensasi disetujui Waka"><input type="radio" name="st-${id}" value="D" ${radioDAttr}><span>D</span></label></td>
+            <td class="td-status"><label class="status-pill-btn status-pill-d is-admin is-auto-dispen" title="Status Dispen terisi otomatis saat surat dispensasi disetujui Waka"><input type="radio" name="st-${id}" value="D" ${radioDAttr}><span>D</span></label></td>
             <td class="td-status"><label class="status-pill-btn status-pill-a${isAdmin ? ' is-admin' : ''}"><input type="radio" name="st-${id}" value="A" ${radioAttr}><span>A</span></label></td>
             <td><input type="text" id="ket-${id}" ${ketAttr}${isAdmin || isGuruDisabled ? '' : ` oninput="mirrorKetGuru(this, '${id}')"`}></td>
         `;
@@ -1178,9 +1178,9 @@ function renderTable(data){
             card.dataset.nama = (nama || '').toLowerCase();
             card.dataset.nisn = (nisn || '').toLowerCase();
             const stBtn=(v,label)=>{
-                const isAutoD = isGuru && v === 'D';
-                const dStyle = isAutoD ? 'style="opacity:.8;"' : (isGuruDisabled ? 'style="pointer-events:none;opacity:.6;"' : '');
-                return `<button type="button" class="absensi-status-btn ${v==='H'?'selected':''} ${isAutoD ? 'is-auto-dispen' : ''}" data-status="${v}" data-sid="${id}" ${dStyle} onclick="pickAbsensiStatus(this)">${label}<input type="radio" name="st-${id}" value="${v}" ${v==='H'?'checked':''} ${isGuruDisabled || isAutoD ? 'disabled' : ''} onchange="updateRekap()"></button>`;
+                const isAutoD = v === 'D';
+                const dStyle = isAutoD ? 'style="cursor:not-allowed;"' : (isGuruDisabled ? 'style="pointer-events:none;opacity:.6;"' : '');
+                return `<button type="button" class="absensi-status-btn ${v==='H'?'selected':''} ${isAutoD ? 'is-auto-dispen is-admin' : ''}" data-status="${v}" data-sid="${id}" ${dStyle} onclick="pickAbsensiStatus(this)" ${isAutoD ? 'title="Status Dispen terisi otomatis saat surat dispensasi disetujui Waka"' : ''}>${label}<input type="radio" name="st-${id}" value="${v}" ${v==='H'?'checked':''} ${isGuruDisabled || isAutoD ? 'disabled' : ''} onchange="updateRekap()"></button>`;
             };
             card.innerHTML=`
                 <div class="absensi-card-head">
@@ -1224,21 +1224,27 @@ function syncAbsensiCards(){
 function pickAbsensiStatus(btn){
     const sid = btn.dataset.sid;
     const val = btn.dataset.status;
-    const root = absensiRoot();
-    const isGuru = root === '#page-jurnal-absensi';
 
-    // Guru tidak bisa memilih status Dispen secara manual jika siswa tidak punya surat dispen yang disetujui
-    if(isGuru && val === 'D'){
-        const hasApprovedDispen = window.currentDispenMap && window.currentDispenMap[sid];
-        if(!hasApprovedDispen){
-            Swal.fire({
-                icon: 'info',
-                title: 'Dispensasi Otomatis',
-                text: 'Status Dispensasi terisi otomatis saat surat dispensasi siswa telah disetujui oleh Waka Kesiswaan.',
-                confirmButtonColor: '#2563eb'
-            });
-            return;
-        }
+    // Status Dispen bersifat read-only di seluruh web karena terisi otomatis dari surat dispensasi
+    if(val === 'D'){
+        Swal.fire({
+            icon: 'info',
+            title: 'Dispensasi Otomatis',
+            text: 'Status Dispensasi bersifat read-only dan hanya terisi otomatis saat surat dispensasi siswa telah disetujui oleh Waka Kesiswaan.',
+            confirmButtonColor: '#2563eb'
+        });
+        return;
+    }
+
+    const hasApprovedDispen = (window.currentDispenMap && window.currentDispenMap[sid]) || (currentSiswaList && currentSiswaList.find(s=>s.id_siswa == sid)?.has_approved_dispen);
+    if(hasApprovedDispen && val !== 'D'){
+        Swal.fire({
+            icon: 'warning',
+            title: 'Siswa Sedang Dispensasi',
+            text: 'Siswa ini memiliki Surat Dispensasi resmi yang telah disetujui Waka Kesiswaan.',
+            confirmButtonColor: '#2563eb'
+        });
+        return;
     }
 
     const radio = document.querySelector(`input[name="st-${sid}"][value="${val}"]`);

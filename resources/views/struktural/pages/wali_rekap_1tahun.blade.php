@@ -141,14 +141,8 @@
                             <td style="text-align:center"><span class="badge badge-success" style="font-size:12px">{{ $r['hadir'] }}</span></td>
                             <td style="text-align:center"><span class="badge badge-warning" style="font-size:12px">{{ $r['sakit'] }}</span></td>
                             <td style="text-align:center"><span class="badge badge-info" style="font-size:12px">{{ $r['izin'] }}</span></td>
-                            <td style="text-align:center"><span class="badge" style="font-size:12px; background:#ede9fe; color:#7c3aed">{{ $r['dispen'] ?? 0 }}</span></td>
-                            <td style="text-align:center">
-                                @if($r['alpa'] > 0)
-                                    <span class="badge badge-danger" style="font-size:12px">{{ $r['alpa'] }}</span>
-                                @else
-                                    <span style="color:#94a3b8; font-size:12px">0</span>
-                                @endif
-                            </td>
+                            <td style="text-align:center"><span class="badge badge-purple" style="font-size:12px">{{ $r['dispen'] ?? 0 }}</span></td>
+                            <td style="text-align:center"><span class="badge badge-danger" style="font-size:12px">{{ $r['alpa'] ?? 0 }}</span></td>
                             <td style="text-align:center">
                                 <div style="display:flex; align-items:center; gap:8px; justify-content:center">
                                     <div style="flex:1; background:#e2e8f0; height:8px; border-radius:4px; overflow:hidden">

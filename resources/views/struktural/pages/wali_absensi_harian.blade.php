@@ -140,8 +140,8 @@
                                     </label>
                                 </td>
                                 <td class="td-status" style="text-align:center">
-                                    <label class="status-pill-btn status-pill-d">
-                                        <input type="radio" name="absensi[{{ $s['id_siswa'] }}][status]" value="D" {{ $s['status'] === 'D' ? 'checked' : '' }}>
+                                    <label class="status-pill-btn status-pill-d is-auto-dispen" title="Status Dispen terisi otomatis saat surat dispensasi disetujui Waka" style="cursor:not-allowed">
+                                        <input type="radio" name="absensi[{{ $s['id_siswa'] }}][status]" value="D" {{ $s['status'] === 'D' ? 'checked' : '' }} onclick="return false;" tabindex="-1">
                                         <span>D</span>
                                     </label>
                                 </td>
@@ -152,7 +152,7 @@
                                     </label>
                                 </td>
                                 <td>
-                                    <input type="text" name="absensi[{{ $s['id_siswa'] }}][keterangan]" value="{{ $s['keterangan'] }}" placeholder="Catatan/Keterangan..." style="width:100%; padding:6px 10px; font-size:12.5px; border-radius:8px; border:1px solid #cbd5e1; outline:none">
+                                    <input type="text" name="absensi[{{ $s['id_siswa'] }}][keterangan]" value="{{ $s['keterangan'] }}" placeholder="Catatan/Keterangan..." {{ $s['status'] === 'D' ? 'readonly title="Dispensasi resmi disetujui Waka"' : '' }} style="width:100%; padding:6px 10px; font-size:12.5px; border-radius:8px; border:1px solid #cbd5e1; outline:none; {{ $s['status'] === 'D' ? 'background:#f8fafc; color:#64748b; cursor:default;' : '' }}">
                                 </td>
                                 <td style="text-align:center">
                                     @if(!empty($s['no_hp_ortu']))
@@ -186,8 +186,14 @@
 
 <script>
 function tandaiSemuaWali(val) {
+    if (val === 'D') return;
     const radios = document.querySelectorAll(`#table-wali-harian input[type="radio"][value="${val}"]`);
-    radios.forEach(r => r.checked = true);
+    radios.forEach(r => {
+        const row = r.closest('tr');
+        const isDispen = row && row.querySelector('input[type="radio"][value="D"]:checked');
+        if (isDispen) return;
+        r.checked = true;
+    });
 }
 
 function simpanAbsensiHarianWaliSubmit() {

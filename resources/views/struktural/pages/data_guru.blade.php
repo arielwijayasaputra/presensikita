@@ -66,11 +66,9 @@
         /* Kartu statistik mengikuti komponen .stat-card bawaan aplikasi */
         #page-data-guru .stat-card { cursor: default; }
 
-        /* Tabel — adapts to the screen width, no horizontal scrolling */
-        #page-data-guru .dg-table-wrap { overflow-x: hidden; border-radius: var(--radius); }
+        /* Tabel Desktop: Default Table Layout */
+        #page-data-guru .dg-table-wrap { overflow-x: auto; border-radius: var(--radius); }
         #page-data-guru .data-table { width: 100%; min-width: 0; table-layout: auto; }
-        /* Nilai lebih tinggi dari aturan .data-table global (pakai #id), sehingga
-           tetap berlaku walau aturan global memakai white-space: nowrap di layar kecil. */
         #page-data-guru .data-table th,
         #page-data-guru .data-table td { padding: 10px 6px; white-space: normal; }
         #page-data-guru .data-table thead th {
@@ -90,6 +88,7 @@
             background: #f8fafc; font-weight: 800; color: var(--text-primary);
             border-top: 2px solid var(--border); border-bottom: none;
         }
+        #page-data-guru .dg-name-wrap { display: flex; align-items: center; gap: 8px; }
         #page-data-guru .dg-name { font-weight: 700; color: var(--text-primary); overflow-wrap: anywhere; line-height: 1.3; }
         #page-data-guru .dg-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; overflow-wrap: anywhere; }
         #page-data-guru .dg-nip { font-family: monospace; font-size: 11.5px; color: var(--text-secondary); overflow-wrap: anywhere; }
@@ -106,6 +105,15 @@
         }
         #page-data-guru .dg-view-btn:hover { transform: translateY(-1px); }
 
+        /* Elemen khusus mobile - disembunyikan di desktop */
+        #page-data-guru .dg-m-lbl,
+        #page-data-guru .dg-m-stat-lbl,
+        #page-data-guru .dg-m-bar-lbl,
+        #page-data-guru .dg-m-no-badge,
+        #page-data-guru .dg-m-tfoot-lbl {
+            display: none !important;
+        }
+
         /* Keterangan / legenda */
         #page-data-guru .dg-legend { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--text-secondary); }
         #page-data-guru .dg-legend span.item { display: inline-flex; align-items: center; gap: 6px; }
@@ -121,6 +129,387 @@
         .swal2-dg-table th, .swal2-dg-table td { padding: 7px 5px; font-size: 12px; overflow-wrap: anywhere; }
         .swal2-dg-table thead th { position: sticky; top: 0; background: var(--border-subtle); font-size: 11px; line-height: 1.25; }
         .swal2-dg-scroll { max-height: 280px; overflow-y: auto; overflow-x: hidden; border: 1px solid var(--border); border-radius: 10px; }
+
+        /* ── RESPONSIVE MOBILE (<= 768px): Tampilan Card Lengkap Rapi Tanpa Geser Samping ── */
+        @media (max-width: 768px) {
+            #page-data-guru .dg-page-head {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 14px;
+                margin-bottom: 16px;
+            }
+            #page-data-guru .dg-page-head form {
+                width: 100%;
+                justify-content: space-between;
+            }
+            #page-data-guru .dg-page-head form select {
+                flex: 1;
+                min-width: 0;
+            }
+
+            /* ── Stat Cards Summary Grid Mobile ── */
+            #page-data-guru .stat-cards {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+                margin-bottom: 18px !important;
+            }
+            #page-data-guru .stat-card {
+                padding: 12px 14px !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 10px !important;
+                border-radius: 12px !important;
+            }
+            #page-data-guru .stat-card:last-child:nth-child(odd) {
+                grid-column: 1 / -1 !important;
+            }
+            #page-data-guru .stat-icon {
+                width: 38px !important;
+                height: 38px !important;
+                border-radius: 10px !important;
+                flex-shrink: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            #page-data-guru .stat-icon svg {
+                width: 18px !important;
+                height: 18px !important;
+            }
+            #page-data-guru .stat-label {
+                font-size: 11px !important;
+                font-weight: 700 !important;
+                color: var(--text-secondary) !important;
+                line-height: 1.2 !important;
+            }
+            #page-data-guru .stat-value {
+                font-size: 20px !important;
+                font-weight: 800 !important;
+                color: var(--text-primary) !important;
+                line-height: 1.2 !important;
+                margin: 2px 0 1px 0 !important;
+            }
+            #page-data-guru .stat-sub {
+                font-size: 10px !important;
+                color: var(--text-muted) !important;
+                line-height: 1.2 !important;
+            }
+
+            #page-data-guru .card-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+                padding: 16px 14px !important;
+            }
+            #page-data-guru .card-header > div:last-child {
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            #page-data-guru .card-header > div:last-child > div:last-child {
+                width: 100% !important;
+            }
+            #page-data-guru .dg-legend {
+                justify-content: flex-start;
+                gap: 10px;
+                font-size: 11px;
+            }
+
+            /* Container Tabel Mobile */
+            #page-data-guru .dg-table-wrap {
+                overflow: visible !important;
+                background: transparent !important;
+                padding: 0 12px 14px !important;
+                border: none !important;
+            }
+            #page-data-guru .data-table {
+                display: block !important;
+                width: 100% !important;
+                border: none !important;
+                background: transparent !important;
+            }
+            #page-data-guru .data-table thead {
+                display: none !important;
+            }
+            #page-data-guru .data-table tbody {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 12px !important;
+                width: 100% !important;
+            }
+
+            /* Baris Guru sebagai Kartu Utuh */
+            #page-data-guru .data-table tbody tr.dg-row {
+                display: grid !important;
+                grid-template-columns: repeat(5, 1fr) !important;
+                gap: 8px 6px !important;
+                background: var(--card-bg) !important;
+                border: 1px solid var(--border) !important;
+                border-radius: 14px !important;
+                padding: 14px 12px !important;
+                box-shadow: var(--shadow) !important;
+                cursor: pointer;
+                position: relative;
+                transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+                -webkit-tap-highlight-color: transparent;
+            }
+            #page-data-guru .data-table tbody tr.dg-row:hover {
+                border-color: #3b82f6 !important;
+                background: var(--card-bg) !important;
+                transform: translateY(-1px);
+            }
+            #page-data-guru .data-table tbody tr.dg-row:nth-child(even) {
+                background: var(--card-bg) !important;
+            }
+
+            /* Kolom Nomor di desktop disembunyikan, diganti badge di dalam nama */
+            #page-data-guru .dg-col-no {
+                display: none !important;
+            }
+
+            /* Header Kartu: Nama & Tombol Detail */
+            #page-data-guru .dg-col-nama {
+                grid-row: 1 !important;
+                grid-column: 1 / span 4 !important;
+                display: flex !important;
+                align-items: center !important;
+                padding: 0 !important;
+                border: none !important;
+                background: transparent !important;
+            }
+            #page-data-guru .dg-m-no-badge {
+                display: inline-flex !important;
+                align-items: center;
+                justify-content: center;
+                background: var(--border-subtle);
+                color: var(--text-secondary);
+                border: 1px solid var(--border);
+                font-size: 11px;
+                font-weight: 800;
+                padding: 2px 7px;
+                border-radius: 6px;
+                flex-shrink: 0;
+                margin-top: 1px;
+            }
+            #page-data-guru .dg-name {
+                font-size: 14px !important;
+                font-weight: 800 !important;
+                color: var(--text-primary) !important;
+                line-height: 1.3 !important;
+            }
+            #page-data-guru .dg-sub {
+                font-size: 11.5px !important;
+                color: var(--text-muted) !important;
+                margin-top: 2px !important;
+            }
+
+            #page-data-guru .dg-col-action {
+                grid-row: 1 !important;
+                grid-column: 5 / span 1 !important;
+                display: flex !important;
+                justify-content: flex-end !important;
+                align-items: flex-start !important;
+                padding: 0 !important;
+                border: none !important;
+                background: transparent !important;
+            }
+            #page-data-guru .dg-view-btn {
+                padding: 5px 9px !important;
+                font-size: 11.5px !important;
+                border-radius: 8px !important;
+            }
+
+            /* Metadata: NIP & Mapel */
+            #page-data-guru .dg-col-nip {
+                grid-row: 2 !important;
+                grid-column: 1 / span 3 !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 5px !important;
+                padding: 2px 0 4px 0 !important;
+                border: none !important;
+                background: transparent !important;
+                font-size: 11.5px !important;
+                color: var(--text-secondary) !important;
+            }
+            #page-data-guru .dg-col-mapel {
+                grid-row: 2 !important;
+                grid-column: 4 / span 2 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: flex-end !important;
+                gap: 5px !important;
+                padding: 2px 0 4px 0 !important;
+                border: none !important;
+                background: transparent !important;
+                font-size: 11.5px !important;
+                color: var(--text-secondary) !important;
+                text-align: right !important;
+            }
+            #page-data-guru .dg-m-lbl {
+                display: inline-block !important;
+                font-size: 10px !important;
+                font-weight: 700 !important;
+                color: var(--text-muted) !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.3px !important;
+            }
+            #page-data-guru .dg-val-mapel {
+                max-width: 140px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                font-weight: 600;
+                color: var(--text-primary);
+            }
+            #page-data-guru .dg-val-nip {
+                font-family: monospace;
+                font-size: 11px;
+                color: var(--text-secondary);
+            }
+
+            /* 5 Kotak Statistik Presensi (Sesi, Hadir, Tdk Hadir, Izin, Belum Isi) */
+            #page-data-guru .dg-col-sesi { grid-row: 3 !important; grid-column: 1 !important; }
+            #page-data-guru .dg-col-hadir { grid-row: 3 !important; grid-column: 2 !important; }
+            #page-data-guru .dg-col-thadir { grid-row: 3 !important; grid-column: 3 !important; }
+            #page-data-guru .dg-col-izin { grid-row: 3 !important; grid-column: 4 !important; }
+            #page-data-guru .dg-col-belum { grid-row: 3 !important; grid-column: 5 !important; }
+            #page-data-guru .dg-col-sesi,
+            #page-data-guru .dg-col-hadir,
+            #page-data-guru .dg-col-thadir,
+            #page-data-guru .dg-col-izin,
+            #page-data-guru .dg-col-belum {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                background: var(--border-subtle) !important;
+                border: 1px solid var(--border) !important;
+                border-radius: 9px !important;
+                padding: 7px 2px !important;
+                min-height: 48px !important;
+                gap: 3px !important;
+            }
+            #page-data-guru .dg-m-stat-lbl {
+                display: block !important;
+                font-size: 8.5px !important;
+                font-weight: 700 !important;
+                color: var(--text-muted) !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.3px !important;
+                line-height: 1 !important;
+                text-align: center !important;
+            }
+            #page-data-guru .badge {
+                font-size: 11.5px !important;
+                padding: 2px 6px !important;
+            }
+
+            /* Progress Bar Kehadiran */
+            #page-data-guru .dg-col-bar {
+                grid-row: 4 !important;
+                grid-column: 1 / -1 !important;
+                display: block !important;
+                padding: 8px 0 0 0 !important;
+                border: none !important;
+                border-top: 1px dashed var(--border) !important;
+                background: transparent !important;
+            }
+            #page-data-guru .dg-bar-cell {
+                display: flex !important;
+                align-items: center !important;
+                gap: 8px !important;
+                justify-content: space-between !important;
+                width: 100% !important;
+            }
+            #page-data-guru .dg-m-bar-lbl {
+                display: inline-block !important;
+                font-size: 11.5px !important;
+                font-weight: 700 !important;
+                color: var(--text-secondary) !important;
+                white-space: nowrap !important;
+            }
+            #page-data-guru .dg-bar {
+                flex: 1 !important;
+                height: 8px !important;
+                border-radius: 99px !important;
+                background: var(--border-subtle) !important;
+                overflow: hidden !important;
+                min-width: 50px !important;
+            }
+            #page-data-guru .dg-pct {
+                font-size: 12px !important;
+                font-weight: 800 !important;
+                min-width: 42px !important;
+                text-align: right !important;
+            }
+
+            /* Summary / Footer di Mobile */
+            #page-data-guru .data-table tfoot {
+                display: block !important;
+                margin-top: 12px !important;
+                border: none !important;
+                background: transparent !important;
+            }
+            #page-data-guru .data-table tfoot tr {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 6px !important;
+                background: var(--card-bg) !important;
+                border: 1px solid var(--border) !important;
+                border-radius: 14px !important;
+                padding: 14px 16px !important;
+                box-shadow: var(--shadow) !important;
+            }
+            #page-data-guru .data-table tfoot td {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 4px 0 !important;
+                border: none !important;
+                background: transparent !important;
+                font-size: 12px !important;
+            }
+            #page-data-guru .data-table tfoot td:first-child {
+                font-size: 13.5px !important;
+                font-weight: 800 !important;
+                color: var(--text-primary) !important;
+                border-bottom: 1px solid var(--border) !important;
+                padding-bottom: 8px !important;
+                margin-bottom: 2px !important;
+                text-align: left !important;
+            }
+            #page-data-guru .data-table tfoot td:last-child {
+                display: none !important;
+            }
+            #page-data-guru .dg-m-tfoot-lbl {
+                display: inline-block !important;
+                font-weight: 600 !important;
+                color: var(--text-secondary) !important;
+            }
+
+            /* Modal detail pada mobile */
+            .swal2-dg-popup {
+                width: 95vw !important;
+                max-width: 95vw !important;
+                padding: 16px 12px !important;
+                border-radius: 16px !important;
+            }
+            .swal2-dg-popup .swal2-tab {
+                padding: 8px 4px !important;
+                margin: 0 4px !important;
+                font-size: 11.5px !important;
+            }
+            .swal2-dg-head {
+                padding: 12px !important;
+            }
+            .swal2-dg-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 8px !important;
+            }
+        }
     </style>
 
     <!-- ══ HEADER HALAMAN ══ -->
@@ -267,43 +656,64 @@
                         @endphp
                         <tr class="dg-row" onclick="lihatDetailGuru({{ $r['id_guru'] }})" tabindex="0"
                             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();lihatDetailGuru({{ $r['id_guru'] }});}">
-                            <td class="dg-num" style="color:var(--text-muted); font-weight:600">{{ $idx + 1 }}</td>
-                            <td class="dg-nip">{{ $r['nip'] }}</td>
-                            <td>
-                                <div class="dg-name">{{ $r['nama_guru'] }}</div>
-                                <div class="dg-sub">{{ $r['username'] }}</div>
+                            <td class="dg-num dg-col-no" style="color:var(--text-muted); font-weight:600">{{ $idx + 1 }}</td>
+                            <td class="dg-nip dg-col-nip">
+                                <span class="dg-m-lbl">NIP:</span>
+                                <span class="dg-val-nip">{{ $r['nip'] ?: '-' }}</span>
                             </td>
-                            <td class="dg-mapel">{{ $r['nama_mapel'] }}</td>
-                            <td class="dg-num" style="font-weight:700">{{ $r['total_sesi'] }}</td>
-                            <td class="dg-num"><span class="badge badge-success" style="font-size:12px">{{ $r['hadir'] }}</span></td>
-                            <td class="dg-num">
+                            <td class="dg-col-nama">
+                                <div class="dg-name-wrap">
+                                    <span class="dg-m-no-badge">#<span class="dg-m-no-val">{{ $idx + 1 }}</span></span>
+                                    <div>
+                                        <div class="dg-name">{{ $r['nama_guru'] }}</div>
+                                        <div class="dg-sub">{{ $r['username'] }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="dg-mapel dg-col-mapel">
+                                <span class="dg-m-lbl">Mapel:</span>
+                                <span class="dg-val-mapel" title="{{ $r['nama_mapel'] }}">{{ $r['nama_mapel'] ?: '-' }}</span>
+                            </td>
+                            <td class="dg-num dg-col-sesi">
+                                <span class="dg-m-stat-lbl">Sesi</span>
+                                <span style="font-weight:700">{{ $r['total_sesi'] }}</span>
+                            </td>
+                            <td class="dg-num dg-col-hadir">
+                                <span class="dg-m-stat-lbl">Hadir</span>
+                                <span class="badge badge-success" style="font-size:12px">{{ $r['hadir'] }}</span>
+                            </td>
+                            <td class="dg-num dg-col-thadir">
+                                <span class="dg-m-stat-lbl">Tdk Hadir</span>
                                 @if($r['tidak_hadir'] > 0)
                                     <span class="badge badge-danger" style="font-size:12px">{{ $r['tidak_hadir'] }}</span>
                                 @else
                                     <span style="color:var(--text-muted)">0</span>
                                 @endif
                             </td>
-                            <td class="dg-num">
+                            <td class="dg-num dg-col-izin">
+                                <span class="dg-m-stat-lbl">Izin</span>
                                 @if($r['izin_total'] > 0)
                                     <span class="badge badge-info" style="font-size:12px">{{ $r['izin_total'] }}x</span>
                                 @else
                                     <span style="color:var(--text-muted)">0</span>
                                 @endif
                             </td>
-                            <td class="dg-num">
+                            <td class="dg-num dg-col-belum">
+                                <span class="dg-m-stat-lbl">Belum Isi</span>
                                 @if($r['belum_isi'] > 0)
                                     <span class="badge badge-warning" style="font-size:12px">{{ $r['belum_isi'] }}</span>
                                 @else
                                     <span style="color:var(--text-muted)">0</span>
                                 @endif
                             </td>
-                            <td>
+                            <td class="dg-col-bar">
                                 <div class="dg-bar-cell">
+                                    <span class="dg-m-bar-lbl">Kehadiran:</span>
                                     <div class="dg-bar"><span style="width:{{ $r['persentase'] }}%; background:{{ $warnaPersen }}"></span></div>
                                     <span class="dg-pct" style="color:{{ $warnaPersen }}">{{ $r['persentase'] }}%</span>
                                 </div>
                             </td>
-                            <td style="text-align:center">
+                            <td class="dg-col-action" style="text-align:center">
                                 <button type="button" class="dg-view-btn" onclick="event.stopPropagation(); lihatDetailGuru({{ $r['id_guru'] }});">
                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                                     <span>Lihat</span>
@@ -321,12 +731,12 @@
                 <tfoot>
                     <tr>
                         <td colspan="4" style="text-align:right; font-size:12px; letter-spacing:0.03em; text-transform:uppercase; color:var(--text-secondary)">Total {{ $totalGuruData }} Guru</td>
-                        <td class="dg-num">{{ $totalSesiData }}</td>
-                        <td class="dg-num">{{ $totalHadirData }}</td>
-                        <td class="dg-num">{{ $totalTidakHadirData }}</td>
-                        <td class="dg-num">{{ $totalIzinData }}</td>
-                        <td class="dg-num">{{ $totalBelumIsiData }}</td>
-                                <td style="text-align:right"><span class="dg-pct">{{ $pctHadirData }}%</span></td>
+                        <td class="dg-num"><span class="dg-m-tfoot-lbl">Total Sesi:</span> {{ $totalSesiData }}</td>
+                        <td class="dg-num"><span class="dg-m-tfoot-lbl">Total Hadir:</span> {{ $totalHadirData }}</td>
+                        <td class="dg-num"><span class="dg-m-tfoot-lbl">Total Tdk Hadir:</span> {{ $totalTidakHadirData }}</td>
+                        <td class="dg-num"><span class="dg-m-tfoot-lbl">Total Izin:</span> {{ $totalIzinData }}</td>
+                        <td class="dg-num"><span class="dg-m-tfoot-lbl">Total Belum Isi:</span> {{ $totalBelumIsiData }}</td>
+                        <td style="text-align:right"><span class="dg-m-tfoot-lbl">Rata-rata:</span> <span class="dg-pct">{{ $pctHadirData }}%</span></td>
                         <td></td>
                     </tr>
                 </tfoot>
@@ -408,7 +818,11 @@ function urutkanDataGuru(th) {
 
     // Penomoran urut mengikuti urutan tampilan
     urut.forEach((tr, i) => {
-        if (nilaiBaris(tr) !== null) tr.cells[0].textContent = String(i + 1);
+        if (nilaiBaris(tr) !== null) {
+            tr.cells[0].textContent = String(i + 1);
+            const mBadge = tr.querySelector('.dg-m-no-val');
+            if (mBadge) mBadge.textContent = String(i + 1);
+        }
     });
 
     urut.forEach(tr => tbody.appendChild(tr));

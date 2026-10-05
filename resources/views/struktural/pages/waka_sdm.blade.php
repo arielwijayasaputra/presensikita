@@ -80,8 +80,8 @@
             </div>
         </div>
 
-        <div style="overflow-x:auto">
-            <table class="data-table" id="table-harian" style="min-width:900px">
+        <div class="sdm-scroll-wrap" style="overflow-x:auto; overflow-y:visible; width:100%; display:block">
+            <table class="data-table" id="table-harian" style="min-width:900px; white-space:nowrap">
                 <thead>
                     <tr>
                         <th style="width:80px">Jam Ke</th>
@@ -175,8 +175,8 @@
             </div>
         </div>
 
-        <div style="overflow-x:auto">
-            <table class="data-table" id="table-rekap" style="min-width:950px">
+        <div class="sdm-scroll-wrap" style="overflow-x:auto; overflow-y:visible; width:100%; display:block">
+            <table class="data-table" id="table-rekap" style="min-width:950px; white-space:nowrap">
                 <thead>
                     <tr>
                         <th style="width:50px">No</th>
@@ -193,7 +193,7 @@
                     @forelse($sdmRekapGuru as $idx => $r)
                         <tr>
                             <td style="color:#94a3b8; font-weight:600">{{ $idx + 1 }}</td>
-                            <td style="font-family:monospace; font-size:12.5px; color:#64748b">{{ $r['nip'] }}</td>
+                            <td style="font-family:monospace; font-size:12.5px; color:#64748b; white-space:nowrap">{{ $r['nip'] }}</td>
                             <td><strong style="color:#0f172a">{{ $r['nama_guru'] }}</strong></td>
                             <td style="text-align:center; font-weight:700; color:#1e293b">{{ $r['total_sesi'] }} Sesi</td>
                             <td style="text-align:center">
@@ -247,8 +247,8 @@
             </div>
         </div>
 
-        <div style="overflow-x:auto">
-            <table class="data-table" id="table-izin" style="min-width:850px">
+        <div class="sdm-scroll-wrap" style="overflow-x:auto; overflow-y:visible; width:100%; display:block">
+            <table class="data-table" id="table-izin" style="min-width:850px; white-space:nowrap">
                 <thead>
                     <tr>
                         <th>Tanggal Izin</th>
@@ -356,6 +356,27 @@ function filterTable(inputId, tableId) {
         box-shadow: none !important;
         border: 1px solid #ddd !important;
         break-inside: avoid;
+    }
+}
+
+/* ── Mobile: Waka SDM — tampil persis desktop, geser horizontal ── */
+@media (max-width: 768px) {
+    #page-waka-sdm,
+    #page-waka-sdm .card { overflow: visible !important; }
+
+    .sdm-scroll-wrap {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        display: block !important;
+    }
+
+    #page-waka-sdm .data-table {
+        width: auto !important;
+        white-space: nowrap !important;
+        border-collapse: collapse !important;
     }
 }
 </style>

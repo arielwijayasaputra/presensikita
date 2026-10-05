@@ -398,32 +398,94 @@
 
         .jam-row-item {
             display: grid;
-            grid-template-columns: 140px 1fr 180px;
+            grid-template-columns: 170px 1fr auto;
             align-items: center;
             gap: 20px;
-            padding: 16px 0;
+            padding: 16px 18px;
             border-bottom: 1px dashed #e2e8f0;
+            border-radius: 12px;
+            transition: all 0.2s ease;
         }
 
         .jam-row-item:last-child {
             border-bottom: none;
         }
 
+        .jam-row-item.jam-ongoing-active {
+            background: rgba(34, 197, 94, 0.04);
+        }
+
         .jam-badge-time {
             display: flex;
             flex-direction: column;
+            gap: 6px;
+        }
+
+        .jam-time-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
 
         .jam-number {
-            font-size: 14px;
+            font-size: 13.5px;
             font-weight: 800;
             color: #0284c7;
+            letter-spacing: -0.01em;
         }
 
         .jam-time-span {
-            font-size: 12px;
+            font-size: 11.5px;
             color: #64748b;
             font-weight: 600;
+        }
+
+        .badge-jam-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #16a34a;
+            background: #dcfce7;
+            padding: 2.5px 8.5px;
+            border-radius: 20px;
+            width: fit-content;
+            border: 1px solid #bbf7d0;
+        }
+
+        .badge-jam-finished {
+            display: inline-flex;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 2.5px 8.5px;
+            border-radius: 20px;
+            width: fit-content;
+            border: 1px solid #e2e8f0;
+        }
+
+        .badge-jam-upcoming {
+            display: inline-flex;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: #0284c7;
+            background: #e0f2fe;
+            padding: 2.5px 8.5px;
+            border-radius: 20px;
+            width: fit-content;
+            border: 1px solid #bae6fd;
+        }
+
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #16a34a;
+            animation: pulseLive 1.2s infinite;
         }
 
         .jam-subject-info {
@@ -447,39 +509,42 @@
         }
 
         .materi-text {
-            font-size: 12.5px;
+            font-size: 12px;
             color: #334155;
             background-color: #f8fafc;
-            padding: 6px 12px;
-            border-radius: 8px;
-            border: 1px solid #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
             margin-top: 4px;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            width: fit-content;
         }
 
         .jam-status-col {
             display: flex;
             flex-direction: column;
-            align-items: flex-end;
+            align-items: flex-start;
             gap: 6px;
         }
 
         .badge-status {
             padding: 6px 14px;
             border-radius: 20px;
-            font-size: 12.5px;
+            font-size: 12px;
             font-weight: 800;
             display: inline-flex;
             align-items: center;
             gap: 6px;
         }
 
-        .badge-success   { background-color: #dcfce7; color: #15803d; }
-        .badge-warning   { background-color: #fef3c7; color: #b45309; }
-        .badge-info      { background-color: #e0f2fe; color: #0369a1; }
-        .badge-danger    { background-color: #fee2e2; color: #b91c1c; }
-        .badge-secondary { background-color: #f1f5f9; color: #64748b; }
-        .badge-dispen    { background-color: #ede9fe; color: #7c3aed; }
+        .badge-success, .badge-hadir   { background-color: #dcfce7; color: #15803d; }
+        .badge-warning, .badge-izin    { background-color: #fef3c7; color: #b45309; }
+        .badge-info, .badge-sakit      { background-color: #e0f2fe; color: #0369a1; }
+        .badge-danger, .badge-alpa, .badge-alfa { background-color: #fee2e2; color: #b91c1c; }
+        .badge-secondary               { background-color: #f1f5f9; color: #64748b; }
+        .badge-dispen, .badge-purple   { background-color: #ede9fe; color: #7c3aed; }
 
         .ket-note {
             font-size: 11.5px;
@@ -892,18 +957,78 @@
                 justify-content: space-between;
                 box-sizing: border-box;
             }
-            .jam-row-item {
-                grid-template-columns: 1fr;
+            .jam-list-container {
+                padding: 12px 14px;
+                display: flex;
+                flex-direction: column;
                 gap: 10px;
             }
-            .jam-status-col {
+            .jam-row-item {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                padding: 14px 16px;
+                border: 1px solid #e2e8f0;
+                border-radius: 12px;
+                background: #ffffff;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            }
+            .jam-row-item.jam-ongoing-active {
+                border-color: #86efac;
+                background: #f0fdf4;
+                box-shadow: 0 2px 8px rgba(34,197,94,0.12);
+            }
+            .jam-badge-time {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 10px;
+                width: 100%;
+                padding-bottom: 8px;
+                border-bottom: 1px dashed #e2e8f0;
+                text-align: left;
+            }
+            .jam-time-group {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 8px;
+                flex-wrap: wrap;
+                text-align: left;
+            }
+            .jam-time-span {
+                background: #f1f5f9;
+                padding: 2px 7px;
+                border-radius: 6px;
+                font-size: 11px;
+            }
+            .jam-subject-info {
+                gap: 5px;
+                text-align: left;
                 align-items: flex-start;
+                width: 100%;
+            }
+            .subject-title {
+                font-size: 14.5px;
+                line-height: 1.35;
+                text-align: left;
+            }
+            .jam-status-col {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+                text-align: left;
+                width: 100%;
+                padding-top: 6px;
+                border-top: 1px solid #f8fafc;
+                gap: 10px;
+                flex-wrap: wrap;
             }
             .card-box-header {
                 padding: 14px 16px;
-            }
-            .jam-list-container {
-                padding: 12px 16px;
             }
             .dispen-tracker-card {
                 padding: 18px 16px;
@@ -1467,11 +1592,22 @@
 
         /* Jam (schedule) rows */
         [data-theme="dark"] .jam-row-item {
-            border-bottom-color: #1e3a5f !important;
-            background: transparent !important;
+            border: 1px solid #1e3a5f !important;
+            background: #111827 !important;
+            box-shadow: none !important;
         }
-        [data-theme="dark"] .jam-time-col,
-        [data-theme="dark"] .jam-num-badge { color: #60a5fa !important; }
+        [data-theme="dark"] .jam-row-item.jam-ongoing-active {
+            border-color: #166534 !important;
+            background: rgba(22, 101, 52, 0.15) !important;
+        }
+        [data-theme="dark"] .jam-badge-time {
+            border-bottom-color: #1e3a5f !important;
+        }
+        [data-theme="dark"] .jam-time-group .jam-number { color: #38bdf8 !important; }
+        [data-theme="dark"] .jam-time-span {
+            color: #94a3b8 !important;
+            background: rgba(255,255,255,0.06) !important;
+        }
         [data-theme="dark"] .subject-title { color: #f1f5f9 !important; }
         [data-theme="dark"] .guru-name { color: #94a3b8 !important; }
         [data-theme="dark"] .materi-text {
@@ -1479,31 +1615,61 @@
             border-color: #243552 !important;
             color: #94a3b8 !important;
         }
+        [data-theme="dark"] .badge-jam-live {
+            background: rgba(22,163,74,0.18) !important;
+            color: #4ade80 !important;
+            border-color: rgba(74,222,128,0.3) !important;
+        }
+        [data-theme="dark"] .badge-jam-live .pulse-dot {
+            background: #4ade80 !important;
+        }
+        [data-theme="dark"] .badge-jam-finished {
+            background: rgba(148,163,184,0.12) !important;
+            color: #94a3b8 !important;
+            border-color: rgba(148,163,184,0.2) !important;
+        }
+        [data-theme="dark"] .badge-jam-upcoming {
+            background: rgba(2,132,199,0.15) !important;
+            color: #38bdf8 !important;
+            border-color: rgba(56,189,248,0.25) !important;
+        }
+        [data-theme="dark"] .jam-status-col {
+            border-top-color: #1e3a5f !important;
+        }
         [data-theme="dark"] .ket-note { color: #64748b !important; }
         [data-theme="dark"] .empty-jam-state { color: #64748b !important; }
         [data-theme="dark"] .jam-list-container { background: transparent !important; }
 
         /* Badge status */
-        [data-theme="dark"] .badge-hadir {
+        [data-theme="dark"] .badge-hadir,
+        [data-theme="dark"] .badge-success {
             background: rgba(16,185,129,0.15) !important;
             color: #34d399 !important;
         }
         [data-theme="dark"] .badge-alfa,
-        [data-theme="dark"] .badge-alpa {
+        [data-theme="dark"] .badge-alpa,
+        [data-theme="dark"] .badge-danger {
             background: rgba(239,68,68,0.15) !important;
             color: #f87171 !important;
         }
-        [data-theme="dark"] .badge-izin {
+        [data-theme="dark"] .badge-izin,
+        [data-theme="dark"] .badge-warning {
             background: rgba(245,158,11,0.15) !important;
             color: #fbbf24 !important;
         }
-        [data-theme="dark"] .badge-sakit {
+        [data-theme="dark"] .badge-sakit,
+        [data-theme="dark"] .badge-info {
             background: rgba(2,132,199,0.15) !important;
             color: #38bdf8 !important;
         }
-        [data-theme="dark"] .badge-info {
-            background: rgba(37,99,235,0.15) !important;
-            color: #60a5fa !important;
+        [data-theme="dark"] .badge-dispen,
+        [data-theme="dark"] .badge-purple {
+            background: rgba(124,58,237,0.15) !important;
+            color: #c084fc !important;
+        }
+        [data-theme="dark"] .badge-secondary {
+            background: rgba(148,163,184,0.12) !important;
+            color: #94a3b8 !important;
         }
 
         /* Dispensasi tracker card */
@@ -2028,18 +2194,22 @@
                 @forelse($presensiPerJam as $p)
                 <div class="jam-row-item {{ !empty($p['is_ongoing']) ? 'jam-ongoing-active' : '' }}" data-jam-ke="{{ $p['jam_ke'] }}">
                     <div class="jam-badge-time">
-                        <span class="jam-number">Jam Ke-{{ $p['jam_ke'] >= 100 ? $p['jam_ke'] - 100 : $p['jam_ke'] }}</span>
-                        <span class="jam-time-span">{{ substr($p['jam_mulai'], 0, 5) }} - {{ substr($p['jam_selesai'], 0, 5) }} WIB</span>
-                        @if(!empty($p['is_ongoing']))
-                            <span class="badge-jam-live" style="margin-top:5px;display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;color:#16a34a;background:#dcfce7;padding:2px 8px;border-radius:12px;width:fit-content;border:1px solid #bbf7d0">
-                                <span style="width:6px;height:6px;border-radius:50%;background:#16a34a;animation:pulseLive 1.2s infinite"></span>
-                                Sedang Berlangsung
-                            </span>
-                        @elseif(!empty($p['is_finished']))
-                            <span style="margin-top:5px;font-size:10.5px;color:#64748b;font-weight:600">Selesai</span>
-                        @else
-                            <span style="margin-top:5px;font-size:10.5px;color:#94a3b8;font-weight:600">Akan Datang</span>
-                        @endif
+                        <div class="jam-time-group">
+                            <span class="jam-number">Jam Ke-{{ $p['jam_ke'] >= 100 ? $p['jam_ke'] - 100 : $p['jam_ke'] }}</span>
+                            <span class="jam-time-span">{{ substr($p['jam_mulai'], 0, 5) }} - {{ substr($p['jam_selesai'], 0, 5) }} WIB</span>
+                        </div>
+                        <div class="jam-session-badge-wrap">
+                            @if(!empty($p['is_ongoing']))
+                                <span class="badge-jam-live">
+                                    <span class="pulse-dot"></span>
+                                    Sedang Berlangsung
+                                </span>
+                            @elseif(!empty($p['is_finished']))
+                                <span class="badge-jam-finished">Selesai</span>
+                            @else
+                                <span class="badge-jam-upcoming">Akan Datang</span>
+                            @endif
+                        </div>
                     </div>
 
                     <div class="jam-subject-info">
@@ -2052,7 +2222,10 @@
                         </div>
                         @if($p['materi'] !== '-')
                         <div>
-                            <span class="materi-text">Materi: {{ $p['materi'] }}</span>
+                            <span class="materi-text">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                                Materi: {{ $p['materi'] }}
+                            </span>
                         </div>
                         @endif
                     </div>
@@ -2589,8 +2762,8 @@
                         let sessionHtml = '';
                         if (p.is_ongoing) {
                             sessionHtml = `
-                                <span class="badge-jam-live" style="margin-top:5px;display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;color:#16a34a;background:#dcfce7;padding:2px 8px;border-radius:12px;width:fit-content;border:1px solid #bbf7d0">
-                                    <span style="width:6px;height:6px;border-radius:50%;background:#16a34a;animation:pulseLive 1.2s infinite"></span>
+                                <span class="badge-jam-live">
+                                    <span class="pulse-dot"></span>
                                     Sedang Berlangsung
                                 </span>
                             `;
@@ -2598,15 +2771,20 @@
                         } else {
                             row.classList.remove('jam-ongoing-active');
                             if (p.is_finished) {
-                                sessionHtml = '<span style="margin-top:5px;font-size:10.5px;color:#64748b;font-weight:600">Selesai</span>';
+                                sessionHtml = '<span class="badge-jam-finished">Selesai</span>';
                             } else {
-                                sessionHtml = '<span style="margin-top:5px;font-size:10.5px;color:#94a3b8;font-weight:600">Akan Datang</span>';
+                                sessionHtml = '<span class="badge-jam-upcoming">Akan Datang</span>';
                             }
                         }
 
-                        const oldBadge = timeCol.querySelector('.badge-jam-live') || timeCol.querySelector('span:nth-child(3)');
-                        if (oldBadge) {
-                            oldBadge.outerHTML = sessionHtml;
+                        const sessionWrap = timeCol.querySelector('.jam-session-badge-wrap');
+                        if (sessionWrap) {
+                            sessionWrap.innerHTML = sessionHtml;
+                        } else {
+                            const oldBadge = timeCol.querySelector('.badge-jam-live, .badge-jam-finished, .badge-jam-upcoming') || timeCol.querySelector('span:nth-child(3)');
+                            if (oldBadge) {
+                                oldBadge.outerHTML = sessionHtml;
+                            }
                         }
                     }
                 });

@@ -1156,6 +1156,19 @@ html.theme-transitioning *::after {
 [data-theme="dark"] .status-pill-d:not(.is-admin):hover span { box-shadow: 0 6px 18px rgba(139, 92, 246, 0.35); }
 [data-theme="dark"] .status-pill-a:not(.is-admin):hover span { box-shadow: 0 6px 18px rgba(239, 68, 68, 0.35); }
 
+/* Absensi mobile status buttons in Dark Mode */
+[data-theme="dark"] #page-jurnal-absensi .absensi-status-btn[data-status="H"] { background: rgba(34, 197, 94, 0.12) !important; color: #4ade80 !important; border-color: rgba(34, 197, 94, 0.3) !important; }
+[data-theme="dark"] #page-jurnal-absensi .absensi-status-btn[data-status="S"] { background: rgba(245, 158, 11, 0.12) !important; color: #fbbf24 !important; border-color: rgba(245, 158, 11, 0.3) !important; }
+[data-theme="dark"] #page-jurnal-absensi .absensi-status-btn[data-status="I"] { background: rgba(59, 130, 246, 0.12) !important; color: #60a5fa !important; border-color: rgba(59, 130, 246, 0.3) !important; }
+[data-theme="dark"] #page-jurnal-absensi .absensi-status-btn[data-status="D"] { background: rgba(139, 92, 246, 0.12) !important; color: #a78bfa !important; border-color: rgba(139, 92, 246, 0.3) !important; }
+[data-theme="dark"] #page-jurnal-absensi .absensi-status-btn[data-status="A"] { background: rgba(239, 68, 68, 0.12) !important; color: #f87171 !important; border-color: rgba(239, 68, 68, 0.3) !important; }
+
+[data-theme="dark"] #page-jurnal-absensi .absensi-status-btn.selected[data-status="H"] { background: linear-gradient(135deg, #22c55e, #16a34a) !important; color: #ffffff !important; border-color: #15803d !important; box-shadow: 0 4px 16px rgba(34, 197, 94, 0.5) !important; }
+[data-theme="dark"] #page-jurnal-absensi .absensi-status-btn.selected[data-status="S"] { background: linear-gradient(135deg, #f59e0b, #d97706) !important; color: #ffffff !important; border-color: #b45309 !important; box-shadow: 0 4px 16px rgba(245, 158, 11, 0.5) !important; }
+[data-theme="dark"] #page-jurnal-absensi .absensi-status-btn.selected[data-status="I"] { background: linear-gradient(135deg, #3b82f6, #2563eb) !important; color: #ffffff !important; border-color: #1d4ed8 !important; box-shadow: 0 4px 16px rgba(59, 130, 246, 0.5) !important; }
+[data-theme="dark"] #page-jurnal-absensi .absensi-status-btn.selected[data-status="D"] { background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important; color: #ffffff !important; border-color: #6d28d9 !important; box-shadow: 0 4px 16px rgba(139, 92, 246, 0.5) !important; }
+[data-theme="dark"] #page-jurnal-absensi .absensi-status-btn.selected[data-status="A"] { background: linear-gradient(135deg, #ef4444, #dc2626) !important; color: #ffffff !important; border-color: #b91c1c !important; box-shadow: 0 4px 16px rgba(239, 68, 68, 0.5) !important; }
+
 
 
 /* ==========================================================================

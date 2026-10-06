@@ -1190,7 +1190,7 @@ function renderTable(data){
                         <div class="absensi-card-nisn">NISN: ${nisn}</div>
                     </div>
                 </div>
-                <div class="absensi-status-row">${stBtn('H','Hadir')}${stBtn('S','Sakit')}${stBtn('I','Izin')}${stBtn('D','Dispen')}${stBtn('A','Alpa')}</div>
+                <div class="absensi-status-row">${stBtn('H','H')}${stBtn('S','S')}${stBtn('I','I')}${stBtn('D','D')}${stBtn('A','A')}</div>
                 <input type="text" class="absensi-ket-input" data-ket-sid="${id}" placeholder="Keterangan (opsional)..." ${isGuruDisabled ? 'disabled' : ''} oninput="mirrorKetGuru(this, '${id}')">
             `;
             tbody.appendChild(card);

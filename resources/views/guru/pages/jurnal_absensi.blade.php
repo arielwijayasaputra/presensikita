@@ -166,10 +166,10 @@
 
             <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:16px;align-items:start">
                 <div id="signature-canvas-wrapper" style="position:relative;border:1px dashed #cbd5e1;border-radius:10px;overflow:hidden;background:#fff;aspect-ratio:500/160;max-height:160px">
-                    <canvas id="signature-canvas" width="500" height="160" style="width:100%;height:100%;display:block;background:#fff;cursor:crosshair"></canvas>
+                    <canvas id="signature-canvas" width="500" height="160" style="width:100%;height:100%;display:block;cursor:crosshair"></canvas>
                 </div>
                 <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
-                    <div id="signature-preview-container" style="border:1px dashed #cbd5e1;border-radius:10px;overflow:hidden;background:#f8fafc;display:flex;align-items:center;justify-content:center;aspect-ratio:500/160;max-height:160px">
+                    <div id="signature-preview-container" style="border:1px dashed #cbd5e1;border-radius:10px;overflow:hidden;background:var(--bg-card, #f8fafc);display:flex;align-items:center;justify-content:center;aspect-ratio:500/160;max-height:160px">
                         <img id="signature-preview" src="" alt="Preview Tanda Tangan" style="width:100%;height:100%;object-fit:contain;display:none;">
                         <div id="signature-placeholder" style="text-align:center;color:#94a3b8;padding:14px">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 8px;display:block"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5a1 1 0 0 1-1.4.4l-4-2a1 1 0 0 1 .3-1.8l10-3z"/><path d="M2 19l7-7 2 2 5-5 6 6v4a1 1 0 0 1-1 1l-9 2-4 2z"/></svg>

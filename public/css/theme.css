@@ -1416,4 +1416,26 @@ html.theme-transitioning *::after {
     filter: none !important;
 }
 
+/* ── Kanvas Tanda Tangan Guru — Adaptive Dark Mode ── */
+[data-theme="dark"] #signature-canvas-wrapper {
+    background: #000000 !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-theme="dark"] #signature-preview-container {
+    background: #0f172a !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-theme="dark"] #signature-placeholder {
+    color: rgba(255, 255, 255, 0.45) !important;
+}
+
+[data-theme="dark"] #signature-placeholder svg {
+    stroke: rgba(255, 255, 255, 0.35) !important;
+}
+
+[data-theme="dark"] #signature-section {
+    border-color: var(--border, rgba(255,255,255,0.1)) !important;
+}
 

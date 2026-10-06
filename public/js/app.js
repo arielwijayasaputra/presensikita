@@ -782,6 +782,25 @@ let sigCtx = null;
 let sigDrawing = false;
 let sigInitReady = false;
 
+function _sigIsDark() {
+    return document.documentElement.getAttribute('data-theme') === 'dark';
+}
+
+function _sigApplyTheme(canvas) {
+    const isDark = _sigIsDark();
+    const bg = isDark ? '#000000' : '#ffffff';
+    const stroke = isDark ? '#ffffff' : '#1e293b';
+    // fill background
+    if (sigCtx) {
+        sigCtx.fillStyle = bg;
+        sigCtx.fillRect(0, 0, canvas.width, canvas.height);
+        sigCtx.strokeStyle = stroke;
+    }
+    canvas.style.background = bg;
+    const wrapper = document.getElementById('signature-canvas-wrapper');
+    if (wrapper) wrapper.style.background = bg;
+}
+
 function initSignaturePad() {
     const canvas = document.getElementById('signature-canvas');
     if (!canvas || sigInitReady) return;
@@ -796,8 +815,8 @@ function initSignaturePad() {
     sigCtx = canvas.getContext('2d');
     sigCtx.lineCap = 'round';
     sigCtx.lineJoin = 'round';
-    sigCtx.strokeStyle = '#1e293b';
     sigCtx.lineWidth = 2.5;
+    _sigApplyTheme(canvas);
 
     const getPos = function(e) {
         const rect = canvas.getBoundingClientRect();
@@ -846,9 +865,21 @@ window.initSignaturePad = initSignaturePad;
 function isSignatureCanvasEmpty() {
     const canvas = document.getElementById('signature-canvas');
     if (!canvas || !sigCtx) return true;
+    const isDark = _sigIsDark();
     const data = sigCtx.getImageData(0, 0, canvas.width, canvas.height).data;
-    for (let i = 0; i < data.length; i += 4) {
-        if (data[i] !== 0 || data[i+1] !== 0 || data[i+2] !== 0 || data[i+3] !== 0) return false;
+    // In dark mode background is black (r=0,g=0,b=0,a=255), stroke is white.
+    // In light mode background is white (r=255,g=255,b=255,a=255), stroke is dark.
+    // We detect "drawn" pixels differently per theme.
+    if (isDark) {
+        // Any pixel that is NOT pure black (i.e., r|g|b > 0 and fully opaque) is a stroke
+        for (let i = 0; i < data.length; i += 4) {
+            if (data[i+3] === 255 && (data[i] > 10 || data[i+1] > 10 || data[i+2] > 10)) return false;
+        }
+    } else {
+        // Any pixel that is NOT pure white (r|g|b < 245) is a stroke
+        for (let i = 0; i < data.length; i += 4) {
+            if (data[i+3] === 255 && (data[i] < 245 || data[i+1] < 245 || data[i+2] < 245)) return false;
+        }
     }
     return true;
 }
@@ -856,7 +887,7 @@ function isSignatureCanvasEmpty() {
 function clearSignature() {
     const canvas = document.getElementById('signature-canvas');
     if (canvas && sigCtx) {
-        sigCtx.clearRect(0, 0, canvas.width, canvas.height);
+        _sigApplyTheme(canvas); // clear and repaint background
     }
     const input = document.getElementById('input-tanda-tangan');
     if (input) { input.value = ''; input.dataset.hasExistingTandaTangan = '0'; }
@@ -868,6 +899,7 @@ function clearSignature() {
     if (placeholder) placeholder.style.display = 'block';
     if (canvasWrapper) canvasWrapper.style.display = 'block';
     if (previewContainer) previewContainer.style.display = 'block';
+    sigInitReady = false;
     initSignaturePad();
 }
 window.clearSignature = clearSignature;

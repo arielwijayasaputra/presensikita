@@ -28,12 +28,12 @@ class DispenSiswaController extends Controller
         return redirect()->to(route('guru.index').'#dispen-siswa');
     }
 
-    public function storeAbsensi(Request $request)
+    public function storeAbsensi(StoreDispenSiswaRequest $request)
     {
         $isGuruPiket = session('auth_role') === 'guru_piket' || (session('auth_guru_id') && GuruPiket::where('id_guru', session('auth_guru_id'))->whereDate('tanggal', now()->toDateString())->exists());
         abort_unless($isGuruPiket, 403, 'Akses khusus Guru Piket yang bertugas.');
 
-        return $this->store(app(StoreDispenSiswaRequest::class));
+        return $this->store($request);
     }
 
     public function store(StoreDispenSiswaRequest $request)
@@ -42,17 +42,18 @@ class DispenSiswaController extends Controller
         abort_unless($isGuruPiket, 403, 'Akses khusus Guru Piket yang bertugas.');
         $data = $request->validated();
 
-        $idSiswaList = (array) $data['id_siswa'];
+        $idSiswaList = (array) ($data['id_siswa'] ?? $request->input('id_siswa'));
         $guruPiket = Guru::where('id_guru', session('auth_guru_id'))->where('is_aktif', 1)->firstOrFail();
         $fotoSurat = $request->hasFile('foto_surat') ? $request->file('foto_surat')->store('surat-dispen', 'public') : null;
         $kodeDispen = 'DSP-'.date('Ymd').'-'.strtoupper(Str::random(6));
 
         try {
-            $createdDispens = DB::transaction(function () use ($data, $idSiswaList, $guruPiket, $fotoSurat, $kodeDispen) {
+            $createdDispens = DB::transaction(function () use ($data, $request, $idSiswaList, $guruPiket, $fotoSurat, $kodeDispen) {
                 $nowTime = now()->format('H:i:s');
                 $dispens = collect();
-                $tglMulai = $data['tanggal_dispen'];
-                $tglSelesai = ! empty($data['tanggal_selesai']) ? $data['tanggal_selesai'] : $tglMulai;
+                $tglMulai = $data['tanggal_dispen'] ?? $request->input('tanggal_dispen');
+                $tglSelesai = ! empty($data['tanggal_selesai']) ? $data['tanggal_selesai'] : ($request->input('tanggal_selesai') ?: $tglMulai);
+                $jenisAbsen = $data['jenis_absen'] ?? $request->input('jenis_absen', 'S');
 
                 foreach ($idSiswaList as $idSiswa) {
                     $siswa = Siswa::where('id_siswa', $idSiswa)->where('is_aktif', 1)->firstOrFail();
@@ -78,13 +79,16 @@ class DispenSiswaController extends Controller
                         ->whereDate('jurnal_kelas.tanggal', '>=', $tglMulai)
                         ->whereDate('jurnal_kelas.tanggal', '<=', $tglSelesai);
 
-                    if ($data['jenis_absen'] === 'D') {
+                    if ($jenisAbsen === 'D') {
                         $existingJurnalsQuery->whereTime('jam_pelajaran.jam_selesai', '>', $nowTime);
                     }
 
-                    $alasan = ! empty($data['alasan'])
-                        ? $data['alasan']
-                        : ($data['jenis_absen'] === 'S' ? 'Sakit' : ($data['jenis_absen'] === 'I' ? 'Izin' : 'Dispensasi'));
+                    $existingJurnals = $existingJurnalsQuery->pluck('jurnal_kelas.id_jurnal')->unique();
+
+                    $alasanInput = $data['alasan'] ?? $request->input('alasan');
+                    $alasan = ! empty($alasanInput)
+                        ? $alasanInput
+                        : ($jenisAbsen === 'S' ? 'Sakit' : ($jenisAbsen === 'I' ? 'Izin' : 'Dispensasi'));
 
                     foreach ($existingJurnals as $jId) {
                         $existingTh = JurnalSiswaTidakHadir::where('id_jurnal', $jId)->where('id_siswa', $siswa->id_siswa)->first();
@@ -93,7 +97,7 @@ class DispenSiswaController extends Controller
                         }
                         JurnalSiswaTidakHadir::updateOrCreate(
                             ['id_jurnal' => $jId, 'id_siswa' => $siswa->id_siswa],
-                            ['status' => $data['jenis_absen'], 'keterangan' => strtoupper($data['jenis_absen']).($alasan ? ': '.$alasan : '')]
+                            ['status' => $jenisAbsen, 'keterangan' => strtoupper($jenisAbsen).($alasan ? ': '.$alasan : '')]
                         );
                     }
 
@@ -104,7 +108,7 @@ class DispenSiswaController extends Controller
                         'tanggal_dispen' => $tglMulai,
                         'tanggal_selesai' => $tglSelesai,
                         'alasan' => $alasan,
-                        'jenis_absen' => $data['jenis_absen'],
+                        'jenis_absen' => $jenisAbsen,
                         'foto_surat' => $fotoSurat,
                         'id_jurnal' => $jurnal?->id_jurnal,
                         'status_guru_piket' => 'disetujui',

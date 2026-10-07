@@ -37,6 +37,10 @@ class StoreDispenSiswaRequest extends FormRequest
             $filtered = array_values(array_unique(array_filter($raw, fn($v) => !is_null($v) && $v !== '')));
             $this->merge(['id_siswa' => $filtered]);
         }
+
+        if (! $this->has('alasan') || $this->input('alasan') === null) {
+            $this->merge(['alasan' => null]);
+        }
     }
 
     public function messages(): array

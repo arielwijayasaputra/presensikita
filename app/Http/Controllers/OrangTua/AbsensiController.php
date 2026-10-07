@@ -11,6 +11,7 @@ use App\Models\Pengaturan;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
 use App\Services\AbsensiService;
+use App\Services\HariKhususService;
 use App\Services\JadwalService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -58,6 +59,7 @@ class AbsensiController extends Controller
                 'pctHadirBulan' => $data['pctHadirBulan'],
                 'presensiPerJam' => $data['presensiPerJam'],
                 'rekapPerMapel' => $data['rekapPerMapel'],
+                'hariKhusus' => $data['hariKhusus'],
             ],
         ]);
     }
@@ -150,11 +152,105 @@ class AbsensiController extends Controller
             ->where('status', 'diizinkan')
             ->first();
 
+        // Ambil Hari Khusus yang berlaku untuk tingkat kelas siswa
+        $tingkat = $siswa->kelas ? HariKhususService::normalizeTingkat($siswa->kelas->tingkat_kelas ?? $siswa->kelas->nama_kelas) : null;
+        $hariKhusus = HariKhususService::getHariKhusus($tanggal, $tingkat);
+
         // 3. Ambil Jurnal & Presensi Siswa per Jam Pelajaran pada Tanggal Tersebut
         $presensiPerJam = [];
         $statHarian = ['Hadir' => 0, 'Sakit' => 0, 'Izin' => 0, 'Dispen' => 0, 'Alpa' => 0, 'Terlambat' => 0, 'Belum Diabsen' => 0, 'Menunggu' => 0];
 
         foreach ($jadwalList as $j) {
+            // Periksa apakah jam pelajaran ini terdampak oleh Hari Khusus (Event / Pulang Cepat)
+            if ($hariKhusus) {
+                if ($hariKhusus->tipe === 'pulang_cepat' && $hariKhusus->jam_pulang && $j->jam_mulai >= $hariKhusus->jam_pulang) {
+                    $presensiPerJam[] = [
+                        'jam_ke' => $j->jam_ke,
+                        'jam_mulai' => date('H:i', strtotime($j->jam_mulai)),
+                        'jam_selesai' => date('H:i', strtotime($j->jam_selesai)),
+                        'kode_mapel' => $j->kode_mapel ?? '-',
+                        'nama_mapel' => $j->nama_mapel,
+                        'nama_guru' => $j->nama_guru,
+                        'status' => 'Pulang Cepat',
+                        'status_label' => 'Ditiadakan (Pulang Cepat)',
+                        'badge_class' => 'badge-warning',
+                        'materi' => '-',
+                        'keterangan' => 'Pulang Cepat: ' . $hariKhusus->judul,
+                        'session_state' => 'finished',
+                        'session_label' => 'Ditiadakan',
+                        'is_ongoing' => false,
+                        'is_finished' => true,
+                    ];
+                    continue;
+                } elseif ($hariKhusus->tipe === 'event' && $hariKhusus->aturan_presensi === 'diliburkan') {
+                    $presensiPerJam[] = [
+                        'jam_ke' => $j->jam_ke,
+                        'jam_mulai' => date('H:i', strtotime($j->jam_mulai)),
+                        'jam_selesai' => date('H:i', strtotime($j->jam_selesai)),
+                        'kode_mapel' => $j->kode_mapel ?? '-',
+                        'nama_mapel' => $j->nama_mapel,
+                        'nama_guru' => $j->nama_guru,
+                        'status' => 'Libur',
+                        'status_label' => 'Diliburkan (Event)',
+                        'badge_class' => 'badge-secondary',
+                        'materi' => '-',
+                        'keterangan' => 'Event: ' . $hariKhusus->judul,
+                        'session_state' => 'finished',
+                        'session_label' => 'Diliburkan',
+                        'is_ongoing' => false,
+                        'is_finished' => true,
+                    ];
+                    continue;
+                } elseif ($hariKhusus->tipe === 'event' && $hariKhusus->aturan_presensi === 'hadir_event') {
+                    // Cek apakah siswa memiliki surat sakit atau izin dari Guru Piket (Absensi Harian)
+                    $suratSakitIzin = $dispenHariIniList->first(fn ($d) => in_array($d->jenis_absen, ['S', 'I']));
+
+                    if ($suratSakitIzin) {
+                        $isSakit = ($suratSakitIzin->jenis_absen === 'S');
+                        $stKey = $isSakit ? 'Sakit' : 'Izin';
+                        $statHarian[$stKey]++;
+                        $presensiPerJam[] = [
+                            'jam_ke' => $j->jam_ke,
+                            'jam_mulai' => date('H:i', strtotime($j->jam_mulai)),
+                            'jam_selesai' => date('H:i', strtotime($j->jam_selesai)),
+                            'kode_mapel' => $j->kode_mapel ?? '-',
+                            'nama_mapel' => $j->nama_mapel,
+                            'nama_guru' => $j->nama_guru,
+                            'status' => $stKey,
+                            'status_label' => $stKey . ' (Surat Piket)',
+                            'badge_class' => $isSakit ? 'badge-warning' : 'badge-info',
+                            'materi' => 'Event: ' . $hariKhusus->judul,
+                            'keterangan' => ($suratSakitIzin->alasan ? $suratSakitIzin->alasan : 'Surat keterangan ' . strtolower($stKey)) . ' saat kegiatan ' . $hariKhusus->judul,
+                            'session_state' => 'finished',
+                            'session_label' => 'Selesai',
+                            'is_ongoing' => false,
+                            'is_finished' => true,
+                        ];
+                        continue;
+                    }
+
+                    $statHarian['Hadir']++;
+                    $presensiPerJam[] = [
+                        'jam_ke' => $j->jam_ke,
+                        'jam_mulai' => date('H:i', strtotime($j->jam_mulai)),
+                        'jam_selesai' => date('H:i', strtotime($j->jam_selesai)),
+                        'kode_mapel' => $j->kode_mapel ?? '-',
+                        'nama_mapel' => $j->nama_mapel,
+                        'nama_guru' => $j->nama_guru,
+                        'status' => 'Hadir',
+                        'status_label' => 'Hadir Event',
+                        'badge_class' => 'badge-success',
+                        'materi' => 'Event: ' . $hariKhusus->judul,
+                        'keterangan' => 'Hadir Kegiatan: ' . $hariKhusus->judul,
+                        'session_state' => 'finished',
+                        'session_label' => 'Selesai',
+                        'is_ongoing' => false,
+                        'is_finished' => true,
+                    ];
+                    continue;
+                }
+            }
+
             $isSelesai = $isPastDate || ($isToday && $nowTime >= $j->jam_selesai);
             $isSedangBerlangsung = $isToday && ($nowTime >= $j->jam_mulai && $nowTime < $j->jam_selesai);
             $isUpcoming = $isToday && ($nowTime < $j->jam_mulai);
@@ -411,6 +507,7 @@ class AbsensiController extends Controller
             'namaSekolah' => $namaSekolah,
             'tanggal' => $tanggal,
             'hariIndo' => $hariIndo,
+            'hariKhusus' => $hariKhusus,
             'presensiPerJam' => $presensiPerJam,
             'statHarian' => $statHarian,
             'totalJamBulan' => $totalJamBulan,

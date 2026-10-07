@@ -1,5 +1,5 @@
 <div class="page-content page-anim" id="page-absensi-siswa" style="display:none">
-    <div class="page-header" style="margin-bottom:20px"><div><div class="page-title" style="font-size:22px;font-weight:800">Absensi Siswa</div><div class="page-subtitle">Catat siswa sakit atau izin ke jurnal kelas dan simpan surat keterangannya.</div></div></div>
+    <div class="page-header" style="margin-bottom:20px"><div><div class="page-title" style="font-size:22px;font-weight:800">Absensi Harian Siswa</div><div class="page-subtitle">Catat siswa sakit atau izin lewat surat keterangan ke jurnal kelas (termasuk saat hari event).</div></div></div>
     <div class="card" style="padding:22px 24px;max-width:900px">
         <div class="card-header" style="margin-bottom:16px"><div class="card-title">Catat Sakit atau Izin</div></div>
         <form id="absensi-siswa-form" onsubmit="simpanAbsensiSiswa(event)">@csrf

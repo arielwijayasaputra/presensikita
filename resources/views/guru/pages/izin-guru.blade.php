@@ -1,12 +1,12 @@
 <div class="page-content page-anim" id="page-izin-guru" style="display:none">
-    <div class="page-header" style="margin-bottom:20px"><div><div class="page-title" style="font-size:22px;font-weight:800">Permintaan Izin Guru</div><div class="page-subtitle">Ajukan izin kepada Kepsek dan Waka. Status persetujuan dapat dipantau di halaman ini.</div></div></div>
+    <div class="page-header" style="margin-bottom:20px"><div><div class="page-title" style="font-size:22px;font-weight:800">Permintaan Izin Guru</div><div class="page-subtitle">Ajukan izin tidak hadir mengajar. Permohonan akan masuk ke Guru Piket terlebih dahulu untuk dikonfirmasi dan diteruskan ke Kepala Sekolah & Waka SDM.</div></div></div>
     <div class="card" style="padding:22px 24px;max-width:900px">
         <div class="card-header" style="margin-bottom:16px"><div class="card-title">Buat Permintaan Izin</div></div>
         <form id="izin-guru-form" onsubmit="buatPermintaanIzinGuru(event)">@csrf
             <div style="display:grid;grid-template-columns:1fr 180px;gap:14px;margin-bottom:14px"><div><label>Guru yang meminta izin</label><input type="text" class="filter-input" value="{{ session('auth_nama_guru') ?? $guruAktif->firstWhere('id_guru', session('auth_guru_id'))?->nama_guru ?? '-' }}" readonly style="width:100%;margin-top:4px;background:#f8fafc"></div><div><label for="guru-izin-tanggal">Tanggal izin</label><input type="date" id="guru-izin-tanggal" name="tanggal_izin" class="filter-input" value="{{ now()->toDateString() }}" required style="width:100%;margin-top:4px"></div></div>
             <div style="margin-bottom:14px"><label for="guru-izin-alasan">Alasan izin</label><textarea id="guru-izin-alasan" name="alasan" class="filter-input" rows="4" required maxlength="2000" placeholder="Tuliskan alasan tidak dapat mengajar..." style="width:100%;margin-top:4px;resize:vertical"></textarea></div>
             <div style="margin-bottom:14px"><label for="guru-izin-foto">Foto surat (opsional)</label><input type="file" id="guru-izin-foto" name="foto_surat" accept="image/jpeg,image/png,image/webp" style="display:block;width:100%;margin-top:6px;font-size:13px"><small style="display:block;color:#64748b;margin-top:5px">Format JPG, PNG, atau WEBP. Maksimal 5 MB.</small></div>
-            <button type="submit" class="btn-primary" style="border-radius:8px;padding:10px 16px;font-size:13px">Buat Link Persetujuan</button>
+            <button type="submit" class="btn-primary" style="border-radius:8px;padding:10px 16px;font-size:13px">Ajukan Izin ke Guru Piket</button>
         </form>
         <div id="guru-izin-link-result" style="display:none;margin-top:16px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:9px;padding:14px">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
@@ -43,16 +43,21 @@
                 <input type="text" id="search-guru-izin-saya" oninput="filterTable('search-guru-izin-saya','table-guru-izin-saya')" onkeyup="filterTable('search-guru-izin-saya','table-guru-izin-saya')" placeholder="Cari alasan / tanggal..." class="filter-input" style="padding:7px 12px 7px 32px;font-size:12.5px;border-radius:8px;border:1px solid #cbd5e1;width:210px">
             </div>
         </div>
-        <div style="overflow-x:auto"><table class="data-table" id="table-guru-izin-saya" style="min-width:950px"><thead><tr><th>Tanggal</th><th>Alasan</th><th>Surat</th><th>Status Kepsek</th><th>Status Waka</th><th style="text-align:center">Tanda Tangan</th><th>Status Akhir</th></tr></thead><tbody>@forelse($izinGuruTerbaru as $izin)<tr><td>{{ $izin->tanggal_izin->format('d-m-Y') }}</td><td>{{ $izin->alasan }}</td><td>@if($izin->foto_surat)<a href="{{ Storage::disk('public')->url($izin->foto_surat) }}" target="_blank" rel="noopener">Lihat foto</a>@else<span style="color:#94a3b8">Tidak ada</span>@endif</td><td>{{ ucfirst($izin->status_kepsek) }}</td><td>{{ ucfirst($izin->status_waka) }}</td><td style="text-align:center"><div style="display:inline-flex;gap:4px;flex-wrap:wrap;justify-content:center">@if($izin->tanda_tangan_kepsek)<button type="button" onclick="showSignaturePopup('{{ Storage::disk('public')->url($izin->tanda_tangan_kepsek) }}', 'Izin: {{ $izin->tanggal_izin->format('d-m-Y') }}', 'Tanda Tangan Kepala Sekolah')" style="background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;padding:3px 7px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:3px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5a1 1 0 0 1-1.4.4l-4-2a1 1 0 0 1 .3-1.8l10-3z"/><path d="M2 19l7-7 2 2 5-5 6 6v4a1 1 0 0 1-1 1l-9 2-4 2z"/></svg>Kepsek</button>@endif @if($izin->tanda_tangan_waka)<button type="button" onclick="showSignaturePopup('{{ Storage::disk('public')->url($izin->tanda_tangan_waka) }}', 'Izin: {{ $izin->tanggal_izin->format('d-m-Y') }}', 'Tanda Tangan Waka SDM')" style="background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;border-radius:6px;padding:3px 7px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:3px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5a1 1 0 0 1-1.4.4l-4-2a1 1 0 0 1 .3-1.8l10-3z"/><path d="M2 19l7-7 2 2 5-5 6 6v4a1 1 0 0 1-1 1l-9 2-4 2z"/></svg>Waka</button>@endif @if(!$izin->tanda_tangan_kepsek && !$izin->tanda_tangan_waka)<span style="color:#94a3b8;font-size:12px">-</span>@endif</div></td><td>@if($izin->isDisetujui())<span class="badge badge-success">Diterima</span>@elseif($izin->status_kepsek === 'ditolak' || $izin->status_waka === 'ditolak')<span class="badge badge-danger">Ditolak</span>@else<span class="badge badge-warning">Menunggu</span>@endif</td></tr>@empty<tr><td colspan="7" style="text-align:center;color:#64748b;padding:22px">Belum ada data izin.</td></tr>@endforelse</tbody></table></div>
+        <div style="overflow-x:auto"><table class="data-table" id="table-guru-izin-saya" style="min-width:950px"><thead><tr><th>Tanggal</th><th>Alasan</th><th>Surat</th><th>Konfirmasi Piket</th><th>Status Kepsek</th><th>Status Waka</th><th style="text-align:center">Tanda Tangan</th><th>Status Akhir</th></tr></thead><tbody>@forelse($izinGuruTerbaru as $izin)<tr><td>{{ $izin->tanggal_izin->format('d-m-Y') }}</td><td>{{ $izin->alasan }}</td><td>@if($izin->foto_surat)<a href="{{ Storage::disk('public')->url($izin->foto_surat) }}" target="_blank" rel="noopener">Lihat foto</a>@else<span style="color:#94a3b8">Tidak ada</span>@endif</td><td>@if($izin->status_konfirmasi_piket === 'dikonfirmasi')<span class="badge badge-success" title="Dikonfirmasi piket: {{ $izin->guruPiket?->nama_guru ?? 'Piket' }}">Dikonfirmasi</span>@else<span class="badge badge-warning">Menunggu Piket</span>@endif</td><td>{{ ucfirst($izin->status_kepsek) }}</td><td>{{ ucfirst($izin->status_waka) }}</td><td style="text-align:center"><div style="display:inline-flex;gap:4px;flex-wrap:wrap;justify-content:center">@if($izin->tanda_tangan_kepsek)<button type="button" onclick="showSignaturePopup('{{ Storage::disk('public')->url($izin->tanda_tangan_kepsek) }}', 'Izin: {{ $izin->tanggal_izin->format('d-m-Y') }}', 'Tanda Tangan Kepala Sekolah')" style="background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;padding:3px 7px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:3px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5a1 1 0 0 1-1.4.4l-4-2a1 1 0 0 1 .3-1.8l10-3z"/><path d="M2 19l7-7 2 2 5-5 6 6v4a1 1 0 0 1-1 1l-9 2-4 2z"/></svg>Kepsek</button>@endif @if($izin->tanda_tangan_waka)<button type="button" onclick="showSignaturePopup('{{ Storage::disk('public')->url($izin->tanda_tangan_waka) }}', 'Izin: {{ $izin->tanggal_izin->format('d-m-Y') }}', 'Tanda Tangan Waka SDM')" style="background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;border-radius:6px;padding:3px 7px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:3px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5a1 1 0 0 1-1.4.4l-4-2a1 1 0 0 1 .3-1.8l10-3z"/><path d="M2 19l7-7 2 2 5-5 6 6v4a1 1 0 0 1-1 1l-9 2-4 2z"/></svg>Waka</button>@endif @if(!$izin->tanda_tangan_kepsek && !$izin->tanda_tangan_waka)<span style="color:#94a3b8;font-size:12px">-</span>@endif</div></td><td>@if($izin->isDisetujui())<span class="badge badge-success">Disetujui</span>@elseif($izin->status_kepsek === 'ditolak' || $izin->status_waka === 'ditolak')<span class="badge badge-danger">Ditolak</span>@elseif($izin->status_konfirmasi_piket === 'menunggu')<span class="badge badge-warning" style="background:#fef3c7;color:#92400e">Menunggu Piket</span>@else<span class="badge badge-info">Menunggu Kepsek/Waka</span>@endif</td></tr>@empty<tr><td colspan="8" style="text-align:center;color:#64748b;padding:22px">Belum ada data izin.</td></tr>@endforelse</tbody></table></div>
     </div>
 </div>
 <script>
 function buatPermintaanIzinGuru(event){
     event.preventDefault();
+    const form = document.getElementById('izin-guru-form');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const origText = submitBtn ? submitBtn.innerText : '';
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = 'Mengajukan...'; }
+
     fetch(@json(route('guru.izin-guru.store')),{
         method:'POST',
         headers:{'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content,'Accept':'application/json'},
-        body:new FormData(document.getElementById('izin-guru-form'))
+        body:new FormData(form)
     })
     .then(async r=>{
         const d=await r.json();
@@ -60,34 +65,37 @@ function buatPermintaanIzinGuru(event){
         return d;
     })
     .then(d=>{
-        document.getElementById('guru-izin-kepsek-link').value=d.kepsek_link;
-        document.getElementById('guru-izin-waka-link').value=d.waka_link;
-
-        const waKepsekUrl = d.wa_notification?.kepsek?.wa_me_link || ('https://wa.me/?text=' + encodeURIComponent(d.kepsek_link));
-        const waWakaUrl = d.wa_notification?.waka_sdm?.wa_me_link || ('https://wa.me/?text=' + encodeURIComponent(d.waka_link));
-
-        const btnKepsek = document.getElementById('guru-izin-kepsek-wa-btn');
-        const btnWaka = document.getElementById('guru-izin-waka-wa-btn');
-        if (btnKepsek) btnKepsek.href = waKepsekUrl;
-        if (btnWaka) btnWaka.href = waWakaUrl;
-
-        const statusBadge = document.getElementById('guru-izin-wa-status-badge');
-        if (statusBadge) {
-            const kepsekSent = d.wa_notification?.kepsek?.sent;
-            const wakaSent = d.wa_notification?.waka_sdm?.sent;
-            if (kepsekSent && wakaSent) {
-                statusBadge.innerHTML = '<span class="badge badge-success" style="font-size:11px;padding:3px 8px">● WA Terkirim ke Kepsek & Waka</span>';
-            } else if (kepsekSent || wakaSent) {
-                statusBadge.innerHTML = '<span class="badge badge-warning" style="font-size:11px;padding:3px 8px">● WA Terkirim Sebagian</span>';
-            } else {
-                statusBadge.innerHTML = '<span class="badge badge-secondary" style="font-size:11px;padding:3px 8px">WA Belum Terkirim Otomatis</span>';
-            }
+        if (d.menunggu_piket) {
+            Swal.fire({
+                icon:'success',
+                title:'Permohonan Terkirim',
+                text:d.message,
+                confirmButtonColor:'#2563eb'
+            }).then(() => location.reload());
+            return;
         }
 
-        document.getElementById('guru-izin-link-result').style.display='block';
-        Swal.fire({icon:'success',title:'Permintaan berhasil dibuat',text:d.message,confirmButtonColor:'#2563eb'});
+        if (d.kepsek_link && d.waka_link) {
+            document.getElementById('guru-izin-kepsek-link').value=d.kepsek_link;
+            document.getElementById('guru-izin-waka-link').value=d.waka_link;
+
+            const waKepsekUrl = d.wa_notification?.kepsek?.wa_me_link || ('https://wa.me/?text=' + encodeURIComponent(d.kepsek_link));
+            const waWakaUrl = d.wa_notification?.waka_sdm?.wa_me_link || ('https://wa.me/?text=' + encodeURIComponent(d.waka_link));
+
+            const btnKepsek = document.getElementById('guru-izin-kepsek-wa-btn');
+            const btnWaka = document.getElementById('guru-izin-waka-wa-btn');
+            if (btnKepsek) btnKepsek.href = waKepsekUrl;
+            if (btnWaka) btnWaka.href = waWakaUrl;
+
+            document.getElementById('guru-izin-link-result').style.display='block';
+        }
+
+        Swal.fire({icon:'success',title:'Permintaan berhasil dibuat',text:d.message,confirmButtonColor:'#2563eb'}).then(() => location.reload());
     })
-    .catch(e=>Swal.fire({icon:'error',title:'Gagal',text:e.message,confirmButtonColor:'#dc2626'}));
+    .catch(e=>{
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = origText; }
+        Swal.fire({icon:'error',title:'Gagal',text:e.message,confirmButtonColor:'#dc2626'});
+    });
 }
 function salinPermintaanIzin(id){navigator.clipboard.writeText(document.getElementById(id).value).then(()=>Swal.fire({icon:'success',title:'Link disalin',timer:1200,showConfirmButton:false}));}
 </script>

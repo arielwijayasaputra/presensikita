@@ -8,6 +8,7 @@ use App\Models\Alumni;
 use App\Models\Guru;
 use App\Models\GuruPiket;
 use App\Models\Hari;
+use App\Models\HariKhusus;
 use App\Models\JamPelajaran;
 use App\Models\Jurusan;
 use App\Models\Kelas;
@@ -233,6 +234,7 @@ class DashboardController extends Controller
         }
 
         $allJamPelajaran = JamPelajaran::orderBy('jam_ke')->get();
+        $allHariKhusus = HariKhusus::orderByDesc('tanggal_mulai')->orderByDesc('id_hari_khusus')->get();
         $allJadwal = DB::table('jadwal_mengajar')
             ->leftJoin('guru', function ($join) {
                 $join->on('jadwal_mengajar.id_guru', '=', 'guru.id_guru')
@@ -460,6 +462,7 @@ class DashboardController extends Controller
             'allMapel',
             'allJurusan',
             'allJamPelajaran',
+            'allHariKhusus',
             'allJadwal',
             'totalJadwalAktif',
             'totalJadwalTanpaGuru',

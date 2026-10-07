@@ -6,6 +6,27 @@
         </div>
     </div>
 
+    @if(isset($hariKhususHariIni) && $hariKhususHariIni->isNotEmpty())
+        @foreach($hariKhususHariIni as $hk)
+            <div style="margin-bottom:16px;padding:14px 18px;border-radius:12px;display:flex;align-items:center;gap:12px;{{ $hk->tipe === 'pulang_cepat' ? 'background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #f59e0b;color:#92400e;' : 'background:linear-gradient(135deg,#e0e7ff,#c7d2fe);border:1px solid #6366f1;color:#3730a3;' }}">
+                <div style="font-size:22px;line-height:1">{{ $hk->tipe === 'pulang_cepat' ? '⚡' : '🎉' }}</div>
+                <div style="flex:1">
+                    <div style="font-weight:800;font-size:14px;margin-bottom:2px">
+                        {{ $hk->tipe === 'pulang_cepat' ? 'Pemberitahuan Pulang Cepat' : 'Hari Khusus / Event' }}: {{ $hk->judul }}
+                    </div>
+                    <div style="font-size:12.5px;opacity:0.95;line-height:1.4">
+                        Tingkat terdampak: <strong>Kelas {{ implode(', ', $hk->tingkat ?? []) }}</strong>
+                        @if($hk->tipe === 'pulang_cepat')
+                            — Jam pulang: <strong>{{ substr($hk->jam_pulang, 0, 5) }}</strong> (jam mengajar pada & setelah jam ini ditiadakan).
+                        @else
+                            — Aturan presensi: <strong>{{ $hk->aturan_presensi_label }}</strong>.
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    @endif
+
     @if(isset($siswaTerlambatKelasAktif) && $siswaTerlambatKelasAktif->isNotEmpty() && isset($activeKelasObj))
         <div class="alert-terlambat-banner" onclick="tampilkanModalSiswaTerlambat('{{ $activeKelasObj->id_kelas }}', '{{ $activeKelasObj->nama_kelas }}')">
             <p class="alert-terlambat-title">Pemberitahuan Siswa Terlambat di Kelas {{ $activeKelasObj->nama_kelas }}</p>
@@ -59,7 +80,7 @@
                 <span class="card-action">{{ now()->translatedFormat('d M Y') }}</span>
             </div>
         </div>
-        <div style="overflow-x:auto"><table class="data-table" id="table-guru-dash-jadwal" style="min-width:700px"><thead><tr><th>Jam Ke-</th><th>Waktu</th><th>Kelas</th><th>Mata Pelajaran</th><th>Status</th></tr></thead><tbody>@forelse($jadwalMengajarHariIni as $jadwal)<tr><td><span class="badge badge-info">{{ $jadwal->jam_ke >= 100 ? $jadwal->jam_ke - 100 : $jadwal->jam_ke }}</span></td><td>{{ substr($jadwal->jam_mulai, 0, 5) }} - {{ substr($jadwal->jam_selesai, 0, 5) }}</td><td><strong>{{ $jadwal->nama_kelas }}</strong></td><td>{{ $jadwal->nama_mapel }}</td><td>@if(now()->format('H:i:s') >= $jadwal->jam_mulai && now()->format('H:i:s') <= $jadwal->jam_selesai)<span class="badge badge-success">Sedang berlangsung</span>@elseif(now()->format('H:i:s') < $jadwal->jam_mulai)<span class="badge badge-info">Belum dimulai</span>@else<span class="badge">Selesai</span>@endif</td></tr>@empty<tr><td colspan="5" style="text-align:center;color:#64748b;padding:24px">Tidak ada jadwal mengajar hari ini.</td></tr>@endforelse</tbody></table></div>
+        <div style="overflow-x:auto"><table class="data-table" id="table-guru-dash-jadwal" style="min-width:700px"><thead><tr><th>Jam</th><th>Kelas</th><th>Mata Pelajaran</th><th>Status</th></tr></thead><tbody>@forelse($jadwalMengajarHariIni as $jadwal)<tr><td><span class="badge badge-info">{{ substr($jadwal->jam_mulai, 0, 5) }} - {{ substr($jadwal->jam_selesai, 0, 5) }}</span></td><td><strong>{{ $jadwal->nama_kelas }}</strong></td><td>{{ $jadwal->nama_mapel }}</td><td>@if($jadwal->is_ditiadakan ?? false)<span class="badge badge-warning" style="background:#fef3c7;color:#b45309;border:1px solid #fde68a">Ditiadakan ({{ ($jadwal->hari_khusus->tipe ?? '') === 'pulang_cepat' ? 'Pulang Cepat' : 'Libur Event' }})</span>@elseif(now()->format('H:i:s') >= $jadwal->jam_mulai && now()->format('H:i:s') <= $jadwal->jam_selesai)<span class="badge badge-success">Sedang berlangsung</span>@elseif(now()->format('H:i:s') < $jadwal->jam_mulai)<span class="badge badge-info">Belum dimulai</span>@else<span class="badge">Selesai</span>@endif</td></tr>@empty<tr><td colspan="4" style="text-align:center;color:#64748b;padding:24px">Tidak ada jadwal mengajar hari ini.</td></tr>@endforelse</tbody></table></div>
     </div>
 
     <div class="charts-row" style="grid-template-columns:1.5fr 1fr">

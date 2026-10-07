@@ -35,7 +35,7 @@
                 @if($jadwalGuruAktif->isNotEmpty() && $canInputJurnal)
                     <span id="badge-jadwal-aktif" class="badge badge-success" style="font-size:12px;padding:4px 10px;font-weight:700;display:inline-flex;align-items:center;gap:6px">
                         <span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.5s infinite"></span>
-                        Sesi Aktif: {{ $jadwalGuruAktif->first()->nama_kelas }} (Jam ke-{{ $jadwalGuruAktif->first()->jam_ke >= 100 ? $jadwalGuruAktif->first()->jam_ke - 100 : $jadwalGuruAktif->first()->jam_ke }})
+                        Sesi Aktif: {{ $jadwalGuruAktif->first()->nama_kelas }} ({{ substr($jadwalGuruAktif->first()->jam_mulai, 0, 5) }} - {{ substr($jadwalGuruAktif->first()->jam_selesai, 0, 5) }})
                     </span>
                 @elseif(!$canInputJurnal)
                     <span id="badge-jadwal-aktif" class="badge" style="background:#fee2e2;color:#b91c1c;border:1px solid #fecaca;font-size:12px;padding:4px 10px;font-weight:700;display:inline-flex;align-items:center;gap:6px">

@@ -441,16 +441,18 @@ class WhatsAppService
         $tanggal = date('d-m-Y', strtotime($izin->tanggal_izin));
         $alasan = $izin->alasan ?: '-';
         $namaPiket = $izin->guruPiket?->nama_guru ?? 'Guru Piket';
+        $catatanPiketText = ! empty($izin->catatan_piket) ? "\n• *Catatan Piket:* {$izin->catatan_piket}" : '';
 
         // Pesan untuk Kepsek
         $pesanKepsek = "🔔 *NOTIFIKASI {$namaSekolah}*\n"
             ."*PERMINTAAN PERSETUJUAN IZIN GURU*\n\n"
             ."Yth. *Bapak/Ibu Kepala Sekolah*,\n"
-            ."Terdapat permohonan izin guru yang diajukan oleh Guru Piket:\n\n"
+            ."Terdapat permohonan izin guru yang telah dikonfirmasi oleh Guru Piket:\n\n"
             ."• *Nama Guru:* {$namaGuru}\n"
             ."• *Tanggal Izin:* {$tanggal}\n"
             ."• *Alasan:* {$alasan}\n"
-            ."• *Guru Piket:* {$namaPiket}\n\n"
+            ."• *Dikonfirmasi oleh Piket:* {$namaPiket}"
+            ."{$catatanPiketText}\n\n"
             ."Silakan buka link persetujuan di bawah ini:\n\n"
             ."{$linkKepsek}\n\n"
             .'_Pesan otomatis dari Sistem PresensiKita._';
@@ -459,11 +461,12 @@ class WhatsAppService
         $pesanWaka = "🔔 *NOTIFIKASI {$namaSekolah}*\n"
             ."*PERMINTAAN PERSETUJUAN IZIN GURU*\n\n"
             ."Yth. *Bapak/Ibu Waka SDM / Kurikulum*,\n"
-            ."Terdapat permohonan izin guru yang diajukan oleh Guru Piket:\n\n"
+            ."Terdapat permohonan izin guru yang telah dikonfirmasi oleh Guru Piket:\n\n"
             ."• *Nama Guru:* {$namaGuru}\n"
             ."• *Tanggal Izin:* {$tanggal}\n"
             ."• *Alasan:* {$alasan}\n"
-            ."• *Guru Piket:* {$namaPiket}\n\n"
+            ."• *Dikonfirmasi oleh Piket:* {$namaPiket}"
+            ."{$catatanPiketText}\n\n"
             ."Silakan buka link persetujuan di bawah ini:\n\n"
             ."{$linkWaka}\n\n"
             .'_Pesan otomatis dari Sistem PresensiKita._';

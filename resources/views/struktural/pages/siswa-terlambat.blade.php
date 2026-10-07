@@ -43,11 +43,11 @@
                     <input id="terlambat-jam-masuk" type="time" name="jam_masuk" value="{{ now()->format('H:i') }}" class="filter-input" required style="width:100%;margin-top:4px">
                 </div>
                 <div>
-                    <label for="terlambat-jam-ke">Mulai Jam Ke-</label>
+                    <label for="terlambat-jam-ke">Mulai Masuk Jam</label>
                     <select id="terlambat-jam-ke" name="jam_ke" class="filter-select" required style="width:100%;margin-top:4px">
                         @for($i = 1; $i <= 12; $i++)
                             <option value="{{ $i }}" {{ ($jamAktif?->jam_ke == $i || ($jamAktif?->jam_ke >= 100 && $jamAktif?->jam_ke - 100 == $i)) ? 'selected' : ($i == 2 ? 'selected' : '') }}>
-                                Jam ke-{{ $i }}
+                                {{ \App\Models\JamPelajaran::formatJamKe($i, $hariIni ?? null) }}
                             </option>
                         @endfor
                     </select>
@@ -97,7 +97,7 @@
                             <td><strong>{{ $item->siswa->nama_siswa ?? '-' }}</strong></td>
                             <td>{{ $item->siswa->kelas->nama_kelas ?? '-' }}</td>
                             <td>{{ substr($item->jam_masuk, 0, 5) }} WIB ({{ $item->tanggal->format('d-m-Y') }})</td>
-                            <td><span class="badge badge-info">Jam ke-{{ $item->jam_ke }}</span></td>
+                            <td><span class="badge badge-info">{{ \App\Models\JamPelajaran::formatJamKe($item->jam_ke, $item->tanggal ? \Carbon\Carbon::parse($item->tanggal)->locale('id')->isoFormat('dddd') : null) }}</span></td>
                             <td>{{ $item->alasan ?: '-' }}</td>
                             <td>
                                 @if($item->foto_surat)

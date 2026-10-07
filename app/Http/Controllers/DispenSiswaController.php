@@ -58,6 +58,9 @@ class DispenSiswaController extends Controller
                 foreach ($idSiswaList as $idSiswa) {
                     $siswa = Siswa::where('id_siswa', $idSiswa)->where('is_aktif', 1)->firstOrFail();
 
+                    // Sinkronkan presensi terlebih dahulu agar jurnal kelas (termasuk pada hari event) terbentuk
+                    app(\App\Services\AbsensiService::class)->syncPresensiPerJam($siswa->id_kelas, $data['tanggal_dispen']);
+
                     // Cari jurnal yang sudah ada pada jam yang sedang berlangsung (jika ada)
                     $jurnal = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
                         ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
@@ -70,7 +73,11 @@ class DispenSiswaController extends Controller
                         ->select('jurnal_kelas.*')
                         ->first();
 
+                    $isSakitOrIzin = in_array($jenisAbsen, ['S', 'I']);
+
                     // Update absensi di semua jurnal yang sudah ada dalam rentang tanggal
+                    // Untuk Sakit & Izin (surat keterangan): berlaku untuk SEMUA jam pelajaran pada rentang tanggal tersebut!
+                    // Untuk Dispensasi (D): berlaku untuk jam yang sedang/akan berlangsung
                     $existingJurnalsQuery = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
                         ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
                         ->whereNull('jadwal_mengajar.deleted_at')
@@ -79,7 +86,7 @@ class DispenSiswaController extends Controller
                         ->whereDate('jurnal_kelas.tanggal', '>=', $tglMulai)
                         ->whereDate('jurnal_kelas.tanggal', '<=', $tglSelesai);
 
-                    if ($jenisAbsen === 'D') {
+                    if (! $isSakitOrIzin) {
                         $existingJurnalsQuery->whereTime('jam_pelajaran.jam_selesai', '>', $nowTime);
                     }
 
@@ -91,14 +98,16 @@ class DispenSiswaController extends Controller
                         : ($jenisAbsen === 'S' ? 'Sakit' : ($jenisAbsen === 'I' ? 'Izin' : 'Dispensasi'));
 
                     foreach ($existingJurnals as $jId) {
-                        $existingTh = JurnalSiswaTidakHadir::where('id_jurnal', $jId)->where('id_siswa', $siswa->id_siswa)->first();
-                        if (! $existingTh) {
-                            JurnalKelas::where('id_jurnal', $jId)->decrement('jumlah_hadir');
-                        }
                         JurnalSiswaTidakHadir::updateOrCreate(
                             ['id_jurnal' => $jId, 'id_siswa' => $siswa->id_siswa],
                             ['status' => $jenisAbsen, 'keterangan' => strtoupper($jenisAbsen).($alasan ? ': '.$alasan : '')]
                         );
+
+                        $countTidakHadir = JurnalSiswaTidakHadir::where('id_jurnal', $jId)->count();
+                        $totalSiswaKelas = Siswa::where('id_kelas', $siswa->id_kelas)->where('is_aktif', 1)->count();
+                        JurnalKelas::where('id_jurnal', $jId)->update([
+                            'jumlah_hadir' => max(0, $totalSiswaKelas - $countTidakHadir),
+                        ]);
                     }
 
                     $dispen = DispenSiswa::create([
@@ -111,7 +120,9 @@ class DispenSiswaController extends Controller
                         'jenis_absen' => $jenisAbsen,
                         'foto_surat' => $fotoSurat,
                         'id_jurnal' => $jurnal?->id_jurnal,
+                        'status_waka' => $isSakitOrIzin ? 'disetujui' : 'menunggu',
                         'status_guru_piket' => 'disetujui',
+                        'disetujui_waka_pada' => $isSakitOrIzin ? now() : null,
                         'disetujui_guru_piket_pada' => now(),
                     ]);
 

@@ -17,6 +17,7 @@ Route::middleware('auth.guru')->group(function () {
     Route::post('/guru/profil/update', [PengaturanController::class, 'updateProfil'])->name('guru.profil.update');
     Route::get('/guru/izin-guru', [IzinGuruController::class, 'form'])->name('guru.izin-guru.form');
     Route::post('/guru/izin-guru', [IzinGuruController::class, 'store'])->name('guru.izin-guru.store');
+    Route::post('/guru/izin-guru/{izin}/konfirmasi', [IzinGuruController::class, 'konfirmasiPiket'])->name('guru.izin-guru.konfirmasi-piket');
     Route::get('/guru/siswa-terlambat', [AbsensiController::class, 'getSiswaTerlambatHariIni'])->name('guru.siswa-terlambat');
 
     // Laporan (dapat diakses admin maupun guru)

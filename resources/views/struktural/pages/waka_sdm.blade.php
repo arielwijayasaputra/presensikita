@@ -338,8 +338,7 @@
             <table class="data-table" id="table-harian" style="min-width:900px; white-space:nowrap">
                 <thead>
                     <tr>
-                        <th style="width:80px">Jam Ke</th>
-                        <th>Waktu</th>
+                        <th style="width:150px">Jam</th>
                         <th>Nama Guru</th>
                         <th>Mata Pelajaran</th>
                         <th>Kelas</th>
@@ -353,8 +352,7 @@
                             <td class="sdm-h-jam">
                                 <div class="sdm-h-top">
                                     <div class="sdm-h-jam-box">
-                                        <strong>Ke-{{ $item->jam_ke >= 100 ? $item->jam_ke - 100 : $item->jam_ke }}</strong>
-                                        <span class="sdm-m-waktu">• {{ substr($item->jam_mulai, 0, 5) }} - {{ substr($item->jam_selesai, 0, 5) }}</span>
+                                        <strong style="color:var(--text-primary, #0f172a)">{{ substr($item->jam_mulai, 0, 5) }} - {{ substr($item->jam_selesai, 0, 5) }}</strong>
                                     </div>
                                     <div class="sdm-h-status-m">
                                         @if($item->status_jurnal === 'Hadir')
@@ -367,7 +365,6 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="sdm-h-waktu-td" style="font-size:12.5px; color:#64748b">{{ substr($item->jam_mulai, 0, 5) }} - {{ substr($item->jam_selesai, 0, 5) }}</td>
                             <td class="sdm-h-guru"><strong style="color:var(--text-primary, #0f172a)">{{ $item->nama_guru }}</strong></td>
                             <td class="sdm-h-mapel">{{ $item->nama_mapel }}</td>
                             <td class="sdm-h-kelas"><span class="badge badge-secondary" style="font-size:12px">{{ $item->nama_kelas }}</span></td>
@@ -546,6 +543,9 @@
                                 <div class="sdm-i-head">
                                     <strong style="color:var(--text-primary, #0f172a); font-size:13.5px">{{ $izin->guru->nama_guru ?? '-' }}</strong>
                                     <span style="font-size:12px; color:var(--text-secondary, #64748b); font-weight:600">{{ $izin->tanggal_izin->format('d-m-Y') }}</span>
+                                </div>
+                                <div style="font-size:11.5px;color:#16a34a;margin-top:2px">
+                                    Dikonfirmasi Piket: {{ $izin->guruPiket?->nama_guru ?? 'Guru Piket' }}
                                 </div>
                             </td>
                             <td>

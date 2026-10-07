@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             StatusLaporanSeeder::class,
             SiswaSeeder::class,
             JurnalSeeder::class,
+            HariKhususSeeder::class,
         ]);
     }
 }

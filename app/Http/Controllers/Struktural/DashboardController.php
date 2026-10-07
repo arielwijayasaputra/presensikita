@@ -96,8 +96,14 @@ class DashboardController extends Controller
             ->orderBy('jam_ke')
             ->first();
         $izinGuruTerbaru = collect();
+        $izinGuruMenungguPiket = collect();
         if (session('auth_role') === 'guru_piket') {
-            $izinGuruTerbaru = IzinGuru::with('guru')
+            $izinGuruMenungguPiket = IzinGuru::with('guru')
+                ->menungguPiket()
+                ->latest()
+                ->get();
+
+            $izinGuruTerbaru = IzinGuru::with(['guru', 'guruPiket'])
                 ->where('id_guru_piket', session('auth_guru_id'))
                 ->latest()
                 ->limit(10)
@@ -185,7 +191,8 @@ class DashboardController extends Controller
                 $sdmStatBelumIsi = $sdmJadwal->whereNull('status_jurnal')->count();
             }
 
-            $sdmIzinGuru = IzinGuru::with('guru')
+            $sdmIzinGuru = IzinGuru::with(['guru', 'guruPiket'])
+                ->dikonfirmasiPiket()
                 ->latest()
                 ->limit(20)
                 ->get();
@@ -423,7 +430,7 @@ class DashboardController extends Controller
                         return [
                             'tanggal' => date('d-m-Y', strtotime($item->tanggal)),
                             'jam_masuk' => substr($item->jam_masuk, 0, 5).' WIB',
-                            'jam_ke' => 'Jam ke-'.$item->jam_ke,
+                            'jam_ke' => \App\Models\JamPelajaran::formatJamKe($item->jam_ke, $item->tanggal ? \Carbon\Carbon::parse($item->tanggal)->locale('id')->isoFormat('dddd') : null),
                             'alasan' => $item->alasan ?: '-',
                         ];
                     })->values()->toArray(),
@@ -499,7 +506,7 @@ class DashboardController extends Controller
             'totalKelasHariIni',
             'totalGuruHariIni',
             'jamAktif',
-            'guruAktif', 'izinGuruTerbaru', 'isGuruPiket', 'isWaliKelas', 'kelasesWali', 'kelases', 'selectedKelas', 'laporanBulan', 'laporanTahun', 'laporanRekap', 'siswaAktif', 'dispenTerbaru', 'absensiSiswaTerbaru', 'keterlambatanTerbaru', 'isSatpam', 'dispenHariIni',
+            'guruAktif', 'izinGuruTerbaru', 'izinGuruMenungguPiket', 'isGuruPiket', 'isWaliKelas', 'kelasesWali', 'kelases', 'selectedKelas', 'laporanBulan', 'laporanTahun', 'laporanRekap', 'siswaAktif', 'dispenTerbaru', 'absensiSiswaTerbaru', 'keterlambatanTerbaru', 'isSatpam', 'dispenHariIni',
             'isWakaSDM', 'sdmTanggal', 'sdmJadwal', 'sdmIzinGuru', 'sdmStatHadir', 'sdmStatTidakHadir', 'sdmStatBelumIsi', 'sdmBulan', 'sdmTahun', 'sdmRekapGuru', 'sdmDataGuru',
             'waliKelasObj', 'waliKelasId', 'waliSiswaList', 'waliBulan', 'waliTahun', 'waliRekapData', 'dispenDanIzinKelas', 'siswaPerluPerhatian',
             'waliTanggalHariIni', 'waliAbsensiHariIniList', 'waliStatsHariIni', 'waliJadwalHariIni', 'waliStatsJurnalHariIni',

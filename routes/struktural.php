@@ -30,6 +30,7 @@ Route::middleware('auth.struktural')->group(function () {
 
     Route::post('/struktural/profil/update', [PengaturanController::class, 'updateProfil'])->name('struktural.profil.update');
     Route::post('/guru-piket/izin-guru', [IzinGuruController::class, 'store'])->name('izin-guru.store');
+    Route::post('/guru-piket/izin-guru/{izin}/konfirmasi', [IzinGuruController::class, 'konfirmasiPiket'])->name('izin-guru.konfirmasi-piket');
     Route::get('/guru-piket/izin-guru', [IzinGuruController::class, 'form'])->name('izin-guru.form');
     Route::get('/guru-piket/dispen-siswa', [DispenSiswaController::class, 'form'])->name('dispen-siswa.form');
     Route::post('/guru-piket/dispen-siswa', [DispenSiswaController::class, 'store'])->name('dispen-siswa.store');

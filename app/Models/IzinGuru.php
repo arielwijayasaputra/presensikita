@@ -19,6 +19,9 @@ class IzinGuru extends Model
         'tanggal_izin',
         'alasan',
         'foto_surat',
+        'status_konfirmasi_piket',
+        'dikonfirmasi_piket_pada',
+        'catatan_piket',
         'status_kepsek',
         'status_waka',
         'catatan_kepsek',
@@ -31,6 +34,7 @@ class IzinGuru extends Model
 
     protected $casts = [
         'tanggal_izin' => 'date',
+        'dikonfirmasi_piket_pada' => 'datetime',
         'disetujui_kepsek_pada' => 'datetime',
         'disetujui_waka_pada' => 'datetime',
     ];
@@ -45,8 +49,23 @@ class IzinGuru extends Model
         return $this->belongsTo(Guru::class, 'id_guru_piket', 'id_guru');
     }
 
+    public function isDikonfirmasiPiket(): bool
+    {
+        return $this->status_konfirmasi_piket === 'dikonfirmasi';
+    }
+
     public function isDisetujui(): bool
     {
-        return $this->status_kepsek === 'disetujui' && $this->status_waka === 'disetujui';
+        return $this->isDikonfirmasiPiket() && $this->status_kepsek === 'disetujui' && $this->status_waka === 'disetujui';
+    }
+
+    public function scopeDikonfirmasiPiket($query)
+    {
+        return $query->where('status_konfirmasi_piket', 'dikonfirmasi');
+    }
+
+    public function scopeMenungguPiket($query)
+    {
+        return $query->where('status_konfirmasi_piket', 'menunggu');
     }
 }

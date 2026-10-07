@@ -1874,6 +1874,35 @@
     <!-- CONTAINER UTAMA -->
     <div class="container">
 
+        @if(isset($hariKhusus) && $hariKhusus)
+            <div class="hari-khusus-banner" style="margin-bottom: 20px; padding: 16px 20px; border-radius: 14px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); {{ $hariKhusus->tipe === 'pulang_cepat' ? 'background: linear-gradient(135deg, #fef3c7, #fde68a); border: 1px solid #f59e0b; color: #92400e;' : 'background: linear-gradient(135deg, #e0e7ff, #c7d2fe); border: 1px solid #6366f1; color: #3730a3;' }}">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(255,255,255,0.75); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 22px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+                    {{ $hariKhusus->tipe === 'pulang_cepat' ? '⚡' : '🎉' }}
+                </div>
+                <div style="flex: 1;">
+                    <div style="font-weight: 800; font-size: 15px; margin-bottom: 3px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span>{{ $hariKhusus->tipe === 'pulang_cepat' ? 'Pemberitahuan Pulang Cepat' : 'Informasi Hari Khusus / Event' }}: {{ $hariKhusus->judul }}</span>
+                        <span style="font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 9999px; {{ $hariKhusus->tipe === 'pulang_cepat' ? 'background: #f59e0b; color: #ffffff;' : 'background: #6366f1; color: #ffffff;' }}">
+                            Kelas {{ implode(', ', $hariKhusus->tingkat ?? []) }}
+                        </span>
+                    </div>
+                    <div style="font-size: 13px; line-height: 1.45; opacity: 0.95;">
+                        @if($hariKhusus->tipe === 'pulang_cepat')
+                            Pembelajaran kelas pada dan setelah pukul <strong>{{ substr($hariKhusus->jam_pulang, 0, 5) }}</strong> ditiadakan. Siswa dipulangkan lebih awal tanpa terhitung alpa / izin pulang cepat.
+                        @else
+                            @if($hariKhusus->aturan_presensi === 'diliburkan')
+                                Seluruh kegiatan belajar mengajar dan presensi kelas diliburkan untuk hari ini.
+                            @elseif($hariKhusus->aturan_presensi === 'hadir_event')
+                                Seluruh siswa tercatat Hadir secara otomatis untuk mengikuti kegiatan event sekolah ini.
+                            @else
+                                Kegiatan presensi tetap berjalan sesuai jadwal normal.
+                            @endif
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <!-- STUDENT PROFILE HERO -->
         <div class="student-hero-card">
             <div class="student-profile-group">
@@ -2195,8 +2224,7 @@
                 <div class="jam-row-item {{ !empty($p['is_ongoing']) ? 'jam-ongoing-active' : '' }}" data-jam-ke="{{ $p['jam_ke'] }}">
                     <div class="jam-badge-time">
                         <div class="jam-time-group">
-                            <span class="jam-number">Jam Ke-{{ $p['jam_ke'] >= 100 ? $p['jam_ke'] - 100 : $p['jam_ke'] }}</span>
-                            <span class="jam-time-span">{{ substr($p['jam_mulai'], 0, 5) }} - {{ substr($p['jam_selesai'], 0, 5) }} WIB</span>
+                            <span class="jam-time-span" style="font-size:13px;font-weight:700;color:var(--text-primary, #0f172a)">{{ substr($p['jam_mulai'], 0, 5) }} - {{ substr($p['jam_selesai'], 0, 5) }} WIB</span>
                         </div>
                         <div class="jam-session-badge-wrap">
                             @if(!empty($p['is_ongoing']))
@@ -2385,7 +2413,7 @@
                                     </div>
                                     <div class="terlambat-badge-group">
                                         <span class="time-arrive-val">{{ substr($rk->jam_masuk, 0, 5) }} WIB</span>
-                                        <span class="badge badge-info badge-jam-masuk">Jam ke-{{ $rk->jam_ke }}</span>
+                                        <span class="badge badge-info badge-jam-masuk">{{ \App\Models\JamPelajaran::formatJamKe($rk->jam_ke, $namaHariIndo[\Carbon\Carbon::parse($rk->tanggal)->format('l')] ?? null) }}</span>
                                     </div>
                                 </div>
                                 <!-- Desktop Tanggal Cell -->
@@ -2398,7 +2426,7 @@
                                 <span style="font-weight:700; color:#1e293b">{{ substr($rk->jam_masuk, 0, 5) }} WIB</span>
                             </td>
                             <td class="td-desktop-col" style="text-align:center">
-                                <span class="badge badge-info" style="font-size:11.5px; padding:3px 8px">Jam ke-{{ $rk->jam_ke }}</span>
+                                <span class="badge badge-info" style="font-size:11.5px; padding:3px 8px">{{ \App\Models\JamPelajaran::formatJamKe($rk->jam_ke, $namaHariIndo[\Carbon\Carbon::parse($rk->tanggal)->format('l')] ?? null) }}</span>
                             </td>
                             <td class="td-alasan-terlambat">
                                 <div class="field-row-mobile">

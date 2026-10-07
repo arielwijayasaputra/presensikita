@@ -213,7 +213,7 @@
                     <tr style="background:#f8fafc">
                         <th style="width:40px">No</th>
                         <th>Hari</th>
-                        <th>Jam Ke- &amp; Waktu</th>
+                        <th>Jam</th>
                         <th>Kelas</th>
                         <th>Mata Pelajaran</th>
                         <th>Guru</th>
@@ -227,9 +227,10 @@
                         <td style="color:#94a3b8;font-weight:600">{{ $idx + 1 }}</td>
                         <td><strong>{{ $j->hari ?: '-' }}</strong></td>
                         <td>
-                            @if(!empty($j->jam_ke))
-                                <span class="badge badge-info" style="font-size:11.5px">Jam ke-{{ $j->jam_ke >= 100 ? $j->jam_ke - 100 : $j->jam_ke }}</span>
-                                <span style="font-size:12px;color:#64748b;display:block;margin-top:2px">{{ substr($j->jam_mulai, 0, 5) }} - {{ substr($j->jam_selesai, 0, 5) }}</span>
+                            @if(!empty($j->jam_mulai) && !empty($j->jam_selesai))
+                                <span class="badge badge-info" style="font-size:11.5px">{{ substr($j->jam_mulai, 0, 5) }} - {{ substr($j->jam_selesai, 0, 5) }}</span>
+                            @elseif(!empty($j->jam_ke))
+                                <span class="badge badge-info" style="font-size:11.5px">{{ \App\Models\JamPelajaran::formatJamKe($j->jam_ke, $j->hari) }}</span>
                             @else
                                 <span class="badge" style="background:#fee2e2;color:#b91c1c;padding:4px 8px;border-radius:6px;font-size:11.5px;font-weight:700">Belum ada</span>
                             @endif

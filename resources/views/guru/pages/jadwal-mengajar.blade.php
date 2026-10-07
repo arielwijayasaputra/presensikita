@@ -68,7 +68,7 @@
                 <div class="stat-value" style="font-size:15px;font-weight:800;color:{{ $activeJadwal ? '#15803d' : '#475569' }}">
                     {{ $activeJadwal ? 'Sedang Mengajar' : 'Jam Kosong / Luar Sesi' }}
                 </div>
-                <div class="stat-pct">{{ $activeJadwal ? $activeJadwal->nama_kelas . ' (Jam ke-' . ($activeJadwal->jam_ke >= 100 ? $activeJadwal->jam_ke - 100 : $activeJadwal->jam_ke) . ')' : 'tidak ada sesi aktif' }}</div>
+                <div class="stat-pct">{{ $activeJadwal ? $activeJadwal->nama_kelas . ' (' . substr($activeJadwal->jam_mulai, 0, 5) . ' - ' . substr($activeJadwal->jam_selesai, 0, 5) . ')' : 'tidak ada sesi aktif' }}</div>
             </div>
         </div>
     </div>
@@ -98,8 +98,7 @@
             <table class="data-table" id="table-guru-jadwal-mengajar" style="min-width:750px">
                 <thead>
                     <tr>
-                        <th style="width:90px;text-align:center">Jam Ke-</th>
-                        <th style="width:160px">Rentang Waktu</th>
+                        <th style="width:170px">Jam</th>
                         <th>Kelas</th>
                         <th>Mata Pelajaran</th>
                         <th style="width:170px;text-align:center">Status Sesi</th>
@@ -109,7 +108,6 @@
                 <tbody>
                     @forelse($jadwalMengajarHariIni as $idx => $jadwal)
                     @php
-                        $jamTampil = $jadwal->jam_ke >= 100 ? $jadwal->jam_ke - 100 : $jadwal->jam_ke;
                         $nowStr = now()->format('H:i:s');
                         $isSedang = ($nowStr >= $jadwal->jam_mulai && $nowStr <= $jadwal->jam_selesai);
                         $isBelum = ($nowStr < $jadwal->jam_mulai);
@@ -117,15 +115,12 @@
                         $hasJurnal = ! empty($jadwal->has_jurnal);
                     @endphp
                     <tr class="jadwal-row-item {{ $isSedang ? 'is-sedang' : '' }}" data-mulai="{{ $jadwal->jam_mulai }}" data-selesai="{{ $jadwal->jam_selesai }}" data-kelas="{{ $jadwal->id_kelas }}" data-has-jurnal="{{ $hasJurnal ? '1' : '0' }}" style="{{ $isSedang ? 'background:#f0fdf4;' : '' }}">
-                        <td style="text-align:center">
-                            <span class="badge {{ $isSedang ? 'badge-success' : 'badge-info' }}" style="font-weight:800;font-size:12.5px;padding:4px 10px">
-                                Ke-{{ $jamTampil }}
-                            </span>
-                        </td>
                         <td style="font-weight:600;color:#334155">
                             <div style="display:flex;align-items:center;gap:6px">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                <span>{{ substr($jadwal->jam_mulai, 0, 5) }} - {{ substr($jadwal->jam_selesai, 0, 5) }}</span>
+                                <span class="badge {{ $isSedang ? 'badge-success' : 'badge-info' }}" style="font-weight:700;font-size:12px;padding:4px 9px;display:inline-flex;align-items:center;gap:5px">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                    {{ substr($jadwal->jam_mulai, 0, 5) }} - {{ substr($jadwal->jam_selesai, 0, 5) }}
+                                </span>
                             </div>
                         </td>
                         <td>

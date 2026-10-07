@@ -77,7 +77,7 @@
         <div style="overflow-x:auto">
             <table class="data-table" style="min-width:820px">
                 <thead>
-                    <tr><th>Hari</th><th>Jam Ke-</th><th>Mata Pelajaran</th><th>Guru</th><th>Kelas</th><th>Aksi</th></tr>
+                    <tr><th>Hari</th><th>Jam</th><th>Mata Pelajaran</th><th>Guru</th><th>Kelas</th><th>Aksi</th></tr>
                 </thead>
                 <tbody id="jadwal-table-body">
                     @forelse($allJadwal as $jadwalItem)
@@ -91,7 +91,7 @@
                             data-kelas="{{ $jadwalItem->id_kelas }}"
                             data-status="{{ $isUpacara ? 'upacara' : ($isKosong ? 'kosong' : 'terisi') }}">
                             <td><strong>{{ $jadwalItem->hari }}</strong></td>
-                            <td><span class="badge badge-info">Jam ke-{{ $jadwalItem->jam_ke >= 100 ? $jadwalItem->jam_ke - 100 : $jadwalItem->jam_ke }}</span></td>
+                            <td><span class="badge badge-info">{{ substr($jadwalItem->jam_mulai, 0, 5) }} - {{ substr($jadwalItem->jam_selesai, 0, 5) }}</span></td>
                             <td>{{ $jadwalItem->nama_mapel }}</td>
                             <td>
                                 @if($isUpacara)
@@ -113,7 +113,7 @@
                                         Edit
                                     </button>
                                 @elseif($isKosong)
-                                    <button type="button" class="btn-primary" onclick="pilihGuruJadwalKosong({{ $jadwalItem->id_jadwal }}, '{{ $jadwalItem->hari }}', {{ $jadwalItem->jam_ke }}, {{ $jadwalItem->id_jam }}, '{{ htmlspecialchars($jadwalItem->nama_kelas) }}', '{{ htmlspecialchars($jadwalItem->nama_mapel) }}')" style="padding:6px 12px;font-size:12px;background:#d97706;border-color:#b45309;font-weight:700">
+                                    <button type="button" class="btn-primary" onclick="pilihGuruJadwalKosong({{ $jadwalItem->id_jadwal }}, '{{ $jadwalItem->hari }}', '{{ substr($jadwalItem->jam_mulai, 0, 5) }} - {{ substr($jadwalItem->jam_selesai, 0, 5) }}', {{ $jadwalItem->id_jam }}, '{{ htmlspecialchars($jadwalItem->nama_kelas) }}', '{{ htmlspecialchars($jadwalItem->nama_mapel) }}')" style="padding:6px 12px;font-size:12px;background:#d97706;border-color:#b45309;font-weight:700">
                                         Tugaskan Guru
                                     </button>
                                 @else
@@ -142,7 +142,7 @@
             <input type="hidden" id="jadwal-id">
             <div style="display:grid;gap:12px">
                 <div><label>Hari</label><select id="form-jadwal-hari" class="filter-select" disabled required style="width:100%;margin-top:4px;background:#f1f5f9;color:#64748b;cursor:not-allowed">@foreach(\App\Models\Hari::getWeekdayNames() as $hari)<option value="{{ $hari }}">{{ $hari }}</option>@endforeach</select></div>
-                <div><label>Jam Ke-</label><select id="form-jadwal-jam" class="filter-select" disabled required style="width:100%;margin-top:4px;background:#f1f5f9;color:#64748b;cursor:not-allowed">@foreach($allJamPelajaran as $jamItem)<option value="{{ $jamItem->id_jam }}">{{ $jamItem->jam_ke >= 100 ? $jamItem->jam_ke - 100 : $jamItem->jam_ke }} ({{ substr($jamItem->jam_mulai, 0, 5) }} - {{ substr($jamItem->jam_selesai, 0, 5) }})</option>@endforeach</select></div>
+                <div><label>Jam</label><select id="form-jadwal-jam" class="filter-select" disabled required style="width:100%;margin-top:4px;background:#f1f5f9;color:#64748b;cursor:not-allowed">@foreach($allJamPelajaran as $jamItem)<option value="{{ $jamItem->id_jam }}">{{ substr($jamItem->jam_mulai, 0, 5) }} - {{ substr($jamItem->jam_selesai, 0, 5) }}</option>@endforeach</select></div>
                 <div><label>Kelas</label><select id="form-jadwal-kelas" class="filter-select" required style="width:100%;margin-top:4px">@foreach($allKelas as $kelasItem)<option value="{{ $kelasItem->id_kelas }}">{{ $kelasItem->nama_kelas }}</option>@endforeach</select></div>
                 <div><label>Mata Pelajaran</label><select id="form-jadwal-mapel" onchange="onMapelChange()" class="filter-select" required style="width:100%;margin-top:4px"><option value="">-- Pilih Mata Pelajaran --</option>@foreach($allMapel as $mapelItem)<option value="{{ $mapelItem->id_mapel }}" data-is-upacara="{{ $mapelItem->isUpacara() ? '1' : '0' }}">{{ $mapelItem->nama_mapel }}</option>@endforeach</select></div>
                 <div>
@@ -185,7 +185,7 @@
                     <tr style="background:#f8fafc">
                         <th style="width:40px">No</th>
                         <th>Hari</th>
-                        <th>Jam Ke- & Waktu</th>
+                        <th>Jam</th>
                         <th>Kelas</th>
                         <th>Mata Pelajaran</th>
                         <th style="text-align:center">Aksi</th>
@@ -197,15 +197,14 @@
                         <td style="color:#94a3b8;font-weight:600">{{ $kIdx + 1 }}</td>
                         <td><strong>{{ $kItem->hari }}</strong></td>
                         <td>
-                            <span class="badge badge-info" style="font-size:11.5px">Jam ke-{{ $kItem->jam_ke >= 100 ? $kItem->jam_ke - 100 : $kItem->jam_ke }}</span>
-                            <span style="font-size:12px;color:#64748b;display:block;margin-top:2px">{{ substr($kItem->jam_mulai, 0, 5) }} - {{ substr($kItem->jam_selesai, 0, 5) }}</span>
+                            <span class="badge badge-info" style="font-size:11.5px">{{ substr($kItem->jam_mulai, 0, 5) }} - {{ substr($kItem->jam_selesai, 0, 5) }}</span>
                         </td>
                         <td><strong>{{ $kItem->nama_kelas }}</strong></td>
                         <td>{{ $kItem->nama_mapel }}</td>
                         <td style="text-align:center">
                             <button type="button"
                                 class="btn-primary"
-                                onclick="pilihGuruJadwalKosong({{ $kItem->id_jadwal }}, '{{ $kItem->hari }}', {{ $kItem->jam_ke }}, {{ $kItem->id_jam }}, '{{ htmlspecialchars($kItem->nama_kelas) }}', '{{ htmlspecialchars($kItem->nama_mapel) }}')"
+                                onclick="pilihGuruJadwalKosong({{ $kItem->id_jadwal }}, '{{ $kItem->hari }}', '{{ substr($kItem->jam_mulai, 0, 5) }} - {{ substr($kItem->jam_selesai, 0, 5) }}', {{ $kItem->id_jam }}, '{{ htmlspecialchars($kItem->nama_kelas) }}', '{{ htmlspecialchars($kItem->nama_mapel) }}')"
                                 style="padding:6px 14px;font-size:12px;background:#d97706;border-color:#b45309;border-radius:6px;font-weight:700">
                                 Tugaskan Guru
                             </button>
@@ -333,7 +332,7 @@ function simpanJadwal(event) {
         .catch(error => Swal.fire({icon: 'error', title: 'Gagal', text: error.message, confirmButtonColor: '#dc2626'}));
 }
 
-function pilihGuruJadwalKosong(idJadwal, hari, jamKe, idJam, kelasNama, mapelNama) {
+function pilihGuruJadwalKosong(idJadwal, hari, jamWaktu, idJam, kelasNama, mapelNama) {
     Swal.fire({
         title: 'Memeriksa Jadwal Guru...',
         text: 'Mengambil daftar guru yang jam mengajarnya sedang kosong...',
@@ -388,7 +387,7 @@ function pilihGuruJadwalKosong(idJadwal, hari, jamKe, idJam, kelasNama, mapelNam
                     <div style="background:#f8fafc;border:1px solid #e2e8f0;padding:12px 14px;border-radius:10px;margin-bottom:14px;font-size:13px">
                         <div style="display:flex;justify-content:space-between;margin-bottom:4px">
                             <span style="color:#64748b">Hari & Jam:</span>
-                            <strong>${hari}, Jam ke-${jamKe}</strong>
+                            <strong>${hari}, ${jamWaktu}</strong>
                         </div>
                         <div style="display:flex;justify-content:space-between;margin-bottom:4px">
                             <span style="color:#64748b">Kelas:</span>

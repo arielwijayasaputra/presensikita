@@ -80,8 +80,7 @@
             <table class="data-table" id="table-wali-jurnal-harian" style="min-width:900px">
                 <thead>
                     <tr>
-                        <th style="width:70px">Jam Ke-</th>
-                        <th style="width:130px">Waktu</th>
+                        <th style="width:140px">Jam</th>
                         <th>Mata Pelajaran</th>
                         <th>Guru Pengajar</th>
                         <th style="text-align:center; width:130px">Status Jurnal</th>
@@ -92,13 +91,10 @@
                 <tbody>
                     @forelse($waliJadwalHariIni as $j)
                         <tr>
-                            <td style="text-align:center">
-                                <span class="badge badge-info" style="font-weight:700; font-size:12.5px">
-                                    {{ $j->jam_ke >= 100 ? $j->jam_ke - 100 : $j->jam_ke }}
-                                </span>
-                            </td>
                             <td style="font-family:monospace; font-size:12.5px; color:#475569">
-                                {{ substr($j->jam_mulai, 0, 5) }} - {{ substr($j->jam_selesai, 0, 5) }}
+                                <span class="badge badge-info" style="font-weight:700; font-size:12px">
+                                    {{ substr($j->jam_mulai, 0, 5) }} - {{ substr($j->jam_selesai, 0, 5) }}
+                                </span>
                             </td>
                             <td><strong style="color:#0f172a">{{ $j->nama_mapel }}</strong></td>
                             <td>

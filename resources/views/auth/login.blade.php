@@ -27,493 +27,34 @@
 
         body {
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #0d1b3e;
-            height: 100vh;
-            overflow: hidden;
+            background:
+                radial-gradient(circle at 100% 0%, rgba(59,130,246,0.08) 0%, transparent 40%),
+                #f2f5fb;
+            min-height: 100vh;
+            overflow-x: hidden;
             display: flex;
+            color: #0f172a;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         /* ───── LAYOUT ───── */
         .login-container {
             width: 100vw;
-            height: 100vh;
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            overflow: hidden;
-        }
-
-        /* ───── LEFT HERO ───── */
-        .left-hero {
-            background: linear-gradient(155deg, #0a1628 0%, #102150 40%, #0f2a60 70%, #0a1e4f 100%);
-            padding: 5% 6%;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Animated gradient orbs */
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(60px);
-            pointer-events: none;
-            animation: floatOrb 8s ease-in-out infinite;
-        }
-        .orb-1 {
-            width: 320px; height: 320px;
-            background: radial-gradient(circle, rgba(59,130,246,0.25) 0%, transparent 70%);
-            top: -80px; right: -60px;
-            animation-delay: 0s;
-        }
-        .orb-2 {
-            width: 250px; height: 250px;
-            background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%);
-            bottom: 60px; left: -40px;
-            animation-delay: -4s;
-        }
-        .orb-3 {
-            width: 180px; height: 180px;
-            background: radial-gradient(circle, rgba(14,165,233,0.18) 0%, transparent 70%);
-            top: 45%; right: 10%;
-            animation-delay: -2s;
-        }
-        @keyframes floatOrb {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(20px, -20px); }
-        }
-
-        /* Dot grid */
-        .dot-grid {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
-            background-size: 28px 28px;
-            pointer-events: none;
-        }
-
-        /* Wave bottom */
-        .wave-bottom {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            pointer-events: none; z-index: 0;
-        }
-
-        .left-content { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; }
-
-        /* Brand header */
-        .brand-header { display: flex; align-items: center; gap: 13px; margin-bottom: auto; }
-        .brand-icon-box {
-            width: 48px; height: 48px;
-            background: rgba(255,255,255,0.12);
-            border: 1.5px solid rgba(255,255,255,0.35);
-            border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-            box-shadow: 0 4px 16px rgba(59,130,246,0.2);
-        }
-        .brand-title { font-size: clamp(17px,2vw,22px); font-weight: 800; color: #fff; letter-spacing: -0.01em; }
-        .brand-sub { font-size: clamp(10px,1.1vw,12.5px); color: rgba(255,255,255,0.5); margin-top: 2px; }
-
-        /* Hero body */
-        .hero-body {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 4% 0 6%;
-        }
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(59,130,246,0.15);
-            border: 1px solid rgba(59,130,246,0.3);
-            border-radius: 50px;
-            padding: 5px 14px;
-            font-size: 11.5px;
-            color: #93c5fd;
-            font-weight: 600;
-            margin-bottom: 18px;
-            width: fit-content;
-        }
-        .hero-title {
-            font-size: clamp(22px,2.8vw,36px);
-            font-weight: 800;
-            line-height: 1.2;
-            letter-spacing: -0.02em;
-            margin-bottom: 14px;
-            color: #fff;
-        }
-        .hero-title .accent {
-            background: linear-gradient(90deg, #60a5fa, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .hero-desc {
-            font-size: clamp(11px,1.15vw,13.5px);
-            color: rgba(255,255,255,0.55);
-            line-height: 1.7;
-            margin-bottom: 7%;
-            max-width: 90%;
-        }
-
-        /* Feature list */
-        .feature-list { display: flex; flex-direction: column; gap: clamp(12px,1.6vw,20px); }
-        .feature-item { display: flex; align-items: flex-start; gap: 14px; }
-        .feature-icon-badge {
-            width: clamp(32px,3.2vw,40px); height: clamp(32px,3.2vw,40px);
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 11px;
-            display: flex; align-items: center; justify-content: center;
-            color: #7ec8f8; flex-shrink: 0;
-            transition: background 0.2s;
-        }
-        .feature-title { font-size: clamp(12px,1.2vw,14px); font-weight: 700; color: #f0f6ff; margin-bottom: 2px; }
-        .feature-sub { font-size: clamp(10px,1vw,12.5px); color: rgba(255,255,255,0.4); line-height: 1.5; }
-
-        /* Quote */
-        .hero-quote {
-            background: rgba(255,255,255,0.05);
-            border-left: 3px solid rgba(99,102,241,0.6);
-            border-radius: 8px;
-            padding: 13px 16px;
-            margin-top: 5%;
-        }
-        .hero-quote p { font-size: clamp(10.5px,1.05vw,13px); color: rgba(255,255,255,0.65); line-height: 1.6; font-style: italic; }
-
-        .left-footer { font-size: clamp(9.5px,0.95vw,12px); color: rgba(255,255,255,0.28); margin-top: 4%; }
-
-        /* ───── RIGHT FORM ───── */
-        .right-form {
-            background: #f4f7fc;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 4% 6%;
-            overflow-y: auto;
-        }
-
-        .form-card {
-            width: 100%;
-            max-width: 460px;
-            background: #fff;
-            border-radius: 12px;
-            padding: 36px 36px 32px;
-            box-shadow: 0 4px 32px rgba(15,40,100,0.09), 0 1px 4px rgba(15,40,100,0.05);
-            border: 1px solid #e2e8f0;
-        }
-
-        /* Lock icon */
-        .lock-icon-circle {
-            width: clamp(52px,6vw,66px); height: clamp(52px,6vw,66px);
-            background: linear-gradient(135deg, #eef3fb, #e2ecfb);
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            color: #1e3a6e;
-            margin: 0 auto clamp(12px,1.6vw,18px);
-            box-shadow: 0 4px 12px rgba(30,58,110,0.12);
-        }
-
-        .form-header { text-align: center; margin-bottom: 24px; }
-        .form-header h2 { font-size: clamp(18px,2vw,23px); font-weight: 800; color: #0f1f3d; margin-bottom: 4px; }
-        .form-header p { font-size: clamp(11px,1.1vw,13px); color: #6b7a99; }
-
-        /* ───── ROLE SELECTOR (SINGLE) ───── */
-        .role-selector {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            margin-bottom: 14px;
-        }
-        .role-arrow {
-            width: 42px; height: 42px;
-            border-radius: 10px;
-            border: 1.5px solid #e2e8f0;
-            background: #fff;
-            color: #4d6080;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-            font-family: inherit;
-            transition: all 0.2s;
-        }
-        .role-arrow:hover {
-            border-color: #2563eb;
-            color: #2563eb;
-            background: #eff6ff;
-        }
-        .role-arrow:active { transform: scale(0.94); }
-
-        .role-display {
-            position: relative;
-            width: 100%;
-            max-width: 200px;
-            height: 108px;
-        }
-        .role-card {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background: #f0f4fb;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 12px;
-            opacity: 0;
-            transform: scale(0.88);
-            pointer-events: none;
-            transition: opacity 0.25s ease, transform 0.25s ease;
-        }
-        .role-card.active {
-            opacity: 1;
-            transform: scale(1);
-            pointer-events: auto;
-            border-color: transparent;
-        }
-        .role-card-icon {
-            width: 46px; height: 46px;
-            border-radius: 13px;
-            background: rgba(0,0,0,0.04);
-            color: #9aaac4;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.25s;
-        }
-        .role-card.active .role-card-icon-admin     { background: linear-gradient(135deg, #1d4ed8, #2563eb); color: #fff; }
-        .role-card.active .role-card-icon-guru      { background: linear-gradient(135deg, #0e7490, #0891b2); color: #fff; }
-        .role-card.active .role-card-icon-gurupiket { background: linear-gradient(135deg, #0891b2, #06b6d4); color: #fff; }
-        .role-card.active .role-card-icon-walikelas { background: linear-gradient(135deg, #059669, #10b981); color: #fff; }
-        .role-card.active .role-card-icon-satpam    { background: linear-gradient(135deg, #334155, #64748b); color: #fff; }
-        .role-card.active .role-card-icon-wakasdm   { background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff; }
-        .role-card.active .role-card-icon-wali      { background: linear-gradient(135deg, #7c3aed, #a78bfa); color: #fff; }
-        .role-card-name { font-size: 14px; font-weight: 700; color: #1a2a45; }
-
-        .role-hint {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-size: 11px;
-            color: #9aaac4;
-            margin-bottom: 8px;
-        }
-        .role-hint .key {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 20px;
-            height: 20px;
-            padding: 0 4px;
-            border: 1px solid #c7d2e6;
-            border-radius: 6px;
-            background: #fff;
-            color: #4d6080;
-            font-weight: 700;
-            font-size: 11px;
-        }
-
-        .role-dots {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            margin-bottom: 22px;
-        }
-        .role-dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            background: #c7d2e6;
-            cursor: pointer;
-            border: none;
-            padding: 0;
-            transition: all 0.2s;
-        }
-        .role-dot.active {
-            width: 22px;
-            border-radius: 50px;
-            background: #2563eb;
-        }
-
-        /* ───── FORM PANELS ───── */
-        .form-panel { display: none; animation: panelIn 0.3s ease forwards; }
-        .form-panel.active { display: block; }
-        @keyframes panelIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Alert */
-        .alert-danger {
-            background: #fef2f2; border: 1px solid #fecaca;
-            border-radius: 10px; padding: 10px 14px;
-            margin-bottom: 16px; font-size: 13px; color: #b91c1c;
-            display: flex; align-items: center; gap: 8px;
-        }
-
-        /* Form elements */
-        .form-group { margin-bottom: clamp(12px,1.5vw,18px); }
-        .form-label { display: block; font-size: clamp(11px,1.1vw,13px); font-weight: 700; color: #2d3a55; margin-bottom: 6px; }
-        .input-relative { position: relative; display: flex; align-items: center; }
-        .input-icon { position: absolute; left: 13px; color: #9aaac4; display: flex; align-items: center; pointer-events: none; }
-        .form-input {
-            width: 100%;
-            height: clamp(42px,4.5vw,50px);
-            padding: 10px 14px 10px 42px;
-            border: 1.5px solid #cbd5e1;
-            border-radius: 10px;
-            font-size: clamp(12px,1.2vw,14px);
-            color: #1a2a45;
-            background: #fff;
-            outline: none;
-            font-family: inherit;
-            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-        }
-        .form-input::placeholder { color: #94a3b8; }
-        .form-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.12); background: #fff; }
-        .form-select {
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239aaac4' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            padding-right: 42px;
-            cursor: pointer;
-        }
-        .form-select:invalid { color: #b0bdd4; }
-        .form-select option { color: #1a2a45; }
-        .btn-eye-toggle { position: absolute; right: 12px; background: none; border: none; color: #9aaac4; cursor: pointer; padding: 4px; display: flex; align-items: center; }
-        .btn-eye-toggle:hover { color: #4a6fa8; }
-
-        /* Remember + forgot */
-        .form-options { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; font-size: clamp(11px,1.1vw,13px); margin-bottom: clamp(14px,1.8vw,20px); }
-        .forgot-link { text-decoration: none; font-weight: 600; font-size: 12px; color: #2563c0; }
-        .forgot-link:hover { text-decoration: underline; }
-
-        /* Submit buttons */
-        .btn-submit {
-            width: 100%;
-            height: clamp(42px,4.5vw,50px);
-            border: none; border-radius: 10px;
-            color: #fff;
-            font-size: clamp(13px,1.3vw,15px);
-            font-weight: 700;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            font-family: inherit;
-            transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
-        }
-        .btn-submit:hover { filter: brightness(1.08); transform: translateY(-1px); }
-        .btn-submit:active { transform: scale(0.985) translateY(0); }
-
-        .btn-admin { background: linear-gradient(135deg, #2563eb, #1d4ed8); box-shadow: 0 4px 16px rgba(37,99,235,0.35); }
-        .btn-admin:hover { box-shadow: 0 6px 22px rgba(37,99,235,0.45); }
-
-        .btn-guru  { background: linear-gradient(135deg, #0e7490, #0891b2); box-shadow: 0 4px 16px rgba(14,116,144,0.35); }
-        .btn-guru:hover { box-shadow: 0 6px 22px rgba(14,116,144,0.45); }
-
-        .btn-gurupiket  { background: linear-gradient(135deg, #0891b2, #06b6d4); box-shadow: 0 4px 16px rgba(8,145,178,0.35); }
-        .btn-gurupiket:hover { box-shadow: 0 6px 22px rgba(8,145,178,0.45); }
-
-        .btn-wali  { background: linear-gradient(135deg, #7c3aed, #8b5cf6); box-shadow: 0 4px 16px rgba(124,58,237,0.35); }
-        .btn-wali:hover { box-shadow: 0 6px 22px rgba(124,58,237,0.45); }
-
-        .btn-walikelas { background: linear-gradient(135deg, #059669, #10b981); box-shadow: 0 4px 16px rgba(5,150,105,0.35); }
-        .btn-walikelas:hover { box-shadow: 0 6px 22px rgba(5,150,105,0.45); }
-
-        .btn-satpam  { background: linear-gradient(135deg, #334155, #64748b); box-shadow: 0 4px 16px rgba(51,65,85,0.35); }
-        .btn-satpam:hover { box-shadow: 0 6px 22px rgba(51,65,85,0.45); }
-
-        .btn-wakasdm  { background: linear-gradient(135deg, #d97706, #f59e0b); box-shadow: 0 4px 16px rgba(217,119,6,0.35); }
-        .btn-wakasdm:hover { box-shadow: 0 6px 22px rgba(217,119,6,0.45); }
-
-        /* NISN helper */
-        .nisn-helper {
-            background: linear-gradient(135deg, #faf5ff, #f0f4ff);
-            border: 1px solid #e9d5ff;
-            border-radius: 10px;
-            padding: 11px 14px;
-            margin-bottom: 14px;
-            font-size: 12px;
-            color: #6d28d9;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            line-height: 1.5;
-        }
-        .nisn-helper svg { flex-shrink: 0; margin-top: 1px; }
-
-        /* Footer */
-        .form-footer-text { text-align: center; font-size: clamp(10.5px,1.05vw,12.5px); color: #6b7a99; margin-top: clamp(14px,1.8vw,20px); }
-        .form-footer-text a { color: #2563c0; font-weight: 600; text-decoration: none; }
-        .form-footer-text a:hover { text-decoration: underline; }
-
-        /* Divider */
-        .divider { display: flex; align-items: center; gap: 10px; margin: 16px 0; }
-        .divider-line { flex: 1; height: 1px; background: #e2e8f0; }
-        .divider-text { font-size: 11px; color: #a0aec0; font-weight: 500; white-space: nowrap; }
-
-        /* ───── RESPONSIVE ───── */
-        @media (max-width: 820px) {
-            body { overflow: auto; }
-            .login-container { grid-template-columns: 1fr; height: auto; min-height: 100vh; }
-            .left-hero { padding: 22px 20px 26px; min-height: auto; border-radius: 0 0 24px 24px; }
-            .wave-bottom { display: none; }
-            .hero-body { padding: 14px 0 0; justify-content: flex-start; }
-            .hero-title { font-size: 20px; margin-bottom: 6px; }
-            .hero-desc { max-width: 100%; font-size: 12.5px; margin-bottom: 8px; }
-            .feature-list { display: none; }
-            .hero-quote { display: none; }
-            .left-footer { margin-top: 10px; }
-            .right-form { padding: 24px 16px 32px; min-height: auto; }
-            .form-card { padding: 26px 20px 22px; }
-        }
-        @media (max-width: 480px) {
-            .brand-icon-box { width: 40px; height: 40px; }
-            .brand-title { font-size: 16px; }
-            .brand-sub { font-size: 10.5px; }
-            .hero-title { font-size: 17px; }
-            .hero-badge { font-size: 10.5px; padding: 4px 12px; }
-            .hero-desc { font-size: 12px; }
-            .left-footer { font-size: 10px; }
-            .form-card { padding: 22px 14px 18px; border-radius: var(--radius); }
-            .role-display { height: 96px; }
-            .role-hint { font-size: 10px; }
-            .form-header h2 { font-size: 19px; }
-            .form-options { justify-content: flex-start; }
-            .nisn-helper { padding: 9px 12px; font-size: 11.5px; }
-        }
-        @media (max-height: 600px) { .hero-quote { display: none; } }
-
-        /* ══════════ NEW DESIGN OVERRIDE (sesuai desain halaman login) ══════════ */
-        body {
-            background:
-                radial-gradient(circle at 100% 0%, rgba(59,130,246,0.08) 0%, transparent 40%),
-                #f2f5fb;
-            overflow: auto;
-        }
-
-        .login-container {
+            min-height: 100vh;
             display: grid;
             grid-template-columns: 1.05fr 1fr;
-            min-height: 100vh;
+            overflow: hidden;
             background: transparent;
         }
 
-        /* ── LEFT: blob navy dengan lengkung kanan ── */
+        /* ───── LEFT HERO ───── */
         .left-hero {
             background:
                 radial-gradient(circle at 85% 15%, rgba(59,130,246,0.35) 0%, transparent 45%),
                 radial-gradient(circle at 20% 85%, rgba(37,99,235,0.30) 0%, transparent 50%),
                 linear-gradient(150deg, #0a173f 0%, #0d2160 45%, #0a1a4f 100%);
             border-radius: 0 48% 44% 0 / 0 52% 50% 0;
+            display: flex;
             align-items: center;
             justify-content: center;
             padding: 40px 8% 40px 6%;
@@ -521,6 +62,7 @@
             top: 0;
             height: 100vh;
             box-shadow: 16px 0 48px rgba(10,23,63,0.08);
+            overflow: hidden;
         }
         .left-hero::before {
             content: '';
@@ -542,7 +84,7 @@
             pointer-events: none;
         }
 
-        /* ilustrasi tengah: lingkaran glow + logo */
+        /* Hero Content & Orbit Illustration */
         .hero-illus {
             position: relative;
             z-index: 1;
@@ -617,7 +159,8 @@
             text-transform: uppercase;
             font-weight: 600;
         }
-        /* Floating Hero Badge Kiri (Presensi Realtime Hijau - Compact & Sleek) */
+
+        /* Floating Hero Badge Kiri */
         .hero-float-badge {
             position: absolute;
             background: rgba(14, 30, 64, 0.72);
@@ -651,18 +194,11 @@
             color: #fff;
             box-shadow: 0 3px 10px rgba(16, 185, 129, 0.4);
         }
-        .float-badge-icon svg {
-            width: 15px;
-            height: 15px;
-        }
         .float-badge-title {
             font-size: 11.5px;
             font-weight: 700;
             color: #ffffff;
             line-height: 1.2;
-            display: flex;
-            align-items: center;
-            gap: 4px;
         }
         .float-badge-desc {
             font-size: 10px;
@@ -675,30 +211,76 @@
             50% { transform: translateY(-6px); }
         }
 
-        .left-footer { position: absolute; bottom: 22px; left: 0; right: 0; text-align: center; }
+        .hero-live-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            margin-top: 24px;
+            padding: 8px 18px;
+            border-radius: 99px;
+            background: rgba(255, 255, 255, 0.09);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 0 16px rgba(59, 130, 246, 0.12);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .hero-live-pill:hover {
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(96, 165, 250, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22), 0 0 24px rgba(59, 130, 246, 0.25);
+        }
+        .live-dot-pulse {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 10px #10b981;
+            animation: livePulse 2s infinite ease-in-out;
+            flex-shrink: 0;
+        }
+        @keyframes livePulse {
+            0%, 100% { transform: scale(0.9); opacity: 1; }
+            50% { transform: scale(1.35); opacity: 0.55; }
+        }
+        .live-pill-text {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.92);
+            letter-spacing: 0.01em;
+        }
+        .left-footer {
+            position: absolute;
+            bottom: 22px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255,255,255,0.35);
+        }
 
-        /* sembunyikan elemen hero lama yang tak terpakai */
-        .wave-bottom, .orb, .dot-grid, .hero-body, .brand-header { display: none !important; }
-
-        /* ── RIGHT: latar terang + kartu login modern ── */
+        /* ───── RIGHT FORM & MODERN CARD ───── */
         .right-form {
             background: transparent;
             padding: 40px 24px;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow-y: auto;
         }
+
         .form-card {
             width: 100%;
             max-width: 480px;
             background: #ffffff;
             border-radius: 28px;
             border: 1px solid rgba(226, 232, 240, 0.95);
-            box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.12), 0 0 1px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.10), 0 0 1px rgba(0, 0, 0, 0.05);
             padding: clamp(32px, 3.5vw, 44px);
             position: relative;
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
         }
         .form-card::before {
             content: '';
@@ -707,8 +289,7 @@
             height: 5px;
             background: linear-gradient(90deg, #1e3a8a 0%, #2563eb 50%, #38bdf8 100%);
         }
-        .lock-icon-circle { display: none; }
-        
+
         .form-header {
             text-align: left;
             margin-bottom: 24px;
@@ -754,7 +335,28 @@
             margin: 0;
         }
 
-        /* ── FORM GROUPS & INPUTS ── */
+        /* ── ALERTS ── */
+        .alert-danger {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #b91c1c;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: alertShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+        @keyframes alertShake {
+            10%, 90% { transform: translateX(-2px); }
+            20%, 80% { transform: translateX(3px); }
+            30%, 50%, 70% { transform: translateX(-4px); }
+            40%, 60% { transform: translateX(4px); }
+        }
+
+        /* ── FORM ELEMENTS ── */
         .form-group {
             margin-bottom: 18px;
         }
@@ -771,27 +373,12 @@
             font-size: 11px;
             font-weight: 500;
             color: #94a3b8;
+            transition: color 0.2s ease;
         }
         .input-relative {
             position: relative;
-        }
-        .form-input {
-            width: 100%;
-            height: 52px;
-            border-radius: 14px;
-            border: 1.5px solid #e2e8f0;
-            background: #f8fafc;
-            font-size: 13.5px;
-            font-weight: 500;
-            color: #0f172a;
-            padding: 0 14px 0 44px;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .form-input:focus {
-            background: #ffffff;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
-            outline: none;
+            display: flex;
+            align-items: center;
         }
         .input-icon {
             position: absolute;
@@ -808,32 +395,99 @@
         .input-relative:focus-within .input-icon {
             color: #2563eb;
         }
+        .form-input {
+            width: 100%;
+            height: 52px;
+            border-radius: 14px;
+            border: 1.5px solid #e2e8f0;
+            background: #f8fafc;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #0f172a;
+            padding: 0 42px 0 44px;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .form-input::placeholder {
+            color: #94a3b8;
+        }
+        .form-input:focus {
+            background: #ffffff;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+        }
 
-        /* ── TIP BOX ── */
-        .login-tip-box {
+        .btn-eye-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 6px;
             display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-            border: 1px solid #bbf7d0;
-            border-radius: 12px;
-            padding: 11px 14px;
-            margin: 18px 0 16px;
-            font-size: 12px;
-            color: #15803d;
-            line-height: 1.45;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: color 0.2s ease, background-color 0.2s ease;
         }
-        .login-tip-box .tip-icon {
-            color: #16a34a;
-            flex-shrink: 0;
-            margin-top: 1px;
+        .btn-eye-toggle:hover {
+            color: #2563eb;
+            background: rgba(37, 99, 235, 0.08);
         }
 
-        /* ── OPTIONS ── */
+        /* ── LIVE ROLE AUTO-DETECT CHIP ── */
+        .role-detect-container {
+            margin-top: 8px;
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+        }
+        .role-detect-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 5px 13px;
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: 600;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: chipFadeIn 0.25s ease-out;
+        }
+        @keyframes chipFadeIn {
+            from { opacity: 0; transform: translateY(-3px) scale(0.96); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .role-detect-chip.default {
+            background: #f1f5f9;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+        .role-detect-chip.chip-siswa {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(167, 139, 250, 0.15));
+            color: #7c3aed;
+            border: 1px solid rgba(124, 58, 237, 0.28);
+        }
+        .role-detect-chip.chip-guru {
+            background: linear-gradient(135deg, rgba(14, 116, 144, 0.1), rgba(6, 182, 212, 0.15));
+            color: #0e7490;
+            border: 1px solid rgba(14, 116, 144, 0.28);
+        }
+        .role-detect-chip.chip-staff {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(59, 130, 246, 0.15));
+            color: #1d4ed8;
+            border: 1px solid rgba(37, 99, 235, 0.28);
+        }
+
+        /* ── FORM OPTIONS ── */
         .form-options {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            margin-top: 14px;
             margin-bottom: 22px;
             font-size: 12.5px;
         }
@@ -865,17 +519,19 @@
             text-decoration: underline;
         }
 
-        /* ── TOMBOL SUBMIT MEWAH ── */
+        /* ── SUBMIT BUTTON WITH SHIMMER ── */
         .button-boundary {
             position: relative;
             display: flex;
             justify-content: center;
-            padding: 12px 14px;
+            padding: 10px 12px;
             border: 1.5px dashed rgba(203, 213, 225, 0.8);
-            border-radius: 20px;
+            border-radius: 18px;
             background: #fafcff;
         }
         .btn-submit {
+            position: relative;
+            overflow: hidden;
             height: 48px;
             width: 100%;
             border-radius: 12px;
@@ -889,13 +545,27 @@
             color: #ffffff;
             border: none;
             cursor: pointer;
+            font-family: inherit;
             background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #38bdf8 100%);
             box-shadow: 0 10px 24px -4px rgba(37, 99, 235, 0.45);
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        .btn-submit::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -120%;
+            width: 70%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: skewX(-20deg);
+            pointer-events: none;
+        }
+        .btn-submit:hover::after {
+            left: 140%;
+            transition: left 0.8s ease-in-out;
+        }
         .btn-submit:hover {
             box-shadow: 0 14px 28px -4px rgba(37, 99, 235, 0.55);
-            transform: translateY(-1.5px);
+            transform: translateY(-2px);
         }
         .btn-submit:active {
             transform: translateY(0);
@@ -910,19 +580,299 @@
             transform: translateX(3px);
         }
 
-        /* ── RESPONSIVE TERTATA & MODERN ── */
+        /* Submit Spinner */
+        .btn-spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            animation: btnSpin 0.7s linear infinite;
+            flex-shrink: 0;
+        }
+        .btn-submit.is-submitting .btn-spinner {
+            display: inline-block;
+        }
+        .btn-submit.is-submitting > svg:not(.btn-spinner) {
+            display: none;
+        }
+        @keyframes btnSpin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
+        /* ── SECURITY & TRUST BADGE ── */
+        .security-trust-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #f1f5f9;
+            font-size: 11.5px;
+            color: #64748b;
+            font-weight: 500;
+            text-align: center;
+        }
+        .security-trust-badge svg {
+            color: #10b981;
+            flex-shrink: 0;
+        }
+
+        /* Footer */
+        .form-footer-text {
+            text-align: center;
+            font-size: 12px;
+            color: #6b7a99;
+            margin-top: 14px;
+        }
+        .form-footer-text a {
+            color: #2563eb;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .form-footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── FLOATING THEME TOGGLE ── */
+        .login-theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 120;
+        }
+        .login-theme-toggle .theme-toggle-btn {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ══════════ DARK MODE STYLING ══════════ */
+        [data-theme="dark"] body {
+            background:
+                radial-gradient(circle at 100% 0%, rgba(37, 99, 235, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 0% 100%, rgba(30, 58, 138, 0.16) 0%, transparent 45%),
+                #070d19;
+            color: #f8fafc;
+        }
+
+        [data-theme="dark"] .login-container {
+            background: transparent;
+        }
+
+        [data-theme="dark"] .left-hero {
+            background:
+                radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.28) 0%, transparent 50%),
+                radial-gradient(circle at 20% 85%, rgba(37, 99, 235, 0.22) 0%, transparent 50%),
+                linear-gradient(150deg, #081226 0%, #0c1c42 45%, #08132d 100%);
+            border-right: 1px solid rgba(59, 130, 246, 0.15);
+            box-shadow: 20px 0 60px rgba(0, 0, 0, 0.6);
+        }
+
+        [data-theme="dark"] .left-hero::before {
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.18) 0%, transparent 65%);
+        }
+
+        [data-theme="dark"] .left-hero::after {
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        [data-theme="dark"] .illus-ring {
+            background: linear-gradient(160deg, rgba(59, 130, 246, 0.2), rgba(15, 23, 42, 0.6));
+            border-color: rgba(96, 165, 250, 0.35);
+            box-shadow: 0 0 80px rgba(37, 99, 235, 0.35), inset 0 0 40px rgba(59, 130, 246, 0.15);
+        }
+
+        [data-theme="dark"] .illus-badge {
+            background: linear-gradient(160deg, #3b82f6, #1d4ed8);
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 24px rgba(29, 78, 216, 0.6);
+        }
+
+        [data-theme="dark"] .illus-title {
+            color: #ffffff;
+            text-shadow: 0 4px 30px rgba(59, 130, 246, 0.65);
+        }
+
+        [data-theme="dark"] .hero-live-pill {
+            background: rgba(18, 29, 51, 0.7);
+            border-color: rgba(59, 130, 246, 0.25);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(59, 130, 246, 0.15);
+        }
+
+        [data-theme="dark"] .left-footer {
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        [data-theme="dark"] .form-card {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.75), 0 0 1px rgba(255, 255, 255, 0.08) inset;
+        }
+
+        [data-theme="dark"] .form-card::before {
+            background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 50%, #38bdf8 100%);
+        }
+
+        [data-theme="dark"] .login-badge-pill {
+            background: rgba(37, 99, 235, 0.18);
+            border-color: rgba(96, 165, 250, 0.35);
+            color: #93c5fd;
+        }
+
+        [data-theme="dark"] .badge-dot-glow {
+            background: #60a5fa;
+            box-shadow: 0 0 10px #60a5fa;
+        }
+
+        [data-theme="dark"] .form-header h2 {
+            color: #f8fafc;
+        }
+
+        [data-theme="dark"] .form-header p {
+            color: #94a3b8;
+        }
+
+        [data-theme="dark"] .form-label {
+            color: #e2e8f0;
+        }
+
+        [data-theme="dark"] .label-hint {
+            color: #64748b;
+        }
+
+        [data-theme="dark"] .input-icon {
+            color: #64748b;
+        }
+
+        [data-theme="dark"] .input-relative:focus-within .input-icon {
+            color: #60a5fa;
+        }
+
+        [data-theme="dark"] .form-input {
+            background: #141f36;
+            border-color: #243552;
+            color: #f8fafc;
+        }
+
+        [data-theme="dark"] .form-input::placeholder {
+            color: #52637a;
+        }
+
+        [data-theme="dark"] .form-input:focus {
+            background: #182542;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
+        }
+
+        [data-theme="dark"] .btn-eye-toggle {
+            color: #64748b;
+        }
+
+        [data-theme="dark"] .btn-eye-toggle:hover {
+            color: #93c5fd;
+            background: rgba(59, 130, 246, 0.15);
+        }
+
+        [data-theme="dark"] .role-detect-chip.default {
+            background: #141f36;
+            color: #94a3b8;
+            border-color: #243552;
+        }
+        [data-theme="dark"] .role-detect-chip.chip-siswa {
+            background: rgba(124, 58, 237, 0.2);
+            color: #c4b5fd;
+            border-color: rgba(167, 139, 250, 0.35);
+        }
+        [data-theme="dark"] .role-detect-chip.chip-guru {
+            background: rgba(14, 116, 144, 0.25);
+            color: #67e8f9;
+            border-color: rgba(6, 182, 212, 0.35);
+        }
+        [data-theme="dark"] .role-detect-chip.chip-staff {
+            background: rgba(37, 99, 235, 0.25);
+            color: #93c5fd;
+            border-color: rgba(96, 165, 250, 0.35);
+        }
+
+        [data-theme="dark"] .remember-me {
+            color: #94a3b8;
+        }
+
+        [data-theme="dark"] .remember-me:hover {
+            color: #e2e8f0;
+        }
+
+        [data-theme="dark"] .remember-me input {
+            accent-color: #3b82f6;
+        }
+
+        [data-theme="dark"] .forgot-link {
+            color: #60a5fa;
+        }
+
+        [data-theme="dark"] .forgot-link:hover {
+            color: #93c5fd;
+        }
+
+        [data-theme="dark"] .button-boundary {
+            background: #0b1326;
+            border-color: #1e2c48;
+        }
+
+        [data-theme="dark"] .btn-submit {
+            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 55%, #38bdf8 100%);
+            box-shadow: 0 10px 28px -4px rgba(37, 99, 235, 0.55);
+        }
+
+        [data-theme="dark"] .btn-submit:hover {
+            box-shadow: 0 14px 32px -4px rgba(37, 99, 235, 0.65);
+            filter: brightness(1.08);
+        }
+
+        [data-theme="dark"] .alert-danger {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.35);
+            color: #fca5a5;
+        }
+
+        [data-theme="dark"] .security-trust-badge {
+            border-top-color: #1e293b;
+            color: #94a3b8;
+        }
+        [data-theme="dark"] .security-trust-badge svg {
+            color: #34d399;
+        }
+
+        [data-theme="dark"] .form-footer-text {
+            color: #64748b;
+        }
+
+        [data-theme="dark"] .form-footer-text a {
+            color: #60a5fa;
+        }
+
+        [data-theme="dark"] .form-footer-text a:hover {
+            color: #93c5fd;
+        }
+
+        [data-theme="dark"] .login-theme-toggle .theme-toggle-btn {
+            background: #0f172a;
+            border-color: #1e293b;
+            color: #fbbf24;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+        }
+
+        /* ── RESPONSIVE ── */
         @media (max-width: 900px) {
             body {
                 overflow-y: auto;
-                overflow-x: hidden;
-                height: auto;
                 min-height: 100vh;
                 min-height: 100dvh;
             }
             .login-container {
                 display: flex;
                 flex-direction: column;
-                height: auto;
                 min-height: 100vh;
                 min-height: 100dvh;
             }
@@ -938,11 +888,9 @@
             .left-hero::before, .left-hero::after {
                 display: none;
             }
-            /* Sembunyikan floating badge di HP / Mobile agar tampilan hero sangat ringkas & fokus */
             .hero-float-badge {
                 display: none !important;
             }
-
             .hero-illus {
                 margin: 0 auto;
             }
@@ -989,13 +937,8 @@
                 padding: 20px 16px 36px;
                 overflow: visible;
                 flex: 1;
-                display: flex;
-                align-items: center;
-                justify-content: center;
             }
             .form-card {
-                width: 100%;
-                max-width: 440px;
                 padding: 24px 20px;
                 border-radius: 20px;
                 box-shadow: 0 12px 36px rgba(15,40,100,0.1);
@@ -1011,14 +954,6 @@
                 font-size: 12.5px;
             }
 
-            /* Sembunyikan Role Admin di HP/Mobile */
-            #card-admin,
-            .role-dot[data-role="admin"],
-            #panel-admin {
-                display: none !important;
-            }
-
-            /* Ukuran & kenyamanan input di mobile */
             .form-input {
                 font-size: 15px;
                 height: 48px;
@@ -1027,29 +962,11 @@
                 height: 44px;
                 font-size: 14px;
             }
-            .role-selector {
-                gap: 10px;
-                margin-bottom: 12px;
-            }
-            .role-display {
-                height: 94px;
-                max-width: 180px;
-            }
-            .role-card-icon {
-                width: 40px;
-                height: 40px;
-            }
-            .role-card-name {
-                font-size: 13px;
-            }
-            .role-arrow {
-                width: 40px;
-                height: 40px;
-                border-radius: 10px;
-            }
-            .role-dots {
-                gap: 6px;
-                margin-bottom: 18px;
+
+            [data-theme="dark"] .left-hero {
+                border-right: none;
+                border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+                box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
             }
         }
 
@@ -1075,329 +992,6 @@
             .form-header h2 {
                 font-size: 18.5px;
             }
-            .role-display {
-                max-width: 160px;
-                height: 90px;
-            }
-        }
-        /* ── Dark Mode Overrides untuk Login (Cohesive & Modern) ── */
-        .login-theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 120;
-        }
-        .login-theme-toggle .theme-toggle-btn {
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-        }
-
-        [data-theme="dark"] body {
-            background:
-                radial-gradient(circle at 100% 0%, rgba(37, 99, 235, 0.12) 0%, transparent 45%),
-                radial-gradient(circle at 0% 100%, rgba(30, 58, 138, 0.16) 0%, transparent 45%),
-                #070d19;
-            color: #f8fafc;
-        }
-
-        [data-theme="dark"] .login-container {
-            background: transparent;
-        }
-
-        [data-theme="dark"] .left-hero {
-            background:
-                radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.28) 0%, transparent 50%),
-                radial-gradient(circle at 20% 85%, rgba(37, 99, 235, 0.22) 0%, transparent 50%),
-                linear-gradient(150deg, #081226 0%, #0c1c42 45%, #08132d 100%);
-            border-right: 1px solid rgba(59, 130, 246, 0.15);
-            box-shadow: 20px 0 60px rgba(0, 0, 0, 0.6);
-        }
-
-        [data-theme="dark"] .left-hero::before {
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.18) 0%, transparent 65%);
-        }
-
-        [data-theme="dark"] .left-hero::after {
-            border-color: rgba(255, 255, 255, 0.05);
-        }
-
-        [data-theme="dark"] .illus-ring {
-            background: linear-gradient(160deg, rgba(59, 130, 246, 0.2), rgba(15, 23, 42, 0.6));
-            border-color: rgba(96, 165, 250, 0.35);
-            box-shadow: 0 0 80px rgba(37, 99, 235, 0.35), inset 0 0 40px rgba(59, 130, 246, 0.15);
-        }
-
-        [data-theme="dark"] .illus-ring::before {
-            border-color: rgba(96, 165, 250, 0.28);
-        }
-
-        [data-theme="dark"] .illus-badge {
-            background: linear-gradient(160deg, #3b82f6, #1d4ed8);
-            border-color: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 8px 24px rgba(29, 78, 216, 0.6);
-        }
-
-        [data-theme="dark"] .illus-title {
-            color: #ffffff;
-            text-shadow: 0 4px 30px rgba(59, 130, 246, 0.65);
-        }
-
-        [data-theme="dark"] .illus-sub {
-            color: rgba(255, 255, 255, 0.55);
-        }
-
-        /* ══════════ DARK MODE STYLING ══════════ */
-        [data-theme="dark"] body {
-            background:
-                radial-gradient(circle at 100% 0%, rgba(37,99,235,0.12) 0%, transparent 45%),
-                #070d1a !important;
-            color: #f8fafc;
-        }
-
-        [data-theme="dark"] .left-footer {
-            color: rgba(255, 255, 255, 0.35);
-        }
-
-        [data-theme="dark"] .right-form {
-            background: transparent;
-        }
-
-        [data-theme="dark"] .form-card {
-            background: #0f172a !important;
-            border: 1px solid #1e293b !important;
-            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.75), 0 0 1px rgba(255, 255, 255, 0.08) inset !important;
-        }
-
-        [data-theme="dark"] .form-card::before {
-            background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 50%, #38bdf8 100%);
-        }
-
-        [data-theme="dark"] .login-badge-pill {
-            background: rgba(37, 99, 235, 0.18) !important;
-            border-color: rgba(96, 165, 250, 0.35) !important;
-            color: #93c5fd !important;
-        }
-
-        [data-theme="dark"] .badge-dot-glow {
-            background: #60a5fa;
-            box-shadow: 0 0 10px #60a5fa;
-        }
-
-        [data-theme="dark"] .form-header h2 {
-            color: #f8fafc !important;
-        }
-
-        [data-theme="dark"] .form-header p {
-            color: #94a3b8 !important;
-        }
-
-        /* Inputs & Form Groups */
-        [data-theme="dark"] .form-label {
-            color: #e2e8f0 !important;
-        }
-
-        [data-theme="dark"] .label-hint {
-            color: #64748b !important;
-        }
-
-        [data-theme="dark"] .input-icon {
-            color: #64748b !important;
-        }
-
-        [data-theme="dark"] .input-relative:focus-within .input-icon {
-            color: #60a5fa !important;
-        }
-
-        [data-theme="dark"] .form-input {
-            background: #141f36 !important;
-            border-color: #243552 !important;
-            color: #f8fafc !important;
-        }
-
-        [data-theme="dark"] .form-input::placeholder {
-            color: #52637a !important;
-        }
-
-        [data-theme="dark"] .form-input:focus {
-            background: #182542 !important;
-            border-color: #3b82f6 !important;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25) !important;
-        }
-
-        [data-theme="dark"] .btn-eye-toggle {
-            color: #64748b;
-        }
-
-        [data-theme="dark"] .btn-eye-toggle:hover {
-            color: #cbd5e1;
-        }
-
-        [data-theme="dark"] .login-tip-box {
-            background: rgba(22, 163, 74, 0.12) !important;
-            border-color: rgba(34, 197, 94, 0.3) !important;
-            color: #86efac !important;
-        }
-
-        [data-theme="dark"] .login-tip-box .tip-icon {
-            color: #4ade80 !important;
-        }
-
-        [data-theme="dark"] .login-tip-box strong {
-            color: #bbf7d0 !important;
-        }
-
-        [data-theme="dark"] .remember-me {
-            color: #94a3b8 !important;
-        }
-
-        [data-theme="dark"] .remember-me:hover {
-            color: #e2e8f0 !important;
-        }
-
-        [data-theme="dark"] .remember-me input {
-            accent-color: #3b82f6 !important;
-        }
-
-        [data-theme="dark"] .forgot-link {
-            color: #60a5fa !important;
-        }
-
-        [data-theme="dark"] .forgot-link:hover {
-            color: #93c5fd !important;
-        }
-
-        [data-theme="dark"] .button-boundary {
-            background: #0b1326 !important;
-            border-color: #1e2c48 !important;
-        }
-
-        [data-theme="dark"] .btn-submit {
-            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 55%, #38bdf8 100%) !important;
-            box-shadow: 0 10px 28px -4px rgba(37, 99, 235, 0.55) !important;
-        }
-
-        [data-theme="dark"] .btn-submit:hover {
-            box-shadow: 0 14px 32px -4px rgba(37, 99, 235, 0.65) !important;
-            filter: brightness(1.08);
-        }
-
-        [data-theme="dark"] .alert-danger {
-            background: rgba(239, 68, 68, 0.15) !important;
-            border-color: rgba(239, 68, 68, 0.35) !important;
-            color: #fca5a5 !important;
-        }
-
-        [data-theme="dark"] .form-footer-text {
-            color: #64748b !important;
-        }
-
-        [data-theme="dark"] .form-footer-text a {
-            color: #60a5fa !important;
-        }
-
-        [data-theme="dark"] .form-footer-text a:hover {
-            color: #93c5fd !important;
-        }
-
-        [data-theme="dark"] .login-theme-toggle .theme-toggle-btn {
-            background: #0f172a !important;
-            border-color: #1e293b !important;
-            color: #fbbf24 !important;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
-        }
-
-        @media (max-width: 900px) {
-            [data-theme="dark"] .left-hero {
-                border-right: none;
-                border-bottom: 1px solid rgba(59, 130, 246, 0.15);
-                box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
-            }
-        }
-
-        /* ── Submit Spinner & Button Submitting State ── */
-        .btn-spinner {
-            display: none;
-            width: 18px;
-            height: 18px;
-            animation: btnSpin 0.7s linear infinite;
-            flex-shrink: 0;
-        }
-        .btn-submit.is-submitting .btn-spinner {
-            display: inline-block;
-        }
-        .btn-submit.is-submitting > svg:not(.btn-spinner) {
-            display: none;
-        }
-        @keyframes btnSpin {
-            from { transform: rotate(0deg); }
-            to   { transform: rotate(360deg); }
-        }
-
-        /* ── Minimalist Clean Hero Animations ── */
-        .hero-live-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 9px;
-            margin-top: 24px;
-            padding: 8px 18px;
-            border-radius: 99px;
-            background: rgba(255, 255, 255, 0.09);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 0 16px rgba(59, 130, 246, 0.12);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .hero-live-pill:hover {
-            background: rgba(255, 255, 255, 0.14);
-            border-color: rgba(96, 165, 250, 0.4);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22), 0 0 24px rgba(59, 130, 246, 0.25);
-        }
-        .live-dot-pulse {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #10b981;
-            box-shadow: 0 0 10px #10b981;
-            animation: livePulse 2s infinite ease-in-out;
-            flex-shrink: 0;
-        }
-        @keyframes livePulse {
-            0%, 100% { transform: scale(0.9); opacity: 1; }
-            50% { transform: scale(1.35); opacity: 0.55; }
-        }
-        .live-pill-text {
-            font-size: 12.5px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.92);
-            letter-spacing: 0.01em;
-        }
-
-        /* Role switch pop animation */
-        .role-card.active {
-            animation: rolePop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        @keyframes rolePop {
-            0% { transform: scale(0.92); }
-            100% { transform: scale(1); }
-        }
-
-        [data-theme="dark"] .hero-live-pill {
-            background: rgba(18, 29, 51, 0.7);
-            border-color: rgba(59, 130, 246, 0.25);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(59, 130, 246, 0.15);
-        }
-
-        .alert-danger {
-            animation: alertShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-        }
-        @keyframes alertShake {
-            10%, 90% { transform: translateX(-2px); }
-            20%, 80% { transform: translateX(3px); }
-            30%, 50%, 70% { transform: translateX(-4px); }
-            40%, 60% { transform: translateX(4px); }
         }
     </style>
     <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
@@ -1431,13 +1025,13 @@
         <!-- Floating Badge Hijau: Presensi Realtime (Kiri Atas) -->
         <div class="hero-float-badge badge-realtime-left">
             <div class="float-badge-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12"/>
                 </svg>
             </div>
             <div>
                 <div class="float-badge-title">Presensi Realtime</div>
-                <div class="float-badge-desc" id="live-realtime-badge-desc">06:45:00 WIB • Tepat Waktu ✨</div>
+                <div class="float-badge-desc" id="live-realtime-badge-desc">Tepat Waktu &amp; Terverifikasi ✨</div>
             </div>
         </div>
 
@@ -1458,13 +1052,13 @@
             <div class="illus-title">PresensiKita</div>
             <div class="illus-sub">Sistem Informasi Kehadiran Siswa</div>
 
-            <!-- Single Minimalist Live Status Pill (Clean & Spacious) -->
+            <!-- Single Minimalist Live Status Pill -->
             <div class="hero-live-pill">
                 <span class="live-dot-pulse"></span>
                 <span class="live-pill-text" id="live-school-clock">SMKN 1 Boyolangu • Sistem Aktif</span>
             </div>
         </div>
-        <div class="left-footer">&copy; {{ date('Y') }} PresensiKita. All rights reserved.</div>
+        <div class="left-footer">&copy; {{ date('Y') }} PresensiKita. SMKN 1 Boyolangu.</div>
     </div>
 
     <!-- ─── RIGHT FORM ─── -->
@@ -1478,7 +1072,7 @@
                     <span>Portal Presensi Terpadu</span>
                 </div>
                 <h2>Selamat Datang</h2>
-                <p>Satu akses untuk Guru, Siswa, Orang Tua, dan Staf SMKN 1 Boyolangu.</p>
+                <p>Satu akses terintegrasi untuk Guru, Wali Murid, Siswa, dan Staf SMKN 1 Boyolangu.</p>
             </div>
 
             <!-- ─── ERROR MESSAGES ─── -->
@@ -1493,44 +1087,47 @@
             <div class="form-panel active" id="panel-login" role="tabpanel">
                 <form method="POST" action="{{ route('login.post') }}" id="form-login">
                     @csrf
+                    
+                    <!-- Username / NISN Input -->
                     <div class="form-group">
                         <label class="form-label" for="login-username">
-                            <span>Username / NIP / NISN</span>
-                            <span class="label-hint">Identitas Akun</span>
+                            <span>Username / NISN</span>
                         </label>
                         <div class="input-relative">
                             <span class="input-icon">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                             </span>
-                            <input type="text" id="login-username" name="username" class="form-input" placeholder="Masukkan username, NIP, atau NISN" value="{{ old('username') }}" autocomplete="username" required autofocus>
+                            <input type="text" id="login-username" name="username" class="form-input" placeholder="Masukkan Username atau NISN" value="{{ old('username') }}" autocomplete="username" required autofocus>
+                        </div>
+                        
+                        <!-- Live Role Auto-Detect Chip -->
+                        <div class="role-detect-container">
+                            <div class="role-detect-chip default" id="role-detect-chip">
+                                <span class="detect-icon" id="detect-icon">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                </span>
+                                <span class="detect-text" id="detect-text">Ketik Username atau 10 digit NISN</span>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Password Input -->
                     <div class="form-group" id="group-password">
                         <label class="form-label" for="login-password">
                             <span>Password</span>
-                            <span class="label-hint">Kata Sandi</span>
                         </label>
                         <div class="input-relative">
                             <span class="input-icon">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                             </span>
-                            <input type="password" id="login-password" name="password" class="form-input" placeholder="Masukkan password (opsional untuk NISN murid)" autocomplete="current-password">
-                            <button type="button" class="btn-eye-toggle" onclick="togglePassword('login-password','eye-login')" title="Tampilkan/Sembunyikan">
+                            <input type="password" id="login-password" name="password" class="form-input" placeholder="Masukkan password akun Anda" autocomplete="current-password">
+                            <button type="button" class="btn-eye-toggle" onclick="togglePassword('login-password','eye-login')" title="Tampilkan/Sembunyikan Kata Sandi">
                                 <svg id="eye-login" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Petunjuk Ringkas Menarik -->
-                    <div class="login-tip-box">
-                        <div class="tip-icon">
-                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                        </div>
-                        <div>
-                            <strong>Petunjuk:</strong> Guru &amp; Staf gunakan <em>Username/NIP</em>, Wali Murid gunakan <em>10 digit NISN Siswa</em>.
-                        </div>
-                    </div>
-
+                    <!-- Options: Ingat Saya & Lupa Password -->
                     <div class="form-options">
                         <label class="remember-me">
                             <input type="checkbox" name="remember">
@@ -1538,6 +1135,8 @@
                         </label>
                         <a href="javascript:void(0)" onclick="alert('Silakan hubungi administrator sekolah untuk me-reset password Anda.')" class="forgot-link">Lupa password?</a>
                     </div>
+
+                    <!-- Submit Button with Modern Boundary & Shimmer -->
                     <div class="button-boundary">
                         <button type="submit" class="btn-submit" data-runaway id="btn-login">
                             <svg class="btn-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
@@ -1545,12 +1144,22 @@
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                         </button>
                     </div>
+
+                    <!-- Security & Trust Badge -->
+                    <div class="security-trust-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        <span>Koneksi Terenkripsi &amp; Presensi Real-Time SMKN 1 Boyolangu</span>
+                    </div>
+
                 </form>
             </div>
 
-            <!-- Footer -->
+            <!-- Footer Link -->
             <div class="form-footer-text">
-                Ada kendala akun? <a href="{{ route('laporan.public') }}">Laporkan ke Admin</a>
+                Ada kendala akses akun? <a href="{{ route('laporan.public') }}">Laporkan ke Admin</a>
             </div>
 
         </div>
@@ -1558,7 +1167,7 @@
 </div>
 
 <script>
-    // ── Toggle password visibility
+    // ── Toggle Password Visibility
     function togglePassword(inputId, iconId) {
         const pwd  = document.getElementById(inputId);
         const icon = document.getElementById(iconId);
@@ -1571,6 +1180,55 @@
             icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
         }
     }
+
+    // ── Live Role Auto-Detection
+    (function() {
+        const usernameInput = document.getElementById('login-username');
+        const chip = document.getElementById('role-detect-chip');
+        const detectIcon = document.getElementById('detect-icon');
+        const detectText = document.getElementById('detect-text');
+        const pwdInput = document.getElementById('login-password');
+
+        if (!usernameInput || !chip) return;
+
+        function evaluateRole() {
+            const val = (usernameInput.value || '').trim();
+            chip.className = 'role-detect-chip';
+
+            if (!val) {
+                chip.classList.add('default');
+                detectIcon.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+                detectText.textContent = 'Ketik Username atau 10 digit NISN';
+                if (pwdInput) pwdInput.placeholder = 'Masukkan password akun Anda';
+                return;
+            }
+
+            // Pola 1: 10 digit angka persis = NISN Siswa / Wali Murid
+            if (/^\d{10}$/.test(val)) {
+                chip.classList.add('chip-siswa');
+                detectIcon.innerHTML = '🎓';
+                detectText.textContent = 'Terdeteksi: Siswa / Wali Murid (NISN)';
+                if (pwdInput) pwdInput.placeholder = 'Opsional (Kosongkan jika hanya memantau presensi)';
+            }
+            // Pola 2: Angka sebagian (belum 10 digit) = sedang mengetik NISN
+            else if (/^\d+$/.test(val) && val.length < 10) {
+                chip.classList.add('default');
+                detectIcon.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+                detectText.textContent = `NISN: ${val.length}/10 digit angka`;
+                if (pwdInput) pwdInput.placeholder = 'Masukkan password akun Anda';
+            }
+            // Pola 3: Teks umum / username = Akun Guru / Staf / Admin
+            else {
+                chip.classList.add('chip-staff');
+                detectIcon.innerHTML = '🛡️';
+                detectText.textContent = 'Terdeteksi: Akun Guru / Staf / Admin';
+                if (pwdInput) pwdInput.placeholder = 'Masukkan password akun Anda';
+            }
+        }
+
+        usernameInput.addEventListener('input', evaluateRole);
+        evaluateRole(); // Initial check on load (e.g. if old value exists)
+    })();
 
     // ── Button Submit State
     function attachLoginSubmit(formId, btnId, initialText) {
@@ -1588,7 +1246,7 @@
         });
     }
 
-    attachLoginSubmit('form-login', 'btn-login', 'Memproses...');
+    attachLoginSubmit('form-login', 'btn-login', 'Memproses Masuk...');
 
     // ── Live School Clock
     (function() {

@@ -3,7 +3,7 @@
     <div class="card" style="padding:22px 24px;max-width:900px">
         <div class="card-header" style="margin-bottom:16px"><div class="card-title">Catat Sakit atau Izin</div></div>
         <form id="absensi-siswa-form" onsubmit="simpanAbsensiSiswa(event)">@csrf
-            <div style="display:grid;grid-template-columns:minmax(0, 1fr) minmax(130px, 160px) minmax(140px, 170px);gap:14px;margin-bottom:14px;align-items:flex-start">
+            <div style="display:grid;grid-template-columns:minmax(0, 1.2fr) minmax(110px, 130px) minmax(130px, 150px) minmax(130px, 150px);gap:14px;margin-bottom:14px;align-items:flex-start">
                 <div style="min-width:0">
                     <label for="absensi-siswa">Siswa</label>
                     <input type="hidden" id="absensi-siswa" name="id_siswa" required>
@@ -29,7 +29,8 @@
                     </div>
                 </div>
                 <div style="min-width:0"><label for="absensi-jenis">Jenis absensi</label><select id="absensi-jenis" name="jenis_absen" class="filter-select" required style="width:100%;margin-top:4px;box-sizing:border-box"><option value="S">Sakit</option><option value="I">Izin</option></select></div>
-                <div style="min-width:0"><label for="absensi-tanggal">Tanggal</label><input id="absensi-tanggal" type="date" name="tanggal_dispen" value="{{ now()->toDateString() }}" class="filter-input" required style="width:100%;margin-top:4px;box-sizing:border-box"></div>
+                <div style="min-width:0"><label for="absensi-tanggal-mulai">Tanggal Mulai</label><input id="absensi-tanggal-mulai" type="date" name="tanggal_dispen" value="{{ now()->toDateString() }}" class="filter-input" required style="width:100%;margin-top:4px;box-sizing:border-box" onchange="var s=document.getElementById('absensi-tanggal-selesai'); if(s){ s.min=this.value; if(s.value < this.value) s.value=this.value; }"></div>
+                <div style="min-width:0"><label for="absensi-tanggal-selesai">Sampai Dengan</label><input id="absensi-tanggal-selesai" type="date" name="tanggal_selesai" value="{{ now()->toDateString() }}" min="{{ now()->toDateString() }}" class="filter-input" required style="width:100%;margin-top:4px;box-sizing:border-box"></div>
             </div>
             <div style="margin-bottom:14px"><label for="absensi-foto">Foto surat keterangan <small style="color:#94a3b8">(opsional)</small></label><input id="absensi-foto" type="file" name="foto_surat" accept="image/jpeg,image/png,image/webp" style="display:block;width:100%;margin-top:6px;font-size:13px"><small style="display:block;color:#64748b;margin-top:5px">Format JPG, PNG, atau WEBP. Maksimal 5 MB.</small></div>
             <button type="submit" class="btn-primary" style="border-radius:8px;padding:10px 16px;font-size:13px">Simpan &amp; Absen ke Jurnal</button>
@@ -52,8 +53,23 @@
                             <td><strong>{{ $item->siswa->nama_siswa ?? '-' }}</strong></td>
                             <td>{{ $item->siswa->kelas->nama_kelas ?? '-' }}</td>
                             <td>{{ $item->jenis_absen === 'S' ? 'Sakit' : 'Izin' }}</td>
-                            <td>{{ $item->tanggal_dispen->format('d-m-Y') }}</td>
-                            <td>@if($item->foto_surat)<a href="{{ Storage::disk('public')->url($item->foto_surat) }}" target="_blank" rel="noopener">Lihat foto</a>@else-@endif</td>
+                            <td>
+                                @if($item->tanggal_selesai && $item->tanggal_selesai->gt($item->tanggal_dispen))
+                                    {{ $item->tanggal_dispen->format('d-m-Y') }} <span style="color:#64748b;font-size:11.5px">s/d</span> {{ $item->tanggal_selesai->format('d-m-Y') }}
+                                @else
+                                    {{ $item->tanggal_dispen->format('d-m-Y') }}
+                                @endif
+                            </td>
+                            <td>
+                                @if($item->foto_surat)
+                                    <a href="#" onclick="showSuratPopup('{{ Storage::disk('public')->url($item->foto_surat) }}'); return false;" style="font-size:12.5px;font-weight:600;color:#2563eb;display:inline-flex;align-items:center;gap:4px">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        Lihat foto
+                                    </a>
+                                @else
+                                    <span style="color:#94a3b8">-</span>
+                                @endif
+                            </td>
                             <td><span class="badge badge-success">Tersimpan</span></td>
                         </tr>
                     @empty
@@ -98,4 +114,18 @@ document.addEventListener('click',function(e){
         toggleAbsensiSiswaDropdown(false);
     }
 });
+if (typeof window.showSuratPopup !== 'function') {
+    window.showSuratPopup = function(url) {
+        Swal.fire({
+            title: 'Foto Surat Keterangan',
+            imageUrl: url,
+            imageAlt: 'Foto Surat',
+            confirmButtonText: 'Tutup',
+            confirmButtonColor: '#475569',
+            customClass: {
+                image: 'swal-popup-image'
+            }
+        });
+    };
+}
 </script>

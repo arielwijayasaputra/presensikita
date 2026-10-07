@@ -936,6 +936,8 @@ function muatAbsensiTersimpan(){
     const tanggal = tanggalInput.value;
     if (!kelasId || !tanggal) return;
 
+    const tbody = root ? qs('#siswa-tbody', root) : document.getElementById('siswa-tbody');
+
     fetch(`/absensi/cek?kelas_id=${kelasId}&tanggal=${tanggal}`)
         .then(res => res.json())
         .then(data => {
@@ -959,7 +961,7 @@ function muatAbsensiTersimpan(){
                 const map = {};
                 data.siswa.forEach(s => {
                     map[s.id_siswa] = s;
-                    if (s.has_approved_dispen) {
+                    if (s.has_approved_dispen || s.has_active_surat) {
                         window.currentDispenMap[s.id_siswa] = true;
                     }
                 });
@@ -967,6 +969,57 @@ function muatAbsensiTersimpan(){
                     const rec = map[s.id_siswa];
                     if (rec) {
                         s.has_approved_dispen = !!rec.has_approved_dispen;
+                        s.has_active_surat = !!rec.has_active_surat;
+                        s.has_surat = !!rec.has_surat;
+                        s.foto_surat_url = rec.foto_surat_url;
+                        s.surat_jenis = rec.surat_jenis;
+                        s.surat_info = rec.surat_info;
+
+                        // Update tombol Lihat Surat di baris tabel Desktop
+                        const trNameTd = tbody ? tbody.querySelector(`tr[data-siswa-id="${s.id_siswa}"] td:nth-child(3)`) : null;
+                        if (trNameTd) {
+                            const existingBtn = trNameTd.querySelector('.btn-surat-preview-badge');
+                            if (rec.foto_surat_url) {
+                                if (!existingBtn) {
+                                    const btnSurat = document.createElement('button');
+                                    btnSurat.type = 'button';
+                                    btnSurat.className = 'btn-surat-preview-badge';
+                                    btnSurat.title = rec.surat_info || 'Lihat Foto Surat';
+                                    btnSurat.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Lihat Surat`;
+                                    btnSurat.onclick = function(e) {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        showSuratPopup(rec.foto_surat_url);
+                                    };
+                                    trNameTd.appendChild(btnSurat);
+                                }
+                            } else if (existingBtn) {
+                                existingBtn.remove();
+                            }
+                        }
+
+                        // Update tombol Lihat Surat di header kartu Mobile
+                        const cardHead = document.querySelector(`.absensi-card[data-siswa-id="${s.id_siswa}"] .absensi-card-head`);
+                        if (cardHead) {
+                            const existingMobileBtn = cardHead.querySelector('.btn-surat-preview-mobile');
+                            if (rec.foto_surat_url) {
+                                if (!existingMobileBtn) {
+                                    const btnSuratMobile = document.createElement('button');
+                                    btnSuratMobile.type = 'button';
+                                    btnSuratMobile.className = 'btn-surat-preview-mobile';
+                                    btnSuratMobile.title = rec.surat_info || 'Lihat Foto Surat';
+                                    btnSuratMobile.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> <span>Lihat Surat</span>`;
+                                    btnSuratMobile.onclick = function(e) {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        showSuratPopup(rec.foto_surat_url);
+                                    };
+                                    cardHead.appendChild(btnSuratMobile);
+                                }
+                            } else if (existingMobileBtn) {
+                                existingMobileBtn.remove();
+                            }
+                        }
                     }
                     if (rec && rec.status && rec.status !== 'H') {
                         const radio = qs(`input[name="st-${s.id_siswa}"][value="${rec.status}"]`, root);
@@ -983,12 +1036,15 @@ function muatAbsensiTersimpan(){
                             if (rec.has_approved_dispen) {
                                 ket.readOnly = true;
                                 ket.title = 'Dispensasi resmi disetujui Waka';
+                            } else if (rec.has_active_surat) {
+                                ket.readOnly = true;
+                                ket.title = 'Surat keterangan ' + (rec.surat_jenis === 'S' ? 'Sakit' : 'Izin');
                             }
                         }
                         const ketCard = document.querySelector(`.absensi-card[data-siswa-id="${s.id_siswa}"] .absensi-ket-input`);
                         if (ketCard) {
                             ketCard.value = rec.keterangan;
-                            if (rec.has_approved_dispen) {
+                            if (rec.has_approved_dispen || rec.has_active_surat) {
                                 ketCard.readOnly = true;
                             }
                         }
@@ -1185,6 +1241,8 @@ function renderTable(data){
         const id = s.id_siswa;
         const nisn = s.nisn || '-';
         const nama = s.nama_siswa;
+        const hasSuratUrl = s.foto_surat_url;
+        const suratBtnHtml = hasSuratUrl ? `<button type="button" class="btn-surat-preview-badge" onclick="showSuratPopup('${hasSuratUrl}')" title="${s.surat_info || 'Lihat Foto Surat'}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Lihat Surat</button>` : '';
         const r=document.createElement('tr');
         r.dataset.siswaId = id;
         r.dataset.nama = (nama || '').toLowerCase();
@@ -1192,7 +1250,7 @@ function renderTable(data){
         r.innerHTML=`
             <td style="color:#94a3b8;font-weight:600">${idx+1}</td>
             <td style="font-family:monospace;font-size:13px;color:#64748b">${nisn}</td>
-            <td style="font-weight:600">${nama}</td>
+            <td style="font-weight:600"><span class="siswa-nama-txt">${nama}</span>${suratBtnHtml}</td>
             <td class="td-status"><label class="status-pill-btn status-pill-h${isAdmin ? ' is-admin' : ''}"><input type="radio" name="st-${id}" value="H" checked ${radioAttr}><span>H</span></label></td>
             <td class="td-status"><label class="status-pill-btn status-pill-s${isAdmin ? ' is-admin' : ''}"><input type="radio" name="st-${id}" value="S" ${radioAttr}><span>S</span></label></td>
             <td class="td-status"><label class="status-pill-btn status-pill-i${isAdmin ? ' is-admin' : ''}"><input type="radio" name="st-${id}" value="I" ${radioAttr}><span>I</span></label></td>
@@ -1209,6 +1267,7 @@ function renderTable(data){
             card.dataset.siswaId=id;
             card.dataset.nama = (nama || '').toLowerCase();
             card.dataset.nisn = (nisn || '').toLowerCase();
+            const suratMobileBtnHtml = hasSuratUrl ? `<button type="button" class="btn-surat-preview-mobile" onclick="showSuratPopup('${hasSuratUrl}')" title="${s.surat_info || 'Lihat Foto Surat'}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> <span>Lihat Surat</span></button>` : '';
             const stBtn=(v,label)=>{
                 const isAutoD = v === 'D';
                 const dStyle = isAutoD ? 'style="cursor:not-allowed;"' : (isGuruDisabled ? 'style="pointer-events:none;opacity:.6;"' : '');
@@ -1216,11 +1275,14 @@ function renderTable(data){
             };
             card.innerHTML=`
                 <div class="absensi-card-head">
-                    <span class="absensi-card-no">${idx+1}</span>
-                    <div>
-                        <div class="absensi-card-nama">${nama}</div>
-                        <div class="absensi-card-nisn">NISN: ${nisn}</div>
+                    <div style="display:flex;align-items:flex-start;gap:10px;min-width:0;flex:1">
+                        <span class="absensi-card-no">${idx+1}</span>
+                        <div style="min-width:0;flex:1">
+                            <div class="absensi-card-nama">${nama}</div>
+                            <div class="absensi-card-nisn">NISN: ${nisn}</div>
+                        </div>
                     </div>
+                    ${suratMobileBtnHtml}
                 </div>
                 <div class="absensi-status-row">${stBtn('H','H')}${stBtn('S','S')}${stBtn('I','I')}${stBtn('D','D')}${stBtn('A','A')}</div>
                 <input type="text" class="absensi-ket-input" data-ket-sid="${id}" placeholder="Keterangan (opsional)..." ${isGuruDisabled ? 'disabled' : ''} oninput="mirrorKetGuru(this, '${id}')">
@@ -1274,6 +1336,18 @@ function pickAbsensiStatus(btn){
             icon: 'warning',
             title: 'Siswa Sedang Dispensasi',
             text: 'Siswa ini memiliki Surat Dispensasi resmi yang telah disetujui Waka Kesiswaan.',
+            confirmButtonColor: '#2563eb'
+        });
+        return;
+    }
+
+    const sObj = currentSiswaList && currentSiswaList.find(s=>s.id_siswa == sid);
+    if(sObj && sObj.has_active_surat && val !== sObj.surat_jenis){
+        const jName = sObj.surat_jenis === 'S' ? 'Sakit' : 'Izin';
+        Swal.fire({
+            icon: 'info',
+            title: 'Siswa Memiliki Surat ' + jName,
+            text: 'Siswa ini telah dicatat ' + jName + ' oleh Guru Piket melalui Surat Keterangan resmi.',
             confirmButtonColor: '#2563eb'
         });
         return;
@@ -1365,6 +1439,25 @@ function filterSiswa(q){
     }
 }
 window.filterSiswa = filterSiswa;
+
+function showSuratPopup(url) {
+    if (!url) return;
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Foto Surat Keterangan / Sakit / Izin',
+            imageUrl: url,
+            imageAlt: 'Foto Surat',
+            confirmButtonText: 'Tutup',
+            confirmButtonColor: '#475569',
+            customClass: {
+                image: 'swal-popup-image'
+            }
+        });
+    } else {
+        window.open(url, '_blank');
+    }
+}
+window.showSuratPopup = showSuratPopup;
 
 window.filterTable = function(inputId, tableId) {
     const input = typeof inputId === 'string' ? document.getElementById(inputId) : inputId;

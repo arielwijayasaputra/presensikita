@@ -242,7 +242,21 @@ class DashboardController extends Controller
                 ->keyBy('id_siswa');
 
             $dispenHariIniClass = DispenSiswa::whereHas('siswa', fn ($q) => $q->where('id_kelas', $waliKelasId))
-                ->whereDate('tanggal_dispen', $waliTanggalHariIni)
+                ->where(function ($q) use ($waliTanggalHariIni) {
+                    $q->where(function ($d) use ($waliTanggalHariIni) {
+                        $d->where('jenis_absen', 'D')
+                          ->whereDate('tanggal_dispen', $waliTanggalHariIni);
+                    })->orWhere(function ($s) use ($waliTanggalHariIni) {
+                        $s->whereIn('jenis_absen', ['S', 'I'])
+                          ->whereDate('tanggal_dispen', '<=', $waliTanggalHariIni)
+                          ->where(function ($sq) use ($waliTanggalHariIni) {
+                              $sq->where(function ($n) use ($waliTanggalHariIni) {
+                                  $n->whereNull('tanggal_selesai')
+                                    ->whereDate('tanggal_dispen', $waliTanggalHariIni);
+                              })->orWhereDate('tanggal_selesai', '>=', $waliTanggalHariIni);
+                          });
+                    });
+                })
                 ->get()
                 ->keyBy('id_siswa');
 

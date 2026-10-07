@@ -51,6 +51,8 @@ class DispenSiswaController extends Controller
             $createdDispens = DB::transaction(function () use ($data, $idSiswaList, $guruPiket, $fotoSurat, $kodeDispen) {
                 $nowTime = now()->format('H:i:s');
                 $dispens = collect();
+                $tglMulai = $data['tanggal_dispen'];
+                $tglSelesai = ! empty($data['tanggal_selesai']) ? $data['tanggal_selesai'] : $tglMulai;
 
                 foreach ($idSiswaList as $idSiswa) {
                     $siswa = Siswa::where('id_siswa', $idSiswa)->where('is_aktif', 1)->firstOrFail();
@@ -61,21 +63,28 @@ class DispenSiswaController extends Controller
                         ->whereNull('jadwal_mengajar.deleted_at')
                         ->whereNull('jam_pelajaran.deleted_at')
                         ->where('jadwal_mengajar.id_kelas', $siswa->id_kelas)
-                        ->whereDate('jurnal_kelas.tanggal', $data['tanggal_dispen'])
+                        ->whereDate('jurnal_kelas.tanggal', $tglMulai)
                         ->whereTime('jam_pelajaran.jam_mulai', '<=', $nowTime)
                         ->whereTime('jam_pelajaran.jam_selesai', '>', $nowTime)
                         ->select('jurnal_kelas.*')
                         ->first();
 
-                    // Update absensi di semua jurnal yang sudah ada hari ini mulai dari jam dispen
-                    $existingJurnals = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
+                    // Update absensi di semua jurnal yang sudah ada dalam rentang tanggal
+                    $existingJurnalsQuery = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
                         ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
                         ->whereNull('jadwal_mengajar.deleted_at')
                         ->whereNull('jam_pelajaran.deleted_at')
                         ->where('jadwal_mengajar.id_kelas', $siswa->id_kelas)
-                        ->whereDate('jurnal_kelas.tanggal', $data['tanggal_dispen'])
-                        ->whereTime('jam_pelajaran.jam_selesai', '>', $nowTime)
-                        ->pluck('jurnal_kelas.id_jurnal');
+                        ->whereDate('jurnal_kelas.tanggal', '>=', $tglMulai)
+                        ->whereDate('jurnal_kelas.tanggal', '<=', $tglSelesai);
+
+                    if ($data['jenis_absen'] === 'D') {
+                        $existingJurnalsQuery->whereTime('jam_pelajaran.jam_selesai', '>', $nowTime);
+                    }
+
+                    $alasan = ! empty($data['alasan'])
+                        ? $data['alasan']
+                        : ($data['jenis_absen'] === 'S' ? 'Sakit' : ($data['jenis_absen'] === 'I' ? 'Izin' : 'Dispensasi'));
 
                     foreach ($existingJurnals as $jId) {
                         $existingTh = JurnalSiswaTidakHadir::where('id_jurnal', $jId)->where('id_siswa', $siswa->id_siswa)->first();
@@ -84,7 +93,7 @@ class DispenSiswaController extends Controller
                         }
                         JurnalSiswaTidakHadir::updateOrCreate(
                             ['id_jurnal' => $jId, 'id_siswa' => $siswa->id_siswa],
-                            ['status' => $data['jenis_absen'], 'keterangan' => strtoupper($data['jenis_absen']).($data['alasan'] ? ': '.$data['alasan'] : '')]
+                            ['status' => $data['jenis_absen'], 'keterangan' => strtoupper($data['jenis_absen']).($alasan ? ': '.$alasan : '')]
                         );
                     }
 
@@ -92,8 +101,9 @@ class DispenSiswaController extends Controller
                         'kode_dispen' => $kodeDispen,
                         'id_siswa' => $siswa->id_siswa,
                         'id_guru_piket' => $guruPiket->id_guru,
-                        'tanggal_dispen' => $data['tanggal_dispen'],
-                        'alasan' => $data['alasan'] ?? null,
+                        'tanggal_dispen' => $tglMulai,
+                        'tanggal_selesai' => $tglSelesai,
+                        'alasan' => $alasan,
                         'jenis_absen' => $data['jenis_absen'],
                         'foto_surat' => $fotoSurat,
                         'id_jurnal' => $jurnal?->id_jurnal,

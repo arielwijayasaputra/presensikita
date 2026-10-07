@@ -20,6 +20,7 @@ class StoreDispenSiswaRequest extends FormRequest
             'id_siswa' => ['required', 'array', 'min:1'],
             'id_siswa.*' => ['required', 'integer', 'exists:siswa,id_siswa'],
             'tanggal_dispen' => ['required', 'date'],
+            'tanggal_selesai' => ['nullable', 'date', 'after_or_equal:tanggal_dispen'],
             'jenis_absen' => ['required', 'in:S,I,D'],
             'alasan' => ['nullable', 'string', 'max:2000'],
             'foto_surat' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],

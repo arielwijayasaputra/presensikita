@@ -474,8 +474,22 @@ class AbsensiService
         $nowTime = now()->format('H:i:s');
 
         $dispenList = DispenSiswa::whereIn('id_siswa', $allSiswa->pluck('id_siswa'))
-            ->whereDate('tanggal_dispen', $tanggal)
-            ->where('status_waka', 'disetujui')
+            ->where(function ($q) use ($tanggal) {
+                $q->where(function ($d) use ($tanggal) {
+                    $d->where('jenis_absen', 'D')
+                      ->whereDate('tanggal_dispen', $tanggal)
+                      ->where('status_waka', 'disetujui');
+                })->orWhere(function ($s) use ($tanggal) {
+                    $s->whereIn('jenis_absen', ['S', 'I'])
+                      ->whereDate('tanggal_dispen', '<=', $tanggal)
+                      ->where(function ($sq) use ($tanggal) {
+                          $sq->where(function ($n) use ($tanggal) {
+                              $n->whereNull('tanggal_selesai')
+                                ->whereDate('tanggal_dispen', $tanggal);
+                          })->orWhereDate('tanggal_selesai', '>=', $tanggal);
+                      });
+                });
+            })
             ->get();
 
         $keterlambatanList = KeterlambatanSiswa::whereIn('id_siswa', $allSiswa->pluck('id_siswa'))
@@ -536,12 +550,21 @@ class AbsensiService
             if ($jurnal) {
                 $normalizedJamKe = $j->jam_ke >= 100 ? $j->jam_ke - 100 : $j->jam_ke;
 
-                // Tambahkan data dispen aktif ke jurnal ini jika bertepatan
+                // Tambahkan data dispen / surat sakit / izin aktif ke jurnal ini
                 foreach ($dispenList as $d) {
-                    $wMulai = $d->waktu_keluar ? $d->waktu_keluar->format('H:i:s') : ($d->created_at ? $d->created_at->format('H:i:s') : '00:00:00');
-                    $wSelesai = $d->waktu_masuk ? $d->waktu_masuk->format('H:i:s') : '23:59:59';
-                    if ($j->jam_selesai > $wMulai && $j->jam_mulai < $wSelesai) {
-                        $st = $d->jenis_absen ?? 'D';
+                    if ($d->jenis_absen === 'D') {
+                        $wMulai = $d->waktu_keluar ? $d->waktu_keluar->format('H:i:s') : ($d->created_at ? $d->created_at->format('H:i:s') : '00:00:00');
+                        $wSelesai = $d->waktu_masuk ? $d->waktu_masuk->format('H:i:s') : '23:59:59';
+                        if ($j->jam_selesai > $wMulai && $j->jam_mulai < $wSelesai) {
+                            $st = 'D';
+                            JurnalSiswaTidakHadir::updateOrCreate(
+                                ['id_jurnal' => $jurnal->id_jurnal, 'id_siswa' => $d->id_siswa],
+                                ['status' => $st, 'keterangan' => strtoupper($st).($d->alasan ? ': '.$d->alasan : '')]
+                            );
+                        }
+                    } else {
+                        // S (Sakit) atau I (Izin) berlaku sepanjang hari
+                        $st = $d->jenis_absen;
                         JurnalSiswaTidakHadir::updateOrCreate(
                             ['id_jurnal' => $jurnal->id_jurnal, 'id_siswa' => $d->id_siswa],
                             ['status' => $st, 'keterangan' => strtoupper($st).($d->alasan ? ': '.$d->alasan : '')]

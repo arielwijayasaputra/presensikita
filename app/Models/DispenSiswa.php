@@ -16,7 +16,7 @@ class DispenSiswa extends Model
 
     protected $fillable = [
         'kode_dispen',
-        'id_siswa', 'id_guru_piket', 'tanggal_dispen', 'alasan',
+        'id_siswa', 'id_guru_piket', 'tanggal_dispen', 'tanggal_selesai', 'alasan',
         'jenis_absen', 'foto_surat', 'id_jurnal',
         'status_waka', 'status_guru_piket', 'catatan_waka', 'catatan_guru_piket',
         'tanda_tangan_waka',
@@ -26,6 +26,7 @@ class DispenSiswa extends Model
 
     protected $casts = [
         'tanggal_dispen' => 'date',
+        'tanggal_selesai' => 'date',
         'disetujui_waka_pada' => 'datetime',
         'disetujui_guru_piket_pada' => 'datetime',
         'waktu_keluar' => 'datetime',

@@ -271,7 +271,21 @@ class AbsensiController extends Controller
                 ->keyBy('id_siswa');
 
             $dispenHariIniClass = DispenSiswa::whereHas('siswa', fn ($q) => $q->where('id_kelas', $waliKelasId))
-                ->whereDate('tanggal_dispen', $waliTanggalHariIni)
+                ->where(function ($q) use ($waliTanggalHariIni) {
+                    $q->where(function ($d) use ($waliTanggalHariIni) {
+                        $d->where('jenis_absen', 'D')
+                          ->whereDate('tanggal_dispen', $waliTanggalHariIni);
+                    })->orWhere(function ($s) use ($waliTanggalHariIni) {
+                        $s->whereIn('jenis_absen', ['S', 'I'])
+                          ->whereDate('tanggal_dispen', '<=', $waliTanggalHariIni)
+                          ->where(function ($sq) use ($waliTanggalHariIni) {
+                              $sq->where(function ($n) use ($waliTanggalHariIni) {
+                                  $n->whereNull('tanggal_selesai')
+                                    ->whereDate('tanggal_dispen', $waliTanggalHariIni);
+                              })->orWhereDate('tanggal_selesai', '>=', $waliTanggalHariIni);
+                          });
+                    });
+                })
                 ->get()
                 ->keyBy('id_siswa');
 
@@ -614,10 +628,79 @@ class AbsensiController extends Controller
 
     public function getSiswa($id_kelas): JsonResponse
     {
-        $siswa = Siswa::where('id_kelas', $id_kelas)
+        $tanggal = now()->toDateString();
+        $siswaList = Siswa::where('id_kelas', $id_kelas)
             ->where('is_aktif', 1)
             ->orderBy('nama_siswa')
             ->get();
+
+        $dispenMap = DispenSiswa::whereIn('id_siswa', $siswaList->pluck('id_siswa'))
+            ->whereDate('tanggal_dispen', $tanggal)
+            ->where('status_waka', 'disetujui')
+            ->where('jenis_absen', 'D')
+            ->get()
+            ->keyBy('id_siswa');
+
+        $suratMap = DispenSiswa::whereIn('id_siswa', $siswaList->pluck('id_siswa'))
+            ->whereIn('jenis_absen', ['S', 'I'])
+            ->whereDate('tanggal_dispen', '<=', $tanggal)
+            ->where(function ($q) use ($tanggal) {
+                $q->where(function ($n) use ($tanggal) {
+                    $n->whereNull('tanggal_selesai')
+                      ->whereDate('tanggal_dispen', $tanggal);
+                })->orWhereDate('tanggal_selesai', '>=', $tanggal);
+            })
+            ->get()
+            ->keyBy('id_siswa');
+
+        $siswa = $siswaList->map(function ($s) use ($dispenMap, $suratMap) {
+            $dp = $dispenMap->get($s->id_siswa);
+            $surat = $suratMap->get($s->id_siswa);
+
+            $status = 'H';
+            $keterangan = '';
+            $hasApprovedDispen = false;
+            $hasActiveSurat = false;
+            $hasSurat = false;
+            $fotoSuratUrl = null;
+            $suratJenis = null;
+            $suratInfo = null;
+
+            if ($dp) {
+                $hasApprovedDispen = true;
+                $status = 'D';
+                $keterangan = 'Dispensasi' . ($dp->alasan ? ': ' . $dp->alasan : ' Resmi (Disetujui Waka)');
+                $hasSurat = ! empty($dp->foto_surat);
+                $fotoSuratUrl = $dp->fotoSuratUrl();
+                $suratJenis = 'D';
+                $suratInfo = 'Dispensasi';
+            } elseif ($surat) {
+                $hasActiveSurat = true;
+                $status = $surat->jenis_absen;
+                $jenisLabel = $surat->jenis_absen === 'S' ? 'Sakit' : 'Izin';
+                $tglRange = $surat->tanggal_selesai && $surat->tanggal_selesai->gt($surat->tanggal_dispen) ? ' (' . $surat->tanggal_dispen->format('d/m') . ' - ' . $surat->tanggal_selesai->format('d/m/Y') . ')' : '';
+                $keterangan = $jenisLabel . ($surat->alasan ? ': ' . $surat->alasan : '') . $tglRange;
+                $hasSurat = ! empty($surat->foto_surat);
+                $fotoSuratUrl = $surat->fotoSuratUrl();
+                $suratJenis = $surat->jenis_absen;
+                $suratInfo = 'Surat ' . $jenisLabel . $tglRange;
+            }
+
+            return [
+                'id_siswa' => $s->id_siswa,
+                'nisn' => $s->nisn,
+                'nama_siswa' => $s->nama_siswa,
+                'status' => $status,
+                'keterangan' => $keterangan,
+                'has_approved_dispen' => $hasApprovedDispen,
+                'has_active_surat' => $hasActiveSurat,
+                'has_surat' => $hasSurat,
+                'foto_surat_url' => $fotoSuratUrl,
+                'surat_jenis' => $suratJenis,
+                'surat_info' => $suratInfo,
+                'dispen_alasan' => $dp?->alasan ?? $surat?->alasan,
+            ];
+        });
 
         return response()->json([
             'status' => 'success',
@@ -844,6 +927,19 @@ class AbsensiController extends Controller
         $dispenMap = DispenSiswa::whereIn('id_siswa', $siswaList->pluck('id_siswa'))
             ->whereDate('tanggal_dispen', $tanggal)
             ->where('status_waka', 'disetujui')
+            ->where('jenis_absen', 'D')
+            ->get()
+            ->keyBy('id_siswa');
+
+        $suratMap = DispenSiswa::whereIn('id_siswa', $siswaList->pluck('id_siswa'))
+            ->whereIn('jenis_absen', ['S', 'I'])
+            ->whereDate('tanggal_dispen', '<=', $tanggal)
+            ->where(function ($q) use ($tanggal) {
+                $q->where(function ($n) use ($tanggal) {
+                    $n->whereNull('tanggal_selesai')
+                      ->whereDate('tanggal_dispen', $tanggal);
+                })->orWhereDate('tanggal_selesai', '>=', $tanggal);
+            })
             ->get()
             ->keyBy('id_siswa');
 
@@ -858,20 +954,41 @@ class AbsensiController extends Controller
         $normalizedCurrentJamKe = $currentJamKe >= 100 ? $currentJamKe - 100 : $currentJamKe;
 
         $nowTime = now()->format('H:i:s');
-        $siswa = $siswaList->map(function ($s) use ($tidakHadirMap, $dispenMap, $keterlambatanMap, $normalizedCurrentJamKe, $nowTime) {
+        $siswa = $siswaList->map(function ($s) use ($tidakHadirMap, $dispenMap, $suratMap, $keterlambatanMap, $normalizedCurrentJamKe, $nowTime) {
             $th = $tidakHadirMap->get($s->id_siswa);
             $dp = $dispenMap->get($s->id_siswa);
+            $surat = $suratMap->get($s->id_siswa);
             $kt = $keterlambatanMap->get($s->id_siswa);
 
             $status = $th ? $th->status : 'H';
             $keterangan = $th ? ($th->keterangan ?? '') : '';
             $hasApprovedDispen = false;
+            $hasActiveSurat = false;
+            $hasSurat = false;
+            $fotoSuratUrl = null;
+            $suratJenis = null;
+            $suratInfo = null;
 
             // Jika siswa memiliki surat dispensasi resmi yang sudah disetujui Waka: OTOMATIS STATUS DISPEN
             if ($dp) {
                 $hasApprovedDispen = true;
                 $status = 'D';
                 $keterangan = 'Dispensasi' . ($dp->alasan ? ': ' . $dp->alasan : ' Resmi (Disetujui Waka)');
+                $hasSurat = ! empty($dp->foto_surat);
+                $fotoSuratUrl = $dp->fotoSuratUrl();
+                $suratJenis = 'D';
+                $suratInfo = 'Dispensasi';
+            } elseif ($surat) {
+                // Jika siswa memiliki surat sakit atau izin yang aktif pada tanggal ini: OTOMATIS S / I
+                $hasActiveSurat = true;
+                $status = $surat->jenis_absen;
+                $jenisLabel = $surat->jenis_absen === 'S' ? 'Sakit' : 'Izin';
+                $tglRange = $surat->tanggal_selesai && $surat->tanggal_selesai->gt($surat->tanggal_dispen) ? ' (' . $surat->tanggal_dispen->format('d/m') . ' - ' . $surat->tanggal_selesai->format('d/m/Y') . ')' : '';
+                $keterangan = $jenisLabel . ($surat->alasan ? ': ' . $surat->alasan : '') . $tglRange;
+                $hasSurat = ! empty($surat->foto_surat);
+                $fotoSuratUrl = $surat->fotoSuratUrl();
+                $suratJenis = $surat->jenis_absen;
+                $suratInfo = 'Surat ' . $jenisLabel . $tglRange;
             } elseif ($status === 'D') {
                 // Jika tidak ada surat dispen yang disetujui, guru tidak dapat memberikan status D
                 $status = 'H';
@@ -892,7 +1009,12 @@ class AbsensiController extends Controller
                 'status' => $status,
                 'keterangan' => $keterangan,
                 'has_approved_dispen' => $hasApprovedDispen,
-                'dispen_alasan' => $dp?->alasan,
+                'has_active_surat' => $hasActiveSurat,
+                'has_surat' => $hasSurat,
+                'foto_surat_url' => $fotoSuratUrl,
+                'surat_jenis' => $suratJenis,
+                'surat_info' => $suratInfo,
+                'dispen_alasan' => $dp?->alasan ?? $surat?->alasan,
             ];
         });
 
@@ -935,6 +1057,20 @@ class AbsensiController extends Controller
             $approvedDispenMap = DispenSiswa::whereIn('id_siswa', $validSiswaIds)
                 ->whereDate('tanggal_dispen', $tanggal)
                 ->where('status_waka', 'disetujui')
+                ->where('jenis_absen', 'D')
+                ->get()
+                ->keyBy('id_siswa');
+
+            // Ambil daftar surat sakit dan izin yang aktif pada tanggal ini
+            $activeSuratMap = DispenSiswa::whereIn('id_siswa', $validSiswaIds)
+                ->whereIn('jenis_absen', ['S', 'I'])
+                ->whereDate('tanggal_dispen', '<=', $tanggal)
+                ->where(function ($q) use ($tanggal) {
+                    $q->where(function ($n) use ($tanggal) {
+                        $n->whereNull('tanggal_selesai')
+                          ->whereDate('tanggal_dispen', $tanggal);
+                    })->orWhereDate('tanggal_selesai', '>=', $tanggal);
+                })
                 ->get()
                 ->keyBy('id_siswa');
 
@@ -944,10 +1080,17 @@ class AbsensiController extends Controller
                 }
 
                 $dp = $approvedDispenMap->get((int) $idSiswa);
+                $surat = $activeSuratMap->get((int) $idSiswa);
                 if ($dp) {
                     // OTOMATIS DISPEN jika ada surat yang disetujui Waka
                     $status = 'D';
                     $ket = 'Dispensasi' . ($dp->alasan ? ': ' . $dp->alasan : ' Resmi (Disetujui Waka)');
+                } elseif ($surat) {
+                    // OTOMATIS SAKIT / IZIN jika ada surat sakit/izin aktif
+                    $status = $surat->jenis_absen;
+                    $jenisLabel = $surat->jenis_absen === 'S' ? 'Sakit' : 'Izin';
+                    $tglRange = $surat->tanggal_selesai && $surat->tanggal_selesai->gt($surat->tanggal_dispen) ? ' (' . $surat->tanggal_dispen->format('d/m') . ' - ' . $surat->tanggal_selesai->format('d/m/Y') . ')' : '';
+                    $ket = $jenisLabel . ($surat->alasan ? ': ' . $surat->alasan : '') . $tglRange;
                 } else {
                     $reqStatus = isset($item['status']) && in_array($item['status'], $validStatuses) ? $item['status'] : 'H';
                     // Jika tidak ada surat dispen yang disetujui, guru TIDAK BISA memberikan status D manual

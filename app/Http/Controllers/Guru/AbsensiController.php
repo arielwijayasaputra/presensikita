@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAbsensiRequest;
 use App\Models\DispenSiswa;
 use App\Models\Guru;
+use App\Models\GuruPiket;
 use App\Models\Hari;
 use App\Models\IzinGuru;
+use App\Models\JamPelajaran;
 use App\Models\JurnalKelas;
 use App\Models\JurnalSiswaTidakHadir;
 use App\Models\Kelas;
@@ -220,6 +222,327 @@ class AbsensiController extends Controller
             ? $siswaTerlambatHariIni->filter(fn ($s) => $s->siswa && (int) $s->siswa->id_kelas === $activeKelasIdNow)
             : collect();
 
+        // ── Peran Dinamis: Wali Kelas & Guru Piket ──
+        $waliKelasObj = Kelas::where('id_wali_kelas', $guru->id_guru)->first();
+        $isWaliKelas = ! is_null($waliKelasObj);
+        $waliKelasId = $waliKelasObj?->id_kelas;
+        if ($waliKelasObj) {
+            session([
+                'auth_kelas_id' => $waliKelasObj->id_kelas,
+                'auth_nama_kelas' => $waliKelasObj->nama_kelas,
+            ]);
+        }
+
+        $isGuruPiket = GuruPiket::where('id_guru', $guru->id_guru)
+            ->whereDate('tanggal', now()->toDateString())
+            ->exists();
+
+        // Data Wali Kelas (jika bertugas sebagai wali kelas)
+        $kelasesWali = $isWaliKelas ? collect([$waliKelasObj]) : collect();
+        $waliSiswaList = collect();
+        $waliBulan = (int) $request->get('wali_bulan', date('n'));
+        $waliTahun = (int) $request->get('wali_tahun', date('Y'));
+        $waliRekapData = [];
+        $dispenDanIzinKelas = collect();
+        $siswaPerluPerhatian = [];
+
+        if ($isWaliKelas && $waliKelasId) {
+            $waliSiswaList = Siswa::where('id_kelas', $waliKelasId)->where('is_aktif', 1)->orderBy('nama_siswa')->get();
+            $waliRekapData = $this->absensiService->buildAbsensiRekap($waliKelasId, $waliBulan, $waliTahun);
+            $dispenDanIzinKelas = DispenSiswa::with('siswa')
+                ->whereHas('siswa', fn ($q) => $q->where('id_kelas', $waliKelasId))
+                ->latest()
+                ->limit(30)
+                ->get();
+
+            $siswaPerluPerhatian = array_values(array_filter($waliRekapData['siswa'] ?? [], function ($row) {
+                return ($row['alpa'] ?? 0) >= 3 || (($row['sakit'] ?? 0) + ($row['izin'] ?? 0)) >= 5;
+            }));
+
+            // 1. Absensi Harian Kelas Hari Ini
+            $waliTanggalHariIni = now()->toDateString();
+            $jurnalHariIniIds = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
+                ->where('jadwal_mengajar.id_kelas', $waliKelasId)
+                ->whereDate('jurnal_kelas.tanggal', $waliTanggalHariIni)
+                ->pluck('jurnal_kelas.id_jurnal');
+
+            $tidakHadirHariIni = JurnalSiswaTidakHadir::whereIn('id_jurnal', $jurnalHariIniIds)
+                ->get()
+                ->keyBy('id_siswa');
+
+            $dispenHariIniClass = DispenSiswa::whereHas('siswa', fn ($q) => $q->where('id_kelas', $waliKelasId))
+                ->whereDate('tanggal_dispen', $waliTanggalHariIni)
+                ->get()
+                ->keyBy('id_siswa');
+
+            $hadirCount = 0;
+            $sakitCount = 0;
+            $izinCount = 0;
+            $alpaCount = 0;
+            $dispenCount = 0;
+
+            $waliAbsensiHariIniList = $waliSiswaList->map(function ($s) use ($tidakHadirHariIni, $dispenHariIniClass, &$hadirCount, &$sakitCount, &$izinCount, &$alpaCount, &$dispenCount) {
+                $th = $tidakHadirHariIni->get($s->id_siswa);
+                $ds = $dispenHariIniClass->get($s->id_siswa);
+
+                $status = 'H';
+                $ket = '';
+
+                if ($ds) {
+                    $status = $ds->jenis_absen;
+                    $ket = $ds->alasan ?? 'Dispensasi/Izin';
+                } elseif ($th) {
+                    $status = $th->status;
+                    $ket = $th->keterangan ?? '';
+                }
+
+                if ($status === 'H') {
+                    $hadirCount++;
+                } elseif ($status === 'S') {
+                    $sakitCount++;
+                } elseif ($status === 'I') {
+                    $izinCount++;
+                } elseif ($status === 'A') {
+                    $alpaCount++;
+                } elseif ($status === 'D') {
+                    $dispenCount++;
+                }
+
+                return [
+                    'id_siswa' => $s->id_siswa,
+                    'nisn' => $s->nisn ?? '-',
+                    'nama_siswa' => $s->nama_siswa,
+                    'jenis_kelamin' => $s->jenis_kelamin ?? 'L',
+                    'no_hp_ortu' => $s->no_hp_ortu ?? '',
+                    'status' => $status,
+                    'keterangan' => $ket,
+                ];
+            });
+
+            $totalSiswaWali = $waliSiswaList->count();
+            $pctHadirHariIni = $totalSiswaWali > 0 ? (int) round(($hadirCount / $totalSiswaWali) * 100) : 0;
+            $waliStatsHariIni = [
+                'total_siswa' => $totalSiswaWali,
+                'hadir' => $hadirCount,
+                'sakit' => $sakitCount,
+                'izin' => $izinCount,
+                'alpa' => $alpaCount,
+                'dispensasi' => $dispenCount,
+                'pct_hadir' => $pctHadirHariIni,
+            ];
+
+            // 2. Jurnal Harian Real-Time Hari Ini
+            $hariNamaIndo = Hari::getActiveDays()->pluck('nama_hari', 'urutan')->toArray()[$hariIni] ?? $hariIni;
+            $jadwalWaliHariIni = DB::table('jadwal_mengajar')
+                ->join('guru', 'jadwal_mengajar.id_guru', '=', 'guru.id_guru')
+                ->join('mapel', 'jadwal_mengajar.id_mapel', '=', 'mapel.id_mapel')
+                ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
+                ->whereNull('jadwal_mengajar.deleted_at')
+                ->whereNull('guru.deleted_at')
+                ->whereNull('mapel.deleted_at')
+                ->whereNull('jam_pelajaran.deleted_at')
+                ->where('jadwal_mengajar.id_kelas', $waliKelasId)
+                ->where('jadwal_mengajar.hari', $hariNamaIndo)
+                ->select(
+                    'jadwal_mengajar.id_jadwal',
+                    'jadwal_mengajar.id_kelas',
+                    'guru.nama_guru',
+                    'guru.foto_profil',
+                    'mapel.nama_mapel',
+                    'jam_pelajaran.id_jam',
+                    'jam_pelajaran.jam_ke',
+                    'jam_pelajaran.jam_mulai',
+                    'jam_pelajaran.jam_selesai'
+                )
+                ->orderBy('jam_pelajaran.jam_ke')
+                ->get();
+
+            $jadwalWaliHariIni = JadwalService::applyJadwalMaju($jadwalWaliHariIni, $hariNamaIndo);
+
+            $jurnalWaliHariIniMap = JurnalKelas::whereDate('tanggal', $waliTanggalHariIni)
+                ->whereIn('id_jadwal', $jadwalWaliHariIni->pluck('id_jadwal'))
+                ->get()
+                ->keyBy('id_jadwal');
+
+            $jamSekarang = now()->format('H:i:s');
+            $jurnalTerisiCount = 0;
+            $waliJadwalHariIni = $jadwalWaliHariIni->map(function ($j) use ($jurnalWaliHariIniMap, $jamSekarang, &$jurnalTerisiCount) {
+                $jurnal = $jurnalWaliHariIniMap->get($j->id_jadwal);
+                if ($jurnal) {
+                    $jurnalTerisiCount++;
+                }
+
+                $statusPembelajaran = 'Belum Dimulai';
+                if ($jurnal) {
+                    $statusPembelajaran = 'Jurnal Terisi';
+                } elseif ($jamSekarang >= $j->jam_mulai && $jamSekarang <= $j->jam_selesai) {
+                    $statusPembelajaran = 'Sedang Berlangsung';
+                } elseif ($jamSekarang > $j->jam_selesai) {
+                    $statusPembelajaran = 'Selesai (Belum Isi Jurnal)';
+                }
+
+                $j->jurnal = $jurnal;
+                $j->status_pembelajaran = $statusPembelajaran;
+
+                return $j;
+            });
+
+            $totalJamHariIni = $jadwalWaliHariIni->count();
+            $waliStatsJurnalHariIni = [
+                'total_jam' => $totalJamHariIni,
+                'terisi' => $jurnalTerisiCount,
+                'guru_count' => $jadwalWaliHariIni->pluck('nama_guru')->unique()->count(),
+                'pct_terisi' => $totalJamHariIni > 0 ? (int) round(($jurnalTerisiCount / $totalJamHariIni) * 100) : 0,
+            ];
+
+            // 3. Rekap Absensi Kelas (Filter Tanggal Bebas)
+            $waliTglMulaiAbsen = $request->get('wali_tgl_mulai', date('Y-m-01'));
+            $waliTglSelesaiAbsen = $request->get('wali_tgl_selesai', date('Y-m-d'));
+            $waliRekapAbsensiRange = $this->absensiService->buildAbsensiRekapRange($waliKelasId, $waliTglMulaiAbsen, $waliTglSelesaiAbsen, true);
+
+            $waliKeterlambatanList = KeterlambatanSiswa::with(['siswa.kelas', 'guruPiket'])
+                ->whereHas('siswa', function ($q) use ($waliKelasId) {
+                    $q->where('id_kelas', $waliKelasId);
+                })
+                ->where('status', 'diizinkan')
+                ->when($waliTglMulaiAbsen, fn ($q) => $q->whereDate('tanggal', '>=', $waliTglMulaiAbsen))
+                ->when($waliTglSelesaiAbsen, fn ($q) => $q->whereDate('tanggal', '<=', $waliTglSelesaiAbsen))
+                ->orderByDesc('tanggal')
+                ->orderByDesc('jam_masuk')
+                ->get();
+
+            $waliTotalTerlambatPerSiswa = KeterlambatanSiswa::whereHas('siswa', function ($q) use ($waliKelasId) {
+                $q->where('id_kelas', $waliKelasId);
+            })
+                ->where('status', 'diizinkan')
+                ->when($waliTglMulaiAbsen, fn ($q) => $q->whereDate('tanggal', '>=', $waliTglMulaiAbsen))
+                ->when($waliTglSelesaiAbsen, fn ($q) => $q->whereDate('tanggal', '<=', $waliTglSelesaiAbsen))
+                ->selectRaw('id_siswa, COUNT(*) as total')
+                ->groupBy('id_siswa')
+                ->pluck('total', 'id_siswa')
+                ->toArray();
+
+            $keterlambatanBySiswa = $waliKeterlambatanList->groupBy('id_siswa');
+
+            $waliSiswaTerlambatSummary = $waliSiswaList->map(function ($siswa) use ($keterlambatanBySiswa) {
+                $items = $keterlambatanBySiswa->get($siswa->id_siswa, collect());
+
+                return [
+                    'id_siswa' => $siswa->id_siswa,
+                    'nisn' => $siswa->nisn ?: '-',
+                    'nama_siswa' => $siswa->nama_siswa,
+                    'jenis_kelamin' => $siswa->jenis_kelamin ?: 'L',
+                    'total_telat' => $items->count(),
+                    'riwayat' => $items->map(function ($item) {
+                        return [
+                            'tanggal' => date('d-m-Y', strtotime($item->tanggal)),
+                            'jam_masuk' => substr($item->jam_masuk, 0, 5).' WIB',
+                            'jam_ke' => 'Jam ke-'.$item->jam_ke,
+                            'alasan' => $item->alasan ?: '-',
+                        ];
+                    })->values()->toArray(),
+                ];
+            });
+
+            // 4. Rekap Jurnal Pembelajaran Kelas (Filter Tanggal Bebas)
+            $waliTglMulaiJurnal = $request->get('jurnal_tgl_mulai', date('Y-01-01'));
+            $waliTglSelesaiJurnal = $request->get('jurnal_tgl_selesai', date('Y-m-d'));
+
+            $jurnalQ = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
+                ->join('guru', 'jurnal_kelas.id_guru', '=', 'guru.id_guru')
+                ->join('mapel', 'jadwal_mengajar.id_mapel', '=', 'mapel.id_mapel')
+                ->where('jadwal_mengajar.id_kelas', $waliKelasId);
+
+            if ($waliTglMulaiJurnal) {
+                $jurnalQ->whereDate('jurnal_kelas.tanggal', '>=', $waliTglMulaiJurnal);
+            }
+            if ($waliTglSelesaiJurnal) {
+                $jurnalQ->whereDate('jurnal_kelas.tanggal', '<=', $waliTglSelesaiJurnal);
+            }
+
+            $waliRekapJurnalList = $jurnalQ->orderByDesc('jurnal_kelas.tanggal')
+                ->orderByDesc('jurnal_kelas.waktu_input')
+                ->orderByDesc('jurnal_kelas.id_jurnal')
+                ->select(
+                    'jurnal_kelas.*',
+                    'guru.nama_guru',
+                    'mapel.nama_mapel',
+                    'jadwal_mengajar.id_mapel'
+                )
+                ->get()
+                ->unique(function ($item) {
+                    return $item->tanggal . '_' . $item->id_guru . '_' . $item->id_mapel;
+                })
+                ->values();
+        } else {
+            $waliTanggalHariIni = now()->toDateString();
+            $waliAbsensiHariIniList = collect();
+            $waliStatsHariIni = ['total_siswa' => 0, 'hadir' => 0, 'sakit' => 0, 'izin' => 0, 'alpa' => 0, 'dispensasi' => 0, 'pct_hadir' => 0];
+            $waliJadwalHariIni = collect();
+            $waliStatsJurnalHariIni = ['total_jam' => 0, 'terisi' => 0, 'guru_count' => 0, 'pct_terisi' => 0];
+            $waliTglMulaiAbsen = date('Y-m-01');
+            $waliTglSelesaiAbsen = date('Y-m-d');
+            $waliRekapAbsensiRange = [];
+            $waliKeterlambatanList = collect();
+            $waliTotalTerlambatPerSiswa = [];
+            $waliSiswaTerlambatSummary = collect();
+            $waliTglMulaiJurnal = date('Y-01-01');
+            $waliTglSelesaiJurnal = date('Y-m-d');
+            $waliRekapJurnalList = collect();
+        }
+
+        // Data Guru Piket (jika bertugas piket hari ini)
+        $guruAktif = Guru::where('is_admin', 0)->where('is_aktif', 1)->orderBy('nama_guru')->get();
+        $siswaAktif = Siswa::with('kelas')->where('is_aktif', 1)->orderBy('nama_siswa')->get();
+        $dispenTerbaru = collect();
+        $absensiSiswaTerbaru = collect();
+        $keterlambatanTerbaru = collect();
+        $totalJadwalPiketHariIni = 0;
+        $totalKelasPiketHariIni = 0;
+        $totalGuruPiketHariIni = 0;
+        $jamAktif = null;
+        $jadwalPiketHariIni = collect();
+
+        if ($isGuruPiket) {
+            $dispenTerbaru = DispenSiswa::with(['siswa.kelas', 'guruPiket'])
+                ->where('id_guru_piket', $guru->id_guru)
+                ->where('jenis_absen', 'D')
+                ->latest()->limit(25)->get();
+            $absensiSiswaTerbaru = DispenSiswa::with(['siswa.kelas'])
+                ->where('id_guru_piket', $guru->id_guru)
+                ->whereIn('jenis_absen', ['S', 'I'])
+                ->latest()->limit(25)->get();
+            $keterlambatanTerbaru = KeterlambatanSiswa::with(['siswa.kelas', 'guruPiket'])
+                ->where('id_guru_piket', $guru->id_guru)
+                ->latest()->limit(25)->get();
+
+            $jadwalPiketHariIni = DB::table('jadwal_mengajar')
+                ->join('guru', 'jadwal_mengajar.id_guru', '=', 'guru.id_guru')
+                ->join('mapel', 'jadwal_mengajar.id_mapel', '=', 'mapel.id_mapel')
+                ->join('kelas', 'jadwal_mengajar.id_kelas', '=', 'kelas.id_kelas')
+                ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
+                ->whereNull('jadwal_mengajar.deleted_at')
+                ->whereNull('guru.deleted_at')
+                ->whereNull('mapel.deleted_at')
+                ->whereNull('kelas.deleted_at')
+                ->whereNull('jam_pelajaran.deleted_at')
+                ->where('jadwal_mengajar.hari', $hariIni)
+                ->select('jadwal_mengajar.id_jadwal', 'jadwal_mengajar.id_kelas', 'jadwal_mengajar.hari', 'guru.nama_guru', 'mapel.nama_mapel', 'kelas.nama_kelas', 'jam_pelajaran.id_jam', 'jam_pelajaran.jam_ke', 'jam_pelajaran.jam_mulai', 'jam_pelajaran.jam_selesai')
+                ->orderBy('jam_pelajaran.jam_ke')
+                ->orderBy('kelas.nama_kelas')
+                ->get();
+            $jadwalPiketHariIni = JadwalService::applyJadwalMaju($jadwalPiketHariIni, $hariIni);
+            $totalJadwalPiketHariIni = $jadwalPiketHariIni->count();
+            $totalKelasPiketHariIni = $jadwalPiketHariIni->pluck('nama_kelas')->unique()->count();
+            $totalGuruPiketHariIni = $jadwalPiketHariIni->pluck('nama_guru')->unique()->count();
+
+            $jamAktif = JamPelajaran::where('jam_mulai', '<=', now()->format('H:i:s'))
+                ->where('jam_selesai', '>=', now()->format('H:i:s'))
+                ->whereIn('jam_ke', $jadwalPiketHariIni->pluck('jam_ke'))
+                ->orderBy('jam_ke')
+                ->first();
+        }
+
         return view('guru.dashboard', compact(
             'tahunAjaran',
             'kelases',
@@ -249,7 +572,43 @@ class AbsensiController extends Controller
             'hariIni',
             'siswaTerlambatHariIni',
             'siswaTerlambatKelasAktif',
-            'activeKelasObj'
+            'activeKelasObj',
+            // Variabel Wali Kelas
+            'isWaliKelas',
+            'waliKelasObj',
+            'kelasesWali',
+            'waliSiswaList',
+            'waliBulan',
+            'waliTahun',
+            'waliRekapData',
+            'dispenDanIzinKelas',
+            'siswaPerluPerhatian',
+            'waliTanggalHariIni',
+            'waliAbsensiHariIniList',
+            'waliStatsHariIni',
+            'waliJadwalHariIni',
+            'waliStatsJurnalHariIni',
+            'waliTglMulaiAbsen',
+            'waliTglSelesaiAbsen',
+            'waliRekapAbsensiRange',
+            'waliKeterlambatanList',
+            'waliTotalTerlambatPerSiswa',
+            'waliSiswaTerlambatSummary',
+            'waliTglMulaiJurnal',
+            'waliTglSelesaiJurnal',
+            'waliRekapJurnalList',
+            // Variabel Guru Piket
+            'isGuruPiket',
+            'guruAktif',
+            'siswaAktif',
+            'dispenTerbaru',
+            'absensiSiswaTerbaru',
+            'keterlambatanTerbaru',
+            'totalJadwalPiketHariIni',
+            'totalKelasPiketHariIni',
+            'totalGuruPiketHariIni',
+            'jamAktif',
+            'jadwalPiketHariIni'
         ));
     }
 

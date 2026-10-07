@@ -59,87 +59,189 @@ class AuthController extends Controller
     }
 
     /**
-     * Proses login Guru / Admin
+     * Proses login terpadu (1 pintu untuk semua peran: Admin, Guru, Wali Kelas, Guru Piket, Satpam, Waka SDM, Kepsek, Orang Tua/Siswa)
      */
     public function login(Request $request)
     {
         $request->validate([
             'username' => 'required|string',
-            'password' => 'required|string',
-            'role' => 'required|in:admin,guru',
+            'password' => 'nullable|string',
         ], [
-            'username.required' => 'Username tidak boleh kosong.',
-            'password.required' => 'Password tidak boleh kosong.',
-            'role.required' => 'Pilih peran terlebih dahulu.',
-            'role.in' => 'Peran tidak valid.',
+            'username.required' => 'Username / NIP / NISN tidak boleh kosong.',
         ]);
 
-        if ($request->role === 'admin') {
-            $admin = AkunAdmin::where('username', $request->username)->first();
+        $input = trim($request->username);
+        $password = (string) $request->password;
 
-            if (! $admin) {
-                return back()->withErrors([
-                    'username' => 'Username atau password salah.',
-                ])->withInput($request->only('username', 'role'));
-            }
-
+        // 1. Cek apakah cocok dengan Akun Admin
+        $admin = AkunAdmin::where('username', $input)->first();
+        if ($admin) {
             if (isset($admin->is_aktif) && $admin->is_aktif == 0) {
-                return back()->withErrors([
-                    'username' => 'Akun admin telah dinonaktifkan.',
-                ])->withInput($request->only('username', 'role'));
+                return back()->withErrors(['username' => 'Akun admin telah dinonaktifkan.'])->withInput($request->only('username'));
             }
 
             $passwordHash = $admin->password ?: $admin->password_hash;
-            if (! Hash::check($request->password, $passwordHash)) {
-                return back()->withErrors([
-                    'username' => 'Username atau password salah.',
-                ])->withInput($request->only('username', 'role'));
+            if (Hash::check($password, $passwordHash)) {
+                session([
+                    'auth_admin_id' => $admin->id_admin,
+                    'auth_guru_id' => $admin->id_admin,
+                    'auth_nama_admin' => $admin->nama,
+                    'auth_nama_guru' => $admin->nama,
+                    'auth_is_admin' => 1,
+                    'auth_role' => 'admin',
+                ]);
+                $request->session()->regenerate();
+
+                return redirect()->route('admin.index');
             }
 
-            // Simpan data admin ke session
+            return back()->withErrors(['username' => 'Username atau password salah.'])->withInput($request->only('username'));
+        }
+
+        // 2. Cek apakah cocok dengan Akun Satpam
+        $satpam = AkunSatpam::where('username', $input)->first();
+        if ($satpam) {
+            if (isset($satpam->is_aktif) && $satpam->is_aktif == 0) {
+                return back()->withErrors(['username' => 'Akun anda telah dinonaktifkan.'])->withInput($request->only('username'));
+            }
+
+            if (Hash::check($password, $satpam->password_hash)) {
+                session([
+                    'auth_satpam_id' => $satpam->id_satpam,
+                    'auth_guru_id' => null,
+                    'auth_nama_guru' => $satpam->nama,
+                    'auth_is_admin' => 0,
+                    'auth_role' => 'satpam',
+                ]);
+                $request->session()->regenerate();
+
+                return redirect()->route('satpam.index');
+            }
+
+            return back()->withErrors(['username' => 'Username atau password salah.'])->withInput($request->only('username'));
+        }
+
+        // 3. Cek apakah cocok dengan Akun Waka SDM
+        $wakaSdm = AkunWakaSdm::where('username', $input)->first();
+        if ($wakaSdm) {
+            if (isset($wakaSdm->is_aktif) && $wakaSdm->is_aktif == 0) {
+                return back()->withErrors(['username' => 'Akun anda telah dinonaktifkan.'])->withInput($request->only('username'));
+            }
+
+            if (Hash::check($password, $wakaSdm->password_hash)) {
+                session([
+                    'auth_waka_sdm_id' => $wakaSdm->id_waka_sdm,
+                    'auth_guru_id' => null,
+                    'auth_nama_guru' => $wakaSdm->nama,
+                    'auth_is_admin' => 0,
+                    'auth_role' => 'waka_sdm',
+                ]);
+                $request->session()->regenerate();
+
+                return redirect()->route('wakasdm.index');
+            }
+
+            return back()->withErrors(['username' => 'Username atau password salah.'])->withInput($request->only('username'));
+        }
+
+        // 4. Cek apakah cocok dengan Guru / Struktural Berbasis Guru
+        $guru = Guru::where('username', $input)
+            ->orWhere('nip', $input)
+            ->first();
+
+        if ($guru) {
+            if ($guru->is_aktif == 0) {
+                return back()->withErrors(['username' => 'Akun anda telah dinonaktifkan.'])->withInput($request->only('username'));
+            }
+
+            if (Hash::check($password, $guru->password_hash)) {
+                if ($guru->is_admin == 1) {
+                    session([
+                        'auth_admin_id' => $guru->id_guru,
+                        'auth_guru_id' => $guru->id_guru,
+                        'auth_nama_admin' => $guru->nama_guru,
+                        'auth_nama_guru' => $guru->nama_guru,
+                        'auth_is_admin' => 1,
+                        'auth_role' => 'admin',
+                    ]);
+                    $request->session()->regenerate();
+
+                    return redirect()->route('admin.index');
+                }
+
+                // Cek peran khusus Kepala Sekolah
+                if (strtolower($guru->Peran ?? '') === 'kepsek' || strtolower($guru->Peran ?? '') === 'kepala sekolah') {
+                    session([
+                        'auth_guru_id' => $guru->id_guru,
+                        'auth_nama_guru' => $guru->nama_guru,
+                        'auth_is_admin' => 0,
+                        'auth_role' => 'kepsek',
+                    ]);
+                    $request->session()->regenerate();
+
+                    return redirect()->route('kepsek.index');
+                }
+
+                // Cek jika peran struktural lain (misal Waka Kurikulum, dll)
+                if (! empty($guru->Peran)) {
+                    $roleRecord = Role::where('nama_role', $guru->Peran)->first();
+                    if ($roleRecord && $roleRecord->is_struktural && ! in_array($roleRecord->slug_role, ['guru_piket', 'walikelas'])) {
+                        session([
+                            'auth_guru_id' => $guru->id_guru,
+                            'auth_nama_guru' => $guru->nama_guru,
+                            'auth_is_admin' => 0,
+                            'auth_role' => $roleRecord->slug_role,
+                        ]);
+                        $request->session()->regenerate();
+                        $routeName = $roleRecord->route_name ?? Role::getRouteFromSlug($roleRecord->slug_role);
+
+                        return redirect()->route($routeName ?? 'guru.index');
+                    }
+                }
+
+                // Guru reguler (termasuk Wali Kelas & Guru Piket dinamis)
+                $kelasWali = Kelas::where('id_wali_kelas', $guru->id_guru)->first();
+                session([
+                    'auth_guru_id' => $guru->id_guru,
+                    'auth_nama_guru' => $guru->nama_guru,
+                    'auth_is_admin' => 0,
+                    'auth_role' => 'guru',
+                    'auth_kelas_id' => $kelasWali ? $kelasWali->id_kelas : null,
+                    'auth_nama_kelas' => $kelasWali ? $kelasWali->nama_kelas : null,
+                ]);
+                $request->session()->regenerate();
+
+                return redirect()->route('guru.index');
+            }
+
+            return back()->withErrors(['username' => 'Username atau password salah.'])->withInput($request->only('username'));
+        }
+
+        // 5. Cek apakah cocok dengan Siswa / Orang Tua (via NISN)
+        $unpadded = ltrim($input, '0');
+        $padded = is_numeric($input) ? sprintf('%010d', (int) $input) : $input;
+        $siswa = Siswa::whereIn('nisn', [$input, $unpadded, $padded])->first();
+
+        if ($siswa) {
+            if (isset($siswa->is_aktif) && $siswa->is_aktif == 0) {
+                return back()->withErrors(['username' => 'Akun siswa tidak aktif.'])->withInput($request->only('username'));
+            }
+
             session([
-                'auth_admin_id' => $admin->id_admin,
-                'auth_guru_id' => $admin->id_admin,
-                'auth_nama_admin' => $admin->nama,
-                'auth_nama_guru' => $admin->nama,
-                'auth_is_admin' => 1,
-                'auth_role' => 'admin',
+                'auth_siswa_id' => $siswa->id_siswa,
+                'auth_nisn' => $siswa->nisn,
+                'auth_nama_siswa' => $siswa->nama_siswa,
+                'auth_role' => 'orangtua',
             ]);
             $request->session()->regenerate();
 
-            return redirect()->route('admin.index');
+            return redirect()->route('orangtua.index');
         }
 
-        $guru = Guru::where('username', $request->username)->first();
-
-        if (! $guru) {
-            return back()->withErrors([
-                'username' => 'Username atau password salah.',
-            ])->withInput($request->only('username', 'role'));
-        }
-
-        if ($guru->is_aktif == 0) {
-            return back()->withErrors([
-                'username' => 'Akun anda telah dinonaktifkan.',
-            ])->withInput($request->only('username', 'role'));
-        }
-
-        if (! Hash::check($request->password, $guru->password_hash)) {
-            return back()->withErrors([
-                'username' => 'Username atau password salah.',
-            ])->withInput($request->only('username', 'role'));
-        }
-
-        // Simpan data guru ke session
-        session([
-            'auth_guru_id' => $guru->id_guru,
-            'auth_nama_guru' => $guru->nama_guru,
-            'auth_is_admin' => 0,
-            'auth_role' => 'guru',
-        ]);
-        $request->session()->regenerate();
-
-        return redirect()->route('guru.index');
+        // 6. Jika tidak ditemukan di mana pun
+        return back()->withErrors([
+            'username' => 'Username atau kredensial tidak ditemukan.',
+        ])->withInput($request->only('username'));
     }
 
     /**
@@ -190,72 +292,6 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
         return redirect()->route('orangtua.index');
-    }
-
-    /**
-     * Proses login Wali Kelas (Guru yang menjadi wali dari suatu kelas)
-     */
-    public function loginWaliKelas(Request $request)
-    {
-        $username = $request->username ?? $request->nip;
-
-        $request->validate([
-            'username' => 'nullable|string',
-            'nip' => 'nullable|string',
-            'password' => 'required|string',
-        ], [
-            'password.required' => 'Password tidak boleh kosong.',
-        ]);
-
-        if (empty($username)) {
-            return back()->withErrors([
-                'username' => 'Username tidak boleh kosong.',
-            ])->withInput($request->only('username', 'nip', 'role'));
-        }
-
-        $guru = Guru::where('username', $username)
-            ->orWhere('nip', $username)
-            ->first();
-
-        if (! $guru) {
-            return back()->withErrors([
-                'username' => 'Username atau password salah.',
-            ])->withInput($request->only('username', 'nip', 'role'));
-        }
-
-        if ($guru->is_aktif == 0) {
-            return back()->withErrors([
-                'username' => 'Akun anda telah dinonaktifkan.',
-            ])->withInput($request->only('username', 'nip', 'role'));
-        }
-
-        if (! Hash::check($request->password, $guru->password_hash)) {
-            return back()->withErrors([
-                'username' => 'Username atau password salah.',
-            ])->withInput($request->only('username', 'nip', 'role'));
-        }
-
-        // Kelas yang guru tersebut menjadi wali kelasnya
-        $kelasWali = Kelas::where('id_wali_kelas', $guru->id_guru)->first();
-
-        if (! $kelasWali) {
-            return back()->withErrors([
-                'username' => 'Akun tersebut bukan wali kelas.',
-            ])->withInput($request->only('username', 'nip', 'role'));
-        }
-
-        // Simpan data guru + kelas wali ke session
-        session([
-            'auth_guru_id' => $guru->id_guru,
-            'auth_nama_guru' => $guru->nama_guru,
-            'auth_is_admin' => $guru->is_admin,
-            'auth_role' => 'walikelas',
-            'auth_kelas_id' => $kelasWali->id_kelas,
-            'auth_nama_kelas' => $kelasWali->nama_kelas,
-        ]);
-        $request->session()->regenerate();
-
-        return redirect()->route('walikelas.index', ['kelas_id' => $kelasWali->id_kelas]);
     }
 
     /**
@@ -426,60 +462,6 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
         return redirect()->route('kepsek.index');
-    }
-
-    /**
-     * Proses login Guru Piket (username + password)
-     */
-    public function loginGuruPiket(Request $request)
-    {
-        $request->validate([
-            'username' => 'required|string',
-            'password' => 'required|string',
-        ], [
-            'username.required' => 'Username tidak boleh kosong.',
-            'password.required' => 'Password tidak boleh kosong.',
-        ]);
-
-        $guru = Guru::where('username', $request->username)->first();
-
-        if (! $guru) {
-            return back()->withErrors([
-                'username' => 'Username atau password salah.',
-            ])->withInput($request->only('username', 'role'));
-        }
-
-        if ($guru->is_aktif == 0) {
-            return back()->withErrors([
-                'username' => 'Akun anda telah dinonaktifkan.',
-            ])->withInput($request->only('username', 'role'));
-        }
-
-        if (! Hash::check($request->password, $guru->password_hash)) {
-            return back()->withErrors([
-                'username' => 'Username atau password salah.',
-            ])->withInput($request->only('username', 'role'));
-        }
-
-        $ditugaskanHariIni = GuruPiket::where('id_guru', $guru->id_guru)
-            ->whereDate('tanggal', now()->toDateString())
-            ->exists();
-
-        if (! $ditugaskanHariIni) {
-            return back()->withErrors([
-                'username' => 'Akun ini belum ditugaskan sebagai Guru Piket hari ini.',
-            ])->withInput($request->only('username', 'role'));
-        }
-
-        session([
-            'auth_guru_id' => $guru->id_guru,
-            'auth_nama_guru' => $guru->nama_guru,
-            'auth_is_admin' => $guru->is_admin,
-            'auth_role' => 'guru_piket',
-        ]);
-        $request->session()->regenerate();
-
-        return redirect()->route('gurupiket.index');
     }
 
     /**

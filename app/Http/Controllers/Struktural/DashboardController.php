@@ -697,7 +697,7 @@ class DashboardController extends Controller
     public function exportRekapKelasWali(Request $request)
 
     {
-        abort_unless(session('auth_role') === 'walikelas', 403);
+        $this->checkIsWaliKelas();
 
         $kelasId = session('auth_kelas_id');
         if (! $kelasId) {
@@ -775,7 +775,7 @@ class DashboardController extends Controller
 
     public function exportRekapAbsensiWali(Request $request)
     {
-        abort_unless(session('auth_role') === 'walikelas', 403);
+        $this->checkIsWaliKelas();
 
         $kelasId = session('auth_kelas_id');
         if (! $kelasId) {
@@ -846,7 +846,7 @@ class DashboardController extends Controller
 
     public function simpanAbsensiHarianWali(Request $request)
     {
-        abort_unless(session('auth_role') === 'walikelas', 403);
+        $this->checkIsWaliKelas();
 
         $request->validate([
             'absensi' => 'required|array',
@@ -943,7 +943,7 @@ class DashboardController extends Controller
 
     public function exportRekapJurnalWali(Request $request)
     {
-        abort_unless(session('auth_role') === 'walikelas', 403);
+        $this->checkIsWaliKelas();
 
         $kelasId = session('auth_kelas_id');
         if (! $kelasId) {
@@ -1021,7 +1021,7 @@ class DashboardController extends Controller
 
     public function exportRekapKelasWaliPdf(Request $request)
     {
-        abort_unless(session('auth_role') === 'walikelas', 403);
+        $this->checkIsWaliKelas();
 
         $kelasId = session('auth_kelas_id');
         if (! $kelasId) {
@@ -1083,7 +1083,7 @@ class DashboardController extends Controller
 
     public function exportRekapAbsensiWaliPdf(Request $request)
     {
-        abort_unless(session('auth_role') === 'walikelas', 403);
+        $this->checkIsWaliKelas();
 
         $kelasId = session('auth_kelas_id');
         if (! $kelasId) {
@@ -1131,7 +1131,7 @@ class DashboardController extends Controller
 
     public function exportRekapJurnalWaliPdf(Request $request)
     {
-        abort_unless(session('auth_role') === 'walikelas', 403);
+        $this->checkIsWaliKelas();
 
         $kelasId = session('auth_kelas_id');
         if (! $kelasId) {
@@ -1193,7 +1193,7 @@ class DashboardController extends Controller
 
     public function exportRekap1TahunWali(Request $request)
     {
-        abort_unless(session('auth_role') === 'walikelas', 403);
+        $this->checkIsWaliKelas();
 
         $kelasId = session('auth_kelas_id');
         if (! $kelasId) {
@@ -1256,7 +1256,7 @@ class DashboardController extends Controller
 
     public function exportRekap1TahunWaliPdf(Request $request)
     {
-        abort_unless(session('auth_role') === 'walikelas', 403);
+        $this->checkIsWaliKelas();
 
         $kelasId = session('auth_kelas_id');
         if (! $kelasId) {
@@ -1298,5 +1298,11 @@ class DashboardController extends Controller
             ]);
 
         return $pdf->download($filename);
+    }
+
+    private function checkIsWaliKelas(): void
+    {
+        $isWali = session('auth_role') === 'walikelas' || (session('auth_guru_id') && Kelas::where('id_wali_kelas', session('auth_guru_id'))->exists());
+        abort_unless($isWali, 403, 'Akses khusus Wali Kelas.');
     }
 }

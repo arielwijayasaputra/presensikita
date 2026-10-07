@@ -21,21 +21,24 @@ class DispenSiswaController extends Controller
 {
     public function form()
     {
-        abort_unless(session('auth_role') === 'guru_piket', 403);
+        $isGuruPiket = session('auth_role') === 'guru_piket' || (session('auth_guru_id') && \App\Models\GuruPiket::where('id_guru', session('auth_guru_id'))->whereDate('tanggal', now()->toDateString())->exists());
+        abort_unless($isGuruPiket, 403, 'Akses khusus Guru Piket yang bertugas.');
 
-        return redirect()->to(route('gurupiket.index').'#dispen-siswa');
+        return redirect()->to(route('guru.index').'#dispen-siswa');
     }
 
     public function storeAbsensi(Request $request)
     {
-        abort_unless(session('auth_role') === 'guru_piket', 403);
+        $isGuruPiket = session('auth_role') === 'guru_piket' || (session('auth_guru_id') && \App\Models\GuruPiket::where('id_guru', session('auth_guru_id'))->whereDate('tanggal', now()->toDateString())->exists());
+        abort_unless($isGuruPiket, 403, 'Akses khusus Guru Piket yang bertugas.');
 
         return $this->store($request);
     }
 
     public function store(StoreDispenSiswaRequest $request)
     {
-        abort_unless(session('auth_role') === 'guru_piket', 403);
+        $isGuruPiket = session('auth_role') === 'guru_piket' || (session('auth_guru_id') && \App\Models\GuruPiket::where('id_guru', session('auth_guru_id'))->whereDate('tanggal', now()->toDateString())->exists());
+        abort_unless($isGuruPiket, 403, 'Akses khusus Guru Piket yang bertugas.');
         $data = $request->validated();
 
         $siswa = Siswa::where('id_siswa', $data['id_siswa'])->where('is_aktif', 1)->firstOrFail();

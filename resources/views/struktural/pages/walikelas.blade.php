@@ -19,7 +19,7 @@
 
         <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
             <!-- Filter Bulan & Tahun Rekap -->
-            <form method="GET" action="{{ route('walikelas.index') }}" style="display:flex; align-items:center; gap:8px; background:#fff; padding:6px 12px; border-radius:10px; border:1px solid #cbd5e1; box-shadow:0 1px 3px rgba(0,0,0,0.05)">
+            <form method="GET" action="{{ url()->current() }}" style="display:flex; align-items:center; gap:8px; background:#fff; padding:6px 12px; border-radius:10px; border:1px solid #cbd5e1; box-shadow:0 1px 3px rgba(0,0,0,0.05)">
                 <label style="font-size:12px; font-weight:700; color:#475569">Periode:</label>
                 <select name="wali_bulan" onchange="this.form.submit()" class="filter-input" style="padding:4px 8px; font-size:12.5px; border-radius:6px; border:1px solid #cbd5e1">
                     @foreach($namaBulanList as $mNum => $mName)

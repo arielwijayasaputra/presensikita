@@ -57,7 +57,10 @@ class StrukturalMiddleware
 
         $allowed = Role::getStrukturalSlugs();
 
-        if (! in_array($role, $allowed)) {
+        $isWali = \App\Models\Kelas::where('id_wali_kelas', $guru->id_guru)->exists();
+        $isPiket = \App\Models\GuruPiket::where('id_guru', $guru->id_guru)->whereDate('tanggal', now()->toDateString())->exists();
+
+        if (! in_array($role, $allowed) && ! $isWali && ! $isPiket) {
             if (session('auth_is_admin')) {
                 return redirect()->route('admin.index');
             }

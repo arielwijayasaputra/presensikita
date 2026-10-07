@@ -20,7 +20,7 @@ class IzinGuruController extends Controller
 {
     public function form()
     {
-        $isGuruPiket = session('auth_role') === 'guru_piket';
+        $isGuruPiket = session('auth_role') === 'guru_piket' || (session('auth_guru_id') && \App\Models\GuruPiket::where('id_guru', session('auth_guru_id'))->whereDate('tanggal', now()->toDateString())->exists());
         if (! $isGuruPiket) {
             return redirect()->to(route('guru.index').'#izin-guru');
         }
@@ -41,8 +41,8 @@ class IzinGuruController extends Controller
             'isGuruPiket' => $isGuruPiket,
             'guruAktif' => $guruAktif,
             'izinGuruTerbaru' => $izinGuruTerbaru,
-            'sidebar' => $isGuruPiket ? 'partials.sidebar_struktural' : 'partials.sidebar_guru',
-            'profilUpdateUrl' => $isGuruPiket ? route('struktural.profil.update') : route('guru.profil.update'),
+            'sidebar' => 'partials.sidebar_guru',
+            'profilUpdateUrl' => route('guru.profil.update'),
         ]);
     }
 
@@ -59,7 +59,8 @@ class IzinGuruController extends Controller
             abort(403);
         }
 
-        $requestedGuruId = session('auth_role') === 'guru_piket'
+        $isGuruPiket = session('auth_role') === 'guru_piket' || (\App\Models\GuruPiket::where('id_guru', $guruPiketId)->whereDate('tanggal', now()->toDateString())->exists());
+        $requestedGuruId = ($isGuruPiket && $request->filled('id_guru'))
             ? $request->id_guru
             : $guruPiketId;
         $guru = Guru::where('id_guru', $requestedGuruId)

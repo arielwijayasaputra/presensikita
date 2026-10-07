@@ -15,6 +15,7 @@ class DispenSiswa extends Model
     protected $primaryKey = 'id_dispen_siswa';
 
     protected $fillable = [
+        'kode_dispen',
         'id_siswa', 'id_guru_piket', 'tanggal_dispen', 'alasan',
         'jenis_absen', 'foto_surat', 'id_jurnal',
         'status_waka', 'status_guru_piket', 'catatan_waka', 'catatan_guru_piket',

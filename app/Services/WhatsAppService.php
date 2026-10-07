@@ -338,43 +338,87 @@ class WhatsAppService
 
     /**
      * Mengirim notifikasi WhatsApp ke Waka Kesiswaan untuk Dispensasi / Izin Siswa.
+     * @param \App\Models\DispenSiswa|\Illuminate\Support\Collection|array $dispens
      */
-    public static function kirimNotifikasiDispenSiswa(DispenSiswa $dispen, string $linkWaka): array
+    public static function kirimNotifikasiDispenSiswa($dispens, string $linkWaka): array
     {
         $nomorWaka = Pengaturan::get('wa_nomor_waka_kesiswaan', '');
         $namaSekolah = Pengaturan::get('nama_sekolah', 'SMKN 1 Boyolangu');
 
-        $dispen->loadMissing(['siswa.kelas', 'guruPiket']);
+        if ($dispens instanceof DispenSiswa) {
+            $dispens = collect([$dispens]);
+        } elseif (is_array($dispens)) {
+            $dispens = collect($dispens);
+        }
 
-        $namaSiswa = $dispen->siswa?->nama_siswa ?? 'Siswa';
-        $namaKelas = $dispen->siswa?->kelas?->nama_kelas ?? '-';
-        $jenis = match ($dispen->jenis_absen) {
+        $dispens->each(function ($d) {
+            if ($d instanceof DispenSiswa) {
+                $d->loadMissing(['siswa.kelas', 'guruPiket']);
+            }
+        });
+
+        $firstDispen = $dispens->first();
+        if (! $firstDispen) {
+            return ['sent' => false, 'error' => 'Data permohonan dispensasi kosong.'];
+        }
+
+        $jenis = match ($firstDispen->jenis_absen) {
             'S' => 'Sakit',
             'I' => 'Izin',
             default => 'Dispensasi',
         };
-        $tanggal = date('d-m-Y', strtotime($dispen->tanggal_dispen));
-        $alasan = $dispen->alasan ?: '-';
-        $namaPiket = $dispen->guruPiket?->nama_guru ?? 'Guru Piket';
+        $tanggal = date('d-m-Y', strtotime($firstDispen->tanggal_dispen));
+        $alasan = $firstDispen->alasan ?: '-';
+        $namaPiket = $firstDispen->guruPiket?->nama_guru ?? 'Guru Piket';
 
-        $pesan = "🔔 *NOTIFIKASI {$namaSekolah}*\n"
-            .'*PERMINTAAN PERSETUJUAN '.strtoupper($jenis)." SISWA*\n\n"
-            ."Yth. *Bapak/Ibu Waka Kesiswaan*,\n"
-            ."Terdapat permohonan surat baru yang diajukan oleh Guru Piket:\n\n"
-            ."• *Nama Siswa:* {$namaSiswa}\n"
-            ."• *Kelas:* {$namaKelas}\n"
-            ."• *Jenis:* {$jenis}\n"
-            ."• *Tanggal:* {$tanggal}\n"
-            ."• *Alasan:* {$alasan}\n"
-            ."• *Guru Piket:* {$namaPiket}\n\n"
-            ."Silakan buka link persetujuan di bawah ini:\n\n"
-            ."{$linkWaka}\n\n"
-            .'_Pesan otomatis dari Sistem PresensiKita._';
+        $totalSiswa = $dispens->count();
+
+        if ($totalSiswa > 1) {
+            $daftarSiswaText = '';
+            foreach ($dispens as $idx => $d) {
+                $num = $idx + 1;
+                $nama = $d->siswa?->nama_siswa ?? 'Siswa';
+                $kelas = $d->siswa?->kelas?->nama_kelas ?? '-';
+                $daftarSiswaText .= "  {$num}. {$nama} ({$kelas})\n";
+            }
+            $daftarSiswaText = rtrim($daftarSiswaText, "\n");
+
+            $pesan = "🔔 *NOTIFIKASI {$namaSekolah}*\n"
+                .'*PERMINTAAN PERSETUJUAN '.strtoupper($jenis)." SISWA*\n\n"
+                ."Yth. *Bapak/Ibu Waka Kesiswaan*,\n"
+                ."Terdapat permohonan surat baru untuk *{$totalSiswa} siswa* yang diajukan oleh Guru Piket:\n\n"
+                ."• *Daftar Siswa ({$totalSiswa} Siswa):*\n"
+                ."{$daftarSiswaText}\n\n"
+                ."• *Jenis:* {$jenis}\n"
+                ."• *Tanggal:* {$tanggal}\n"
+                ."• *Alasan:* {$alasan}\n"
+                ."• *Guru Piket:* {$namaPiket}\n\n"
+                ."Silakan buka link persetujuan di bawah ini:\n\n"
+                ."{$linkWaka}\n\n"
+                .'_Pesan otomatis dari Sistem PresensiKita._';
+        } else {
+            $namaSiswa = $firstDispen->siswa?->nama_siswa ?? 'Siswa';
+            $namaKelas = $firstDispen->siswa?->kelas?->nama_kelas ?? '-';
+
+            $pesan = "🔔 *NOTIFIKASI {$namaSekolah}*\n"
+                .'*PERMINTAAN PERSETUJUAN '.strtoupper($jenis)." SISWA*\n\n"
+                ."Yth. *Bapak/Ibu Waka Kesiswaan*,\n"
+                ."Terdapat permohonan surat baru yang diajukan oleh Guru Piket:\n\n"
+                ."• *Nama Siswa:* {$namaSiswa}\n"
+                ."• *Kelas:* {$namaKelas}\n"
+                ."• *Jenis:* {$jenis}\n"
+                ."• *Tanggal:* {$tanggal}\n"
+                ."• *Alasan:* {$alasan}\n"
+                ."• *Guru Piket:* {$namaPiket}\n\n"
+                ."Silakan buka link persetujuan di bawah ini:\n\n"
+                ."{$linkWaka}\n\n"
+                .'_Pesan otomatis dari Sistem PresensiKita._';
+        }
 
         $hasilKirim = ! empty($nomorWaka) ? static::kirimPesan($nomorWaka, $pesan) : ['success' => false, 'error' => 'Nomor WA Waka Kesiswaan belum diatur.'];
 
         return [
-            'sent' => $hasilKirim['success'],
+            'sent' => $hasilKirim['success'] ?? false,
             'target_phone' => $nomorWaka,
             'wa_me_link' => static::generateWaMeLink($nomorWaka, $pesan),
             'pesan' => $pesan,

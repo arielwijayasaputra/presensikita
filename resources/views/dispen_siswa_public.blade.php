@@ -220,8 +220,36 @@
 
     <div class="box-body">
         <section class="info">
-            <div class="row"><span class="label">Nama Siswa</span><strong style="color:#0f172a">{{ $dispen->siswa->nama_siswa ?? '-' }}</strong></div>
-            <div class="row"><span class="label">Kelas</span><strong style="color:#1e3a8a">{{ $dispen->siswa->kelas->nama_kelas ?? '-' }}</strong></div>
+            @if(isset($allDispens) && $allDispens->count() > 1)
+                <div class="row" style="flex-direction:column;align-items:flex-start;gap:8px">
+                    <span class="label">Daftar Siswa ({{ $allDispens->count() }} Orang)</span>
+                    <div style="width:100%;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+                        <table style="width:100%;border-collapse:collapse;font-size:13px">
+                            <thead>
+                                <tr style="background:#f1f5f9;text-align:left;border-bottom:1px solid #e2e8f0">
+                                    <th style="padding:7px 10px;font-size:12px;color:#475569">No</th>
+                                    <th style="padding:7px 10px;font-size:12px;color:#475569">Nama Siswa</th>
+                                    <th style="padding:7px 10px;font-size:12px;color:#475569">Kelas</th>
+                                    <th style="padding:7px 10px;font-size:12px;color:#475569">NISN</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($allDispens as $idx => $dItem)
+                                    <tr style="border-bottom:1px solid #f1f5f9">
+                                        <td style="padding:7px 10px;color:#64748b">{{ $idx + 1 }}</td>
+                                        <td style="padding:7px 10px;font-weight:700">{{ $dItem->siswa->nama_siswa ?? '-' }}</td>
+                                        <td style="padding:7px 10px;font-weight:600;color:#2563eb">{{ $dItem->siswa->kelas->nama_kelas ?? '-' }}</td>
+                                        <td style="padding:7px 10px;color:#64748b">{{ $dItem->siswa->nisn ?? '-' }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @else
+                <div class="row"><span class="label">Nama Siswa</span><strong style="color:#0f172a">{{ $dispen->siswa->nama_siswa ?? '-' }}</strong></div>
+                <div class="row"><span class="label">Kelas</span><strong style="color:#1e3a8a">{{ $dispen->siswa->kelas->nama_kelas ?? '-' }}</strong></div>
+            @endif
             <div class="row"><span class="label">Tanggal Dispensasi</span><strong>{{ $dispen->tanggal_dispen->format('d-m-Y') }}</strong></div>
             <div class="row"><span class="label">Alasan Keperluan</span><strong style="color:#334155;text-align:right">{{ $dispen->alasan }}</strong></div>
             @if($dispen->foto_surat)

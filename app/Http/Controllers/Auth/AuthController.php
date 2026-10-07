@@ -80,6 +80,11 @@ class AuthController extends Controller
                 return back()->withErrors(['username' => 'Akun admin telah dinonaktifkan.'])->withInput($request->only('username'));
             }
 
+            // Blokir login admin dari perangkat mobile
+            if ($this->isMobileDevice($request)) {
+                return back()->withErrors(['username' => 'Login Admin hanya dapat dilakukan melalui Laptop atau PC.'])->withInput($request->only('username'));
+            }
+
             $passwordHash = $admin->password ?: $admin->password_hash;
             if (Hash::check($password, $passwordHash)) {
                 session([
@@ -156,6 +161,11 @@ class AuthController extends Controller
 
             if (Hash::check($password, $guru->password_hash)) {
                 if ($guru->is_admin == 1) {
+                    // Blokir login admin dari perangkat mobile
+                    if ($this->isMobileDevice($request)) {
+                        return back()->withErrors(['username' => 'Login Admin hanya dapat dilakukan melalui Laptop atau PC.'])->withInput($request->only('username'));
+                    }
+
                     session([
                         'auth_admin_id' => $guru->id_guru,
                         'auth_guru_id' => $guru->id_guru,
@@ -486,5 +496,26 @@ class AuthController extends Controller
         ]);
 
         return redirect()->route('login');
+    }
+    /**
+     * Deteksi apakah request berasal dari perangkat mobile (HP/Tablet)
+     */
+    private function isMobileDevice(Request $request): bool
+    {
+        $userAgent = strtolower($request->header('User-Agent', ''));
+
+        $mobileKeywords = [
+            'mobile', 'android', 'iphone', 'ipod', 'ipad',
+            'windows phone', 'opera mini', 'opera mobi',
+            'blackberry', 'webos', 'kindle', 'silk',
+        ];
+
+        foreach ($mobileKeywords as $keyword) {
+            if (str_contains($userAgent, $keyword)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreDispenSiswaRequest;
 use App\Models\DispenSiswa;
 use App\Models\Guru;
+use App\Models\GuruPiket;
 use App\Models\Hari;
 use App\Models\JurnalKelas;
 use App\Models\JurnalSiswaTidakHadir;
@@ -21,7 +22,7 @@ class DispenSiswaController extends Controller
 {
     public function form()
     {
-        $isGuruPiket = session('auth_role') === 'guru_piket' || (session('auth_guru_id') && \App\Models\GuruPiket::where('id_guru', session('auth_guru_id'))->whereDate('tanggal', now()->toDateString())->exists());
+        $isGuruPiket = session('auth_role') === 'guru_piket' || (session('auth_guru_id') && GuruPiket::where('id_guru', session('auth_guru_id'))->whereDate('tanggal', now()->toDateString())->exists());
         abort_unless($isGuruPiket, 403, 'Akses khusus Guru Piket yang bertugas.');
 
         return redirect()->to(route('guru.index').'#dispen-siswa');
@@ -29,68 +30,81 @@ class DispenSiswaController extends Controller
 
     public function storeAbsensi(Request $request)
     {
-        $isGuruPiket = session('auth_role') === 'guru_piket' || (session('auth_guru_id') && \App\Models\GuruPiket::where('id_guru', session('auth_guru_id'))->whereDate('tanggal', now()->toDateString())->exists());
+        $isGuruPiket = session('auth_role') === 'guru_piket' || (session('auth_guru_id') && GuruPiket::where('id_guru', session('auth_guru_id'))->whereDate('tanggal', now()->toDateString())->exists());
         abort_unless($isGuruPiket, 403, 'Akses khusus Guru Piket yang bertugas.');
 
-        return $this->store($request);
+        return $this->store(app(StoreDispenSiswaRequest::class));
     }
 
     public function store(StoreDispenSiswaRequest $request)
     {
-        $isGuruPiket = session('auth_role') === 'guru_piket' || (session('auth_guru_id') && \App\Models\GuruPiket::where('id_guru', session('auth_guru_id'))->whereDate('tanggal', now()->toDateString())->exists());
+        $isGuruPiket = session('auth_role') === 'guru_piket' || (session('auth_guru_id') && GuruPiket::where('id_guru', session('auth_guru_id'))->whereDate('tanggal', now()->toDateString())->exists());
         abort_unless($isGuruPiket, 403, 'Akses khusus Guru Piket yang bertugas.');
         $data = $request->validated();
 
-        $siswa = Siswa::where('id_siswa', $data['id_siswa'])->where('is_aktif', 1)->firstOrFail();
+        $idSiswaList = (array) $data['id_siswa'];
         $guruPiket = Guru::where('id_guru', session('auth_guru_id'))->where('is_aktif', 1)->firstOrFail();
         $fotoSurat = $request->hasFile('foto_surat') ? $request->file('foto_surat')->store('surat-dispen', 'public') : null;
+        $kodeDispen = 'DSP-'.date('Ymd').'-'.strtoupper(Str::random(6));
 
         try {
-            $dispen = DB::transaction(function () use ($data, $siswa, $guruPiket, $fotoSurat) {
+            $createdDispens = DB::transaction(function () use ($data, $idSiswaList, $guruPiket, $fotoSurat, $kodeDispen) {
                 $nowTime = now()->format('H:i:s');
-                $hariIndo = Hari::getNamaHariFromDayOfWeek((int) date('N', strtotime($data['tanggal_dispen'])));
-                $tahunAjaran = TahunAjaran::where('is_aktif', 1)->first() ?? TahunAjaran::first();
+                $dispens = collect();
 
-                // Cari jurnal yang sudah ada pada jam yang sedang berlangsung (jika ada)
-                $jurnal = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
-                    ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
-                    ->whereNull('jadwal_mengajar.deleted_at')
-                    ->whereNull('jam_pelajaran.deleted_at')
-                    ->where('jadwal_mengajar.id_kelas', $siswa->id_kelas)
-                    ->whereDate('jurnal_kelas.tanggal', $data['tanggal_dispen'])
-                    ->whereTime('jam_pelajaran.jam_mulai', '<=', $nowTime)
-                    ->whereTime('jam_pelajaran.jam_selesai', '>', $nowTime)
-                    ->select('jurnal_kelas.*')
-                    ->first();
+                foreach ($idSiswaList as $idSiswa) {
+                    $siswa = Siswa::where('id_siswa', $idSiswa)->where('is_aktif', 1)->firstOrFail();
 
-                // Update absensi di semua jurnal yang sudah ada hari ini mulai dari jam dispen
-                $existingJurnals = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
-                    ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
-                    ->whereNull('jadwal_mengajar.deleted_at')
-                    ->whereNull('jam_pelajaran.deleted_at')
-                    ->where('jadwal_mengajar.id_kelas', $siswa->id_kelas)
-                    ->whereDate('jurnal_kelas.tanggal', $data['tanggal_dispen'])
-                    ->whereTime('jam_pelajaran.jam_selesai', '>', $nowTime)
-                    ->pluck('jurnal_kelas.id_jurnal');
+                    // Cari jurnal yang sudah ada pada jam yang sedang berlangsung (jika ada)
+                    $jurnal = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
+                        ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
+                        ->whereNull('jadwal_mengajar.deleted_at')
+                        ->whereNull('jam_pelajaran.deleted_at')
+                        ->where('jadwal_mengajar.id_kelas', $siswa->id_kelas)
+                        ->whereDate('jurnal_kelas.tanggal', $data['tanggal_dispen'])
+                        ->whereTime('jam_pelajaran.jam_mulai', '<=', $nowTime)
+                        ->whereTime('jam_pelajaran.jam_selesai', '>', $nowTime)
+                        ->select('jurnal_kelas.*')
+                        ->first();
 
-                foreach ($existingJurnals as $jId) {
-                    $existingTh = JurnalSiswaTidakHadir::where('id_jurnal', $jId)->where('id_siswa', $siswa->id_siswa)->first();
-                    if (! $existingTh) {
-                        JurnalKelas::where('id_jurnal', $jId)->decrement('jumlah_hadir');
+                    // Update absensi di semua jurnal yang sudah ada hari ini mulai dari jam dispen
+                    $existingJurnals = JurnalKelas::join('jadwal_mengajar', 'jurnal_kelas.id_jadwal', '=', 'jadwal_mengajar.id_jadwal')
+                        ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
+                        ->whereNull('jadwal_mengajar.deleted_at')
+                        ->whereNull('jam_pelajaran.deleted_at')
+                        ->where('jadwal_mengajar.id_kelas', $siswa->id_kelas)
+                        ->whereDate('jurnal_kelas.tanggal', $data['tanggal_dispen'])
+                        ->whereTime('jam_pelajaran.jam_selesai', '>', $nowTime)
+                        ->pluck('jurnal_kelas.id_jurnal');
+
+                    foreach ($existingJurnals as $jId) {
+                        $existingTh = JurnalSiswaTidakHadir::where('id_jurnal', $jId)->where('id_siswa', $siswa->id_siswa)->first();
+                        if (! $existingTh) {
+                            JurnalKelas::where('id_jurnal', $jId)->decrement('jumlah_hadir');
+                        }
+                        JurnalSiswaTidakHadir::updateOrCreate(
+                            ['id_jurnal' => $jId, 'id_siswa' => $siswa->id_siswa],
+                            ['status' => $data['jenis_absen'], 'keterangan' => strtoupper($data['jenis_absen']).($data['alasan'] ? ': '.$data['alasan'] : '')]
+                        );
                     }
-                    JurnalSiswaTidakHadir::updateOrCreate(
-                        ['id_jurnal' => $jId, 'id_siswa' => $siswa->id_siswa],
-                        ['status' => $data['jenis_absen'], 'keterangan' => strtoupper($data['jenis_absen']).($data['alasan'] ? ': '.$data['alasan'] : '')]
-                    );
+
+                    $dispen = DispenSiswa::create([
+                        'kode_dispen' => $kodeDispen,
+                        'id_siswa' => $siswa->id_siswa,
+                        'id_guru_piket' => $guruPiket->id_guru,
+                        'tanggal_dispen' => $data['tanggal_dispen'],
+                        'alasan' => $data['alasan'] ?? null,
+                        'jenis_absen' => $data['jenis_absen'],
+                        'foto_surat' => $fotoSurat,
+                        'id_jurnal' => $jurnal?->id_jurnal,
+                        'status_guru_piket' => 'disetujui',
+                        'disetujui_guru_piket_pada' => now(),
+                    ]);
+
+                    $dispens->push($dispen);
                 }
 
-                return DispenSiswa::create(array_merge($data, [
-                    'id_guru_piket' => $guruPiket->id_guru,
-                    'foto_surat' => $fotoSurat,
-                    'id_jurnal' => $jurnal?->id_jurnal,
-                    'status_guru_piket' => 'disetujui',
-                    'disetujui_guru_piket_pada' => now(),
-                ]));
+                return $dispens;
             });
         } catch (\Throwable $exception) {
             if ($fotoSurat) {
@@ -99,11 +113,16 @@ class DispenSiswaController extends Controller
             throw $exception;
         }
 
-        $wakaLink = WhatsAppService::generateLanSignedRoute('dispen-siswa.public', now()->addDays(2), ['dispen' => $dispen->id_dispen_siswa, 'role' => 'waka']);
+        $primaryDispen = $createdDispens->first();
+        $wakaLink = WhatsAppService::generateLanSignedRoute('dispen-siswa.public', now()->addDays(2), ['dispen' => $primaryDispen->id_dispen_siswa, 'role' => 'waka']);
 
-        $waNotification = WhatsAppService::kirimNotifikasiDispenSiswa($dispen, $wakaLink);
+        $waNotification = WhatsAppService::kirimNotifikasiDispenSiswa($createdDispens, $wakaLink);
 
-        $message = 'Siswa berhasil diabsen dan surat berhasil disimpan.';
+        $jumlahSiswa = $createdDispens->count();
+        $message = $jumlahSiswa > 1
+            ? "{$jumlahSiswa} siswa berhasil diabsen dan surat berhasil disimpan."
+            : 'Siswa berhasil diabsen dan surat berhasil disimpan.';
+
         if (! empty($waNotification['sent'])) {
             $message .= ' Notifikasi WhatsApp otomatis telah terkirim ke Waka Kesiswaan.';
         }
@@ -120,8 +139,13 @@ class DispenSiswaController extends Controller
     {
         abort_unless($role === 'waka', 404);
 
+        $allDispens = $dispen->kode_dispen
+            ? DispenSiswa::with(['siswa.kelas', 'guruPiket'])->where('kode_dispen', $dispen->kode_dispen)->get()
+            : collect([$dispen->loadMissing(['siswa.kelas', 'guruPiket'])]);
+
         return view('dispen_siswa_public', [
-            'dispen' => $dispen->load(['siswa.kelas', 'guruPiket']),
+            'dispen' => $dispen->loadMissing(['siswa.kelas', 'guruPiket']),
+            'allDispens' => $allDispens,
             'role' => $role,
             'status' => $dispen->status_waka,
             'approvalUrl' => URL::temporarySignedRoute('dispen-siswa.approve', now()->addDays(2), ['dispen' => $dispen->id_dispen_siswa, 'role' => $role], false),
@@ -166,11 +190,16 @@ class DispenSiswaController extends Controller
         $dateField = 'disetujui_'.$role.'_pada';
         $ttdField = 'tanda_tangan_'.$role;
 
-        $dispen->{$statusField} = $data['keputusan'];
-        $dispen->{$noteField} = $data['catatan'] ?? null;
-        $dispen->{$dateField} = $data['keputusan'] === 'disetujui' ? now() : null;
-        $dispen->{$ttdField} = $tandaTanganPath;
-        $dispen->save();
+        $targetQuery = $dispen->kode_dispen
+            ? DispenSiswa::where('kode_dispen', $dispen->kode_dispen)
+            : DispenSiswa::where('id_dispen_siswa', $dispen->id_dispen_siswa);
+
+        $targetQuery->update([
+            $statusField => $data['keputusan'],
+            $noteField => $data['catatan'] ?? null,
+            $dateField => $data['keputusan'] === 'disetujui' ? now() : null,
+            $ttdField => $tandaTanganPath,
+        ]);
 
         $url = URL::temporarySignedRoute('dispen-siswa.public', now()->addDays(2), ['dispen' => $dispen->id_dispen_siswa, 'role' => $role], false);
 

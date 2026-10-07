@@ -265,34 +265,44 @@ class IzinGuruController extends Controller
             abort(404);
         }
 
-        $data = $request->validate([
-            'keputusan' => ['required', 'in:disetujui,ditolak'],
-            'catatan' => ['nullable', 'string', 'max:1000'],
-            'tanda_tangan' => ['required', 'string'],
-        ], [
-            'tanda_tangan.required' => 'Tanda tangan digital wajib diisi sebelum menyimpan keputusan.',
-        ]);
+        if ($role === 'kepsek') {
+            // Kepala Sekolah: Cukup konfirmasi tanpa perlu tanda tangan digital
+            $data = $request->validate([
+                'keputusan' => ['required', 'in:disetujui,ditolak'],
+                'catatan' => ['nullable', 'string', 'max:1000'],
+            ]);
+            $tandaTanganPath = null;
+        } else {
+            // Waka SDM: Wajib tanda tangan digital
+            $data = $request->validate([
+                'keputusan' => ['required', 'in:disetujui,ditolak'],
+                'catatan' => ['nullable', 'string', 'max:1000'],
+                'tanda_tangan' => ['required', 'string'],
+            ], [
+                'tanda_tangan.required' => 'Tanda tangan digital wajib diisi sebelum menyimpan keputusan.',
+            ]);
 
-        $tandaTanganPath = null;
-        if ($request->filled('tanda_tangan') && str_starts_with($request->tanda_tangan, 'data:image')) {
-            $base64Ttd = $request->tanda_tangan;
-            if (preg_match('/^data:image\/(\w+);base64,/', $base64Ttd, $type)) {
-                $base64Ttd = substr($base64Ttd, strpos($base64Ttd, ',') + 1);
-                $type = strtolower($type[1]);
-                if (! in_array($type, ['jpg', 'jpeg', 'png', 'webp'])) {
-                    $type = 'png';
-                }
-                $decodedTtd = base64_decode($base64Ttd);
-                if ($decodedTtd !== false) {
-                    $filename = 'ttd_izin_'.$role.'_'.$izin->id_izin_guru.'_'.time().'_'.Str::random(6).'.'.$type;
-                    Storage::disk('public')->put('tanda-tangan-struktural/'.$filename, $decodedTtd);
-                    $tandaTanganPath = 'tanda-tangan-struktural/'.$filename;
+            $tandaTanganPath = null;
+            if ($request->filled('tanda_tangan') && str_starts_with($request->tanda_tangan, 'data:image')) {
+                $base64Ttd = $request->tanda_tangan;
+                if (preg_match('/^data:image\/(\w+);base64,/', $base64Ttd, $type)) {
+                    $base64Ttd = substr($base64Ttd, strpos($base64Ttd, ',') + 1);
+                    $type = strtolower($type[1]);
+                    if (! in_array($type, ['jpg', 'jpeg', 'png', 'webp'])) {
+                        $type = 'png';
+                    }
+                    $decodedTtd = base64_decode($base64Ttd);
+                    if ($decodedTtd !== false) {
+                        $filename = 'ttd_izin_'.$role.'_'.$izin->id_izin_guru.'_'.time().'_'.Str::random(6).'.'.$type;
+                        Storage::disk('public')->put('tanda-tangan-struktural/'.$filename, $decodedTtd);
+                        $tandaTanganPath = 'tanda-tangan-struktural/'.$filename;
+                    }
                 }
             }
-        }
 
-        if (! $tandaTanganPath) {
-            return back()->withErrors(['tanda_tangan' => 'Tanda tangan digital tidak valid atau gagal diproses.']);
+            if (! $tandaTanganPath) {
+                return back()->withErrors(['tanda_tangan' => 'Tanda tangan digital tidak valid atau gagal diproses.']);
+            }
         }
 
         $statusField = 'status_'.$role;
@@ -300,11 +310,13 @@ class IzinGuruController extends Controller
         $dateField = 'disetujui_'.$role.'_pada';
         $ttdField = 'tanda_tangan_'.$role;
 
-        DB::transaction(function () use ($izin, $statusField, $noteField, $dateField, $ttdField, $tandaTanganPath, $data) {
+        DB::transaction(function () use ($izin, $statusField, $noteField, $dateField, $ttdField, $tandaTanganPath, $data, $role) {
             $izin->{$statusField} = $data['keputusan'];
             $izin->{$noteField} = $data['catatan'] ?? null;
             $izin->{$dateField} = $data['keputusan'] === 'disetujui' ? now() : null;
-            $izin->{$ttdField} = $tandaTanganPath;
+            if ($role === 'waka') {
+                $izin->{$ttdField} = $tandaTanganPath;
+            }
             $izin->save();
 
             if ($izin->isDisetujui()) {
@@ -319,8 +331,10 @@ class IzinGuruController extends Controller
             false
         );
 
+        $roleLabel = $role === 'kepsek' ? 'Kepala Sekolah' : 'Waka SDM';
+
         return redirect()->to($resultUrl)
-            ->with('approval_message', 'Keputusan '.strtoupper($role).' berhasil disimpan.');
+            ->with('approval_message', 'Konfirmasi '.$roleLabel.' berhasil disimpan.');
     }
 
     private function syncJurnalIzin(IzinGuru $izin): void

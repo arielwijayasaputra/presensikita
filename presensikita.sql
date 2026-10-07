@@ -3535,7 +3535,6 @@ CREATE TABLE `laporan` (
 --
 
 INSERT INTO `laporan` (`id_laporan`, `role_pelapor`, `nama_pelapor`, `judul`, `isi_laporan`, `status`, `catatan_admin`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Orang Tua', 'Orang Tua dari Siswa Budi', 'Uji Coba AJAX Laporan', 'Isi detail laporan untuk pengujian AJAX response.', 'ditolak', NULL, '2026-08-21 18:29:59', '2026-08-21 23:26:15', NULL),
 (2, 'Guru', 'abid rizky', 'kendala absensi', 'ga bisa absen', 'selesai', NULL, '2026-08-21 18:33:06', '2026-08-21 23:25:59', NULL),
 (3, 'Kepala Sekolah', 'tresss', 'ga bisa ngizinin izin', 'errororororor', 'dibatalkan', NULL, '2026-08-21 18:34:01', '2026-08-21 18:57:21', NULL),
 (5, 'Masyarakat / Umum', 'Woi woi ingpo', 'Ngeleg', 'Beh', 'ditolak', NULL, '2026-09-06 23:50:37', '2026-09-06 23:50:52', NULL),
@@ -3712,10 +3711,7 @@ INSERT INTO `notifikasi` (`id`, `id_guru`, `id_kelas`, `judul`, `pesan`, `tipe`,
 (16, 102, 42, 'Siswa Terlambat: ABID RIZKY NATANULLOH (XI RPL 1)', 'Siswa ABID RIZKY NATANULLOH terlambat (datang jam 09:31, mulai masuk jam ke-4). Alasan: Ban bocor. Diizinkan oleh: Abdul Rohman, S.Pd.', 'warning', 0, '2026-09-15 02:31:58', NULL),
 (17, NULL, 42, 'Siswa Terlambat: ABID RIZKY NATANULLOH (XI RPL 1)', 'Siswa ABID RIZKY NATANULLOH terlambat (datang jam 09:31, mulai masuk jam ke-4). Alasan: Ban bocor. Diizinkan oleh: Abdul Rohman, S.Pd.', 'warning', 1, '2026-09-15 02:31:58', NULL),
 (28, 69, 42, 'Siswa Terlambat: ABID RIZKY NATANULLOH (XI RPL 1)', 'Siswa ABID RIZKY NATANULLOH terlambat (datang jam 09:16, mulai masuk jam ke-4). Alasan: Sibuk. Diizinkan oleh: Abdul Rohman, S.Pd.', 'warning', 0, '2026-09-17 02:16:28', NULL),
-(29, 87, 42, 'Siswa Terlambat: ABID RIZKY NATANULLOH (XI RPL 1)', 'Siswa ABID RIZKY NATANULLOH terlambat (datang jam 09:16, mulai masuk jam ke-4). Alasan: Sibuk. Diizinkan oleh: Abdul Rohman, S.Pd.', 'warning', 0, '2026-09-17 02:16:28', NULL),
-(81, 711, 571, 'Siswa Terlambat: Budi Santoso 6ac613d4486c0 (Kelas X RPL 6ac613d4486c0)', 'Siswa Budi Santoso 6ac613d4486c0 terlambat (datang jam 07:45, mulai masuk jam ke-2). Alasan: Macet parah karena pohon tumbang. Diizinkan oleh: Guru Piket 6ac613d4486c0.', 'warning', 0, '2026-10-07 09:41:40', NULL),
-(84, 730, 590, 'Siswa Terlambat: Budi Santoso 6ac5a9689fc7f (Kelas X RPL 6ac5a9689fc7f)', 'Siswa Budi Santoso 6ac5a9689fc7f terlambat (datang jam 07:45, mulai masuk jam ke-2). Alasan: Macet parah karena pohon tumbang. Diizinkan oleh: Guru Piket 6ac5a9689fc7f.', 'warning', 0, '2026-10-07 02:07:37', NULL),
-(87, 742, 599, 'Siswa Terlambat: Budi Santoso 6ac5aae7afdde (Kelas X RPL 6ac5aae7afdde)', 'Siswa Budi Santoso 6ac5aae7afdde terlambat (datang jam 07:45, mulai masuk jam ke-2). Alasan: Macet parah karena pohon tumbang. Diizinkan oleh: Guru Piket 6ac5aae7afdde.', 'warning', 0, '2026-10-07 02:14:00', NULL);
+(29, 87, 42, 'Siswa Terlambat: ABID RIZKY NATANULLOH (XI RPL 1)', 'Siswa ABID RIZKY NATANULLOH terlambat (datang jam 09:16, mulai masuk jam ke-4). Alasan: Sibuk. Diizinkan oleh: Abdul Rohman, S.Pd.', 'warning', 0, '2026-09-17 02:16:28', NULL);
 
 -- --------------------------------------------------------
 

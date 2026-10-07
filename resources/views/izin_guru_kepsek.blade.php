@@ -214,8 +214,8 @@
                 </svg>
             </button>
         </div>
-        <h1 class="box-title">Persetujuan Izin Guru</h1>
-        <p class="intro">Halaman khusus Kepala Sekolah. Keputusan Anda langsung tercatat pada sistem.</p>
+        <h1 class="box-title">Konfirmasi Izin Guru</h1>
+        <p class="intro">Halaman khusus Kepala Sekolah. Cukup konfirmasi untuk menyetujui atau menolak permohonan izin ini tanpa perlu tanda tangan digital.</p>
     </div>
 
     <div class="box-body">
@@ -235,7 +235,7 @@
         </section>
 
         <div class="decision">
-            <h2>Status &amp; Keputusan Kepala Sekolah</h2>
+            <h2>Status &amp; Konfirmasi Kepala Sekolah</h2>
             <div class="row">
                 <span class="label">Status Saat Ini</span>
                 <span class="badge {{ $izin->status_kepsek === 'disetujui' ? 'badge-success' : ($izin->status_kepsek === 'ditolak' ? 'badge-danger' : 'badge-warning') }}" style="font-size:12.5px;padding:5px 12px">
@@ -266,24 +266,9 @@
                         <textarea name="catatan" rows="3" class="form-textarea" placeholder="Tambahkan catatan jika diperlukan..."></textarea>
                     </div>
 
-                    <div style="margin-top:16px;margin-bottom:14px">
-                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-                            <label class="form-label" style="margin-bottom:0">
-                                Tanda Tangan Digital <span style="color:#ef4444">*</span>
-                            </label>
-                            <button type="button" onclick="clearSignature()" style="background:transparent;border:none;color:#ef4444;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                                Ulangi / Hapus
-                            </button>
-                        </div>
-                        <div style="border:1.5px dashed #cbd5e1;border-radius:10px;overflow:hidden;background:#ffffff;position:relative;touch-action:none">
-                            <canvas id="signature-canvas" style="width:100%;height:150px;display:block;cursor:crosshair;background:#ffffff"></canvas>
-                            <div id="signature-hint" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#94a3b8;font-size:12px;pointer-events:none;text-align:center">
-                                ✍️ Goreskan tanda tangan di sini
-                            </div>
-                        </div>
-                        <input type="hidden" id="input-tanda-tangan" name="tanda_tangan" value="">
-                        <div style="font-size:11.5px;color:#64748b;margin-top:4px">Wajib tanda tangan terlebih dahulu dengan jari (layar sentuh) atau mouse sebelum menyetujui / menolak.</div>
+                    <div style="font-size:12.5px;color:#475569;margin-top:14px;margin-bottom:18px;background:var(--bg-muted, #f8fafc);border:1px solid var(--border, #e2e8f0);border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:10px">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        <span>Sebagai Kepala Sekolah, Anda cukup mengonfirmasi (menyetujui atau menolak) izin ini. Tanda tangan digital <strong>tidak diperlukan</strong>.</span>
                     </div>
 
                     <div class="btn-group">
@@ -299,7 +284,7 @@
                 </form>
             @else
                 <p class="intro" style="color:#64748b;margin-top:14px;font-style:italic">
-                    Keputusan Kepala Sekolah telah diberikan dan tersimpan.
+                    Keputusan Kepala Sekolah telah diberikan dan tersimpan ({{ ucfirst($izin->status_kepsek) }}).
                 </p>
             @endif
         </div>
@@ -307,126 +292,14 @@
 </main>
 
 <script>
-let canvas, ctx;
-let drawing = false;
-let hasSigned = false;
-
-function initCanvas() {
-    canvas = document.getElementById('signature-canvas');
-    if (!canvas) return;
-    
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = Math.round(rect.width || 480);
-    canvas.height = 150;
-    
-    ctx = canvas.getContext('2d');
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.strokeStyle = '#0f172a';
-    ctx.lineWidth = 2.5;
-
-    function getPos(e) {
-        const r = canvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        return {
-            x: (clientX - r.left) * (canvas.width / r.width),
-            y: (clientY - r.top) * (canvas.height / r.height)
-        };
-    }
-
-    function startDraw(e) {
-        e.preventDefault();
-        drawing = true;
-        hasSigned = true;
-        const hint = document.getElementById('signature-hint');
-        if (hint) hint.style.display = 'none';
-        const pos = getPos(e);
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
-    }
-
-    function draw(e) {
-        if (!drawing) return;
-        e.preventDefault();
-        const pos = getPos(e);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.stroke();
-    }
-
-    function endDraw() {
-        if (drawing) {
-            drawing = false;
-            ctx.closePath();
-            syncSignatureInput();
-        }
-    }
-
-    canvas.addEventListener('mousedown', startDraw);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', endDraw);
-    canvas.addEventListener('mouseleave', endDraw);
-
-    canvas.addEventListener('touchstart', startDraw, { passive: false });
-    canvas.addEventListener('touchmove', draw, { passive: false });
-    canvas.addEventListener('touchend', endDraw);
-}
-
-function clearSignature() {
-    if (!canvas || !ctx) return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    hasSigned = false;
-    const input = document.getElementById('input-tanda-tangan');
-    if (input) input.value = '';
-    const hint = document.getElementById('signature-hint');
-    if (hint) hint.style.display = 'block';
-}
-
-function isCanvasBlank() {
-    if (!canvas || !ctx || !hasSigned) return true;
-    const pixelBuffer = new Uint32Array(
-        ctx.getImageData(0, 0, canvas.width, canvas.height).data.buffer
-    );
-    return !pixelBuffer.some(color => color !== 0);
-}
-
-function syncSignatureInput() {
-    const input = document.getElementById('input-tanda-tangan');
-    if (!input) return;
-    if (isCanvasBlank()) {
-        input.value = '';
-    } else {
-        input.value = canvas.toDataURL('image/png');
-    }
-}
-
-window.addEventListener('load', initCanvas);
-window.addEventListener('resize', function() {
-    if (canvas && isCanvasBlank()) {
-        initCanvas();
-    }
-});
-
 function konfirmasiKeputusan(event, role) {
     event.preventDefault();
     const form = event.target;
     const isReject = event.submitter && event.submitter.value === 'ditolak';
 
-    syncSignatureInput();
-    const ttdVal = document.getElementById('input-tanda-tangan')?.value;
-    if (!ttdVal || isCanvasBlank()) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Tanda Tangan Diperlukan',
-            text: 'Silakan tanda tangan terlebih dahulu sebelum menyetujui atau menolak izin.',
-            confirmButtonColor: '#2563eb'
-        });
-        return false;
-    }
-
     Swal.fire({
         title: isReject ? 'Tolak izin guru?' : 'Setujui izin guru?',
-        text: 'Keputusan sebagai ' + role + ' beserta tanda tangan akan disimpan.',
+        text: 'Konfirmasi keputusan sebagai ' + role + ' akan disimpan.',
         icon: isReject ? 'warning' : 'question',
         showCancelButton: true,
         confirmButtonText: isReject ? 'Ya, Tolak' : 'Ya, Setujui',

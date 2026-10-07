@@ -217,4 +217,83 @@ class IzinGuruPiketWorkflowTest extends TestCase
         $responseConfirmed->assertStatus(200);
         $responseConfirmed->assertSee('TEST_WORKFLOW: Belum konfirmasi piket');
     }
+
+    public function test_kepsek_bisa_konfirmasi_setujui_tanpa_tanda_tangan()
+    {
+        $guru = Guru::where('is_admin', 0)->where('is_aktif', 1)->firstOrFail();
+
+        $izin = IzinGuru::create([
+            'id_guru' => $guru->id_guru,
+            'tanggal_izin' => now()->toDateString(),
+            'alasan' => 'TEST_WORKFLOW: Izin untuk Kepsek konfirmasi',
+            'status_konfirmasi_piket' => 'dikonfirmasi',
+            'id_guru_piket' => $guru->id_guru,
+            'dikonfirmasi_piket_pada' => now(),
+        ]);
+
+        $approveUrl = URL::temporarySignedRoute('izin-guru.approve', now()->addDays(2), [
+            'izin' => $izin->id_izin_guru,
+            'role' => 'kepsek',
+        ], false);
+
+        // Kepsek submit konfirmasi tanpa tanda tangan
+        $response = $this->post($approveUrl, [
+            'keputusan' => 'disetujui',
+            'catatan' => 'Disetujui oleh Kepala Sekolah tanpa TTD',
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect();
+
+        $izin->refresh();
+        $this->assertEquals('disetujui', $izin->status_kepsek);
+        $this->assertEquals('Disetujui oleh Kepala Sekolah tanpa TTD', $izin->catatan_kepsek);
+        $this->assertNotNull($izin->disetujui_kepsek_pada);
+        $this->assertNull($izin->tanda_tangan_kepsek);
+    }
+
+    public function test_waka_sdm_wajib_tanda_tangan_dan_gagal_jika_tidak_ada_tanda_tangan()
+    {
+        $guru = Guru::where('is_admin', 0)->where('is_aktif', 1)->firstOrFail();
+
+        $izin = IzinGuru::create([
+            'id_guru' => $guru->id_guru,
+            'tanggal_izin' => now()->toDateString(),
+            'alasan' => 'TEST_WORKFLOW: Izin untuk Waka verifikasi TTD',
+            'status_konfirmasi_piket' => 'dikonfirmasi',
+            'id_guru_piket' => $guru->id_guru,
+            'dikonfirmasi_piket_pada' => now(),
+        ]);
+
+        $approveUrl = URL::temporarySignedRoute('izin-guru.approve', now()->addDays(2), [
+            'izin' => $izin->id_izin_guru,
+            'role' => 'waka',
+        ], false);
+
+        // 1. Submit tanpa tanda tangan harus gagal validasi
+        $responseFail = $this->post($approveUrl, [
+            'keputusan' => 'disetujui',
+            'catatan' => 'Coba approve tanpa TTD',
+        ]);
+        $responseFail->assertSessionHasErrors(['tanda_tangan']);
+
+        $izin->refresh();
+        $this->assertEquals('menunggu', $izin->status_waka);
+
+        // 2. Submit dengan tanda tangan base64 harus berhasil
+        $dummySignature = 'data:image/png;base64,' . base64_encode('dummy-signature-image-content');
+        $responseSuccess = $this->post($approveUrl, [
+            'keputusan' => 'disetujui',
+            'catatan' => 'Disetujui dengan TTD Waka',
+            'tanda_tangan' => $dummySignature,
+        ]);
+        $responseSuccess->assertSessionHasNoErrors();
+        $responseSuccess->assertRedirect();
+
+        $izin->refresh();
+        $this->assertEquals('disetujui', $izin->status_waka);
+        $this->assertNotNull($izin->tanda_tangan_waka);
+        $this->assertNotNull($izin->disetujui_waka_pada);
+    }
 }
+

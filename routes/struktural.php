@@ -44,6 +44,8 @@ Route::middleware('auth.struktural')->group(function () {
 
     // Pengaturan WhatsApp Bot Gateway untuk Struktural / Guru Piket
     Route::post('/struktural/pengaturan/update-wa', [PengaturanController::class, 'updateWa'])->name('struktural.pengaturan.update-wa');
+    Route::post('/struktural/pengaturan/upload-ttd-kepsek', [PengaturanController::class, 'uploadTtdKepsek'])->name('struktural.pengaturan.upload-ttd-kepsek');
+    Route::post('/struktural/pengaturan/hapus-ttd-kepsek', [PengaturanController::class, 'hapusTtdKepsek'])->name('struktural.pengaturan.hapus-ttd-kepsek');
     Route::post('/struktural/pengaturan/test-wa', [PengaturanController::class, 'testKirimWa'])->name('struktural.pengaturan.test-wa');
     Route::get('/struktural/pengaturan/status-wa', [PengaturanController::class, 'statusBotWa'])->name('struktural.pengaturan.status-wa');
     Route::post('/struktural/pengaturan/restart-wa', [PengaturanController::class, 'restartBotWa'])->name('struktural.pengaturan.restart-wa');

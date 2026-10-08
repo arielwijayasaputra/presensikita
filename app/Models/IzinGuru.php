@@ -68,4 +68,21 @@ class IzinGuru extends Model
     {
         return $query->where('status_konfirmasi_piket', 'menunggu');
     }
+
+    /**
+     * Mengambil tanda tangan Kepala Sekolah. Jika belum tersimpan di baris izin namun izin sudah disetujui,
+     * otomatis menggunakan foto tanda tangan Kepala Sekolah yang diatur pada pengaturan bot admin.
+     */
+    public function getTandaTanganKepsekAttribute($value)
+    {
+        if (! empty($value)) {
+            return $value;
+        }
+
+        if ($this->status_kepsek === 'disetujui') {
+            return Pengaturan::get('ttd_kepsek');
+        }
+
+        return null;
+    }
 }

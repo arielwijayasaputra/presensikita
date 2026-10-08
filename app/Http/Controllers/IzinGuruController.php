@@ -8,6 +8,7 @@ use App\Models\Hari;
 use App\Models\IzinGuru;
 use App\Models\JurnalKelas;
 use App\Models\JurnalSiswaTidakHadir;
+use App\Models\Pengaturan;
 use App\Models\Siswa;
 use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
@@ -272,6 +273,9 @@ class IzinGuruController extends Controller
                 'catatan' => ['nullable', 'string', 'max:1000'],
             ]);
             $tandaTanganPath = null;
+            if ($data['keputusan'] === 'disetujui') {
+                $tandaTanganPath = Pengaturan::get('ttd_kepsek');
+            }
         } else {
             // Waka SDM: Wajib tanda tangan digital
             $data = $request->validate([
@@ -315,6 +319,8 @@ class IzinGuruController extends Controller
             $izin->{$noteField} = $data['catatan'] ?? null;
             $izin->{$dateField} = $data['keputusan'] === 'disetujui' ? now() : null;
             if ($role === 'waka') {
+                $izin->{$ttdField} = $tandaTanganPath;
+            } elseif ($role === 'kepsek') {
                 $izin->{$ttdField} = $tandaTanganPath;
             }
             $izin->save();

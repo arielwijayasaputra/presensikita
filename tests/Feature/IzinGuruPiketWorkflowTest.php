@@ -5,8 +5,11 @@ namespace Tests\Feature;
 use App\Models\Guru;
 use App\Models\GuruPiket;
 use App\Models\IzinGuru;
+use App\Models\Pengaturan;
 use App\Services\WhatsAppService;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
@@ -16,6 +19,7 @@ class IzinGuruPiketWorkflowTest extends TestCase
     {
         IzinGuru::where('alasan', 'like', 'TEST_WORKFLOW%')->forceDelete();
         GuruPiket::whereDate('tanggal', now()->toDateString())->where('id_guru', 99999)->delete();
+        Pengaturan::set('ttd_kepsek', null);
         parent::tearDown();
     }
 
@@ -294,6 +298,99 @@ class IzinGuruPiketWorkflowTest extends TestCase
         $this->assertEquals('disetujui', $izin->status_waka);
         $this->assertNotNull($izin->tanda_tangan_waka);
         $this->assertNotNull($izin->disetujui_waka_pada);
+    }
+
+    public function test_admin_dapat_mengunggah_dan_menghapus_foto_tanda_tangan_kepsek_di_pengaturan()
+    {
+        Storage::fake('public');
+
+        $admin = \App\Models\AkunAdmin::first();
+        $this->assertNotNull($admin);
+
+        $file = UploadedFile::fake()->create('ttd_kepsek.png', 50, 'image/png');
+
+        // Upload tanda tangan
+        $uploadResponse = $this->withSession([
+            'auth_admin_id' => $admin->id_admin,
+            'auth_guru_id' => $admin->id_admin,
+            'auth_nama_admin' => $admin->nama,
+            'auth_nama_guru' => $admin->nama,
+            'auth_is_admin' => 1,
+            'auth_role' => 'admin',
+        ])->post(route('pengaturan.upload-ttd-kepsek'), [
+            'foto_ttd_kepsek' => $file,
+        ]);
+
+        $uploadResponse->assertStatus(200);
+        $uploadResponse->assertJson(['status' => 'success']);
+
+        $savedPath = Pengaturan::get('ttd_kepsek');
+        $this->assertNotNull($savedPath);
+        Storage::disk('public')->assertExists($savedPath);
+
+        // Hapus tanda tangan
+        $hapusResponse = $this->withSession([
+            'auth_admin_id' => $admin->id_admin,
+            'auth_guru_id' => $admin->id_admin,
+            'auth_nama_admin' => $admin->nama,
+            'auth_nama_guru' => $admin->nama,
+            'auth_is_admin' => 1,
+            'auth_role' => 'admin',
+        ])->postJson(route('pengaturan.hapus-ttd-kepsek'));
+
+        $hapusResponse->assertStatus(200);
+        $this->assertNull(Pengaturan::get('ttd_kepsek'));
+        Storage::disk('public')->assertMissing($savedPath);
+    }
+
+    public function test_tanda_tangan_kepsek_dari_pengaturan_otomatis_muncul_pada_surat_izin_saat_kepsek_konfirmasi()
+    {
+        Storage::fake('public');
+
+        // Simpan foto tanda tangan resmi di pengaturan bot
+        $dummyFile = UploadedFile::fake()->create('ttd_resmi_kepsek.png', 50, 'image/png');
+        $path = $dummyFile->storeAs('tanda-tangan-kepsek', 'ttd_resmi_kepsek.png', 'public');
+        Pengaturan::set('ttd_kepsek', $path);
+
+        $guru = Guru::where('is_admin', 0)->where('is_aktif', 1)->firstOrFail();
+
+        $izin = IzinGuru::create([
+            'id_guru' => $guru->id_guru,
+            'tanggal_izin' => now()->toDateString(),
+            'alasan' => 'TEST_WORKFLOW: Pengujian otomatisasi TTD Kepsek',
+            'status_konfirmasi_piket' => 'dikonfirmasi',
+            'id_guru_piket' => $guru->id_guru,
+            'dikonfirmasi_piket_pada' => now(),
+            'tanda_tangan_kepsek' => null, // Belum ada TTD saat menunggu
+        ]);
+
+        $approveUrl = URL::temporarySignedRoute('izin-guru.approve', now()->addDays(2), [
+            'izin' => $izin->id_izin_guru,
+            'role' => 'kepsek',
+        ], false);
+
+        // Kepsek hanya melakukan konfirmasi 'disetujui' TANPA mengirim tanda tangan
+        $response = $this->post($approveUrl, [
+            'keputusan' => 'disetujui',
+            'catatan' => 'Disetujui Kepsek, TTD harus otomatis terpasang',
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect();
+
+        $izin->refresh();
+        $this->assertEquals('disetujui', $izin->status_kepsek);
+        // Tanda tangan kepsek otomatis terisi dari pengaturan bot tanpa kepsek perlu mengisi manual
+        $this->assertEquals($path, $izin->tanda_tangan_kepsek);
+
+        // Halaman surat izin public sekarang menampilkan tanda tangan Kepsek
+        $publicUrl = URL::temporarySignedRoute('izin-guru.public.role', now()->addDays(2), [
+            'izin' => $izin->id_izin_guru,
+            'role' => 'kepsek',
+        ], false);
+        $viewResponse = $this->get($publicUrl);
+        $viewResponse->assertStatus(200);
+        $viewResponse->assertSee(Storage::disk('public')->url($path));
     }
 }
 

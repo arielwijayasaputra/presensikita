@@ -266,9 +266,17 @@
                         <textarea name="catatan" rows="3" class="form-textarea" placeholder="Tambahkan catatan jika diperlukan..."></textarea>
                     </div>
 
-                    <div style="font-size:12.5px;color:#475569;margin-top:14px;margin-bottom:18px;background:var(--bg-muted, #f8fafc);border:1px solid var(--border, #e2e8f0);border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:10px">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                        <span>Sebagai Kepala Sekolah, Anda cukup mengonfirmasi (menyetujui atau menolak) izin ini. Tanda tangan digital <strong>tidak diperlukan</strong>.</span>
+                    <div style="font-size:12.5px;color:#475569;margin-top:14px;margin-bottom:18px;background:var(--bg-muted, #f8fafc);border:1px solid var(--border, #e2e8f0);border-radius:8px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        <div>
+                            <div>Sebagai Kepala Sekolah, Anda cukup mengonfirmasi (menyetujui atau menolak) izin ini. Tanda tangan digital <strong>tidak perlu diisi manual</strong>.</div>
+                            @if(\App\Models\Pengaturan::get('ttd_kepsek'))
+                                <div style="font-size:11.5px;color:#059669;margin-top:4px;font-weight:600;display:flex;align-items:center;gap:5px">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Foto tanda tangan resmi Anda telah tersimpan di sistem dan akan otomatis dibubuhkan saat permohonan disetujui.
+                                </div>
+                            @endif
+                        </div>
                     </div>
 
                     <div class="btn-group">

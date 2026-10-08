@@ -492,6 +492,7 @@ class DashboardController extends Controller
         $waNomorWakaKesiswaan = Pengaturan::get('wa_nomor_waka_kesiswaan', '');
         $waNomorWakaSdm = Pengaturan::get('wa_nomor_waka_sdm', '');
         $waNomorKepsek = Pengaturan::get('wa_nomor_kepsek', '');
+        $fotoTtdKepsek = Pengaturan::get('ttd_kepsek', '');
         $waBotStatus = WhatsAppService::checkBotStatus();
 
         return view('struktural.dashboard', compact(
@@ -514,7 +515,7 @@ class DashboardController extends Controller
             'waliKeterlambatanList', 'waliTotalTerlambatPerSiswa', 'waliSiswaTerlambatSummary',
             'waliTglMulaiJurnal', 'waliTglSelesaiJurnal', 'waliRekapJurnalList',
             'satpamTanggal', 'satpamDispenRiwayat',
-            'waGatewayAktif', 'waGatewayEndpoint', 'waPublicUrl', 'waNomorBot', 'waNomorWakaKesiswaan', 'waNomorWakaSdm', 'waNomorKepsek', 'waBotStatus'
+            'waGatewayAktif', 'waGatewayEndpoint', 'waPublicUrl', 'waNomorBot', 'waNomorWakaKesiswaan', 'waNomorWakaSdm', 'waNomorKepsek', 'fotoTtdKepsek', 'waBotStatus'
         ));
     }
 

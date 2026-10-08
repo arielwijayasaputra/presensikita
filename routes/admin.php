@@ -89,6 +89,8 @@ Route::middleware('auth.admin')->group(function () {
     // Pengaturan & Profil
     Route::post('/pengaturan/update', [PengaturanController::class, 'update'])->name('pengaturan.update');
     Route::post('/pengaturan/update-wa', [PengaturanController::class, 'updateWa'])->name('pengaturan.update-wa');
+    Route::post('/pengaturan/upload-ttd-kepsek', [PengaturanController::class, 'uploadTtdKepsek'])->name('pengaturan.upload-ttd-kepsek');
+    Route::post('/pengaturan/hapus-ttd-kepsek', [PengaturanController::class, 'hapusTtdKepsek'])->name('pengaturan.hapus-ttd-kepsek');
     Route::post('/pengaturan/test-wa', [PengaturanController::class, 'testKirimWa'])->name('pengaturan.test-wa');
     Route::get('/pengaturan/status-wa', [PengaturanController::class, 'statusBotWa'])->name('pengaturan.status-wa');
     Route::post('/pengaturan/start-wa', [PengaturanController::class, 'startBotWa'])->name('pengaturan.start-wa');

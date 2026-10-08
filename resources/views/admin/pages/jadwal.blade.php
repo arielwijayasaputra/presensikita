@@ -1,3 +1,27 @@
+@php
+    // ── Siapkan data grid jadwal ──
+    // Kelompokkan allJadwal berdasarkan id_kelas, hari, id_jam
+    $jadwalGridMap = []; // [id_kelas][hari][id_jam] = jadwal
+    $allKelasIds   = [];
+    $hariUrutan    = ['Senin','Selasa','Rabu','Kamis','Jumat'];
+
+    foreach ($allJadwal as $j) {
+        $jadwalGridMap[$j->id_kelas][$j->hari][$j->id_jam] = $j;
+        $allKelasIds[] = $j->id_kelas;
+    }
+    $allKelasIds = array_unique($allKelasIds);
+
+    // Kelompokkan jam pelajaran berdasarkan hari, diurutkan jam_ke
+    $jamPerHari = []; // [hari] = [ {id_jam, jam_ke, jam_mulai, jam_selesai}, ... ]
+    foreach ($allJamPelajaran as $jp) {
+        $jamPerHari[$jp->hari][] = $jp;
+    }
+    foreach ($jamPerHari as $h => &$list) {
+        usort($list, fn($a,$b) => $a->jam_ke <=> $b->jam_ke);
+    }
+    unset($list);
+@endphp
+
 <div class="page-content page-anim" id="page-jadwal" style="display:none">
     <div class="page-header" style="margin-bottom:20px">
         <div>
@@ -23,7 +47,66 @@
         </button>
     </div>
 
-    <div class="card" style="padding:20px 22px">
+    {{-- ════════════════════════════════════════════════════════════
+         SECTION GRID VIEW JADWAL (seperti tabel jadwal sekolah)
+         ════════════════════════════════════════════════════════════ --}}
+    <div class="card" id="jadwal-grid-section" style="padding:20px 22px;margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:10px">
+            <div>
+                <div style="font-size:16px;font-weight:800;color:#0f172a">📅 Tabel Jadwal Mengajar</div>
+                <div style="font-size:12px;color:#64748b;margin-top:2px">Tampilan grid per kelas — pilih kelas untuk melihat jadwalnya</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                <button class="btn-primary" onclick="bukaFormJadwal()" style="border-radius:8px;padding:8px 14px;font-size:12.5px;display:inline-flex;align-items:center;gap:5px">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Tambah
+                </button>
+                <button class="btn-primary" onclick="bukaImportJadwalModal()" style="border-radius:8px;padding:8px 14px;font-size:12.5px;background:var(--green,#22c55e);border-color:var(--green,#22c55e);display:inline-flex;align-items:center;gap:5px">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Upload CSV
+                </button>
+                <button type="button" onclick="hapusSemuaJadwal()" style="border-radius:8px;padding:8px 14px;font-size:12.5px;background:#dc2626;color:#fff;border:1px solid #dc2626;font-weight:700;cursor:pointer">Hapus Semua</button>
+            </div>
+        </div>
+        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+
+                <div class="filter-group" style="min-width:220px;margin:0">
+                    <select id="grid-kelas-select" class="filter-select" onchange="gantiKelasGrid()" style="width:100%">
+                        @foreach($allKelas->sortBy('nama_kelas') as $kelasItem)
+                            @if(in_array($kelasItem->id_kelas, $allKelasIds))
+                                <option value="{{ $kelasItem->id_kelas }}">{{ $kelasItem->nama_kelas }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+                <button type="button" id="btn-toggle-view" onclick="toggleJadwalView()" style="padding:9px 16px;font-size:12.5px;font-weight:700;border-radius:8px;border:1px solid #cbd5e1;background:#f8fafc;color:#475569;cursor:pointer;display:inline-flex;align-items:center;gap:6px">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                </button>
+        </div>
+
+        {{-- Lembar jadwal per kelas — struktur gaya aSc Timetables --}}
+        @foreach($allKelas->sortBy('nama_kelas') as $kelasItem)
+            @if(!in_array($kelasItem->id_kelas, $allKelasIds)) @continue @endif
+            <div id="grid-kelas-{{ $kelasItem->id_kelas }}" class="jadwal-grid-kelas" style="display:none">
+                @include('partials.jadwal-asc', [
+                    'gridMap'      => $jadwalGridMap[$kelasItem->id_kelas] ?? [],
+                    'judulBaris2'  => $kelasItem->nama_kelas,
+                    'jamPerHari'   => $jamPerHari,
+                    'hariUrutan'   => $hariUrutan,
+                    'tahunAjaran'  => $tahunAjaran,
+                ])
+            </div>
+        @endforeach
+
+        {{-- Placeholder jika tidak ada data --}}
+        <div id="grid-empty" style="display:none;text-align:center;padding:40px;color:#94a3b8;font-size:13px">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:10px;opacity:.4"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><br>
+            Tidak ada jadwal untuk kelas ini
+        </div>
+    </div>
+
+    {{-- ════════════════════════════════════════════════════════════ --}}
+
+    <div class="card" id="jadwal-list-section" style="padding:20px 22px;display:none">
+
         <div style="display:flex;justify-content:flex-end;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px">
             <button class="btn-primary" onclick="bukaFormJadwal()" style="border-radius:8px;padding:10px 16px;font-size:13px">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -571,6 +654,45 @@ function uploadJadwalFile(formData) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', filterJadwal);
+document.addEventListener('DOMContentLoaded', function() {
+    filterJadwal();
+    // Init grid: tampilkan kelas pertama
+    const firstOpt = document.getElementById('grid-kelas-select');
+    if (firstOpt && firstOpt.value) gantiKelasGrid();
+});
+
+// ── Grid view functions ──
+let isGridView = true; // default: grid view
+
+function gantiKelasGrid() {
+    const kelasId = document.getElementById('grid-kelas-select')?.value;
+    if (!kelasId) return;
+    document.querySelectorAll('.jadwal-grid-kelas').forEach(el => el.style.display = 'none');
+    const target = document.getElementById('grid-kelas-' + kelasId);
+    const empty  = document.getElementById('grid-empty');
+    if (target) {
+        target.style.display = 'block';
+        if (empty) empty.style.display = 'none';
+    } else {
+        if (empty) empty.style.display = 'block';
+    }
+}
+
+function toggleJadwalView() {
+    isGridView = !isGridView;
+    const gridSec = document.getElementById('jadwal-grid-section');
+    const listSec = document.getElementById('jadwal-list-section');
+    const btn     = document.getElementById('btn-toggle-view');
+
+    if (isGridView) {
+        if (gridSec) gridSec.style.display = 'block';
+        if (listSec) listSec.style.display = 'none';
+        if (btn) btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> Tampilan List`;
+    } else {
+        if (gridSec) gridSec.style.display = 'none';
+        if (listSec) listSec.style.display = 'block';
+        if (btn) btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Tampilan Grid`;
+    }
+}
 </script>
 

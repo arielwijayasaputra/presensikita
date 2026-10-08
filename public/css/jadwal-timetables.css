@@ -1,0 +1,400 @@
+/*
+ * ══════════════════════════════════════════════════════════════════════════
+ *  Jadwal Mengajar — tampilan gaya aSc Timetables (satu tabel per kelas)
+ *  Hanya memakai token tema dari style.css / theme.css
+ *  (--card-bg, --border, --text-*, --radius, --shadow, --*-light, dll)
+ *  Sehingga otomatis mengikuti light & dark mode.
+ * ══════════════════════════════════════════════════════════════════════════
+ */
+
+/* ── Lembar jadwal (di dalam .card halaman) ─────────────────────────────── */
+.asc-sheet {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.asc-sheet-head {
+    padding: 16px 20px 14px;
+    text-align: center;
+    background: var(--surface-elevated);
+    border-bottom: 2px solid var(--border);
+}
+
+.asc-sheet-title {
+    font-size: 13.5px;
+    font-weight: 800;
+    line-height: 1.5;
+    letter-spacing: 0.04em;
+    color: var(--text-primary);
+    text-transform: uppercase;
+}
+
+.asc-sheet-class {
+    margin-top: 6px;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--blue);
+}
+
+.asc-sheet-scroll {
+    overflow-x: auto;
+}
+
+.asc-sheet-legend {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.asc-sheet-legend .legenda-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+}
+
+.asc-sheet-legend .legenda-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* ── Tabel: fixed, lebar penuh, kolom jam seragam ───────────────────────── */
+.asc-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+/* Header (sudut kiri + nomor jam) */
+.asc-table th {
+    padding: 9px 6px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: none;
+    letter-spacing: 0;
+    user-select: none;
+    background: var(--blue-light);
+    color: var(--blue);
+    border: 1px solid var(--border);
+}
+
+.asc-table thead tr {
+    background: transparent;
+}
+
+.asc-table thead th {
+    border-bottom: 2px solid var(--border);
+}
+
+.asc-table thead th.asc-corner {
+    width: 96px;
+    background: var(--surface-elevated);
+}
+
+.asc-table thead th.asc-period {
+    width: auto;
+}
+
+/* Kolom hari (font besar, rata tengah) */
+.asc-table th.asc-day {
+    width: 96px;
+    font-size: 15px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    background: var(--surface-elevated);
+}
+
+.asc-table th.asc-day > span {
+    display: block;
+}
+
+/* Baris hari ini */
+.asc-table tr.is-today > th.asc-day {
+    color: var(--green);
+}
+
+.asc-today-tag {
+    width: max-content;
+    margin: 5px auto 0;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--green-light);
+    color: var(--green);
+}
+
+/* ── Sel pelajaran ──────────────────────────────────────────────────────── */
+.asc-table td.asc-cell {
+    padding: 0;
+    height: 78px;
+    vertical-align: middle;
+    text-align: center;
+    background: transparent;
+    border: 1px solid var(--border);
+    transition: background-color 0.15s ease;
+}
+
+.asc-cell-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 78px;
+    padding: 8px 6px;
+}
+
+.asc-cell .asc-room {
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--text-muted);
+    min-height: 12px;
+}
+
+.asc-cell .asc-subject {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--text-primary);
+    overflow-wrap: anywhere;
+}
+
+.asc-cell .asc-teacher {
+    font-size: 10.5px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--text-secondary);
+    overflow-wrap: anywhere;
+    min-height: 13px;
+}
+
+.asc-cell .asc-teacher.is-warning {
+    font-weight: 700;
+    color: var(--yellow);
+}
+
+/* Upacara / Apel: sel biasa dengan sentuhan warna tema */
+.asc-table td.asc-cell.is-upacara {
+    background: var(--yellow-light);
+}
+
+.asc-table td.asc-cell.is-upacara .asc-teacher {
+    color: var(--text-muted);
+}
+
+/* Jam kosong: tetap selutuh grid */
+.asc-table td.asc-cell.is-empty {
+    background: transparent;
+}
+
+/* ── Sel jam berjalan (sorot hijau + titik berdenyut) ────────────────────── */
+.asc-table td.asc-cell.is-now {
+    background: var(--green-light);
+    box-shadow: inset 0 0 0 2px var(--green);
+}
+
+.asc-table td.asc-cell.is-now .asc-subject {
+    color: var(--green);
+}
+
+.asc-now-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: ascPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes ascPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.35; transform: scale(1.5); }
+}
+
+/* ── Kepala lembar dengan toolbar (judul kiri, filter/aksi kanan) ────────── */
+.asc-sheet-head.is-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    text-align: left;
+}
+
+.asc-sheet-head.is-toolbar .asc-sheet-title {
+    font-size: 13px;
+}
+
+.asc-sheet-sub {
+    margin-top: 4px;
+    font-size: 12.5px;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--text-secondary);
+}
+
+.asc-sheet-tools {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ── Varian daftar: baris = satu entri jadwal, kolom label bebas ───────────
+   Dipakai tabel "Jadwal Hari Ini" (guru, piket, wali, waka, orangtua) supaya
+   tombol aksi, badge status, dan filter pencarian tetap berfungsi.          */
+.asc-table.is-list {
+    table-layout: auto;
+    min-width: 720px;
+}
+
+.asc-table.is-list thead th {
+    background: var(--blue-light);
+    color: var(--blue);
+    text-align: left;
+    padding: 10px 14px;
+    white-space: nowrap;
+}
+
+.asc-table.is-list thead th.asc-period,
+.asc-table.is-list thead th:first-child {
+    width: 150px;
+    text-align: center;
+}
+
+.asc-table.is-list tbody td {
+    padding: 11px 14px;
+    vertical-align: middle;
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.asc-table.is-list tbody tr:hover > td {
+    background: var(--surface-elevated);
+}
+
+/* Sel jam (kolom pertama): seragam seperti header nomor jam */
+.asc-table.is-list tbody td.asc-time {
+    width: 150px;
+    text-align: center;
+    white-space: nowrap;
+    font-weight: 700;
+    background: var(--surface-elevated);
+    color: var(--text-primary);
+}
+
+.asc-table.is-list tbody tr.is-now > td {
+    background: var(--green-light);
+}
+
+.asc-table.is-list tbody tr.is-now:hover > td {
+    background: var(--green-light);
+}
+
+.asc-table.is-list tbody tr.is-now > td.asc-time {
+    background: var(--green-light);
+    color: var(--green);
+}
+
+/* Di mobile, aturan .data-table (.main-content:not(.is-admin) …) berada di
+   media query dengan spesifisitas lebih tinggi — kemenangkan kembali gaya asc */
+@media (max-width: 768px) {
+    .main-content .asc-table.is-list thead th {
+        background: var(--blue-light) !important;
+        color: var(--blue) !important;
+        font-size: 11.5px;
+        padding: 10px 12px;
+        white-space: nowrap;
+    }
+
+    .main-content .asc-table.is-list tbody td {
+        font-size: 13px;
+        padding: 11px 12px;
+        white-space: normal;
+    }
+}
+
+/* ── Dark mode (kalahkan aturan !important global untuk table) ──────────── */
+html[data-theme="dark"] .asc-table th {
+    background: var(--blue-light) !important;
+    color: var(--blue) !important;
+    border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] .asc-table td.asc-cell {
+    border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] .asc-table thead tr {
+    background: transparent !important;
+}
+
+html[data-theme="dark"] .asc-table thead th.asc-corner,
+html[data-theme="dark"] .asc-table th.asc-day {
+    background: var(--surface-elevated) !important;
+    color: var(--text-primary) !important;
+}
+
+html[data-theme="dark"] .asc-table tbody tr:last-child td {
+    border-bottom: 1px solid var(--border) !important;
+}
+
+html[data-theme="dark"] .asc-table td.asc-cell.is-now {
+    background: var(--green-light) !important;
+    box-shadow: inset 0 0 0 2px var(--green) !important;
+}
+
+html[data-theme="dark"] .asc-table td.asc-cell.is-now .asc-subject {
+    color: var(--green) !important;
+}
+
+html[data-theme="dark"] .asc-table.is-list tbody td {
+    background: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+}
+
+html[data-theme="dark"] .asc-table.is-list tbody td.asc-time {
+    background: var(--surface-elevated) !important;
+}
+
+html[data-theme="dark"] .asc-table.is-list tbody tr:hover > td {
+    background: var(--surface-elevated) !important;
+}
+
+html[data-theme="dark"] .asc-table.is-list tbody tr.is-now > td,
+html[data-theme="dark"] .asc-table.is-list tbody tr.is-now:hover > td {
+    background: var(--green-light) !important;
+}
+
+html[data-theme="dark"] .asc-sheet-head {
+    background: var(--card-bg-elevated, var(--surface-elevated));
+}
+

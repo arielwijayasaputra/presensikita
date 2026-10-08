@@ -2980,7 +2980,8 @@ function updateJadwalGuruRows() {
         const statusCell = row.querySelector('.status-cell');
         const actionCell = row.querySelector('.action-cell');
 
-        row.style.background = isSedang ? '#f0fdf4' : '';
+        row.classList.toggle('is-now', isSedang);
+        row.style.background = '';
 
         if (statusCell) {
             if (isSedang) {

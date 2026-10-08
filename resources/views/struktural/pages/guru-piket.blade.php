@@ -75,25 +75,32 @@
     </div>
     @endif
 
-    <div class="card" style="padding:22px 24px">
-        <div class="card-header" style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-            <div style="display:flex;align-items:center;gap:10px">
-                <div class="card-title">Jadwal Mengajar Hari Ini</div>
-                <span class="card-action">{{ $hariIni }}</span>
+    <div class="asc-sheet">
+        <div class="asc-sheet-head is-toolbar">
+            <div>
+                <div class="asc-sheet-title">Jadwal Mengajar Hari Ini</div>
+                <div class="asc-sheet-sub">{{ $hariIni }}</div>
             </div>
-            <div style="position:relative">
-                <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input type="text" id="search-gurupiket-jadwal" oninput="filterTable('search-gurupiket-jadwal','table-gurupiket-jadwal')" onkeyup="filterTable('search-gurupiket-jadwal','table-gurupiket-jadwal')" placeholder="Cari kelas, mapel, guru..." class="filter-input" style="padding:7px 12px 7px 32px;font-size:12.5px;border-radius:8px;border:1px solid #cbd5e1;width:210px">
+            <div class="asc-sheet-tools">
+                <div style="position:relative">
+                    <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="search-gurupiket-jadwal" oninput="filterTable('search-gurupiket-jadwal','table-gurupiket-jadwal')" onkeyup="filterTable('search-gurupiket-jadwal','table-gurupiket-jadwal')" placeholder="Cari kelas, mapel, guru..." class="filter-input" style="padding:7px 12px 7px 32px;font-size:12.5px;border-radius:8px;border:1px solid var(--border, #cbd5e1);width:210px;background:var(--card-bg, #fff);color:var(--text-primary, #0f172a)">
+                </div>
             </div>
         </div>
-        <div style="overflow-x:auto">
-            <table class="data-table" id="table-gurupiket-jadwal" style="min-width:760px">
-                <thead><tr><th>Jam</th><th>Kelas</th><th>Mata Pelajaran</th><th>Guru</th></tr></thead>
+        <div class="asc-sheet-scroll">
+            <table class="data-table asc-table is-list" id="table-gurupiket-jadwal">
+                <thead><tr><th class="asc-period" style="text-align:center">Jam</th><th>Kelas</th><th>Mata Pelajaran</th><th>Guru</th></tr></thead>
                 <tbody>
                     @forelse(($jadwalPiketHariIni ?? $jadwalHariIni) as $jadwal)
-                        <tr><td><span class="badge badge-info">{{ substr($jadwal->jam_mulai, 0, 5) }} - {{ substr($jadwal->jam_selesai, 0, 5) }}</span></td><td><strong>{{ $jadwal->nama_kelas }}</strong></td><td>{{ $jadwal->nama_mapel }}</td><td>{{ $jadwal->nama_guru }}</td></tr>
+                        <tr>
+                            <td class="asc-time"><span style="font-size:13.5px;font-weight:800">{{ substr($jadwal->jam_mulai, 0, 5) }} - {{ substr($jadwal->jam_selesai, 0, 5) }}</span></td>
+                            <td><strong style="font-size:13.5px">{{ $jadwal->nama_kelas }}</strong></td>
+                            <td style="font-weight:600">{{ $jadwal->nama_mapel }}</td>
+                            <td>{{ $jadwal->nama_guru }}</td>
+                        </tr>
                     @empty
-                        <tr><td colspan="4" style="text-align:center;color:#64748b;padding:28px">Tidak ada jadwal mengajar untuk hari ini.</td></tr>
+                        <tr><td colspan="4" style="text-align:center;color:var(--text-secondary, #64748b);padding:28px">Tidak ada jadwal mengajar untuk hari ini.</td></tr>
                     @endforelse
                 </tbody>
             </table>

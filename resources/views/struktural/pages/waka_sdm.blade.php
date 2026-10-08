@@ -318,27 +318,29 @@
     </style>
 
     <!-- ══ TABEL LOG KEHADIRAN MENGAJAR HARIAN ══ -->
-    <div class="card" style="padding:22px 24px; margin-bottom:28px">
-        <div class="card-header" style="margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px">
+    <div class="asc-sheet" style="margin-bottom:28px">
+        <div class="asc-sheet-head is-toolbar">
             <div>
-                <div class="card-title" style="font-size:16px; font-weight:700; color:var(--text-primary, #0f172a)">
+                <div class="asc-sheet-title">
                     Monitoring Kehadiran &amp; Jurnal Mengajar Harian ({{ \Carbon\Carbon::parse($sdmTanggal)->format('d-m-Y') }})
                 </div>
-                <div style="font-size:12px; color:var(--text-secondary, #64748b); margin-top:2px">Pemantauan jam mengajar per sesi hari {{ \Carbon\Carbon::parse($sdmTanggal)->translatedFormat('l') }}</div>
+                <div class="asc-sheet-sub">Pemantauan jam mengajar per sesi hari {{ \Carbon\Carbon::parse($sdmTanggal)->translatedFormat('l') }}</div>
             </div>
 
             <!-- Searching Harian -->
-            <div style="position:relative; width:260px; max-width:100%">
-                <input type="text" id="search-harian" oninput="filterTable('search-harian', 'table-harian')" onkeyup="filterTable('search-harian', 'table-harian')" placeholder="Cari guru, mapel, atau kelas..." class="filter-input" style="width:100%; padding:7px 12px 7px 32px; font-size:12.5px; border-radius:8px; border:1px solid #cbd5e1">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" style="position:absolute; left:10px; top:9px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <div class="asc-sheet-tools">
+                <div style="position:relative; width:260px; max-width:100%">
+                    <input type="text" id="search-harian" oninput="filterTable('search-harian', 'table-harian')" onkeyup="filterTable('search-harian', 'table-harian')" placeholder="Cari guru, mapel, atau kelas..." class="filter-input" style="width:100%; padding:7px 12px 7px 32px; font-size:12.5px; border-radius:8px; border:1px solid var(--border, #cbd5e1); background:var(--card-bg, #fff); color:var(--text-primary, #0f172a)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" style="position:absolute; left:10px; top:9px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </div>
             </div>
         </div>
 
         <div class="sdm-scroll-wrap" style="overflow-x:auto; overflow-y:visible; width:100%; display:block">
-            <table class="data-table" id="table-harian" style="min-width:900px; white-space:nowrap">
+            <table class="data-table asc-table is-list" id="table-harian" style="min-width:900px; white-space:nowrap">
                 <thead>
                     <tr>
-                        <th style="width:150px">Jam</th>
+                        <th class="asc-period" style="text-align:center">Jam</th>
                         <th>Nama Guru</th>
                         <th>Mata Pelajaran</th>
                         <th>Kelas</th>
@@ -349,7 +351,7 @@
                 <tbody>
                     @forelse($sdmJadwal as $item)
                         <tr class="sdm-row-harian">
-                            <td class="sdm-h-jam">
+                            <td class="asc-time sdm-h-jam">
                                 <div class="sdm-h-top">
                                     <div class="sdm-h-jam-box">
                                         <strong style="color:var(--text-primary, #0f172a)">{{ substr($item->jam_mulai, 0, 5) }} - {{ substr($item->jam_selesai, 0, 5) }}</strong>
@@ -390,7 +392,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" style="text-align:center; color:#64748b; padding:24px">
+                            <td colspan="6" style="text-align:center; color:var(--text-secondary, #64748b); padding:24px">
                                 Tidak ada jadwal mengajar pada tanggal ini.
                             </td>
                         </tr>

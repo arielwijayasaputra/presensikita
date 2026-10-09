@@ -24,4 +24,6 @@
 
     @include('guru.pages.profil')
     @include('guru.pages.buat-laporan')
+
+    @include('partials.bottom_nav_guru')
 @endsection

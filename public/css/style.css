@@ -2465,62 +2465,86 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     #page-jurnal-absensi .absensi-card {
         display: block;
         background: var(--card-bg);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 14px;
-        margin-bottom: 10px;
-        box-shadow: var(--shadow);
+        border: 1.5px solid var(--border);
+        border-radius: 14px;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        transition: border-color 0.2s, box-shadow 0.2s;
     }
     #page-jurnal-absensi .absensi-card-head {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
         gap: 10px;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
     }
     #page-jurnal-absensi .absensi-card-no {
         flex: none;
-        width: 24px;
-        height: 24px;
+        width: 26px;
+        height: 26px;
         border-radius: 8px;
         background: #eff6ff;
         color: #2563eb;
-        font-size: 12px;
+        font-size: 12.5px;
         font-weight: 800;
         display: flex;
         align-items: center;
         justify-content: center;
         margin-top: 1px;
     }
+    [data-theme="dark"] #page-jurnal-absensi .absensi-card-no {
+        background: rgba(59, 130, 246, 0.2);
+        color: #93c5fd;
+    }
     #page-jurnal-absensi .absensi-card-nama {
-        font-size: 14px;
+        font-size: 15px;
         font-weight: 700;
         color: var(--text-primary);
-        line-height: 1.3;
+        line-height: 1.35;
     }
     #page-jurnal-absensi .absensi-card-nisn {
-        font-size: 11px;
+        font-size: 11.5px;
         font-weight: 600;
-        color: #94a3b8;
+        color: var(--text-secondary);
         font-family: monospace;
-        margin-top: 2px;
+        margin-top: 3px;
     }
     #page-jurnal-absensi .absensi-status-row {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
         gap: 6px;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
     }
     #page-jurnal-absensi .absensi-status-btn {
         position: relative;
         border: 1.5px solid var(--border);
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: 700;
-        padding: 9px 0;
+        border-radius: 10px;
+        font-family: inherit;
+        padding: 8px 2px;
         text-align: center;
         cursor: pointer;
-        transition: all 0.15s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+        user-select: none;
+    }
+    #page-jurnal-absensi .absensi-status-btn .st-letter {
+        font-size: 15px;
+        font-weight: 800;
+        line-height: 1;
+    }
+    #page-jurnal-absensi .absensi-status-btn .st-sub {
+        font-size: 9px;
+        font-weight: 700;
+        margin-top: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.2px;
+        line-height: 1;
+        opacity: 0.85;
     }
     #page-jurnal-absensi .absensi-status-btn input { position: absolute; opacity: 0; pointer-events: none; }
     
@@ -2531,24 +2555,43 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     #page-jurnal-absensi .absensi-status-btn[data-status="D"] { background: #f5f3ff; color: #7c3aed; border-color: #ddd6fe; }
     #page-jurnal-absensi .absensi-status-btn[data-status="A"] { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
 
-    /* Selected states (Light Mode) */
-    #page-jurnal-absensi .absensi-status-btn.selected[data-status="H"] { background: linear-gradient(135deg, #22c55e, #16a34a) !important; border-color: #15803d !important; color: #ffffff !important; box-shadow: 0 4px 14px rgba(34, 197, 94, 0.45); }
-    #page-jurnal-absensi .absensi-status-btn.selected[data-status="S"] { background: linear-gradient(135deg, #f59e0b, #d97706) !important; border-color: #b45309 !important; color: #ffffff !important; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.45); }
-    #page-jurnal-absensi .absensi-status-btn.selected[data-status="I"] { background: linear-gradient(135deg, #3b82f6, #2563eb) !important; border-color: #1d4ed8 !important; color: #ffffff !important; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.45); }
-    #page-jurnal-absensi .absensi-status-btn.selected[data-status="D"] { background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important; border-color: #6d28d9 !important; color: #ffffff !important; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.45); }
-    #page-jurnal-absensi .absensi-status-btn.selected[data-status="A"] { background: linear-gradient(135deg, #ef4444, #dc2626) !important; border-color: #b91c1c !important; color: #ffffff !important; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.45); }
+    /* Dark Mode Unselected */
+    [data-theme="dark"] #page-jurnal-absensi .absensi-status-btn[data-status="H"] { background: rgba(34, 197, 94, 0.12); color: #4ade80; border-color: rgba(34, 197, 94, 0.3); }
+    [data-theme="dark"] #page-jurnal-absensi .absensi-status-btn[data-status="S"] { background: rgba(245, 158, 11, 0.12); color: #fbbf24; border-color: rgba(245, 158, 11, 0.3); }
+    [data-theme="dark"] #page-jurnal-absensi .absensi-status-btn[data-status="I"] { background: rgba(59, 130, 246, 0.12); color: #60a5fa; border-color: rgba(59, 130, 246, 0.3); }
+    [data-theme="dark"] #page-jurnal-absensi .absensi-status-btn[data-status="D"] { background: rgba(168, 85, 247, 0.12); color: #c084fc; border-color: rgba(168, 85, 247, 0.3); }
+    [data-theme="dark"] #page-jurnal-absensi .absensi-status-btn[data-status="A"] { background: rgba(239, 68, 68, 0.12); color: #f87171; border-color: rgba(239, 68, 68, 0.3); }
+
+    /* Selected states (High-Contrast Vibrant Gradients) */
+    #page-jurnal-absensi .absensi-status-btn.selected[data-status="H"] { background: linear-gradient(135deg, #22c55e, #16a34a) !important; border-color: #15803d !important; color: #ffffff !important; box-shadow: 0 4px 14px rgba(34, 197, 94, 0.45); transform: scale(1.02); }
+    #page-jurnal-absensi .absensi-status-btn.selected[data-status="S"] { background: linear-gradient(135deg, #f59e0b, #d97706) !important; border-color: #b45309 !important; color: #ffffff !important; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.45); transform: scale(1.02); }
+    #page-jurnal-absensi .absensi-status-btn.selected[data-status="I"] { background: linear-gradient(135deg, #3b82f6, #2563eb) !important; border-color: #1d4ed8 !important; color: #ffffff !important; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.45); transform: scale(1.02); }
+    #page-jurnal-absensi .absensi-status-btn.selected[data-status="D"] { background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important; border-color: #6d28d9 !important; color: #ffffff !important; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.45); transform: scale(1.02); }
+    #page-jurnal-absensi .absensi-status-btn.selected[data-status="A"] { background: linear-gradient(135deg, #ef4444, #dc2626) !important; border-color: #b91c1c !important; color: #ffffff !important; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.45); transform: scale(1.02); }
+    
+    #page-jurnal-absensi .absensi-status-btn.selected .st-sub { opacity: 1; font-weight: 800; color: #ffffff !important; }
+
+    #page-jurnal-absensi .absensi-ket-wrap {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
     #page-jurnal-absensi .absensi-ket-input {
         width: 100%;
-        border: 1px solid var(--input-border);
-        border-radius: 8px;
-        padding: 8px 10px;
-        font-size: 12.5px;
+        border: 1.5px solid var(--input-border);
+        border-radius: 9px;
+        padding: 9px 12px;
+        font-size: 13px;
         font-family: inherit;
         outline: none;
         background: var(--input-bg);
         color: var(--text-primary);
+        transition: border-color 0.2s;
     }
-    #page-jurnal-absensi .absensi-ket-input:focus { border-color: #2563eb; }
+    #page-jurnal-absensi .absensi-ket-input:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -3003,33 +3046,38 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     }
     #page-izin-guru tbody td { border: none !important; padding: 3px 0 !important; }
 
-    /* Baris 1: Tanggal */
+    /* Baris 1: Tanggal & Status Akhir */
     #page-izin-guru tbody tr td:nth-child(1) {
-        font-size: 14px;
+        font-size: 14.5px;
         font-weight: 800;
         color: var(--text-primary);
+        display: inline-block !important;
+        width: auto !important;
+        margin-right: 10px;
     }
 
     /* Baris 2: Alasan */
     #page-izin-guru tbody tr td:nth-child(2) {
         font-size: 13px;
-        color: #475569;
-        margin: 4px 0;
+        color: var(--text-primary);
+        margin: 6px 0;
+        line-height: 1.4;
     }
     #page-izin-guru tbody tr td:nth-child(2)::before {
         content: "Alasan: ";
         font-weight: 700;
-        color: #64748b;
+        color: var(--text-secondary);
     }
 
     /* Baris 3: Surat */
     #page-izin-guru tbody tr td:nth-child(3) {
         font-size: 12.5px;
+        margin-bottom: 6px;
     }
     #page-izin-guru tbody tr td:nth-child(3)::before {
-        content: "Surat: ";
+        content: "Foto Surat: ";
         font-weight: 700;
-        color: #64748b;
+        color: var(--text-secondary);
     }
 
     /* Baris 4: Status Kepsek & Waka */
@@ -3038,14 +3086,30 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
         display: inline-block !important;
         width: auto !important;
         margin-right: 12px;
+        margin-bottom: 6px;
         font-size: 12px;
-        color: #64748b;
+        color: var(--text-secondary);
     }
     #page-izin-guru tbody tr td:nth-child(4)::before { content: "Kepsek: "; font-weight: 700; }
-    #page-izin-guru tbody tr td:nth-child(5)::before { content: "Waka: "; font-weight: 700; }
+    #page-izin-guru tbody tr td:nth-child(5)::before { content: "Waka SDM: "; font-weight: 700; }
 
-    /* Baris 5: Status Akhir (Badge) */
+    /* Baris 5: Tanda Tangan */
     #page-izin-guru tbody tr td:nth-child(6) {
+        margin: 4px 0 8px;
+        width: auto !important;
+        text-align: left !important;
+    }
+    #page-izin-guru tbody tr td:nth-child(6)::before {
+        content: "Tanda Tangan: ";
+        font-weight: 700;
+        color: var(--text-secondary);
+        font-size: 12px;
+        display: inline-block;
+        margin-right: 6px;
+    }
+
+    /* Baris 6: Status Akhir (Badge) */
+    #page-izin-guru tbody tr td:nth-child(7) {
         margin-top: 6px;
         width: auto !important;
     }
@@ -4508,5 +4572,195 @@ input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
     background: rgba(59, 130, 246, 0.25) !important;
     color: #93c5fd !important;
     border-color: rgba(59, 130, 246, 0.5) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MOBILE BOTTOM NAVIGATION BAR — GURU ROLE
+   Bar navigasi bawah modern, mudah dipahami & nyaman untuk smartphone
+   ══════════════════════════════════════════════════════════════════════════ */
+.mobile-bottom-nav {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 62px;
+        background: rgba(255, 255, 255, 0.94);
+        border-top: 1px solid rgba(226, 232, 240, 0.9);
+        z-index: 990;
+        justify-content: space-around;
+        align-items: center;
+        padding: 4px 6px max(6px, env(safe-area-inset-bottom));
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.07);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+    }
+
+    [data-theme="dark"] .mobile-bottom-nav {
+        background: rgba(18, 26, 45, 0.94);
+        border-top-color: rgba(38, 54, 84, 0.9);
+        box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.45);
+    }
+
+    .bottom-nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        flex: 1;
+        height: 100%;
+        color: var(--text-secondary, #64748b);
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        user-select: none;
+        transition: color 0.18s ease, transform 0.18s ease;
+        padding: 4px 2px;
+        border-radius: 8px;
+    }
+
+    .bottom-nav-item svg {
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), stroke 0.2s ease;
+    }
+
+    .bottom-nav-item:active {
+        transform: scale(0.92);
+    }
+
+    .bottom-nav-item.active {
+        color: #2563eb !important;
+        font-weight: 800;
+    }
+
+    .bottom-nav-item.active svg {
+        stroke: #2563eb !important;
+        transform: translateY(-1px);
+    }
+
+    [data-theme="dark"] .bottom-nav-item.active {
+        color: #60a5fa !important;
+    }
+
+    [data-theme="dark"] .bottom-nav-item.active svg {
+        stroke: #60a5fa !important;
+    }
+
+    /* Tombol Utama Tengah (Isi Jurnal) */
+    .bottom-nav-item.bottom-nav-action-center {
+        position: relative;
+    }
+
+    .bottom-nav-action-center .bottom-nav-icon-circle {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: -18px;
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+        border: 3px solid var(--body-bg, #f1f5f9);
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+    }
+
+    .bottom-nav-action-center .bottom-nav-icon-circle svg {
+        stroke: #ffffff !important;
+    }
+
+    [data-theme="dark"] .bottom-nav-action-center .bottom-nav-icon-circle {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        border-color: var(--body-bg, #0b0f19);
+        box-shadow: 0 4px 16px rgba(59, 130, 246, 0.45);
+    }
+
+    .bottom-nav-item.bottom-nav-action-center.active .bottom-nav-icon-circle {
+        transform: scale(1.08) translateY(-2px);
+        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.55);
+    }
+
+    /* Ruang bawah ekstra pada halaman agar tidak tertutup bottom nav */
+    .main-content:not(.is-admin) .page-content {
+        padding-bottom: 92px !important;
+    }
+
+    /* ── Penyesuaian Form & Grid Guru di Mobile ── */
+    .main-content:not(.is-admin) .stat-cards {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+        margin-bottom: 16px !important;
+    }
+
+    @media (max-width: 380px) {
+        .main-content:not(.is-admin) .stat-cards {
+            grid-template-columns: 1fr !important;
+        }
+    }
+
+    .main-content:not(.is-admin) .stat-card {
+        padding: 14px 12px !important;
+        border-radius: 14px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+    }
+
+    .main-content:not(.is-admin) .stat-card .stat-icon {
+        width: 42px !important;
+        height: 42px !important;
+        border-radius: 10px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .main-content:not(.is-admin) .stat-card .stat-value {
+        font-size: 19px !important;
+        font-weight: 800 !important;
+        line-height: 1.2 !important;
+    }
+
+    .main-content:not(.is-admin) .stat-card .stat-label {
+        font-size: 11.5px !important;
+        font-weight: 700 !important;
+        color: var(--text-secondary) !important;
+        line-height: 1.25 !important;
+    }
+
+    .main-content:not(.is-admin) .stat-card .stat-pct {
+        font-size: 11px !important;
+        margin-top: 2px !important;
+    }
+
+    /* Toolbar filter dan search bar full width di HP */
+    .filter-input, .search-input {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Card padding nyaman di smartphone */
+    .main-content:not(.is-admin) .card {
+        padding: 16px 14px !important;
+        border-radius: 14px !important;
+    }
+
+    /* Sticky Save Bar di Halaman Jurnal Absensi */
+    #page-jurnal-absensi .rekap-summary-bar {
+        position: sticky;
+        bottom: 64px;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        z-index: 50;
+        margin-top: 14px;
+    }
 }
 

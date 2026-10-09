@@ -187,6 +187,11 @@ function showPage(page){
     document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
     const n=document.getElementById('nav-'+page);
     if(n) n.classList.add('active');
+
+    // Update bottom nav mobile
+    document.querySelectorAll('.bottom-nav-item').forEach(el=>el.classList.remove('active'));
+    const bn=document.getElementById('bottom-nav-'+page);
+    if(bn) bn.classList.add('active');
     if(page==='absensi-harian' || page==='absensi' || page==='jurnal-absensi'){
         const root = absensiRoot();
         const select = root ? qs('#pilih-kelas', root) : document.getElementById('pilih-kelas');
@@ -1268,10 +1273,14 @@ function renderTable(data){
             card.dataset.nama = (nama || '').toLowerCase();
             card.dataset.nisn = (nisn || '').toLowerCase();
             const suratMobileBtnHtml = hasSuratUrl ? `<button type="button" class="btn-surat-preview-mobile" onclick="showSuratPopup('${hasSuratUrl}')" title="${s.surat_info || 'Lihat Foto Surat'}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> <span>Lihat Surat</span></button>` : '';
-            const stBtn=(v,label)=>{
+            const stBtn=(v,label,titleText)=>{
                 const isAutoD = v === 'D';
                 const dStyle = isAutoD ? 'style="cursor:not-allowed;"' : (isGuruDisabled ? 'style="pointer-events:none;opacity:.6;"' : '');
-                return `<button type="button" class="absensi-status-btn ${v==='H'?'selected':''} ${isAutoD ? 'is-auto-dispen is-admin' : ''}" data-status="${v}" data-sid="${id}" ${dStyle} onclick="pickAbsensiStatus(this)" ${isAutoD ? 'title="Status Dispen terisi otomatis saat surat dispensasi disetujui Waka"' : ''}>${label}<input type="radio" name="st-${id}" value="${v}" ${v==='H'?'checked':''} ${isGuruDisabled || isAutoD ? 'disabled' : ''} onchange="updateRekap()"></button>`;
+                return `<button type="button" class="absensi-status-btn ${v==='H'?'selected':''} ${isAutoD ? 'is-auto-dispen is-admin' : ''}" data-status="${v}" data-sid="${id}" ${dStyle} onclick="pickAbsensiStatus(this)" title="${titleText}">
+                    <span class="st-letter">${label}</span>
+                    <span class="st-sub">${titleText}</span>
+                    <input type="radio" name="st-${id}" value="${v}" ${v==='H'?'checked':''} ${isGuruDisabled || isAutoD ? 'disabled' : ''} onchange="updateRekap()">
+                </button>`;
             };
             card.innerHTML=`
                 <div class="absensi-card-head">
@@ -1284,8 +1293,16 @@ function renderTable(data){
                     </div>
                     ${suratMobileBtnHtml}
                 </div>
-                <div class="absensi-status-row">${stBtn('H','H')}${stBtn('S','S')}${stBtn('I','I')}${stBtn('D','D')}${stBtn('A','A')}</div>
-                <input type="text" class="absensi-ket-input" data-ket-sid="${id}" placeholder="Keterangan (opsional)..." ${isGuruDisabled ? 'disabled' : ''} oninput="mirrorKetGuru(this, '${id}')">
+                <div class="absensi-status-row">
+                    ${stBtn('H','H','Hadir')}
+                    ${stBtn('S','S','Sakit')}
+                    ${stBtn('I','I','Izin')}
+                    ${stBtn('D','D','Dispen')}
+                    ${stBtn('A','A','Alpa')}
+                </div>
+                <div class="absensi-ket-wrap">
+                    <input type="text" class="absensi-ket-input" data-ket-sid="${id}" placeholder="Catatan/Keterangan tambahan (opsional)..." ${isGuruDisabled ? 'disabled' : ''} oninput="mirrorKetGuru(this, '${id}')">
+                </div>
             `;
             tbody.appendChild(card);
         }

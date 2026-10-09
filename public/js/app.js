@@ -210,7 +210,55 @@ function showPage(page){
     }
     closeSidebarMobile();
     closeUserDropdown();
+    if (window.ascMobileSync) window.ascMobileSync();
 }
+
+/* ── Jadwal mobile: geser chip hari agar tab aktif terlihat ─────────────── */
+function ascMobileSync(scope){
+    const single = scope && scope.matches && scope.matches('.asc-mobile');
+    const wraps = single ? [scope] : Array.prototype.slice.call((scope || document).querySelectorAll('.asc-mobile'));
+    wraps.forEach(function(wrap){
+        const tabs = wrap.querySelector('.asc-m-tabs');
+        const active = tabs && tabs.querySelector('.asc-m-tab.is-active');
+        if (!tabs || !active || !tabs.offsetParent) return;
+        const left = active.offsetLeft;
+        const right = left + active.offsetWidth;
+        const start = tabs.scrollLeft;
+        const end = start + tabs.clientWidth;
+        if (left < start + 1 || right > end - 1) {
+            tabs.scrollLeft = Math.max(0, left - (tabs.clientWidth - active.offsetWidth) / 2);
+        }
+    });
+}
+window.ascMobileSync = ascMobileSync;
+
+document.addEventListener('click', function(ev){
+    const tab = ev.target && ev.target.closest ? ev.target.closest('.asc-m-tab') : null;
+    if (tab) {
+        const wrap = tab.closest('.asc-mobile');
+        if (wrap) {
+            const idx = tab.getAttribute('data-idx');
+            wrap.querySelectorAll('.asc-m-tab').forEach(function(t){
+                const on = t === tab;
+                t.classList.toggle('is-active', on);
+                t.setAttribute('aria-selected', on ? 'true' : 'false');
+            });
+            wrap.querySelectorAll('.asc-m-panel').forEach(function(p){
+                const on = p.getAttribute('data-idx') === idx;
+                p.classList.toggle('is-active', on);
+                if (on) p.removeAttribute('hidden'); else p.setAttribute('hidden', '');
+            });
+            ascMobileSync(wrap);
+            ev.preventDefault();
+            return;
+        }
+    }
+    // Sinkron ulang setelah aksi view lain (ganti kelas admin, toggle tampilan)
+    if (window.requestAnimationFrame) requestAnimationFrame(function(){ ascMobileSync(); });
+});
+document.addEventListener('change', function(){ ascMobileSync(); });
+window.addEventListener('resize', function(){ ascMobileSync(); });
+document.addEventListener('DOMContentLoaded', function(){ ascMobileSync(); });
 
 function reloadCurrentPage(){
     const visible = document.querySelector('[id^="page-"]:not([style*="display: none"]):not([style*="display:none"])');

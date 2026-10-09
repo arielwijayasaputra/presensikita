@@ -398,3 +398,235 @@ html[data-theme="dark"] .asc-sheet-head {
     background: var(--card-bg-elevated, var(--surface-elevated));
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   TAMPILAN MOBILE (<768px) — chip hari sticky + timeline kartu
+   Sembunyikan tabel grid, render dari data yang sama (.asc-mobile di partial)
+   ══════════════════════════════════════════════════════════════════════════ */
+.asc-mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    /* Tabel grid diganti timeline; lembar tidak lagi memotong agar tab bisa sticky */
+    .asc-sheet-grid .asc-sheet-scroll {
+        display: none;
+    }
+
+    .asc-sheet-grid {
+        overflow: visible;
+    }
+
+    .asc-sheet-grid .asc-sheet-head {
+        padding: 14px 14px 12px;
+        border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .asc-sheet-grid .asc-sheet-title {
+        font-size: 12.5px;
+        line-height: 1.45;
+    }
+
+    .asc-sheet-grid .asc-sheet-class {
+        margin-top: 4px;
+        font-size: 21px;
+    }
+
+    .asc-sheet-grid .asc-sheet-legend {
+        margin-top: 10px;
+        font-size: 12px;
+    }
+
+    .asc-mobile {
+        display: block;
+    }
+
+    /* ── Chip hari: horizontal scroll, sticky di bawah header (60px) ───── */
+    .asc-m-tabs {
+        position: sticky;
+        top: 60px;
+        z-index: 40;
+        display: flex;
+        gap: 8px;
+        padding: 10px 12px;
+        background: var(--card-bg);
+        border-bottom: 1px solid var(--border);
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .asc-m-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .asc-m-tab {
+        flex: 0 0 auto;
+        min-height: 44px;
+        padding: 8px 14px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--surface-elevated);
+        color: var(--text-secondary);
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.2;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .asc-m-tab.is-active {
+        background: var(--blue);
+        border-color: var(--blue);
+        color: #fff;
+    }
+
+    .asc-m-tab .asc-m-dot {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        margin-right: 6px;
+        border-radius: 50%;
+        background: var(--green);
+        vertical-align: middle;
+    }
+
+    .asc-m-tab.is-active .asc-m-dot {
+        background: #fff;
+    }
+
+    /* ── Panel hari ─────────────────────────────────────────────────────── */
+    .asc-m-panels {
+        padding: 12px;
+    }
+
+    .asc-m-panel {
+        display: none;
+    }
+
+    .asc-m-panel.is-active {
+        display: block;
+    }
+
+    /* ── Kartu satu blok (jam menyatu) ──────────────────────────────────── */
+    .asc-m-card {
+        display: flex;
+        gap: 12px;
+        padding: 12px 14px;
+        margin-bottom: 8px;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+    }
+
+    .asc-m-time {
+        flex: 0 0 86px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .asc-m-range {
+        font-size: 13px;
+        font-weight: 800;
+        line-height: 1.3;
+        color: var(--text-primary);
+        white-space: nowrap;
+    }
+
+    .asc-m-jamke {
+        padding: 3px 8px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--surface-elevated);
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1.2;
+        color: var(--text-muted);
+        white-space: nowrap;
+    }
+
+    .asc-m-main {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .asc-m-subject {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        font-size: 15.5px;
+        font-weight: 700;
+        line-height: 1.3;
+        color: var(--text-primary);
+        overflow-wrap: anywhere;
+    }
+
+    .asc-m-meta {
+        margin-top: 4px;
+        font-size: 12px;
+        line-height: 1.45;
+        color: var(--text-secondary);
+        overflow-wrap: anywhere;
+    }
+
+    .asc-m-meta.is-warning {
+        font-weight: 700;
+        color: var(--yellow);
+    }
+
+    .asc-m-meta .asc-m-room {
+        color: var(--text-muted);
+    }
+
+    /* Upacara / apel: sentuhan warna tema seperti sel desktop */
+    .asc-m-card.is-upacara {
+        background: var(--yellow-light);
+    }
+
+    .asc-m-card.is-upacara .asc-m-meta {
+        color: var(--text-muted);
+    }
+
+    /* Blok sedang berlangsung: aksen hijau tema */
+    .asc-m-card.is-now {
+        background: var(--green-light);
+        border-color: var(--green);
+        box-shadow: 0 0 0 1px var(--green);
+    }
+
+    .asc-m-card.is-now .asc-m-subject {
+        color: var(--green);
+    }
+
+    /* ── Baris jam kosong (tipis, abu-abu) ──────────────────────────────── */
+    .asc-m-gap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 30px;
+        margin-bottom: 8px;
+        padding: 5px 10px;
+        background: var(--surface-elevated);
+        border: 1px dashed var(--border);
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-align: center;
+    }
+
+    /* ── Hari tanpa jadwal ──────────────────────────────────────────────── */
+    .asc-m-empty {
+        padding: 36px 12px;
+        text-align: center;
+        font-size: 13px;
+        color: var(--text-muted);
+    }
+}
+

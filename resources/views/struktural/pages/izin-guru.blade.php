@@ -2,6 +2,62 @@
     <div class="page-header" style="margin-bottom:20px">
         <div><div class="page-title" style="font-size:22px;font-weight:800">Permintaan Izin Guru</div><div class="page-subtitle">Kirim permintaan izin untuk mendapatkan persetujuan Kepsek dan Waka.</div></div>
     </div>
+
+    @php
+        $pendingIzinList = $izinMenungguKonfirmasi ?? $izinGuruMenungguPiket ?? collect();
+    @endphp
+    @if($isGuruPiket && $pendingIzinList->count() > 0)
+    <div class="card" style="padding:22px 24px;margin-bottom:24px;border:1.5px solid #fbbf24;background:#fffdfa;max-width:900px">
+        <div class="card-header" style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:10px">
+                <div style="background:#fef3c7;color:#d97706;padding:7px;border-radius:8px;display:flex;align-items:center;justify-content:center">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                </div>
+                <div>
+                    <div class="card-title" style="color:#92400e;font-size:16px">Permintaan Izin Guru Masuk</div>
+                    <div style="font-size:12.5px;color:#b45309">Ada {{ $pendingIzinList->count() }} permohonan izin guru yang menunggu konfirmasi Anda untuk diteruskan ke Kepala Sekolah & Waka SDM via WhatsApp.</div>
+                </div>
+            </div>
+            <span class="badge badge-warning" style="font-size:12px;padding:5px 10px;font-weight:700">{{ $pendingIzinList->count() }} Menunggu</span>
+        </div>
+        <div style="overflow-x:auto">
+            <table class="data-table" style="min-width:760px">
+                <thead>
+                    <tr>
+                        <th>Tanggal Izin</th>
+                        <th>Nama Guru</th>
+                        <th>Alasan</th>
+                        <th>Surat</th>
+                        <th style="text-align:center">Aksi Konfirmasi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($pendingIzinList as $izinPiket)
+                        <tr>
+                            <td><strong style="color:var(--text, #0f172a)">{{ $izinPiket->tanggal_izin->format('d-m-Y') }}</strong></td>
+                            <td><strong style="color:#2563eb">{{ $izinPiket->guru->nama_guru ?? '-' }}</strong></td>
+                            <td>{{ $izinPiket->alasan }}</td>
+                            <td>
+                                @if($izinPiket->foto_surat)
+                                    <a href="{{ Storage::disk('public')->url($izinPiket->foto_surat) }}" target="_blank" rel="noopener" style="color:#2563eb;text-decoration:none;font-weight:600">Lihat Foto</a>
+                                @else
+                                    <span style="color:#94a3b8">-</span>
+                                @endif
+                            </td>
+                            <td style="text-align:center">
+                                <button type="button" onclick="konfirmasiIzinPiket({{ $izinPiket->id_izin_guru }}, '{{ addslashes($izinPiket->guru->nama_guru ?? '') }}')" class="btn-primary" style="background:#16a34a;border-color:#16a34a;font-size:12px;padding:6px 14px;border-radius:7px;display:inline-flex;align-items:center;gap:6px">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Konfirmasi & Teruskan ke WA
+                                </button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @endif
+
     <div class="card" style="padding:22px 24px;max-width:900px">
         <div class="card-header" style="margin-bottom:16px"><div class="card-title">Buat Permintaan Izin Guru</div></div>
         <form id="izin-guru-form" onsubmit="buatLinkIzinGuru(event)">@csrf
@@ -213,4 +269,49 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+function konfirmasiIzinPiket(id, namaGuru){
+    Swal.fire({
+        title: 'Konfirmasi Izin Guru',
+        html: `Konfirmasi permohonan izin dari <strong>${namaGuru}</strong>?<br><br><span style="font-size:12.5px;color:#64748b">Setelah dikonfirmasi, sistem akan otomatis mengirim notifikasi WhatsApp dan tautan persetujuan kepada Kepala Sekolah & Waka SDM.</span><br><br><textarea id="swal-catatan-piket-izin" class="swal2-textarea" placeholder="Catatan piket (opsional)..." style="margin:0;width:100%;font-size:13px" rows="2"></textarea>`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#16a34a',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Ya, Konfirmasi & Kirim WA',
+        cancelButtonText: 'Batal',
+        showLoaderOnConfirm: true,
+        preConfirm: () => {
+            const catatan = document.getElementById('swal-catatan-piket-izin')?.value || '';
+            const baseUrl = @json(url('/guru-piket/izin-guru'));
+            return fetch(baseUrl + '/' + id + '/konfirmasi', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ catatan_piket: catatan })
+            })
+            .then(async r => {
+                const d = await r.json();
+                if (!r.ok) throw new Error(d.message || 'Gagal mengonfirmasi izin.');
+                return d;
+            })
+            .catch(err => {
+                Swal.showValidationMessage(err.message);
+            });
+        },
+        allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil Dikonfirmasi',
+                text: result.value.message,
+                confirmButtonColor: '#2563eb'
+            }).then(() => location.reload());
+        }
+    });
+}
 </script>

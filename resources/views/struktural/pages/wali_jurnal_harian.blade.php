@@ -2,6 +2,51 @@
 
     @php
         $namaKelasAktif = $waliKelasObj->nama_kelas ?? session('auth_nama_kelas', 'Kelas');
+
+        // ── Data untuk lembar jadwal mingguan gaya aSc (hanya milik kelas ini) ──
+        $waliIdKelas  = $waliKelasObj->id_kelas ?? null;
+        $waliTA       = \App\Models\TahunAjaran::where('is_aktif', 1)->first() ?? \App\Models\TahunAjaran::first();
+        $waliHariUrut = \App\Models\Hari::getWeekdayNames();
+        if (empty($waliHariUrut)) {
+            $waliHariUrut = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+        }
+
+        $waliGridMap    = [];
+        $waliJamPerHari = [];
+
+        if ($waliIdKelas && $waliTA) {
+            $waliBaris = \Illuminate\Support\Facades\DB::table('jadwal_mengajar')
+                ->join('jam_pelajaran', 'jadwal_mengajar.id_jam', '=', 'jam_pelajaran.id_jam')
+                ->join('mapel', 'jadwal_mengajar.id_mapel', '=', 'mapel.id_mapel')
+                ->leftJoin('guru', function ($join) {
+                    $join->on('jadwal_mengajar.id_guru', '=', 'guru.id_guru')->whereNull('guru.deleted_at');
+                })
+                ->whereNull('jadwal_mengajar.deleted_at')
+                ->whereNull('jam_pelajaran.deleted_at')
+                ->whereNull('mapel.deleted_at')
+                ->where('jadwal_mengajar.id_kelas', $waliIdKelas)
+                ->where('jadwal_mengajar.id_tahun_ajaran', $waliTA->id_tahun_ajaran)
+                ->select(
+                    'jadwal_mengajar.hari',
+                    'jadwal_mengajar.id_jam',
+                    'jadwal_mengajar.id_guru',
+                    'guru.nama_guru',
+                    'mapel.nama_mapel',
+                    'jam_pelajaran.jam_ke',
+                    'jam_pelajaran.jam_mulai',
+                    'jam_pelajaran.jam_selesai'
+                )
+                ->orderBy('jam_pelajaran.jam_ke')
+                ->get();
+
+            foreach ($waliBaris as $baris) {
+                $waliGridMap[$baris->hari][$baris->id_jam] = $baris;
+            }
+        }
+
+        foreach (\App\Models\JamPelajaran::whereNull('deleted_at')->orderBy('jam_ke')->get() as $jp) {
+            $waliJamPerHari[$jp->hari][] = $jp;
+        }
     @endphp
 
     <!-- ══ HEADER JURNAL HARIAN REAL TIME ══ -->
@@ -58,59 +103,73 @@
         </div>
     </div>
 
+    <!-- ══ LEMBAR JADWAL MINGGUAN KELAS (gaya aSc Timetables) ══ -->
+    @if($waliIdKelas && $waliTA)
+        <div style="margin-bottom:24px">
+            @include('partials.jadwal-asc', [
+                'gridMap'       => $waliGridMap,
+                'judulBaris2'   => $namaKelasAktif,
+                'jamPerHari'    => $waliJamPerHari,
+                'hariUrutan'    => $waliHariUrut,
+                'tahunAjaran'   => $waliTA,
+                'barisBawah'    => 'guru',
+                'sorotSekarang' => true,
+            ])
+        </div>
+    @endif
+
     <!-- ══ TABEL JURNAL MENGAJAR HARIAN KELAS ══ -->
-    <div class="card" style="padding:22px 24px">
-        <div class="card-header" style="margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px">
+    <div class="asc-sheet">
+        <div class="asc-sheet-head is-toolbar">
             <div>
-                <div class="card-title" style="font-size:16px; font-weight:700; color:#0f172a">
-                    Daftar Pembelajaran &amp; Jurnal Guru Hari Ini
-                </div>
-                <div style="font-size:12px; color:#64748b; margin-top:2px">
+                <div class="asc-sheet-title">Daftar Pembelajaran &amp; Jurnal Guru Hari Ini</div>
+                <div class="asc-sheet-sub">
                     Riwayat real-time pengisian materi dan presensi per jam pelajaran di kelas {{ $namaKelasAktif }}
                 </div>
             </div>
 
-            <div style="position:relative; width:240px">
-                <input type="text" id="search-wali-jurnal-harian" oninput="filterTable('search-wali-jurnal-harian', 'table-wali-jurnal-harian')" onkeyup="filterTable('search-wali-jurnal-harian', 'table-wali-jurnal-harian')" placeholder="Cari mapel / guru / materi..." class="filter-input" style="width:100%; padding:6px 12px 6px 32px; font-size:12.5px; border-radius:8px; border:1px solid #cbd5e1">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" style="position:absolute; left:10px; top:8px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <div class="asc-sheet-tools">
+                <div style="position:relative; width:240px">
+                    <input type="text" id="search-wali-jurnal-harian" oninput="filterTable('search-wali-jurnal-harian', 'table-wali-jurnal-harian')" onkeyup="filterTable('search-wali-jurnal-harian', 'table-wali-jurnal-harian')" placeholder="Cari mapel / guru / materi..." class="filter-input" style="width:100%; padding:6px 12px 6px 32px; font-size:12.5px; border-radius:8px; border:1px solid var(--border, #cbd5e1); background:var(--card-bg, #fff); color:var(--text-primary, #0f172a)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" style="position:absolute; left:10px; top:8px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </div>
             </div>
         </div>
 
-        <div style="overflow-x:auto">
-            <table class="data-table" id="table-wali-jurnal-harian" style="min-width:900px">
+        <div class="asc-sheet-scroll">
+            <table class="data-table asc-table is-list" id="table-wali-jurnal-harian">
                 <thead>
                     <tr>
-                        <th style="width:70px">Jam Ke-</th>
-                        <th style="width:130px">Waktu</th>
+                        <th class="asc-period" style="text-align:center">Jam</th>
                         <th>Mata Pelajaran</th>
                         <th>Guru Pengajar</th>
-                        <th style="text-align:center; width:130px">Status Jurnal</th>
+                        <th style="text-align:center">Status Jurnal</th>
                         <th>Materi Pembelajaran</th>
-                        <th style="text-align:center; width:110px">Hadir Siswa</th>
+                        <th style="text-align:center">Hadir Siswa</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($waliJadwalHariIni as $j)
-                        <tr>
-                            <td style="text-align:center">
-                                <span class="badge badge-info" style="font-weight:700; font-size:12.5px">
-                                    {{ $j->jam_ke >= 100 ? $j->jam_ke - 100 : $j->jam_ke }}
+                        <tr @if(($j->status_pembelajaran ?? '') === 'Sedang Berlangsung') class="is-now" @endif>
+                            <td class="asc-time">
+                                <span style="font-size:13.5px; font-weight:800">
+                                    {{ substr($j->jam_mulai, 0, 5) }} - {{ substr($j->jam_selesai, 0, 5) }}
                                 </span>
+                                @if(($j->status_pembelajaran ?? '') === 'Sedang Berlangsung')
+                                    <span class="asc-now-dot" style="display:inline-block; margin-top:6px"></span>
+                                @endif
                             </td>
-                            <td style="font-family:monospace; font-size:12.5px; color:#475569">
-                                {{ substr($j->jam_mulai, 0, 5) }} - {{ substr($j->jam_selesai, 0, 5) }}
-                            </td>
-                            <td><strong style="color:#0f172a">{{ $j->nama_mapel }}</strong></td>
+                            <td><strong style="color:var(--text-primary, #0f172a)">{{ $j->nama_mapel }}</strong></td>
                             <td>
                                 <div style="display:flex; align-items:center; gap:8px">
-                                    <div style="width:28px; height:28px; border-radius:50%; background:#e2e8f0; display:flex; align-items:center; justify-content:center; overflow:hidden">
+                                    <div style="width:28px; height:28px; border-radius:50%; background:var(--border-subtle, #e2e8f0); display:flex; align-items:center; justify-content:center; overflow:hidden">
                                         @if(!empty($j->foto_profil))
                                             <img src="{{ Storage::disk('public')->url($j->foto_profil) }}" style="width:100%; height:100%; object-fit:cover">
                                         @else
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                                         @endif
                                     </div>
-                                    <span style="font-size:13px; font-weight:600; color:#334155">{{ $j->nama_guru }}</span>
+                                    <span style="font-size:13px; font-weight:600; color:var(--text-primary, #334155)">{{ $j->nama_guru }}</span>
                                 </div>
                             </td>
                             <td style="text-align:center">
@@ -122,12 +181,12 @@
                                     <span class="badge badge-secondary" style="font-size:11.5px; padding:4px 8px">Belum Diisi</span>
                                 @endif
                             </td>
-                            <td style="font-size:12.5px; color:#475569">
+                            <td style="font-size:12.5px; color:var(--text-secondary, #475569)">
                                 @if($j->jurnal && !empty($j->jurnal->materi))
-                                    <strong style="color:#1e293b">{{ $j->jurnal->materi }}</strong>
-                                    <div style="font-size:11px; color:#94a3b8; margin-top:2px">Waktu Input: {{ date('H:i', strtotime($j->jurnal->waktu_input)) }} WIB</div>
+                                    <strong style="color:var(--text-primary, #1e293b)">{{ $j->jurnal->materi }}</strong>
+                                    <div style="font-size:11px; color:var(--text-muted, #94a3b8); margin-top:2px">Waktu Input: {{ date('H:i', strtotime($j->jurnal->waktu_input)) }} WIB</div>
                                 @else
-                                    <span style="color:#94a3b8; font-style:italic">Materi belum diinput guru</span>
+                                    <span style="color:var(--text-muted, #94a3b8); font-style:italic">Materi belum diinput guru</span>
                                 @endif
                             </td>
                             <td style="text-align:center">
@@ -136,13 +195,13 @@
                                         {{ $j->jurnal->jumlah_hadir }} Siswa
                                     </span>
                                 @else
-                                    <span style="color:#94a3b8; font-size:12px">-</span>
+                                    <span style="color:var(--text-muted, #94a3b8); font-size:12px">-</span>
                                 @endif
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" style="text-align:center; color:#64748b; padding:24px">
+                            <td colspan="6" style="text-align:center; color:var(--text-secondary, #64748b); padding:24px">
                                 Tidak ada jadwal mengajar di kelas ini untuk hari ini.
                             </td>
                         </tr>

@@ -9,6 +9,8 @@ use App\Services\ProfilService;
 use App\Services\WhatsAppService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /**
  * Mengelola pengaturan sistem sekolah seperti nama sekolah, tahun ajaran, dan profil pengguna.
@@ -83,6 +85,22 @@ class PengaturanController extends Controller
             ]);
         }
 
+        // Simpan / Hapus Foto Tanda Tangan Kepsek jika dikirim
+        if ($request->boolean('hapus_ttd_kepsek')) {
+            $this->hapusTtdKepsek();
+        } elseif ($request->hasFile('foto_ttd_kepsek') || ($request->filled('foto_ttd_kepsek') && str_starts_with((string) $request->foto_ttd_kepsek, 'data:image'))) {
+            $path = $this->simpanBerkasFotoTtd($request, 'foto_ttd_kepsek');
+            if ($path) {
+                $oldPath = Pengaturan::get('ttd_kepsek');
+                if ($oldPath && $oldPath !== $path && Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+                Pengaturan::set('ttd_kepsek', $path);
+            }
+        }
+
+        $fotoTtd = Pengaturan::get('ttd_kepsek');
+
         return response()->json([
             'status' => 'success',
             'message' => 'Pengaturan sistem berhasil diperbarui!',
@@ -92,12 +110,14 @@ class PengaturanController extends Controller
                 'semester' => trim($request->semester),
                 'sistem_absensi' => trim($request->sistem_absensi ?? Pengaturan::get('sistem_absensi')),
                 'batas_waktu_jurnal' => trim($request->batas_waktu_jurnal ?? '23:59'),
+                'foto_ttd_kepsek' => $fotoTtd,
+                'foto_ttd_kepsek_url' => $fotoTtd ? Storage::disk('public')->url($fotoTtd) : null,
             ],
         ]);
     }
 
     /**
-     * Memperbarui pengaturan khusus nomor bot WhatsApp (Nomor Bot, Kepsek, Waka SDM, Waka Kesiswaan).
+     * Memperbarui pengaturan khusus nomor bot WhatsApp (Nomor Bot, Kepsek, Waka SDM, Waka Kesiswaan) dan foto TTD Kepsek.
      *
      * @return JsonResponse
      */
@@ -129,6 +149,22 @@ class PengaturanController extends Controller
             Pengaturan::set('wa_nomor_waka_kesiswaan', trim($request->wa_nomor_waka_kesiswaan ?? ''));
         }
 
+        // Simpan / Hapus Foto Tanda Tangan Kepsek jika dikirim
+        if ($request->boolean('hapus_ttd_kepsek')) {
+            $this->hapusTtdKepsek();
+        } elseif ($request->hasFile('foto_ttd_kepsek') || ($request->filled('foto_ttd_kepsek') && str_starts_with((string) $request->foto_ttd_kepsek, 'data:image'))) {
+            $path = $this->simpanBerkasFotoTtd($request, 'foto_ttd_kepsek');
+            if ($path) {
+                $oldPath = Pengaturan::get('ttd_kepsek');
+                if ($oldPath && $oldPath !== $path && Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+                Pengaturan::set('ttd_kepsek', $path);
+            }
+        }
+
+        $fotoTtd = Pengaturan::get('ttd_kepsek');
+
         return response()->json([
             'status' => 'success',
             'message' => 'Pengaturan nomor WhatsApp notifikasi berhasil diperbarui!',
@@ -139,6 +175,8 @@ class PengaturanController extends Controller
                 'wa_nomor_waka_sdm' => Pengaturan::get('wa_nomor_waka_sdm', ''),
                 'wa_nomor_waka_kesiswaan' => Pengaturan::get('wa_nomor_waka_kesiswaan', ''),
                 'wa_gateway_aktif' => Pengaturan::get('wa_gateway_aktif', '1'),
+                'foto_ttd_kepsek' => $fotoTtd,
+                'foto_ttd_kepsek_url' => $fotoTtd ? Storage::disk('public')->url($fotoTtd) : null,
             ],
         ]);
     }
@@ -247,5 +285,92 @@ class PengaturanController extends Controller
     public function updateProfil(Request $request): JsonResponse
     {
         return $this->profilService->update($request);
+    }
+
+    /**
+     * Mengunggah foto tanda tangan Kepala Sekolah secara langsung via AJAX/FormData.
+     */
+    public function uploadTtdKepsek(Request $request): JsonResponse
+    {
+        $request->validate([
+            'foto_ttd_kepsek' => 'required',
+        ]);
+
+        $path = $this->simpanBerkasFotoTtd($request, 'foto_ttd_kepsek');
+        if (! $path) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Format foto tidak valid atau gagal diproses. Unggah file gambar PNG/JPG/WEBP.',
+            ], 422);
+        }
+
+        $oldPath = Pengaturan::get('ttd_kepsek');
+        if ($oldPath && $oldPath !== $path && Storage::disk('public')->exists($oldPath)) {
+            Storage::disk('public')->delete($oldPath);
+        }
+
+        Pengaturan::set('ttd_kepsek', $path);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Foto tanda tangan Kepala Sekolah berhasil disimpan!',
+            'path' => $path,
+            'url' => Storage::disk('public')->url($path),
+        ]);
+    }
+
+    /**
+     * Menghapus foto tanda tangan Kepala Sekolah dari pengaturan sistem.
+     */
+    public function hapusTtdKepsek(): JsonResponse
+    {
+        $oldPath = Pengaturan::get('ttd_kepsek');
+        if ($oldPath && Storage::disk('public')->exists($oldPath)) {
+            Storage::disk('public')->delete($oldPath);
+        }
+        Pengaturan::set('ttd_kepsek', null);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Foto tanda tangan Kepala Sekolah berhasil dihapus.',
+        ]);
+    }
+
+    /**
+     * Helper untuk menyimpan berkas foto tanda tangan baik berupa uploaded file maupun base64 data URL.
+     */
+    private function simpanBerkasFotoTtd(Request $request, string $field): ?string
+    {
+        if ($request->hasFile($field)) {
+            $file = $request->file($field);
+            if (! $file->isValid()) {
+                return null;
+            }
+            $extension = strtolower($file->getClientOriginalExtension());
+            if (! in_array($extension, ['png', 'jpg', 'jpeg', 'webp'])) {
+                $extension = 'png';
+            }
+            $filename = 'ttd_kepsek_'.time().'_'.Str::random(6).'.'.$extension;
+            return $file->storeAs('tanda-tangan-kepsek', $filename, 'public');
+        }
+
+        $raw = $request->input($field);
+        if (is_string($raw) && str_starts_with($raw, 'data:image')) {
+            if (preg_match('/^data:image\/(\w+);base64,/', $raw, $matches)) {
+                $base64Data = substr($raw, strpos($raw, ',') + 1);
+                $ext = strtolower($matches[1]);
+                if (! in_array($ext, ['png', 'jpg', 'jpeg', 'webp'])) {
+                    $ext = 'png';
+                }
+                $decoded = base64_decode($base64Data);
+                if ($decoded !== false) {
+                    $filename = 'ttd_kepsek_'.time().'_'.Str::random(6).'.'.$ext;
+                    Storage::disk('public')->put('tanda-tangan-kepsek/'.$filename, $decoded);
+                    return 'tanda-tangan-kepsek/'.$filename;
+                }
+            }
+        }
+
+        return null;
     }
 }

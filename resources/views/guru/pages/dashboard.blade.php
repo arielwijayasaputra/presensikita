@@ -6,6 +6,27 @@
         </div>
     </div>
 
+    @if(isset($hariKhususHariIni) && $hariKhususHariIni->isNotEmpty())
+        @foreach($hariKhususHariIni as $hk)
+            <div style="margin-bottom:16px;padding:14px 18px;border-radius:12px;display:flex;align-items:center;gap:12px;{{ $hk->tipe === 'pulang_cepat' ? 'background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #f59e0b;color:#92400e;' : 'background:linear-gradient(135deg,#e0e7ff,#c7d2fe);border:1px solid #6366f1;color:#3730a3;' }}">
+                <div style="font-size:22px;line-height:1">{{ $hk->tipe === 'pulang_cepat' ? '⚡' : '🎉' }}</div>
+                <div style="flex:1">
+                    <div style="font-weight:800;font-size:14px;margin-bottom:2px">
+                        {{ $hk->tipe === 'pulang_cepat' ? 'Pemberitahuan Pulang Cepat' : 'Hari Khusus / Event' }}: {{ $hk->judul }}
+                    </div>
+                    <div style="font-size:12.5px;opacity:0.95;line-height:1.4">
+                        Tingkat terdampak: <strong>Kelas {{ implode(', ', $hk->tingkat ?? []) }}</strong>
+                        @if($hk->tipe === 'pulang_cepat')
+                            — Jam pulang: <strong>{{ substr($hk->jam_pulang, 0, 5) }}</strong> (jam mengajar pada & setelah jam ini ditiadakan).
+                        @else
+                            — Aturan presensi: <strong>{{ $hk->aturan_presensi_label }}</strong>.
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    @endif
+
     @if(isset($siswaTerlambatKelasAktif) && $siswaTerlambatKelasAktif->isNotEmpty() && isset($activeKelasObj))
         <div class="alert-terlambat-banner" onclick="tampilkanModalSiswaTerlambat('{{ $activeKelasObj->id_kelas }}', '{{ $activeKelasObj->nama_kelas }}')">
             <p class="alert-terlambat-title">Pemberitahuan Siswa Terlambat di Kelas {{ $activeKelasObj->nama_kelas }}</p>
@@ -48,18 +69,40 @@
         </div>
     </div>
 
-    <div class="card" style="padding:22px 24px;margin-bottom:20px">
-        <div class="card-header" style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-            <div><div class="card-title">Jadwal Mengajar Hari Ini</div><div style="font-size:12px;color:#64748b;margin-top:3px">Jadwal otomatis berdasarkan akun Guru yang sedang login</div></div>
-            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <div class="asc-sheet" style="margin-bottom:20px">
+        <div class="asc-sheet-head is-toolbar">
+            <div>
+                <div class="asc-sheet-title">Jadwal Mengajar Hari Ini</div>
+                <div class="asc-sheet-sub">Jadwal otomatis berdasarkan akun Guru yang sedang login</div>
+            </div>
+            <div class="asc-sheet-tools">
                 <div style="position:relative">
                     <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input type="text" id="search-guru-dash-jadwal" oninput="filterTable('search-guru-dash-jadwal','table-guru-dash-jadwal')" onkeyup="filterTable('search-guru-dash-jadwal','table-guru-dash-jadwal')" placeholder="Cari kelas / mapel..." class="filter-input" style="padding:7px 12px 7px 32px;font-size:12.5px;border-radius:8px;border:1px solid #cbd5e1;width:200px">
+                    <input type="text" id="search-guru-dash-jadwal" oninput="filterTable('search-guru-dash-jadwal','table-guru-dash-jadwal')" onkeyup="filterTable('search-guru-dash-jadwal','table-guru-dash-jadwal')" placeholder="Cari kelas / mapel..." class="filter-input" style="padding:7px 12px 7px 32px;font-size:12.5px;border-radius:8px;border:1px solid var(--border, #cbd5e1);width:200px;background:var(--card-bg, #fff);color:var(--text-primary, #0f172a)">
                 </div>
                 <span class="card-action">{{ now()->translatedFormat('d M Y') }}</span>
             </div>
         </div>
-        <div style="overflow-x:auto"><table class="data-table" id="table-guru-dash-jadwal" style="min-width:700px"><thead><tr><th>Jam Ke-</th><th>Waktu</th><th>Kelas</th><th>Mata Pelajaran</th><th>Status</th></tr></thead><tbody>@forelse($jadwalMengajarHariIni as $jadwal)<tr><td><span class="badge badge-info">{{ $jadwal->jam_ke >= 100 ? $jadwal->jam_ke - 100 : $jadwal->jam_ke }}</span></td><td>{{ substr($jadwal->jam_mulai, 0, 5) }} - {{ substr($jadwal->jam_selesai, 0, 5) }}</td><td><strong>{{ $jadwal->nama_kelas }}</strong></td><td>{{ $jadwal->nama_mapel }}</td><td>@if(now()->format('H:i:s') >= $jadwal->jam_mulai && now()->format('H:i:s') <= $jadwal->jam_selesai)<span class="badge badge-success">Sedang berlangsung</span>@elseif(now()->format('H:i:s') < $jadwal->jam_mulai)<span class="badge badge-info">Belum dimulai</span>@else<span class="badge">Selesai</span>@endif</td></tr>@empty<tr><td colspan="5" style="text-align:center;color:#64748b;padding:24px">Tidak ada jadwal mengajar hari ini.</td></tr>@endforelse</tbody></table></div>
+        <div class="asc-sheet-scroll">
+            <table class="data-table asc-table is-list" id="table-guru-dash-jadwal">
+                <thead><tr><th class="asc-period" style="text-align:center">Jam</th><th>Kelas</th><th>Mata Pelajaran</th><th style="text-align:center">Status</th></tr></thead>
+                <tbody>@forelse($jadwalMengajarHariIni as $jadwal)
+                    @php
+                        $isSedangDash = !($jadwal->is_ditiadakan ?? false)
+                            && now()->format('H:i:s') >= $jadwal->jam_mulai
+                            && now()->format('H:i:s') <= $jadwal->jam_selesai;
+                    @endphp
+                    <tr @if($isSedangDash) class="is-now" @endif>
+                        <td class="asc-time">
+                            <span style="font-size:13.5px;font-weight:800">{{ substr($jadwal->jam_mulai, 0, 5) }} - {{ substr($jadwal->jam_selesai, 0, 5) }}</span>
+                            @if($isSedangDash)<span class="asc-now-dot" style="display:inline-block;margin-top:6px"></span>@endif
+                        </td>
+                        <td><strong style="font-size:13.5px">{{ $jadwal->nama_kelas }}</strong></td>
+                        <td style="font-weight:600">{{ $jadwal->nama_mapel }}</td>
+                        <td style="text-align:center">@if($jadwal->is_ditiadakan ?? false)<span class="badge badge-warning" style="background:#fef3c7;color:#b45309;border:1px solid #fde68a">Ditiadakan ({{ ($jadwal->hari_khusus->tipe ?? '') === 'pulang_cepat' ? 'Pulang Cepat' : 'Libur Event' }})</span>@elseif(now()->format('H:i:s') >= $jadwal->jam_mulai && now()->format('H:i:s') <= $jadwal->jam_selesai)<span class="badge badge-success">Sedang berlangsung</span>@elseif(now()->format('H:i:s') < $jadwal->jam_mulai)<span class="badge badge-info">Belum dimulai</span>@else<span class="badge">Selesai</span>@endif</td>
+                    </tr>@empty<tr><td colspan="4" style="text-align:center;color:var(--text-secondary, #64748b);padding:24px">Tidak ada jadwal mengajar hari ini.</td></tr>@endforelse</tbody>
+            </table>
+        </div>
     </div>
 
     <div class="charts-row" style="grid-template-columns:1.5fr 1fr">

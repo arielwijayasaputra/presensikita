@@ -113,6 +113,46 @@
                         <div style="font-size:11.5px;color:#64748b;margin-top:4px">Menerima permohonan <strong>Izin Guru</strong>.</div>
                     </div>
                 </div>
+
+                {{-- Input Foto Tanda Tangan Kepala Sekolah --}}
+                <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;margin-top:4px">
+                    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap">
+                        <div>
+                            <label style="font-size:12.5px;font-weight:700;color:#1e293b;display:flex;align-items:center;gap:6px">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5a1 1 0 0 1-1.4.4l-4-2a1 1 0 0 1 .3-1.8l10-3z"/><path d="M2 19l7-7 2 2 5-5 6 6v4a1 1 0 0 1-1 1l-9 2-4 2z"/></svg>
+                                Foto Tanda Tangan Kepala Sekolah
+                            </label>
+                            <div style="font-size:11.5px;color:#64748b;margin-top:2px">
+                                Foto tanda tangan ini akan otomatis disematkan pada surat izin saat disetujui Kepala Sekolah (tanpa perlu tanda tangan manual).
+                            </div>
+                        </div>
+                        <span class="badge badge-status-ttd-kepsek {{ !empty($fotoTtdKepsek) ? 'badge-success' : 'badge-secondary' }}" style="font-size:11px;padding:4px 9px">
+                            {{ !empty($fotoTtdKepsek) ? 'Tersimpan' : 'Belum Ada' }}
+                        </span>
+                    </div>
+
+                    <div style="display:flex;gap:14px;align-items:center;margin-top:12px;flex-wrap:wrap">
+                        <div style="width:130px;height:70px;background:#ffffff;border:1.5px dashed #cbd5e1;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;padding:4px">
+                            <img class="preview-img-ttd-kepsek" src="{{ !empty($fotoTtdKepsek) ? Storage::disk('public')->url($fotoTtdKepsek) : '' }}" alt="TTD Kepsek" style="{{ !empty($fotoTtdKepsek) ? 'max-height:60px;max-width:120px;object-fit:contain;display:block;' : 'display:none;' }}">
+                            <span class="placeholder-ttd-kepsek" style="{{ !empty($fotoTtdKepsek) ? 'display:none;' : 'display:block;font-size:11px;color:#94a3b8;text-align:center;' }}">Tidak ada foto</span>
+                        </div>
+
+                        <div style="flex:1;min-width:200px">
+                            <input type="file" class="input-foto-ttd-kepsek" accept="image/png,image/jpeg,image/jpg,image/webp" style="display:none" onchange="uploadFotoTtdKepsekStruktural(this)">
+                            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+                                <button type="button" class="btn-secondary" onclick="this.closest('div').previousElementSibling.click()" style="padding:6px 14px;font-size:12px;border-radius:7px;display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #cbd5e1;font-weight:600">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                    Pilih Foto Tanda Tangan
+                                </button>
+                                <button type="button" class="btn-secondary btn-hapus-ttd-kepsek" onclick="hapusFotoTtdKepsekStruktural()" style="padding:6px 12px;font-size:12px;border-radius:7px;display:{{ !empty($fotoTtdKepsek) ? 'inline-flex' : 'none' }};align-items:center;gap:5px;background:#fef2f2;border-color:#fecaca;color:#dc2626">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                    Hapus Foto
+                                </button>
+                            </div>
+                            <div style="font-size:11px;color:#94a3b8;margin-top:5px">Format: PNG transparan (direkomendasikan), JPG, atau WEBP. Maks 3MB.</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -535,6 +575,134 @@ function modalTestKirimWaPiket() {
                 });
             });
         }
+    });
+}
+
+function uploadFotoTtdKepsekStruktural(fileInput) {
+    if (!fileInput.files || !fileInput.files[0]) return;
+    const file = fileInput.files[0];
+    if (!file.type.startsWith('image/')) {
+        Swal.fire({ icon: 'warning', title: 'Format Tidak Sesuai', text: 'Silakan pilih berkas gambar (PNG, JPG, JPEG, WEBP).' });
+        fileInput.value = '';
+        return;
+    }
+    if (file.size > 3 * 1024 * 1024) {
+        Swal.fire({ icon: 'warning', title: 'Ukuran Terlalu Besar', text: 'Ukuran foto maksimal adalah 3MB.' });
+        fileInput.value = '';
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('foto_ttd_kepsek', file);
+
+    const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    Swal.fire({
+        title: 'Mengunggah Foto Tanda Tangan...',
+        text: 'Mohon tunggu sebentar',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+    });
+
+    const uploadUrl = @json(route('struktural.pengaturan.upload-ttd-kepsek', [], false));
+    fetch(uploadUrl, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': csrf,
+            'Accept': 'application/json'
+        },
+        body: formData
+    })
+    .then(async res => {
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Gagal mengunggah foto tanda tangan.');
+        return data;
+    })
+    .then(data => {
+        const hasPhoto = !!data.url;
+        document.querySelectorAll('.preview-img-ttd-kepsek').forEach(img => {
+            img.src = data.url || '';
+            img.style.display = hasPhoto ? 'block' : 'none';
+        });
+        document.querySelectorAll('.placeholder-ttd-kepsek').forEach(ph => {
+            ph.style.display = hasPhoto ? 'none' : 'block';
+        });
+        document.querySelectorAll('.badge-status-ttd-kepsek').forEach(b => {
+            b.className = 'badge badge-status-ttd-kepsek ' + (hasPhoto ? 'badge-success' : 'badge-secondary');
+            b.textContent = hasPhoto ? 'Tersimpan' : 'Belum Ada';
+        });
+        document.querySelectorAll('.btn-hapus-ttd-kepsek').forEach(btn => {
+            btn.style.display = hasPhoto ? 'inline-flex' : 'none';
+        });
+        fileInput.value = '';
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil Disimpan!',
+            text: data.message || 'Foto tanda tangan Kepala Sekolah berhasil disimpan ke pengaturan sistem.',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    })
+    .catch(err => {
+        Swal.fire({ icon: 'error', title: 'Gagal', text: err.message || 'Terjadi kesalahan saat mengunggah foto.' });
+        fileInput.value = '';
+    });
+}
+
+function hapusFotoTtdKepsekStruktural() {
+    Swal.fire({
+        title: 'Hapus Tanda Tangan?',
+        text: 'Foto tanda tangan Kepala Sekolah akan dihapus dari pengaturan sistem.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        confirmButtonText: 'Ya, Hapus',
+        cancelButtonText: 'Batal'
+    }).then(result => {
+        if (!result.isConfirmed) return;
+
+        const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        const hapusUrl = @json(route('struktural.pengaturan.hapus-ttd-kepsek', [], false));
+        fetch(hapusUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrf,
+                'Accept': 'application/json'
+            }
+        })
+        .then(async res => {
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || 'Gagal menghapus tanda tangan.');
+            return data;
+        })
+        .then(data => {
+            document.querySelectorAll('.preview-img-ttd-kepsek').forEach(img => {
+                img.src = '';
+                img.style.display = 'none';
+            });
+            document.querySelectorAll('.placeholder-ttd-kepsek').forEach(ph => {
+                ph.style.display = 'block';
+            });
+            document.querySelectorAll('.badge-status-ttd-kepsek').forEach(b => {
+                b.className = 'badge badge-status-ttd-kepsek badge-secondary';
+                b.textContent = 'Belum Ada';
+            });
+            document.querySelectorAll('.btn-hapus-ttd-kepsek').forEach(btn => {
+                btn.style.display = 'none';
+            });
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Dihapus',
+                text: data.message || 'Foto tanda tangan berhasil dihapus.',
+                timer: 1800,
+                showConfirmButton: false
+            });
+        })
+        .catch(err => {
+            Swal.fire({ icon: 'error', title: 'Gagal', text: err.message || 'Terjadi kesalahan saat menghapus foto.' });
+        });
     });
 }
 </script>

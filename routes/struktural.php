@@ -30,6 +30,7 @@ Route::middleware('auth.struktural')->group(function () {
 
     Route::post('/struktural/profil/update', [PengaturanController::class, 'updateProfil'])->name('struktural.profil.update');
     Route::post('/guru-piket/izin-guru', [IzinGuruController::class, 'store'])->name('izin-guru.store');
+    Route::post('/guru-piket/izin-guru/{izin}/konfirmasi', [IzinGuruController::class, 'konfirmasiPiket'])->name('izin-guru.konfirmasi-piket');
     Route::get('/guru-piket/izin-guru', [IzinGuruController::class, 'form'])->name('izin-guru.form');
     Route::get('/guru-piket/dispen-siswa', [DispenSiswaController::class, 'form'])->name('dispen-siswa.form');
     Route::post('/guru-piket/dispen-siswa', [DispenSiswaController::class, 'store'])->name('dispen-siswa.store');
@@ -43,6 +44,8 @@ Route::middleware('auth.struktural')->group(function () {
 
     // Pengaturan WhatsApp Bot Gateway untuk Struktural / Guru Piket
     Route::post('/struktural/pengaturan/update-wa', [PengaturanController::class, 'updateWa'])->name('struktural.pengaturan.update-wa');
+    Route::post('/struktural/pengaturan/upload-ttd-kepsek', [PengaturanController::class, 'uploadTtdKepsek'])->name('struktural.pengaturan.upload-ttd-kepsek');
+    Route::post('/struktural/pengaturan/hapus-ttd-kepsek', [PengaturanController::class, 'hapusTtdKepsek'])->name('struktural.pengaturan.hapus-ttd-kepsek');
     Route::post('/struktural/pengaturan/test-wa', [PengaturanController::class, 'testKirimWa'])->name('struktural.pengaturan.test-wa');
     Route::get('/struktural/pengaturan/status-wa', [PengaturanController::class, 'statusBotWa'])->name('struktural.pengaturan.status-wa');
     Route::post('/struktural/pengaturan/restart-wa', [PengaturanController::class, 'restartBotWa'])->name('struktural.pengaturan.restart-wa');

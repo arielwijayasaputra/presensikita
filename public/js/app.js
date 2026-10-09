@@ -372,8 +372,8 @@ function updateGuruJurnalUI(data, targetKelasId) {
     // Badge Sesi
     if (badgeContainer) {
         if (jadwal && String(jadwal.id_kelas) === String(selectedKelas)) {
-            const jamKe = jadwal.jam_ke >= 100 ? jadwal.jam_ke - 100 : jadwal.jam_ke;
-            badgeContainer.innerHTML = `<span id="badge-jadwal-aktif" class="badge badge-success" style="font-size:12px;padding:4px 10px;font-weight:700;display:inline-flex;align-items:center;gap:6px"><span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.5s infinite"></span>Sesi Aktif: ${jadwal.nama_kelas} (Jam ke-${jamKe})</span>`;
+            const jamStr = (jadwal.jam_mulai && jadwal.jam_selesai) ? `${String(jadwal.jam_mulai).slice(0, 5)} - ${String(jadwal.jam_selesai).slice(0, 5)}` : (jadwal.jam_ke >= 100 ? jadwal.jam_ke - 100 : jadwal.jam_ke);
+            badgeContainer.innerHTML = `<span id="badge-jadwal-aktif" class="badge badge-success" style="font-size:12px;padding:4px 10px;font-weight:700;display:inline-flex;align-items:center;gap:6px"><span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.5s infinite"></span>Sesi Aktif: ${jadwal.nama_kelas} (${jamStr})</span>`;
         } else if (canInput) {
             badgeContainer.innerHTML = `<span id="badge-jadwal-aktif" class="badge badge-success" style="font-size:12px;padding:4px 10px;font-weight:700;display:inline-flex;align-items:center;gap:6px">Sesi Terbuka</span>`;
         } else {
@@ -2952,8 +2952,9 @@ function applyPeriodFromData(data) {
     });
 
     if (jam) {
-        periodEl.textContent = `Jam ke-${jam.jam_ke}`;
-        periodEl.title = `Jam ke-${jam.jam_ke} (${String(jam.jam_mulai).slice(0, 5)} - ${String(jam.jam_selesai).slice(0, 5)})`;
+        const timeStr = `${String(jam.jam_mulai).slice(0, 5)} - ${String(jam.jam_selesai).slice(0, 5)}`;
+        periodEl.textContent = timeStr;
+        periodEl.title = timeStr;
     } else {
         periodEl.textContent = 'Di luar jam';
         periodEl.title = 'Di luar jam pelajaran';
@@ -2996,7 +2997,8 @@ function updateJadwalGuruRows() {
         const statusCell = row.querySelector('.status-cell');
         const actionCell = row.querySelector('.action-cell');
 
-        row.style.background = isSedang ? '#f0fdf4' : '';
+        row.classList.toggle('is-now', isSedang);
+        row.style.background = '';
 
         if (statusCell) {
             if (isSedang) {
@@ -3567,7 +3569,7 @@ window.tampilkanModalSiswaTerlambat = function(kelasId, namaKelas) {
                     <div class="siswa-terlambat-modal-item">
                         <div class="siswa-terlambat-modal-item-top">
                             <div class="siswa-terlambat-modal-name">${s.nama_siswa}</div>
-                            <span class="badge" style="background:#ffedd5;color:#c2410c;font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap">Mulai Jam ke-${s.jam_ke}</span>
+                            <span class="badge" style="background:#ffedd5;color:#c2410c;font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap">Mulai: ${s.jam_ke}</span>
                         </div>
                         <div class="siswa-terlambat-modal-grid">
                             <div><span style="color:#64748b">Kelas:</span> <strong style="color:#1e293b">${s.nama_kelas}</strong></div>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GuruController;
 use App\Http\Controllers\Admin\GuruPiketController;
+use App\Http\Controllers\Admin\HariKhususController;
 use App\Http\Controllers\Admin\JadwalMengajarController;
 use App\Http\Controllers\Admin\JamPelajaranController;
 use App\Http\Controllers\Admin\JurusanController;
@@ -72,6 +73,11 @@ Route::middleware('auth.admin')->group(function () {
     Route::post('/jam-pelajaran/istirahat/{hari}/{nomor}', [JamPelajaranController::class, 'updateIstirahat'])->name('jam-pelajaran.update-istirahat');
     Route::delete('/jam-pelajaran/istirahat/{hari}/{nomor}', [JamPelajaranController::class, 'destroyIstirahat'])->name('jam-pelajaran.hapus-istirahat');
     Route::post('/jam-pelajaran/kemajuan-jadwal', [JamPelajaranController::class, 'toggleKemajuanJadwal'])->name('jam-pelajaran.toggle-kemajuan');
+
+    // Hari Khusus (Event & Pulang Cepat)
+    Route::post('/hari-khusus/tambah', [HariKhususController::class, 'store'])->name('hari-khusus.tambah');
+    Route::match(['post', 'put'], '/hari-khusus/{id}/update', [HariKhususController::class, 'update'])->name('hari-khusus.update');
+    Route::delete('/hari-khusus/{id}', [HariKhususController::class, 'destroy'])->name('hari-khusus.hapus');
     Route::get('/jadwal/guru-tersedia', [JadwalMengajarController::class, 'guruTersedia'])->name('jadwal.guru-tersedia');
     Route::post('/jadwal/{id}/tugaskan-guru', [JadwalMengajarController::class, 'tugaskanGuru'])->name('jadwal.tugaskan-guru');
     Route::post('/jadwal/import', [JadwalMengajarController::class, 'import'])->name('jadwal.import');
@@ -83,6 +89,8 @@ Route::middleware('auth.admin')->group(function () {
     // Pengaturan & Profil
     Route::post('/pengaturan/update', [PengaturanController::class, 'update'])->name('pengaturan.update');
     Route::post('/pengaturan/update-wa', [PengaturanController::class, 'updateWa'])->name('pengaturan.update-wa');
+    Route::post('/pengaturan/upload-ttd-kepsek', [PengaturanController::class, 'uploadTtdKepsek'])->name('pengaturan.upload-ttd-kepsek');
+    Route::post('/pengaturan/hapus-ttd-kepsek', [PengaturanController::class, 'hapusTtdKepsek'])->name('pengaturan.hapus-ttd-kepsek');
     Route::post('/pengaturan/test-wa', [PengaturanController::class, 'testKirimWa'])->name('pengaturan.test-wa');
     Route::get('/pengaturan/status-wa', [PengaturanController::class, 'statusBotWa'])->name('pengaturan.status-wa');
     Route::post('/pengaturan/start-wa', [PengaturanController::class, 'startBotWa'])->name('pengaturan.start-wa');

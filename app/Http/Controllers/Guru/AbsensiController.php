@@ -8,6 +8,7 @@ use App\Models\DispenSiswa;
 use App\Models\Guru;
 use App\Models\GuruPiket;
 use App\Models\Hari;
+use App\Models\HariKhusus;
 use App\Models\IzinGuru;
 use App\Models\JamPelajaran;
 use App\Models\JurnalKelas;
@@ -18,6 +19,7 @@ use App\Models\Pengaturan;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
 use App\Services\AbsensiService;
+use App\Services\HariKhususService;
 use App\Services\JadwalService;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
@@ -69,9 +71,25 @@ class AbsensiController extends Controller
             ->get()
             ->keyBy('id_jadwal');
 
-        $jadwalMengajarHariIni = $jadwalMengajarHariIni->map(function ($jadwal) use ($jurnalHariIniMap) {
+        $hariKhususHariIni = HariKhusus::berlakuPada(now()->toDateString())->get();
+
+        $jadwalMengajarHariIni = $jadwalMengajarHariIni->map(function ($jadwal) use ($jurnalHariIniMap, $hariKhususHariIni) {
             $jadwal->has_jurnal = isset($jurnalHariIniMap[$jadwal->id_jadwal]);
             $jadwal->jurnal = $jurnalHariIniMap[$jadwal->id_jadwal] ?? null;
+
+            $tingkat = HariKhususService::normalizeTingkat($jadwal->nama_kelas);
+            $hk = $hariKhususHariIni->first(function ($h) use ($tingkat) {
+                return in_array($tingkat, $h->tingkat ?? []);
+            });
+            $jadwal->hari_khusus = $hk;
+            $jadwal->is_ditiadakan = false;
+            if ($hk) {
+                if ($hk->tipe === 'pulang_cepat' && $hk->jam_pulang && $jadwal->jam_mulai >= $hk->jam_pulang) {
+                    $jadwal->is_ditiadakan = true;
+                } elseif ($hk->tipe === 'event' && $hk->aturan_presensi === 'diliburkan') {
+                    $jadwal->is_ditiadakan = true;
+                }
+            }
 
             return $jadwal;
         });
@@ -451,7 +469,7 @@ class AbsensiController extends Controller
                         return [
                             'tanggal' => date('d-m-Y', strtotime($item->tanggal)),
                             'jam_masuk' => substr($item->jam_masuk, 0, 5).' WIB',
-                            'jam_ke' => 'Jam ke-'.$item->jam_ke,
+                            'jam_ke' => \App\Models\JamPelajaran::formatJamKe($item->jam_ke, $item->tanggal ? \Carbon\Carbon::parse($item->tanggal)->locale('id')->isoFormat('dddd') : null),
                             'alasan' => $item->alasan ?: '-',
                         ];
                     })->values()->toArray(),
@@ -516,8 +534,14 @@ class AbsensiController extends Controller
         $totalGuruPiketHariIni = 0;
         $jamAktif = null;
         $jadwalPiketHariIni = collect();
+        $izinGuruMenungguPiket = collect();
 
         if ($isGuruPiket) {
+            $izinGuruMenungguPiket = IzinGuru::with('guru')
+                ->menungguPiket()
+                ->latest()
+                ->get();
+
             $dispenTerbaru = DispenSiswa::with(['siswa.kelas', 'guruPiket'])
                 ->where('id_guru_piket', $guru->id_guru)
                 ->where('jenis_absen', 'D')
@@ -565,7 +589,7 @@ class AbsensiController extends Controller
             'isKelasAktif',
             'canInputJurnal',
             'jadwalPerKelasMap',
-            'siswaList', 'izinGuruTerbaru', 'izinGuruHariIni', 'statusKehadiranHariIni', 'jadwalMengajarHariIni', 'namaKelasDiajarHariIni', 'jadwalGuruAktif', 'kelasJurnalAktif',
+            'siswaList', 'izinGuruTerbaru', 'izinGuruMenungguPiket', 'izinGuruHariIni', 'statusKehadiranHariIni', 'jadwalMengajarHariIni', 'hariKhususHariIni', 'namaKelasDiajarHariIni', 'jadwalGuruAktif', 'kelasJurnalAktif',
             'guru',
             'namaSekolah',
             'sistemAbsensi',
@@ -1048,6 +1072,16 @@ class AbsensiController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'Jurnal hanya dapat diisi untuk hari ini.'], 422);
             }
 
+            $kelasObj = Kelas::find($kelasId);
+            $tingkat = $kelasObj ? HariKhususService::normalizeTingkat($kelasObj->tingkat_kelas ?? $kelasObj->nama_kelas) : null;
+            $hariKhusus = HariKhususService::getHariKhusus($tanggal, $tingkat);
+
+            if ($hariKhusus && $hariKhusus->tipe === 'event' && $hariKhusus->aturan_presensi === 'diliburkan') {
+                DB::rollBack();
+
+                return response()->json(['status' => 'error', 'message' => 'Hari ini pembelajaran diliburkan ('.$hariKhusus->judul.').'], 422);
+            }
+
             $jumlahHadir = 0;
             $tidakHadirList = [];
             $validStatuses = ['H', 'S', 'I', 'D', 'A', 'T'];
@@ -1178,6 +1212,19 @@ class AbsensiController extends Controller
                 }
 
                 $targetBlock = $blocks[0] ?? $jadwalGuruHariIni->all();
+            }
+
+            // Jika ada event pulang cepat dan jam sesi ini di atas atau sama dengan jam pulang, tolak pengisian
+            if ($hariKhusus && $hariKhusus->tipe === 'pulang_cepat' && $hariKhusus->jam_pulang) {
+                $blockStart = collect($targetBlock)->min('jam_mulai');
+                if ($blockStart && $blockStart >= $hariKhusus->jam_pulang) {
+                    DB::rollBack();
+
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Jam pelajaran ini ditiadakan karena pulang cepat ('.$hariKhusus->judul.').',
+                    ], 422);
+                }
             }
 
             // Proses upload / decode foto selfie guru
@@ -1404,7 +1451,7 @@ class AbsensiController extends Controller
                 'id_kelas' => $k->siswa->id_kelas ?? null,
                 'nama_kelas' => $k->siswa->kelas->nama_kelas ?? '-',
                 'jam_masuk' => substr($k->jam_masuk, 0, 5),
-                'jam_ke' => $k->jam_ke,
+                'jam_ke' => \App\Models\JamPelajaran::formatJamKe($k->jam_ke, $namaHari ?? null),
                 'alasan' => $k->alasan ?? '-',
                 'foto_surat_url' => $k->foto_surat_url,
                 'guru_piket' => $k->guruPiket->nama_guru ?? 'Guru Piket',

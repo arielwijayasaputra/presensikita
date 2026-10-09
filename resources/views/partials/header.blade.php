@@ -73,9 +73,8 @@
             $mMin = ((int)substr($jItem->jam_mulai, 0, 2) * 60) + (int)substr($jItem->jam_mulai, 3, 2);
             $sMin = ((int)substr($jItem->jam_selesai, 0, 2) * 60) + (int)substr($jItem->jam_selesai, 3, 2);
             if ($nowMinutes >= $mMin && $nowMinutes < $sMin) {
-                $jKe = (int)$jItem->jam_ke >= 100 ? (int)$jItem->jam_ke - 100 : (int)$jItem->jam_ke;
-                $initialPeriodText = "Jam ke-$jKe";
-                $initialPeriodTitle = "Jam ke-$jKe (" . substr($jItem->jam_mulai, 0, 5) . " - " . substr($jItem->jam_selesai, 0, 5) . ")";
+                $initialPeriodText = substr($jItem->jam_mulai, 0, 5) . " - " . substr($jItem->jam_selesai, 0, 5);
+                $initialPeriodTitle = substr($jItem->jam_mulai, 0, 5) . " - " . substr($jItem->jam_selesai, 0, 5);
                 break;
             }
         }

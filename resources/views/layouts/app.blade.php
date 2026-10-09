@@ -27,6 +27,7 @@
     <!-- External CSS Style Asset -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ filemtime(public_path('css/style.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/theme.css') }}?v={{ filemtime(public_path('css/theme.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/jadwal-timetables.css') }}?v={{ filemtime(public_path('css/jadwal-timetables.css')) }}">
     <script src="{{ asset('js/theme-toggle.js') }}"></script>
 </head>
 <body>

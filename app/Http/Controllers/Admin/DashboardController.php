@@ -8,6 +8,7 @@ use App\Models\Alumni;
 use App\Models\Guru;
 use App\Models\GuruPiket;
 use App\Models\Hari;
+use App\Models\HariKhusus;
 use App\Models\JamPelajaran;
 use App\Models\Jurusan;
 use App\Models\Kelas;
@@ -233,6 +234,7 @@ class DashboardController extends Controller
         }
 
         $allJamPelajaran = JamPelajaran::orderBy('jam_ke')->get();
+        $allHariKhusus = HariKhusus::orderByDesc('tanggal_mulai')->orderByDesc('id_hari_khusus')->get();
         $allJadwal = DB::table('jadwal_mengajar')
             ->leftJoin('guru', function ($join) {
                 $join->on('jadwal_mengajar.id_guru', '=', 'guru.id_guru')
@@ -369,6 +371,7 @@ class DashboardController extends Controller
         $waNomorWakaKesiswaan = Pengaturan::get('wa_nomor_waka_kesiswaan', '');
         $waNomorWakaSdm = Pengaturan::get('wa_nomor_waka_sdm', '');
         $waNomorKepsek = Pengaturan::get('wa_nomor_kepsek', '');
+        $fotoTtdKepsek = Pengaturan::get('ttd_kepsek', '');
         $waBotStatus = WhatsAppService::checkBotStatus();
 
         // ── Naik Kelas data ──
@@ -460,6 +463,7 @@ class DashboardController extends Controller
             'allMapel',
             'allJurusan',
             'allJamPelajaran',
+            'allHariKhusus',
             'allJadwal',
             'totalJadwalAktif',
             'totalJadwalTanpaGuru',
@@ -480,7 +484,7 @@ class DashboardController extends Controller
             'istirahat1Mulai', 'istirahat1Selesai', 'istirahat2Mulai', 'istirahat2Selesai',
             'istirahatJumat1Mulai', 'istirahatJumat1Selesai', 'istirahatJumat2Mulai', 'istirahatJumat2Selesai',
             'jadwalMajuSenin', 'jadwalMajuJumat',
-            'waGatewayAktif', 'waGatewayEndpoint', 'waPublicUrl', 'waNomorBot', 'waNomorWakaKesiswaan', 'waNomorWakaSdm', 'waNomorKepsek', 'waBotStatus',
+            'waGatewayAktif', 'waGatewayEndpoint', 'waPublicUrl', 'waNomorBot', 'waNomorWakaKesiswaan', 'waNomorWakaSdm', 'waNomorKepsek', 'fotoTtdKepsek', 'waBotStatus',
             'ringkasanNk',
             'alumniTahunan',
             'allAlumni',

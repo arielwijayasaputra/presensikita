@@ -10,30 +10,43 @@
 
         <!-- ══ CARD KIRI: FOTO PROFIL & LOGOUT ══ -->
         <div class="card" style="text-align:center;padding:28px 24px">
-            <div style="position:relative;width:100px;height:100px;margin:0 auto 16px">
-                @if(!empty($guru->foto_profil) && file_exists(public_path($guru->foto_profil)))
-                    <img id="avatar-preview-img" src="{{ asset($guru->foto_profil) }}" alt="Foto Profil" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #3b82f6;box-shadow:0 4px 12px rgba(59,130,246,0.25)">
-                @else
-                    <div id="avatar-preview-fallback" class="user-avatar" style="width:100px;height:100px;font-size:36px;border-radius:50%;margin:0 auto;box-shadow:0 4px 12px rgba(30,58,138,0.2)">
-                        {{ strtoupper(substr($guru->nama_guru ?? 'GUR', 0, 2)) }}
-                    </div>
-                    <img id="avatar-preview-img" src="" alt="Foto Profil" style="display:none;width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #3b82f6;box-shadow:0 4px 12px rgba(59,130,246,0.25)">
-                @endif
+            @php
+                $hasFoto = !empty($guru->foto_profil) && file_exists(public_path($guru->foto_profil));
+                $fotoUrl = $hasFoto ? asset($guru->foto_profil) : '';
+                $inisial = strtoupper(substr($guru->nama_guru ?? 'GUR', 0, 2));
+                $nama = $guru->nama_guru ?? 'Guru';
+                $peran = ($guru->is_admin ?? false) ? 'Administrator Sistem' : ($guru->Peran ?? 'Guru');
+            @endphp
+            <div style="position:relative;width:110px;height:110px;margin:0 auto 16px">
+                <div id="avatar-container" onclick="zoomFotoProfil(document.getElementById('avatar-preview-img')?.src || '{{ $fotoUrl }}', '{{ addslashes($nama) }}', '{{ $inisial }}', '{{ addslashes($peran) }}')" style="width:110px;height:110px;border-radius:50%;overflow:hidden;cursor:pointer;border:3.5px solid #2563eb;box-shadow:0 6px 18px rgba(37,99,235,0.25);background:linear-gradient(135deg, #2563eb, #1d4ed8);display:flex;align-items:center;justify-content:center;margin:0 auto;" title="Klik untuk memperbesar foto">
+                    @if($hasFoto)
+                        <img id="avatar-preview-img" src="{{ $fotoUrl }}" alt="Foto Profil" style="width:100%;height:100%;object-fit:cover;display:block;">
+                        <div id="avatar-preview-fallback" style="display:none;color:#ffffff;font-size:38px;font-weight:800;line-height:1">
+                            {{ $inisial }}
+                        </div>
+                    @else
+                        <div id="avatar-preview-fallback" style="color:#ffffff;font-size:38px;font-weight:800;line-height:1">
+                            {{ $inisial }}
+                        </div>
+                        <img id="avatar-preview-img" src="" alt="Foto Profil" style="display:none;width:100%;height:100%;object-fit:cover;">
+                    @endif
+                </div>
 
-                <label for="input-foto-profil" style="position:absolute;bottom:0;right:0;width:32px;height:32px;background:#1e3a8a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.15)" title="Ubah Foto Profil">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                <label for="input-foto-profil" style="position:absolute;bottom:0;right:0;width:34px;height:34px;background:#2563eb;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;border:2.5px solid var(--card-bg, #ffffff);box-shadow:0 3px 8px rgba(0,0,0,0.25);transition:transform 0.2s" title="Ubah Foto Profil">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
                 </label>
                 <input type="file" id="input-foto-profil" accept="image/*" style="display:none" onchange="previewProfilePhoto(this)">
             </div>
 
-            <h3 style="font-size:18px;font-weight:700;color:#0f172a;margin-bottom:4px" id="prof-title-name">{{ $guru->nama_guru ?? 'Guru' }}</h3>
-            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">{{ ($guru->is_admin ?? false) ? 'Administrator Sistem' : ($guru->Peran ?? 'Guru') }}</p>
+            <h3 style="font-size:18px;font-weight:800;color:var(--text-primary);margin-bottom:4px" id="prof-title-name">{{ $nama }}</h3>
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">{{ $peran }}</p>
 
-            <button type="button" class="btn-secondary" style="width:100%;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;margin-bottom:16px" onclick="document.getElementById('input-foto-profil').click()">
-                Pilih Foto Baru
+            <button type="button" class="btn-secondary" style="width:100%;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:6px" onclick="document.getElementById('input-foto-profil').click()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span>Pilih Foto Baru</span>
             </button>
 
-            <hr style="border:none;border-top:1px solid #e2e8f0;margin:16px 0">
+            <hr style="border:none;border-top:1px solid var(--border, #e2e8f0);margin:16px 0">
 
             <!-- Tombol Keluar -->
             <button type="button" style="width:100%;padding:12px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;color:#b91c1c;font-weight:700;font-size:13.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s" onclick="confirmKeluar('logout-form-sidebar')">

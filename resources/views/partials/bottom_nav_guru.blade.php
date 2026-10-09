@@ -39,12 +39,11 @@
         <span>Riwayat</span>
     </a>
 
-    <a href="javascript:void(0)" class="bottom-nav-item" id="bottom-nav-menu" onclick="toggleSidebar()" title="Buka Menu Lainnya">
+    <a href="javascript:void(0)" class="bottom-nav-item" id="bottom-nav-profil" onclick="showPage('profil')" title="Profil Pengguna">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"/>
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <line x1="3" y1="18" x2="21" y2="18"/>
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
         </svg>
-        <span>Menu</span>
+        <span>Profil</span>
     </a>
 </nav>

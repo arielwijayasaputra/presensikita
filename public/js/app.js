@@ -3974,3 +3974,43 @@ window.filterTable = function(inputId, tableId) {
     });
 };
 
+/* ── Zoom Foto Profil Popup ── */
+window.zoomFotoProfil = function(url, nama, inisial, peran) {
+    if (url && url.trim() !== '') {
+        Swal.fire({
+            title: nama || 'Foto Profil',
+            html: `
+                ${peran ? `<div style="font-size:13px;font-weight:600;color:var(--text-secondary,#64748b);margin-top:-6px;margin-bottom:14px">${peran}</div>` : ''}
+                <div style="border-radius:14px;overflow:hidden;background:var(--body-bg,#f1f5f9);border:1px solid var(--border,#e2e8f0);display:flex;align-items:center;justify-content:center;max-height:70vh;position:relative;padding:6px">
+                    <img src="${url}" alt="${nama || 'Foto Profil'}" style="max-width:100%;max-height:60vh;object-fit:contain;display:block;border-radius:10px" onerror="this.parentElement.innerHTML='<div style=\\'padding:36px 20px;color:#ef4444;font-weight:600\\'>Foto profil tidak ditemukan atau gagal dimuat.</div>'">
+                </div>
+            `,
+            showConfirmButton: true,
+            confirmButtonText: 'Tutup',
+            confirmButtonColor: '#2563eb',
+            customClass: {
+                popup: 'custom-swal-popup'
+            },
+            width: 440
+        });
+    } else {
+        Swal.fire({
+            title: nama || 'Profil Pengguna',
+            html: `
+                ${peran ? `<div style="font-size:13px;font-weight:600;color:var(--text-secondary,#64748b);margin-top:-6px;margin-bottom:14px">${peran}</div>` : ''}
+                <div style="width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg, #2563eb, #1d4ed8);color:#ffffff;font-size:40px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:16px auto;box-shadow:0 8px 24px rgba(37,99,235,0.35);border:3.5px solid #2563eb">
+                    ${inisial || 'GU'}
+                </div>
+                <div style="font-size:13px;color:var(--text-secondary,#64748b);margin-top:10px">Belum ada foto profil yang diunggah.</div>
+            `,
+            showConfirmButton: true,
+            confirmButtonText: 'Tutup',
+            confirmButtonColor: '#2563eb',
+            customClass: {
+                popup: 'custom-swal-popup'
+            },
+            width: 440
+        });
+    }
+};
+
